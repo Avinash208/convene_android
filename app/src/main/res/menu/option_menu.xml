@@ -1,0 +1,9 @@
+<menu xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/font"
+        android:title="@string/chooseFont"
+        android:showAsAction=""
+        android:visible="false"
+        tools:ignore="AppCompatResource" />
+
+</menu>

@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#fff9e4">
+
+    <LinearLayout
+        android:id="@+id/linearheader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="@color/yellow"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <include
+            android:id="@+id/toolbar1"
+            layout="@layout/toolbar">
+        </include>
+
+        <TextView
+            android:id="@+id/userNameLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:textColor="@color/black"
+            android:textSize="16sp" />
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/dueContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/linearheader"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="10dp"
+        android:gravity="right"
+        android:visibility="gone"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/duecountLable"
+            android:layout_width="90dp"
+            android:layout_height="30dp"
+            android:layout_marginRight="20dp"
+            android:background="@drawable/ovalshape"
+            android:gravity="center"
+            android:text="DUE : "
+            android:textAllCaps="true"
+            android:textColor="@color/black" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/footer"
+        android:layout_below="@+id/dueContainer"
+        android:layout_marginTop="10dp"
+        android:layout_centerInParent="true"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/linearContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:orientation="vertical">
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/card_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                app:cardBackgroundColor="@color/yellow"
+                app:cardElevation="4dp">
+
+                <LinearLayout
+                    android:id="@+id/dataformsLinear"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/ripple_effect"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:paddingLeft="20dp"
+                        android:gravity="center_vertical
+"
+                        android:drawableRight="@drawable/ic_arrow"
+                        android:text="@string/data_collection_forms"
+                        android:textSize="15sp" />
+
+
+                </LinearLayout>
+
+            </android.support.v7.widget.CardView>
+
+
+            <ExpandableListView
+                android:id="@+id/expandableListview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:childDivider="#232323">
+            </ExpandableListView>
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+   <include
+       android:id="@+id/bottomLayout"
+       android:visibility="gone"
+       layout="@layout/activity_setting">
+   </include>
+
+</RelativeLayout>

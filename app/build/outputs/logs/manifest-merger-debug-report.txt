@@ -1,0 +1,555 @@
+-- Merging decision tree log ---
+manifest
+ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:2:1-201:12
+INJECTED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:2:1-201:12
+INJECTED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:2:1-201:12
+INJECTED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:2:1-201:12
+MERGED from [com.android.support:multidex:1.0.2] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/multidex-1.0.2.aar/f668acac22e8d6fa011b66c0d233f44f/AndroidManifest.xml:17:1-22:12
+MERGED from [com.crashlytics.sdk.android:crashlytics:2.6.7] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/crashlytics-2.6.7.aar/cf3d2f0f7646d5d3fbfdc98699343338/AndroidManifest.xml:2:1-13:12
+MERGED from [com.android.volley:volley:1.0.0] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/volley-1.0.0.aar/6bf9fb4a6b6d092e6e79a246c02c87f2/AndroidManifest.xml:2:1-11:12
+MERGED from [com.kovachcode:timePickerWithSeconds:1.0.0] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/timePickerWithSeconds-1.0.0.aar/870875d44f0611923087c18d00f7b18d/AndroidManifest.xml:2:1-13:12
+MERGED from [net.zetetic:android-database-sqlcipher:3.5.6] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/android-database-sqlcipher-3.5.6.aar/44b452f445bf943ed037db7328119280/AndroidManifest.xml:2:1-4:12
+MERGED from [com.google.android.gms:play-services-location:11.8.0] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/play-services-location-11.8.0.aar/156eaeee43dc8b8ceae991a471fea653/AndroidManifest.xml:2:1-9:12
+MERGED from [com.github.rey5137:material:1.2.2] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/material-1.2.2.aar/fbab6e24062d7e41f4662d097a198d1c/AndroidManifest.xml:2:1-11:12
+MERGED from [com.android.support.constraint:constraint-layout:1.0.2] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/constraint-layout-1.0.2.aar/a62b5d6478643891ebd846230af7e0f6/AndroidManifest.xml:2:1-11:12
+MERGED from [com.github.douglasjunior:android-simple-tooltip:0.2.1] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/android-simple-tooltip-0.2.1.aar/ce9acb18b8f19b7a1a4e86c32157f98a/AndroidManifest.xml:2:1-14:12
+MERGED from [com.android.support:design:27.0.2] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/design-27.0.2.aar/eaf11d2edd1fa5ad986bf638fb55d5ee/AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:cardview-v7:27.0.2] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/cardview-v7-27.0.2.aar/2c282ced51d81e0cc0f4d44a7eea939a/AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:recyclerview-v7:27.0.2] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/recyclerview-v7-27.0.2.aar/aa7131c32998b88a8b43173f99d421f4/AndroidManifest.xml:17:1-22:12
+MERGED from [com.crashlytics.sdk.android:beta:1.2.4] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/beta-1.2.4.aar/880efaba123bab5c8b2913370f7672bb/AndroidManifest.xml:2:1-13:12
+MERGED from [com.crashlytics.sdk.android:crashlytics-core:2.3.16] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/crashlytics-core-2.3.16.aar/e6b9444fc1dc08999f1f8f31571e92e5/AndroidManifest.xml:45:1-56:12
+MERGED from [com.crashlytics.sdk.android:answers:1.3.12] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/answers-1.3.12.aar/74429d1b81fb7fb42cb2e900356ded7f/AndroidManifest.xml:2:1-13:12
+MERGED from [io.fabric.sdk.android:fabric:1.3.16] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/fabric-1.3.16.aar/24e241b8b24da3a9f98d70b2eec6769e/AndroidManifest.xml:22:1-33:12
+MERGED from [com.google.android.gms:play-services-base:11.8.0] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/play-services-base-11.8.0.aar/3cdf7d251db5d47dd28c7e469430f36b/AndroidManifest.xml:17:1-29:12
+MERGED from [com.google.android.gms:play-services-tasks:11.8.0] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/play-services-tasks-11.8.0.aar/62361606e7e0a5a5e93d138272e66082/AndroidManifest.xml:2:1-9:12
+MERGED from [com.google.android.gms:play-services-basement:11.8.0] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/play-services-basement-11.8.0.aar/2e248498e6256b7b4f84238538f9bb33/AndroidManifest.xml:17:1-28:12
+MERGED from [com.android.support:support-v4:27.0.2] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/support-v4-27.0.2.aar/af937b6e8f0158bff03494f1390addcd/AndroidManifest.xml:17:1-22:12
+MERGED from [com.google.android.gms:play-services-location-license:11.8.0] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/play-services-location-license-11.8.0.aar/53f639717bdca7db7579dfcc177ea060/AndroidManifest.xml:2:1-6:12
+MERGED from [com.android.support:appcompat-v7:27.0.2] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/appcompat-v7-27.0.2.aar/cab19d319faac703b8aeba48ab6da6f0/AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:transition:27.0.2] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/transition-27.0.2.aar/127fb7607c29796c70f2c95f61343e6c/AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:support-fragment:27.0.2] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/support-fragment-27.0.2.aar/9ebb9f6d39f0383cef789a749370ec53/AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:animated-vector-drawable:27.0.2] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/animated-vector-drawable-27.0.2.aar/d8cfc2ddc3864393ad1869db396b4501/AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:support-core-ui:27.0.2] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/support-core-ui-27.0.2.aar/79939a7d8ec10f3500fc642657c652e8/AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:support-media-compat:27.0.2] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/support-media-compat-27.0.2.aar/9cd96d633cb08513f29278b8ac4cd31d/AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:support-core-utils:27.0.2] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/support-core-utils-27.0.2.aar/fc82021c1ccbe7cef32a3ad3a682af8e/AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:support-vector-drawable:27.0.2] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/support-vector-drawable-27.0.2.aar/25845d2ab71ae70d2ce9cf3ab07d2ce8/AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:support-compat:27.0.2] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/support-compat-27.0.2.aar/80690f742d14caff75a1af4d92ba1d94/AndroidManifest.xml:17:1-22:12
+MERGED from [com.google.android.gms:play-services-base-license:11.8.0] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/play-services-base-license-11.8.0.aar/bc0d9fcadcdfc645fdedf448816583ef/AndroidManifest.xml:2:1-6:12
+MERGED from [com.google.android.gms:play-services-basement-license:11.8.0] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/play-services-basement-license-11.8.0.aar/bedd3f5f3e5d572701d7e65b114961a3/AndroidManifest.xml:2:1-6:12
+MERGED from [com.google.android.gms:play-services-tasks-license:11.8.0] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/play-services-tasks-license-11.8.0.aar/8347d7147c73681f271939f426bdbe1c/AndroidManifest.xml:2:1-6:12
+MERGED from [android.arch.lifecycle:runtime:1.0.3] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/runtime-1.0.3.aar/b4337ae13f1546b752ffd89cec3c2ed1/AndroidManifest.xml:17:1-24:12
+INJECTED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:2:1-201:12
+INJECTED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:2:1-201:12
+INJECTED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:2:1-201:12
+	package
+		ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:3:5-36
+		INJECTED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml
+		INJECTED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml
+	android:versionName
+		INJECTED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml
+		ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:2:1-201:12
+		INJECTED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml
+	android:versionCode
+		INJECTED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml
+		ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:2:1-201:12
+		INJECTED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml
+	xmlns:android
+		ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:2:11-69
+uses-feature#android.hardware.camera
+ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:5:5-60
+	android:name
+		ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:5:19-57
+uses-feature#android.hardware.camera.autofocus
+ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:6:5-70
+	android:name
+		ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:6:19-67
+uses-permission#android.permission.WRITE_EXTERNAL_STORAGE
+ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:8:5-81
+	android:name
+		ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:8:22-78
+uses-permission#android.permission.READ_EXTERNAL_STORAGE
+ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:9:5-80
+	android:name
+		ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:9:22-77
+uses-permission#android.permission.ACCESS_NETWORK_STATE
+ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:10:5-79
+	android:name
+		ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:10:22-76
+uses-permission#android.permission.ACCESS_FINE_LOCATION
+ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:11:5-79
+	android:name
+		ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:11:22-76
+uses-permission#android.permission.ACCESS_COARSE_LOCATION
+ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:12:5-81
+	android:name
+		ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:12:22-78
+uses-permission#android.permission.READ_PHONE_STATE
+ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:13:5-75
+	android:name
+		ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:13:22-72
+uses-permission#android.permission.INTERNET
+ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:14:5-67
+MERGED from [com.crashlytics.sdk.android:crashlytics:2.6.7] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/crashlytics-2.6.7.aar/cf3d2f0f7646d5d3fbfdc98699343338/AndroidManifest.xml:9:5-67
+MERGED from [com.crashlytics.sdk.android:crashlytics:2.6.7] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/crashlytics-2.6.7.aar/cf3d2f0f7646d5d3fbfdc98699343338/AndroidManifest.xml:9:5-67
+MERGED from [com.crashlytics.sdk.android:beta:1.2.4] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/beta-1.2.4.aar/880efaba123bab5c8b2913370f7672bb/AndroidManifest.xml:9:5-67
+MERGED from [com.crashlytics.sdk.android:beta:1.2.4] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/beta-1.2.4.aar/880efaba123bab5c8b2913370f7672bb/AndroidManifest.xml:9:5-67
+MERGED from [com.crashlytics.sdk.android:crashlytics-core:2.3.16] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/crashlytics-core-2.3.16.aar/e6b9444fc1dc08999f1f8f31571e92e5/AndroidManifest.xml:52:5-67
+MERGED from [com.crashlytics.sdk.android:crashlytics-core:2.3.16] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/crashlytics-core-2.3.16.aar/e6b9444fc1dc08999f1f8f31571e92e5/AndroidManifest.xml:52:5-67
+MERGED from [com.crashlytics.sdk.android:answers:1.3.12] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/answers-1.3.12.aar/74429d1b81fb7fb42cb2e900356ded7f/AndroidManifest.xml:9:5-67
+MERGED from [com.crashlytics.sdk.android:answers:1.3.12] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/answers-1.3.12.aar/74429d1b81fb7fb42cb2e900356ded7f/AndroidManifest.xml:9:5-67
+MERGED from [io.fabric.sdk.android:fabric:1.3.16] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/fabric-1.3.16.aar/24e241b8b24da3a9f98d70b2eec6769e/AndroidManifest.xml:29:5-67
+MERGED from [io.fabric.sdk.android:fabric:1.3.16] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/fabric-1.3.16.aar/24e241b8b24da3a9f98d70b2eec6769e/AndroidManifest.xml:29:5-67
+	android:name
+		ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:14:22-64
+uses-permission#android.permission.WAKE_LOCK
+ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:15:5-68
+	android:name
+		ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:15:22-65
+uses-permission#android.permission.GET_TASKS
+ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:16:5-68
+	android:name
+		ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:16:22-65
+uses-permission#android.permission.RECORD_AUDIO
+ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:17:5-71
+	android:name
+		ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:17:22-68
+uses-permission#android.permission.CHANGE_NETWORK_STATE
+ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:18:5-79
+	android:name
+		ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:18:22-76
+uses-permission#android.permission.ACCESS_WIFI_STATE
+ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:19:5-76
+	android:name
+		ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:19:22-73
+uses-permission#android.permission.CHANGE_WIFI_MULTICAST_STATE
+ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:20:5-86
+	android:name
+		ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:20:22-83
+application
+ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:22:5-199:19
+MERGED from [com.crashlytics.sdk.android:crashlytics:2.6.7] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/crashlytics-2.6.7.aar/cf3d2f0f7646d5d3fbfdc98699343338/AndroidManifest.xml:11:5-20
+MERGED from [com.crashlytics.sdk.android:crashlytics:2.6.7] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/crashlytics-2.6.7.aar/cf3d2f0f7646d5d3fbfdc98699343338/AndroidManifest.xml:11:5-20
+MERGED from [com.android.volley:volley:1.0.0] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/volley-1.0.0.aar/6bf9fb4a6b6d092e6e79a246c02c87f2/AndroidManifest.xml:9:5-20
+MERGED from [com.android.volley:volley:1.0.0] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/volley-1.0.0.aar/6bf9fb4a6b6d092e6e79a246c02c87f2/AndroidManifest.xml:9:5-20
+MERGED from [com.kovachcode:timePickerWithSeconds:1.0.0] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/timePickerWithSeconds-1.0.0.aar/870875d44f0611923087c18d00f7b18d/AndroidManifest.xml:11:5-20
+MERGED from [com.kovachcode:timePickerWithSeconds:1.0.0] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/timePickerWithSeconds-1.0.0.aar/870875d44f0611923087c18d00f7b18d/AndroidManifest.xml:11:5-20
+MERGED from [com.google.android.gms:play-services-location:11.8.0] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/play-services-location-11.8.0.aar/156eaeee43dc8b8ceae991a471fea653/AndroidManifest.xml:7:5-20
+MERGED from [com.google.android.gms:play-services-location:11.8.0] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/play-services-location-11.8.0.aar/156eaeee43dc8b8ceae991a471fea653/AndroidManifest.xml:7:5-20
+MERGED from [com.android.support.constraint:constraint-layout:1.0.2] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/constraint-layout-1.0.2.aar/a62b5d6478643891ebd846230af7e0f6/AndroidManifest.xml:9:5-20
+MERGED from [com.android.support.constraint:constraint-layout:1.0.2] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/constraint-layout-1.0.2.aar/a62b5d6478643891ebd846230af7e0f6/AndroidManifest.xml:9:5-20
+MERGED from [com.github.douglasjunior:android-simple-tooltip:0.2.1] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/android-simple-tooltip-0.2.1.aar/ce9acb18b8f19b7a1a4e86c32157f98a/AndroidManifest.xml:11:5-12:19
+MERGED from [com.github.douglasjunior:android-simple-tooltip:0.2.1] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/android-simple-tooltip-0.2.1.aar/ce9acb18b8f19b7a1a4e86c32157f98a/AndroidManifest.xml:11:5-12:19
+MERGED from [com.crashlytics.sdk.android:beta:1.2.4] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/beta-1.2.4.aar/880efaba123bab5c8b2913370f7672bb/AndroidManifest.xml:11:5-20
+MERGED from [com.crashlytics.sdk.android:beta:1.2.4] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/beta-1.2.4.aar/880efaba123bab5c8b2913370f7672bb/AndroidManifest.xml:11:5-20
+MERGED from [com.crashlytics.sdk.android:crashlytics-core:2.3.16] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/crashlytics-core-2.3.16.aar/e6b9444fc1dc08999f1f8f31571e92e5/AndroidManifest.xml:54:5-20
+MERGED from [com.crashlytics.sdk.android:crashlytics-core:2.3.16] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/crashlytics-core-2.3.16.aar/e6b9444fc1dc08999f1f8f31571e92e5/AndroidManifest.xml:54:5-20
+MERGED from [com.crashlytics.sdk.android:answers:1.3.12] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/answers-1.3.12.aar/74429d1b81fb7fb42cb2e900356ded7f/AndroidManifest.xml:11:5-20
+MERGED from [com.crashlytics.sdk.android:answers:1.3.12] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/answers-1.3.12.aar/74429d1b81fb7fb42cb2e900356ded7f/AndroidManifest.xml:11:5-20
+MERGED from [io.fabric.sdk.android:fabric:1.3.16] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/fabric-1.3.16.aar/24e241b8b24da3a9f98d70b2eec6769e/AndroidManifest.xml:31:5-20
+MERGED from [io.fabric.sdk.android:fabric:1.3.16] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/fabric-1.3.16.aar/24e241b8b24da3a9f98d70b2eec6769e/AndroidManifest.xml:31:5-20
+MERGED from [com.google.android.gms:play-services-base:11.8.0] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/play-services-base-11.8.0.aar/3cdf7d251db5d47dd28c7e469430f36b/AndroidManifest.xml:22:5-27:19
+MERGED from [com.google.android.gms:play-services-base:11.8.0] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/play-services-base-11.8.0.aar/3cdf7d251db5d47dd28c7e469430f36b/AndroidManifest.xml:22:5-27:19
+MERGED from [com.google.android.gms:play-services-tasks:11.8.0] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/play-services-tasks-11.8.0.aar/62361606e7e0a5a5e93d138272e66082/AndroidManifest.xml:7:5-20
+MERGED from [com.google.android.gms:play-services-tasks:11.8.0] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/play-services-tasks-11.8.0.aar/62361606e7e0a5a5e93d138272e66082/AndroidManifest.xml:7:5-20
+MERGED from [com.google.android.gms:play-services-basement:11.8.0] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/play-services-basement-11.8.0.aar/2e248498e6256b7b4f84238538f9bb33/AndroidManifest.xml:22:5-26:19
+MERGED from [com.google.android.gms:play-services-basement:11.8.0] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/play-services-basement-11.8.0.aar/2e248498e6256b7b4f84238538f9bb33/AndroidManifest.xml:22:5-26:19
+MERGED from [com.google.android.gms:play-services-location-license:11.8.0] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/play-services-location-license-11.8.0.aar/53f639717bdca7db7579dfcc177ea060/AndroidManifest.xml:5:5-20
+MERGED from [com.google.android.gms:play-services-location-license:11.8.0] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/play-services-location-license-11.8.0.aar/53f639717bdca7db7579dfcc177ea060/AndroidManifest.xml:5:5-20
+MERGED from [com.google.android.gms:play-services-base-license:11.8.0] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/play-services-base-license-11.8.0.aar/bc0d9fcadcdfc645fdedf448816583ef/AndroidManifest.xml:5:5-20
+MERGED from [com.google.android.gms:play-services-base-license:11.8.0] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/play-services-base-license-11.8.0.aar/bc0d9fcadcdfc645fdedf448816583ef/AndroidManifest.xml:5:5-20
+MERGED from [com.google.android.gms:play-services-basement-license:11.8.0] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/play-services-basement-license-11.8.0.aar/bedd3f5f3e5d572701d7e65b114961a3/AndroidManifest.xml:5:5-20
+MERGED from [com.google.android.gms:play-services-basement-license:11.8.0] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/play-services-basement-license-11.8.0.aar/bedd3f5f3e5d572701d7e65b114961a3/AndroidManifest.xml:5:5-20
+MERGED from [com.google.android.gms:play-services-tasks-license:11.8.0] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/play-services-tasks-license-11.8.0.aar/8347d7147c73681f271939f426bdbe1c/AndroidManifest.xml:5:5-20
+MERGED from [com.google.android.gms:play-services-tasks-license:11.8.0] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/play-services-tasks-license-11.8.0.aar/8347d7147c73681f271939f426bdbe1c/AndroidManifest.xml:5:5-20
+	android:supportsRtl
+		ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:27:9-35
+	android:label
+		ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:26:9-41
+	android:icon
+		ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:25:9-45
+	android:allowBackup
+		ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:24:9-36
+	android:theme
+		ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:28:9-40
+	android:name
+		ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:23:9-61
+activity#org.mahiti.convenemis.Splash
+ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:29:9-41:20
+	android:screenOrientation
+		ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:34:13-49
+	android:configChanges
+		ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:32:13-48
+	android:largeHeap
+		ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:33:13-37
+	android:allowBackup
+		ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:31:13-39
+	android:theme
+		ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:35:13-63
+	android:name
+		ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:30:13-56
+intent-filter#action:name:android.intent.action.MAIN+category:name:android.intent.category.LAUNCHER
+ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:36:13-40:29
+action#android.intent.action.MAIN
+ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:37:17-69
+	android:name
+		ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:37:25-66
+category#android.intent.category.LAUNCHER
+ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:39:17-77
+	android:name
+		ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:39:27-74
+activity#org.mahiti.convenemis.LoginActivity
+ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:42:9-45:52
+	android:screenOrientation
+		ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:45:13-49
+	android:configChanges
+		ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:44:13-48
+	android:name
+		ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:43:13-63
+activity#org.mahiti.convenemis.LoginParentActivity
+ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:46:9-49:52
+	android:screenOrientation
+		ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:49:13-49
+	android:configChanges
+		ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:48:13-48
+	android:name
+		ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:47:13-69
+activity#org.mahiti.convenemis.SurveyQuestionActivity
+ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:50:9-60:20
+	android:screenOrientation
+		ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:53:13-49
+	android:windowSoftInputMode
+		ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:54:13-60
+	android:configChanges
+		ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:52:13-48
+	android:name
+		ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:51:13-72
+intent-filter#action:name:android.intent.action.MAIN+category:name:android.intent.category.DEFAULT
+ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:55:13-59:29
+category#android.intent.category.DEFAULT
+ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:58:17-76
+	android:name
+		ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:58:27-73
+meta-data#com.google.android.geo.API_KEY
+ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:62:9-64:71
+	android:value
+		ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:64:13-68
+	android:name
+		ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:63:13-58
+activity#org.mahiti.convenemis.SurveyListLevels
+ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:66:9-69:52
+	android:screenOrientation
+		ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:69:13-49
+	android:configChanges
+		ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:68:13-48
+	android:name
+		ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:67:13-66
+activity#org.mahiti.convenemis.LevelsActivityNew
+ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:70:9-79:20
+	android:screenOrientation
+		ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:73:13-49
+	android:configChanges
+		ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:72:13-48
+	android:name
+		ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:71:13-67
+activity#org.mahiti.convenemis.UpdateMasterLoading
+ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:80:9-83:52
+	android:screenOrientation
+		ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:83:13-49
+	android:configChanges
+		ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:82:13-48
+	android:name
+		ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:81:13-69
+service#org.mahiti.convenemis.MyIntentService
+ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:85:9-89:19
+	android:name
+		ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:85:18-70
+intent-filter#action:name:Survey
+ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:86:13-88:29
+action#Survey
+ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:87:17-49
+	android:name
+		ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:87:25-46
+service#org.mahiti.convenemis.network.LangService
+ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:90:9-94:19
+	android:name
+		ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:90:18-74
+intent-filter#action:name:LangService
+ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:91:13-93:29
+action#LangService
+ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:92:17-54
+	android:name
+		ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:92:25-51
+service#org.mahiti.convenemis.MyIntentPeriodicity
+ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:95:9-103:19
+	android:enabled
+		ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:97:13-35
+	android:exported
+		ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:98:13-37
+	android:name
+		ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:96:13-69
+intent-filter#action:name:PeriodicIntentReceiver+action:name:android.net.conn.CONNECTIVITY_CHANGE
+ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:99:13-102:29
+action#PeriodicIntentReceiver
+ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:100:17-65
+	android:name
+		ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:100:25-62
+action#android.net.conn.CONNECTIVITY_CHANGE
+ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:101:17-79
+	android:name
+		ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:101:25-76
+service#org.mahiti.convenemis.MyIntentServiceBeneficiary
+ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:104:9-112:19
+	android:enabled
+		ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:106:13-35
+	android:exported
+		ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:107:13-37
+	android:name
+		ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:105:13-76
+intent-filter#action:name:BeneficiaryIntentReceiver+action:name:android.net.conn.CONNECTIVITY_CHANGE
+ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:108:13-111:29
+action#BeneficiaryIntentReceiver
+ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:109:17-68
+	android:name
+		ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:109:25-65
+service#org.mahiti.convenemis.IntentServiceBeneficiaryUpdate
+ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:113:9-121:19
+	android:enabled
+		ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:115:13-35
+	android:exported
+		ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:116:13-37
+	android:name
+		ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:114:13-80
+intent-filter#action:name:BeneficiaryUpdateIntentReceiver+action:name:android.net.conn.CONNECTIVITY_CHANGE
+ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:117:13-120:29
+action#BeneficiaryUpdateIntentReceiver
+ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:118:17-74
+	android:name
+		ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:118:25-71
+service#org.mahiti.convenemis.MyIntentServiceFacility
+ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:122:9-130:19
+	android:enabled
+		ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:124:13-35
+	android:exported
+		ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:125:13-37
+	android:name
+		ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:123:13-73
+intent-filter#action:name:FacilityIntentReceiver+action:name:android.net.conn.CONNECTIVITY_CHANGE
+ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:126:13-129:29
+action#FacilityIntentReceiver
+ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:127:17-65
+	android:name
+		ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:127:25-62
+receiver#org.mahiti.convenemis.receivers.BatteryChangereciever
+ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:132:9-136:20
+	android:name
+		ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:132:19-87
+intent-filter#action:name:android.intent.action.BATTERY_CHANGED
+ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:133:13-135:29
+action#android.intent.action.BATTERY_CHANGED
+ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:134:17-80
+	android:name
+		ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:134:25-77
+receiver#org.mahiti.convenemis.receivers.PowerConnectionReceiver
+ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:137:9-142:20
+	android:name
+		ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:137:19-89
+intent-filter#action:name:android.intent.action.ACTION_POWER_CONNECTED+action:name:android.intent.action.ACTION_POWER_DISCONNECTED
+ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:138:13-141:29
+action#android.intent.action.ACTION_POWER_CONNECTED
+ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:139:17-87
+	android:name
+		ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:139:25-84
+action#android.intent.action.ACTION_POWER_DISCONNECTED
+ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:140:17-90
+	android:name
+		ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:140:25-87
+meta-data#io.fabric.ApiKey
+ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:144:9-146:72
+	android:value
+		ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:146:13-69
+	android:name
+		ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:145:13-44
+receiver#org.mahiti.convenemis.AlarmService
+ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:148:9-150:41
+	android:process
+		ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:150:13-38
+	android:name
+		ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:149:13-62
+receiver#org.mahiti.convenemis.receivers.ConnectivityReceiver
+ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:151:9-158:20
+	android:enabled
+		ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:153:13-35
+	android:name
+		ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:152:13-80
+intent-filter#action:name:android.net.conn.CONNECTIVITY_CHANGE+action:name:android.net.wifi.WIFI_STATE_CHANGED
+ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:154:13-157:29
+action#android.net.wifi.WIFI_STATE_CHANGED
+ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:155:17-78
+	android:name
+		ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:155:25-75
+activity#org.mahiti.convenemis.HomeActivity
+ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:160:9-163:59
+	android:screenOrientation
+		ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:162:13-49
+	android:theme
+		ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:163:13-56
+	android:name
+		ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:161:13-62
+activity#org.mahiti.convenemis.HomeActivityNew
+ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:164:9-167:59
+	android:screenOrientation
+		ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:166:13-49
+	android:theme
+		ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:167:13-56
+	android:name
+		ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:165:13-65
+activity#org.mahiti.convenemis.ListingActivity
+ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:168:9-171:63
+	android:screenOrientation
+		ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:170:13-49
+	android:windowSoftInputMode
+		ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:171:13-60
+	android:name
+		ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:169:13-65
+activity#org.mahiti.convenemis.TypeDetailsActivity
+ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:172:9-175:59
+	android:screenOrientation
+		ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:174:13-49
+	android:theme
+		ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:175:13-56
+	android:name
+		ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:173:13-69
+activity#org.mahiti.convenemis.AddBeneficiaryActivity
+ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:176:9-178:52
+	android:screenOrientation
+		ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:178:13-49
+	android:name
+		ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:177:13-72
+activity#org.mahiti.convenemis.AddFacilityActivity
+ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:179:9-181:52
+	android:screenOrientation
+		ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:181:13-49
+	android:name
+		ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:180:13-69
+activity#org.mahiti.convenemis.ShowSurveyPreview
+ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:182:9-76
+	android:name
+		ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:182:19-73
+activity#org.mahiti.convenemis.DataCollectionListingActivity
+ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:183:9-187:63
+	android:label
+		ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:185:13-75
+	android:windowSoftInputMode
+		ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:187:13-60
+	android:theme
+		ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:186:13-44
+	android:name
+		ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:184:13-79
+activity#org.mahiti.convenemis.FilterActivityActivity
+ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:188:9-90
+	android:name
+		ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:188:19-78
+activity#org.mahiti.convenemis.SurveySummaryReport
+ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:189:9-198:20
+	android:screenOrientation
+		ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:192:13-49
+	android:configChanges
+		ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:191:13-48
+	android:name
+		ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml:190:13-48
+uses-sdk
+INJECTED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml reason: use-sdk injection requested
+INJECTED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml
+INJECTED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml
+MERGED from [com.android.support:multidex:1.0.2] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/multidex-1.0.2.aar/f668acac22e8d6fa011b66c0d233f44f/AndroidManifest.xml:20:5-43
+MERGED from [com.android.support:multidex:1.0.2] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/multidex-1.0.2.aar/f668acac22e8d6fa011b66c0d233f44f/AndroidManifest.xml:20:5-43
+MERGED from [com.crashlytics.sdk.android:crashlytics:2.6.7] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/crashlytics-2.6.7.aar/cf3d2f0f7646d5d3fbfdc98699343338/AndroidManifest.xml:7:5-43
+MERGED from [com.crashlytics.sdk.android:crashlytics:2.6.7] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/crashlytics-2.6.7.aar/cf3d2f0f7646d5d3fbfdc98699343338/AndroidManifest.xml:7:5-43
+MERGED from [com.android.volley:volley:1.0.0] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/volley-1.0.0.aar/6bf9fb4a6b6d092e6e79a246c02c87f2/AndroidManifest.xml:7:5-43
+MERGED from [com.android.volley:volley:1.0.0] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/volley-1.0.0.aar/6bf9fb4a6b6d092e6e79a246c02c87f2/AndroidManifest.xml:7:5-43
+MERGED from [com.kovachcode:timePickerWithSeconds:1.0.0] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/timePickerWithSeconds-1.0.0.aar/870875d44f0611923087c18d00f7b18d/AndroidManifest.xml:7:5-9:41
+MERGED from [com.kovachcode:timePickerWithSeconds:1.0.0] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/timePickerWithSeconds-1.0.0.aar/870875d44f0611923087c18d00f7b18d/AndroidManifest.xml:7:5-9:41
+MERGED from [net.zetetic:android-database-sqlcipher:3.5.6] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/android-database-sqlcipher-3.5.6.aar/44b452f445bf943ed037db7328119280/AndroidManifest.xml:3:3-40
+MERGED from [net.zetetic:android-database-sqlcipher:3.5.6] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/android-database-sqlcipher-3.5.6.aar/44b452f445bf943ed037db7328119280/AndroidManifest.xml:3:3-40
+MERGED from [com.google.android.gms:play-services-location:11.8.0] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/play-services-location-11.8.0.aar/156eaeee43dc8b8ceae991a471fea653/AndroidManifest.xml:5:5-44
+MERGED from [com.google.android.gms:play-services-location:11.8.0] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/play-services-location-11.8.0.aar/156eaeee43dc8b8ceae991a471fea653/AndroidManifest.xml:5:5-44
+MERGED from [com.github.rey5137:material:1.2.2] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/material-1.2.2.aar/fbab6e24062d7e41f4662d097a198d1c/AndroidManifest.xml:7:5-9:41
+MERGED from [com.github.rey5137:material:1.2.2] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/material-1.2.2.aar/fbab6e24062d7e41f4662d097a198d1c/AndroidManifest.xml:7:5-9:41
+MERGED from [com.android.support.constraint:constraint-layout:1.0.2] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/constraint-layout-1.0.2.aar/a62b5d6478643891ebd846230af7e0f6/AndroidManifest.xml:5:5-7:41
+MERGED from [com.android.support.constraint:constraint-layout:1.0.2] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/constraint-layout-1.0.2.aar/a62b5d6478643891ebd846230af7e0f6/AndroidManifest.xml:5:5-7:41
+MERGED from [com.github.douglasjunior:android-simple-tooltip:0.2.1] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/android-simple-tooltip-0.2.1.aar/ce9acb18b8f19b7a1a4e86c32157f98a/AndroidManifest.xml:7:5-9:41
+MERGED from [com.github.douglasjunior:android-simple-tooltip:0.2.1] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/android-simple-tooltip-0.2.1.aar/ce9acb18b8f19b7a1a4e86c32157f98a/AndroidManifest.xml:7:5-9:41
+MERGED from [com.android.support:design:27.0.2] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/design-27.0.2.aar/eaf11d2edd1fa5ad986bf638fb55d5ee/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:design:27.0.2] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/design-27.0.2.aar/eaf11d2edd1fa5ad986bf638fb55d5ee/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:cardview-v7:27.0.2] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/cardview-v7-27.0.2.aar/2c282ced51d81e0cc0f4d44a7eea939a/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:cardview-v7:27.0.2] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/cardview-v7-27.0.2.aar/2c282ced51d81e0cc0f4d44a7eea939a/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:recyclerview-v7:27.0.2] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/recyclerview-v7-27.0.2.aar/aa7131c32998b88a8b43173f99d421f4/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:recyclerview-v7:27.0.2] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/recyclerview-v7-27.0.2.aar/aa7131c32998b88a8b43173f99d421f4/AndroidManifest.xml:20:5-44
+MERGED from [com.crashlytics.sdk.android:beta:1.2.4] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/beta-1.2.4.aar/880efaba123bab5c8b2913370f7672bb/AndroidManifest.xml:7:5-43
+MERGED from [com.crashlytics.sdk.android:beta:1.2.4] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/beta-1.2.4.aar/880efaba123bab5c8b2913370f7672bb/AndroidManifest.xml:7:5-43
+MERGED from [com.crashlytics.sdk.android:crashlytics-core:2.3.16] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/crashlytics-core-2.3.16.aar/e6b9444fc1dc08999f1f8f31571e92e5/AndroidManifest.xml:50:5-43
+MERGED from [com.crashlytics.sdk.android:crashlytics-core:2.3.16] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/crashlytics-core-2.3.16.aar/e6b9444fc1dc08999f1f8f31571e92e5/AndroidManifest.xml:50:5-43
+MERGED from [com.crashlytics.sdk.android:answers:1.3.12] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/answers-1.3.12.aar/74429d1b81fb7fb42cb2e900356ded7f/AndroidManifest.xml:7:5-43
+MERGED from [com.crashlytics.sdk.android:answers:1.3.12] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/answers-1.3.12.aar/74429d1b81fb7fb42cb2e900356ded7f/AndroidManifest.xml:7:5-43
+MERGED from [io.fabric.sdk.android:fabric:1.3.16] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/fabric-1.3.16.aar/24e241b8b24da3a9f98d70b2eec6769e/AndroidManifest.xml:27:5-43
+MERGED from [io.fabric.sdk.android:fabric:1.3.16] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/fabric-1.3.16.aar/24e241b8b24da3a9f98d70b2eec6769e/AndroidManifest.xml:27:5-43
+MERGED from [com.google.android.gms:play-services-base:11.8.0] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/play-services-base-11.8.0.aar/3cdf7d251db5d47dd28c7e469430f36b/AndroidManifest.xml:20:5-44
+MERGED from [com.google.android.gms:play-services-base:11.8.0] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/play-services-base-11.8.0.aar/3cdf7d251db5d47dd28c7e469430f36b/AndroidManifest.xml:20:5-44
+MERGED from [com.google.android.gms:play-services-tasks:11.8.0] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/play-services-tasks-11.8.0.aar/62361606e7e0a5a5e93d138272e66082/AndroidManifest.xml:5:5-44
+MERGED from [com.google.android.gms:play-services-tasks:11.8.0] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/play-services-tasks-11.8.0.aar/62361606e7e0a5a5e93d138272e66082/AndroidManifest.xml:5:5-44
+MERGED from [com.google.android.gms:play-services-basement:11.8.0] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/play-services-basement-11.8.0.aar/2e248498e6256b7b4f84238538f9bb33/AndroidManifest.xml:20:5-44
+MERGED from [com.google.android.gms:play-services-basement:11.8.0] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/play-services-basement-11.8.0.aar/2e248498e6256b7b4f84238538f9bb33/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-v4:27.0.2] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/support-v4-27.0.2.aar/af937b6e8f0158bff03494f1390addcd/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-v4:27.0.2] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/support-v4-27.0.2.aar/af937b6e8f0158bff03494f1390addcd/AndroidManifest.xml:20:5-44
+MERGED from [com.google.android.gms:play-services-location-license:11.8.0] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/play-services-location-license-11.8.0.aar/53f639717bdca7db7579dfcc177ea060/AndroidManifest.xml:4:5-43
+MERGED from [com.google.android.gms:play-services-location-license:11.8.0] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/play-services-location-license-11.8.0.aar/53f639717bdca7db7579dfcc177ea060/AndroidManifest.xml:4:5-43
+MERGED from [com.android.support:appcompat-v7:27.0.2] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/appcompat-v7-27.0.2.aar/cab19d319faac703b8aeba48ab6da6f0/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:appcompat-v7:27.0.2] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/appcompat-v7-27.0.2.aar/cab19d319faac703b8aeba48ab6da6f0/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:transition:27.0.2] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/transition-27.0.2.aar/127fb7607c29796c70f2c95f61343e6c/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:transition:27.0.2] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/transition-27.0.2.aar/127fb7607c29796c70f2c95f61343e6c/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-fragment:27.0.2] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/support-fragment-27.0.2.aar/9ebb9f6d39f0383cef789a749370ec53/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-fragment:27.0.2] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/support-fragment-27.0.2.aar/9ebb9f6d39f0383cef789a749370ec53/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:animated-vector-drawable:27.0.2] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/animated-vector-drawable-27.0.2.aar/d8cfc2ddc3864393ad1869db396b4501/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:animated-vector-drawable:27.0.2] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/animated-vector-drawable-27.0.2.aar/d8cfc2ddc3864393ad1869db396b4501/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-core-ui:27.0.2] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/support-core-ui-27.0.2.aar/79939a7d8ec10f3500fc642657c652e8/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-core-ui:27.0.2] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/support-core-ui-27.0.2.aar/79939a7d8ec10f3500fc642657c652e8/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-media-compat:27.0.2] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/support-media-compat-27.0.2.aar/9cd96d633cb08513f29278b8ac4cd31d/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-media-compat:27.0.2] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/support-media-compat-27.0.2.aar/9cd96d633cb08513f29278b8ac4cd31d/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-core-utils:27.0.2] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/support-core-utils-27.0.2.aar/fc82021c1ccbe7cef32a3ad3a682af8e/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-core-utils:27.0.2] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/support-core-utils-27.0.2.aar/fc82021c1ccbe7cef32a3ad3a682af8e/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-vector-drawable:27.0.2] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/support-vector-drawable-27.0.2.aar/25845d2ab71ae70d2ce9cf3ab07d2ce8/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-vector-drawable:27.0.2] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/support-vector-drawable-27.0.2.aar/25845d2ab71ae70d2ce9cf3ab07d2ce8/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-compat:27.0.2] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/support-compat-27.0.2.aar/80690f742d14caff75a1af4d92ba1d94/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-compat:27.0.2] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/support-compat-27.0.2.aar/80690f742d14caff75a1af4d92ba1d94/AndroidManifest.xml:20:5-44
+MERGED from [com.google.android.gms:play-services-base-license:11.8.0] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/play-services-base-license-11.8.0.aar/bc0d9fcadcdfc645fdedf448816583ef/AndroidManifest.xml:4:5-43
+MERGED from [com.google.android.gms:play-services-base-license:11.8.0] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/play-services-base-license-11.8.0.aar/bc0d9fcadcdfc645fdedf448816583ef/AndroidManifest.xml:4:5-43
+MERGED from [com.google.android.gms:play-services-basement-license:11.8.0] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/play-services-basement-license-11.8.0.aar/bedd3f5f3e5d572701d7e65b114961a3/AndroidManifest.xml:4:5-43
+MERGED from [com.google.android.gms:play-services-basement-license:11.8.0] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/play-services-basement-license-11.8.0.aar/bedd3f5f3e5d572701d7e65b114961a3/AndroidManifest.xml:4:5-43
+MERGED from [com.google.android.gms:play-services-tasks-license:11.8.0] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/play-services-tasks-license-11.8.0.aar/8347d7147c73681f271939f426bdbe1c/AndroidManifest.xml:4:5-43
+MERGED from [com.google.android.gms:play-services-tasks-license:11.8.0] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/play-services-tasks-license-11.8.0.aar/8347d7147c73681f271939f426bdbe1c/AndroidManifest.xml:4:5-43
+MERGED from [android.arch.lifecycle:runtime:1.0.3] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/runtime-1.0.3.aar/b4337ae13f1546b752ffd89cec3c2ed1/AndroidManifest.xml:20:5-22:41
+MERGED from [android.arch.lifecycle:runtime:1.0.3] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/runtime-1.0.3.aar/b4337ae13f1546b752ffd89cec3c2ed1/AndroidManifest.xml:20:5-22:41
+INJECTED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml
+INJECTED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml
+	android:targetSdkVersion
+		INJECTED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml
+		ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml
+		INJECTED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml
+	android:minSdkVersion
+		INJECTED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml
+		ADDED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml
+		INJECTED from /Volumes/DATA/Cry_Updated_Code/app/src/main/AndroidManifest.xml
+activity#com.google.android.gms.common.api.GoogleApiActivity
+ADDED from [com.google.android.gms:play-services-base:11.8.0] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/play-services-base-11.8.0.aar/3cdf7d251db5d47dd28c7e469430f36b/AndroidManifest.xml:23:9-26:75
+	android:exported
+		ADDED from [com.google.android.gms:play-services-base:11.8.0] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/play-services-base-11.8.0.aar/3cdf7d251db5d47dd28c7e469430f36b/AndroidManifest.xml:25:13-37
+	android:theme
+		ADDED from [com.google.android.gms:play-services-base:11.8.0] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/play-services-base-11.8.0.aar/3cdf7d251db5d47dd28c7e469430f36b/AndroidManifest.xml:26:13-72
+	android:name
+		ADDED from [com.google.android.gms:play-services-base:11.8.0] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/play-services-base-11.8.0.aar/3cdf7d251db5d47dd28c7e469430f36b/AndroidManifest.xml:24:13-79
+meta-data#com.google.android.gms.version
+ADDED from [com.google.android.gms:play-services-basement:11.8.0] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/play-services-basement-11.8.0.aar/2e248498e6256b7b4f84238538f9bb33/AndroidManifest.xml:23:9-25:69
+	android:value
+		ADDED from [com.google.android.gms:play-services-basement:11.8.0] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/play-services-basement-11.8.0.aar/2e248498e6256b7b4f84238538f9bb33/AndroidManifest.xml:25:13-66
+	android:name
+		ADDED from [com.google.android.gms:play-services-basement:11.8.0] /Users/mahiti/.gradle/caches/transforms-1/files-1.1/play-services-basement-11.8.0.aar/2e248498e6256b7b4f84238538f9bb33/AndroidManifest.xml:24:13-58

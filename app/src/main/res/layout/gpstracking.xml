@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="8dp"
+    android:background="#fff9e4">
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/card_view"
+        android:layout_gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        card_view:cardCornerRadius="4dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true">
+        <RelativeLayout
+            android:id="@+id/relativeLayout"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" >
+            <RelativeLayout
+                android:id="@+id/relativeLayoutForRedioButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/block_heading_gps"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="heading"
+                    android:textColor="#53350a"
+                    android:textSize="20sp"
+                    android:visibility="gone"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/heading_gps"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/block_heading_gps"
+                    android:gravity="center"
+                    android:text="sdfsdfsdf"
+                    android:textColor="#000099"
+                    android:visibility="gone"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/gpsQuestion"
+                    style="@style/CodeFont"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/heading_gps"
+                    android:text=""
+                    android:textSize="22sp"
+                    />
+
+                <TextView
+                    android:id="@+id/helpTextView"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/heading_gps"
+                    android:text=""
+                    android:padding="4dp"
+                    android:textColor="@color/black"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+                <TextView
+                    android:id="@+id/errorTextgpsview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/helpTextView"
+                    android:padding="2dp"
+                    android:visibility="gone"
+                    android:textColor="@android:color/holo_red_light"/>
+
+
+            </RelativeLayout>
+            <TableLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:shrinkColumns="*"
+                android:layout_below="@+id/relativeLayoutForRedioButton"
+                android:id="@+id/table1"
+                android:stretchColumns="*">
+
+                <TableRow
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent">
+                    <TextView
+                        android:id="@+id/latitude"
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:layout_span="4"
+                        android:gravity="center_vertical"
+                        android:text="Latitude"
+                        android:paddingRight="10dp"
+                        android:layout_gravity="right"
+                        android:textColor="@android:color/black"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <EditText
+                        android:id="@+id/latitudevalue"
+                        android:layout_width="fill_parent"
+                        android:layout_height="40dp"
+                        android:layout_span="4"
+                        android:gravity="center_vertical"
+                        android:hint="Latitude"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="30dp"
+                        android:background="@drawable/edittext_rounded_corners"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:ems="10"
+                        android:singleLine="true"/>
+
+                </TableRow>
+                <TableRow
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:layout_marginTop="15dp"
+                    android:paddingRight="15dp">
+
+                    <TextView
+                        android:id="@+id/longitude"
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:layout_span="4"
+                        android:gravity="center_vertical"
+                        android:text="Longitude"
+                        android:layout_gravity="right"
+                        android:paddingRight="10dp"
+                        android:textColor="@android:color/black"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <EditText
+                        android:id="@+id/longitudevalue"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:layout_span="4"
+                        android:gravity="center_vertical"
+                        android:hint="Longitude"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="30dp"
+                        android:background="@drawable/edittext_rounded_corners"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:ems="10"
+                        android:singleLine="true" />
+
+
+
+                </TableRow>
+            </TableLayout>
+            <RelativeLayout
+                android:id="@+id/capturelayout"
+                android:layout_width="fill_parent"
+                android:layout_margin="10dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/table1"
+                android:background="#ffffff" >
+                <Button
+                    android:id="@+id/capturelocation"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:background="@drawable/button_click"
+                    android:text="Capture"
+                    android:textColor="#ffffff" />
+                <Button
+                    android:id="@+id/capturelocationfromgoogle"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:background="@drawable/button_click"
+                    android:text="Capture From Google"
+                    android:layout_below="@+id/capturelocation"
+                    android:textColor="#ffffff" />
+
+            </RelativeLayout>
+
+        </RelativeLayout>
+        </android.support.v7.widget.CardView>
+
+</RelativeLayout>

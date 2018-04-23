@@ -1,0 +1,3 @@
+# Referenced at /Volumes/DATA/Cry_Updated_Code/app/build/intermediates/manifests/full/debug/AndroidManifest.xml:28
+-keep class org.mahiti.convenemis.BaseApplication { <init>(...); }
+

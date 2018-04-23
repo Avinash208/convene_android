@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--setting the theme color for App-->
+    <color name="textColor">@color/white</color>
+    <color name="tabBackgroundColor">#1D4517</color>
+<!--    <color name="colorPrimary">#3F51B5</color>-->
+    <color name="colorPrimary">@color/yellow</color>
+    <color name="colorPrimaryDark">#f0f255</color>
+    <color name="orange">#e06216</color>
+    <color name="colorGreen">#089062</color>
+    <color name="tabLabelColor">#3f51b5</color>
+
+
+
+    <!--<color name="colorPrimaryDark">#303F9F</color>-->
+    <color name="colorAccent">#ffd800</color>
+
+    <color name="bluePrimary">#3F51B5</color>
+    <color name="bluePrimaryDark">#303F9F</color>
+    <color name="Accent">#ffd800</color>
+
+
+    <color name="greenPrimary">@color/green</color>
+    <color name="greenPrimaryDark">@color/green</color>
+    <color name="greenAccent">#FF4081</color>
+
+
+    <color name="list_even">#AAAAAA</color>
+    <color name="list_odd">#E1E2E2</color>
+    <color name="list_selected">#455FB6</color>
+    <color name="list_header">#99979C</color>
+
+    <color name="textBackground">#d24645</color>
+
+    <color name="headercolor">#030763</color>
+    <color name="holo_blue">#FF33E5B5</color>
+    <color name="blue">#e00303</color>
+    <color name="Red">#ff4500</color>
+    <color name="yellow">#fed803</color>
+    <color name="TitleColor">#168ed2</color>
+    <color name="white">#FFFFFF</color>
+    <color name="grey">#D7C7AE</color>
+    <color name="black">#000000</color>
+    <color name="darkBlue">#000066</color>
+    <color name="meroon">#b5191f</color>
+    <color name="green">#109c46</color>
+    <color name="cream">#fdf6de</color>
+    <color name="listcolor">#c5cae9</color>
+    <color name="transparent">#99000000</color>
+    <!---charan added below 5 colors for progress bar-->
+    <color name="sa_green">#1E9618</color>
+    <color name="sa_accent">#4EE147</color>
+    <color name="sa_accent_transparent">#D8F3D8</color>
+    <color name="sa_green_dark">#156912</color>
+    <color name="error_text_colour">#806060FF</color>
+    <color name="app_blue">#3f51b5</color>
+
+</resources>

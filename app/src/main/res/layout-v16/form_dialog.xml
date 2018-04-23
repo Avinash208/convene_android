@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
+    <TextView
+        android:id="@+id/assessmentquestion"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:visibility="gone"
+        android:textSize="15dp"/>
+   <ScrollView
+       android:id="@+id/dialogScroll"
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:layout_margin="20dp"
+       android:layout_below="@+id/assessmentquestion"
+       android:layout_above="@+id/dialogfooter"
+       >
+       <LinearLayout
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:orientation="vertical"
+           android:id="@+id/dynamic_mini_grid">
+       </LinearLayout>
+   </ScrollView>
+    <LinearLayout
+        android:id="@+id/dialogfooter"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_alignParentBottom="true"
+        android:weightSum="2">
+        <Button
+            android:id="@+id/saveandcreate"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/saveandcreate"
+            android:layout_weight="1"
+            android:textSize="12dp"
+            android:textColor="#fff" />
+        <Button
+            android:id="@+id/saveandexit"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/save"
+            android:textSize="12dp"
+            android:layout_weight="1"
+            android:textColor="#fff" />
+    </LinearLayout>
+</RelativeLayout>

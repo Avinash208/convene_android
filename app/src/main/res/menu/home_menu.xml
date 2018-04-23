@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <item android:id="@+id/logout"
+        android:title="@string/LOGOUT"
+        android:visible="false"
+        tools:ignore="AppCompatResource" />
+    <item android:id="@+id/contentUpdate"
+        android:title="@string/content_update"
+        android:visible="true"
+        tools:ignore="AppCompatResource" />
+    <item
+        android:id="@+id/changeLanguage"
+        android:visible="false"
+        android:title="@string/choose_language"/>
+</menu>

@@ -1,0 +1,565 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="#fff9e4">
+
+    <include
+        android:id="@+id/toolbar1"
+        layout="@layout/toolbar">
+    </include>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_below="@+id/toolbar1"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
+        android:layout_marginTop="30dp"
+        android:layout_above="@+id/footer">
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="2.7">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <android.support.v7.widget.CardView
+                    android:id="@+id/card_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:padding="8dp"
+                    app:cardBackgroundColor="@color/white"
+                    android:layout_margin="3dp">
+
+                    <LinearLayout
+                        android:id="@+id/QuestionContainer"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_margin="10dp"
+                        android:paddingBottom="10dp">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/baseline"
+                            android:padding="8dp"/>
+
+                        <TextView
+                            android:id="@+id/namelable"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/name_of_the_facility"
+                            android:textSize="16sp"
+                            android:paddingLeft="5dp"
+                            android:paddingRight="5dp"
+
+                            android:layout_marginTop="8dp"/>
+
+                        <TextView
+                            android:id="@+id/errorTextName"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:visibility="gone"
+                            android:textColor="@color/Red"
+                            android:padding="3dp"/>
+
+                        <EditText
+                            android:id="@+id/name"
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:layout_marginTop="8dp"
+                            android:textSize="16sp"
+                            android:background="@drawable/textfieldbg"
+                            android:focusable="true"
+                            android:maxLines="1"
+                            android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890 "
+                            android:textColor="@color/black"
+                            android:hint="@string/name_of_the_facility"
+                            android:paddingLeft="10dp" />
+
+                        <TextView
+                            android:id="@+id/faciltylable"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:text="@string/facility_type"
+                            android:paddingTop="5dp"
+                            android:textSize="16sp"
+                            android:visibility="gone"
+                            android:paddingBottom="5dp"
+                            android:paddingLeft="5dp"
+                            android:paddingRight="5dp"/>
+                        <TextView
+                            android:id="@+id/errorTextFacility"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:visibility="gone"
+                            android:textColor="@color/Red"
+                            android:padding="3dp"/>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:visibility="gone"
+                            android:background="@drawable/textfieldbg"
+                            android:orientation="vertical"
+                            android:gravity="center">
+
+                            <Spinner
+                                android:id="@+id/facilitiesbeneficiarytype"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:paddingLeft="5dp"
+                                android:layout_marginRight="5dp"
+                                android:theme="@style/ThemeOverlay.AppCompat.Light" />
+                        </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/subfaciltylable"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:text="@string/subfacility_type"
+                            android:paddingTop="5dp"
+                            android:textSize="16sp"
+                            android:paddingLeft="5dp"
+                            android:paddingRight="5dp"
+                            android:paddingBottom="5dp"/>
+                        <TextView
+                            android:id="@+id/errorTextSubFacility"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:visibility="gone"
+                            android:textColor="@color/Red"
+                            android:padding="3dp"/>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:gravity="center"
+                            android:background="@drawable/textfieldbg"
+                            android:orientation="vertical">
+
+                            <Spinner
+                                android:id="@+id/facilitiestype"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:paddingLeft="5dp"
+                                android:layout_marginRight="5dp"
+                                android:theme="@style/ThemeOverlay.AppCompat.Light" />
+                        </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/thematiclable"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:textSize="16sp"
+                            android:text="@string/thematic_area"
+                            android:paddingTop="5dp"
+                            android:paddingBottom="5dp"
+                            android:paddingLeft="5dp"
+                            android:paddingRight="5dp"/>
+                        <TextView
+                            android:id="@+id/errorTextThematic"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:visibility="gone"
+                            android:textColor="@color/Red"
+                            android:padding="3dp"/>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:background="@drawable/textfieldbg"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+                            <Spinner
+                                android:id="@+id/facilitiessubtype"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:paddingLeft="5dp"
+                                android:layout_marginRight="5dp"
+                                android:theme="@style/ThemeOverlay.AppCompat.Light" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:background="@drawable/textfieldbg"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:visibility="gone">
+
+                            <Spinner
+                                android:id="@+id/facilitiesarea"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:theme="@style/ThemeOverlay.AppCompat.Light" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/linearservice"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:orientation="vertical">
+                            <TextView
+                                android:id="@+id/serviceLabel"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/services"
+                                android:paddingLeft="8dp"
+                                android:textSize="16sp" />
+
+                            <TextView
+                                android:id="@+id/errorTextService"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:visibility="gone"
+                                android:textColor="@color/Red"
+                                android:padding="3dp"/>
+
+
+                            <LinearLayout
+                                android:id="@+id/dynamiclayoutCheckBox"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+                            </LinearLayout>
+                        </LinearLayout>
+                    </LinearLayout>
+                </android.support.v7.widget.CardView>
+
+                <android.support.v7.widget.CardView
+                    android:id="@+id/card_viewadrress"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:padding="8dp"
+                    app:cardBackgroundColor="@color/white"
+                    android:layout_margin="3dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:orientation="vertical">
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/primary_address"
+                            android:visibility="visible"
+                            android:textSize="18sp" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:text="@string/boundary"
+                            android:visibility="gone"
+                            android:textSize="18sp" />
+
+                        <TextView
+                            android:id="@+id/stateLabel"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:text="@string/boundary_name"
+                            android:textSize="16sp"
+                            android:paddingTop="5dp"
+                            android:paddingBottom="5dp"
+                            android:paddingLeft="5dp"
+                            android:paddingRight="5dp"/>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:background="@drawable/textfieldbg"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+                            <Spinner
+                                android:id="@+id/spFacilityState"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:paddingLeft="5dp"
+                                android:layout_marginRight="5dp"
+                                android:theme="@style/ThemeOverlay.AppCompat.Light" />
+                        </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/locationLevelLabel"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:text="@string/location_type"
+                            android:paddingTop="5dp"
+                            android:textSize="16sp"
+                            android:paddingBottom="5dp"
+                            android:paddingLeft="5dp"
+                            android:paddingRight="5dp"/>
+
+                        <TextView
+                            android:id="@+id/errorTextLocationtype"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:visibility="gone"
+                            android:textColor="@color/Red"
+                            android:padding="3dp"/>
+
+                        <LinearLayout
+                            android:id="@+id/LocationLinear"
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:background="@drawable/textfieldbg"
+                            android:gravity="center"
+                            android:visibility="visible"
+                            android:orientation="vertical">
+
+                            <Spinner
+                                android:id="@+id/spLocationLevel"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/black"
+                                android:theme="@style/ThemeOverlay.AppCompat.Light" />
+                        </LinearLayout>
+                        <TextView
+                            android:id="@+id/districtLabel"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:text="@string/location"
+                            android:textSize="16sp"
+                            android:visibility="visible"
+                            android:paddingTop="5dp"
+                            android:paddingBottom="5dp"
+                            android:paddingLeft="5dp"
+                            android:paddingRight="5dp"/>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:layout_marginTop="10dp"
+                            android:background="@drawable/textfieldbg"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+                            <Spinner
+                                android:id="@+id/spFacilityDistricts"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:paddingLeft="5dp"
+                                android:visibility="gone"
+                                android:layout_marginRight="5dp"
+                                android:textColor="@color/black"
+                                android:theme="@style/ThemeOverlay.AppCompat.Light" />
+
+                            <org.mahiti.convenemis.utils.multispinner.SpinnerClusterSearch
+                                android:id="@+id/searchSingleSpinner"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:visibility="visible"
+                                app:hintText="Select Location"
+                                />
+                        </LinearLayout>
+
+
+                        <TextView
+                            android:id="@+id/addressLabel1"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:text="@string/line_one"
+                            android:textSize="16sp"
+                            android:paddingTop="5dp"
+                            android:paddingBottom="5dp"
+                            android:paddingLeft="5dp"
+                            android:paddingRight="5dp"/>
+
+                        <TextView
+                            android:id="@+id/errorTextAddress1"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:visibility="gone"
+                            android:textColor="@color/Red"
+                            android:padding="3dp"/>
+
+
+                        <EditText
+                            android:id="@+id/address1"
+                            android:layout_width="match_parent"
+                            android:layout_height="80dp"
+                            android:background="@drawable/textfieldbg"
+                            android:focusable="true"
+                            android:gravity="top"
+                            android:maxLines="3"
+                            android:textSize="16sp"
+                            android:padding="10dp"
+                            android:textColor="@color/black"
+                            android:hint="@string/line_one"
+                            />
+
+                        <TextView
+                            android:id="@+id/addressLabel2"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:text="@string/line_two"
+                            android:paddingTop="5dp"
+                            android:textSize="16sp"
+                            android:paddingBottom="5dp"
+                            android:paddingLeft="5dp"
+                            android:paddingRight="5dp"/>
+
+                        <TextView
+                            android:id="@+id/errorTextAddress2"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:visibility="gone"
+                            android:textColor="@color/Red"
+                            android:padding="3dp"/>
+
+                        <EditText
+                            android:id="@+id/address2"
+                            android:layout_width="match_parent"
+                            android:layout_height="80dp"
+                            android:background="@drawable/textfieldbg"
+                            android:focusable="true"
+                            android:maxLines="3"
+                            android:textSize="16sp"
+                            android:gravity="top"
+                            android:padding="10dp"
+                            android:textColor="@color/black"
+                            android:hint="@string/line_two"
+                            />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:layout_marginTop="20dp"
+                            android:background="@drawable/textfieldbg"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:visibility="gone">
+
+                            <Spinner
+                                android:id="@+id/locationlevel"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:paddingLeft="5dp"
+                                android:layout_marginRight="5dp"
+                                android:theme="@style/ThemeOverlay.AppCompat.Light" />
+                        </LinearLayout>
+                        <TextView
+                            android:id="@+id/pincodeLabel"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:text="@string/pincode"
+                            android:paddingTop="5dp"
+                            android:textSize="16sp"
+                            android:paddingBottom="5dp"
+                            android:paddingLeft="5dp"
+                            android:paddingRight="5dp"/>
+
+                        <TextView
+                            android:id="@+id/errorTextPincode"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:visibility="gone"
+                            android:textColor="@color/Red"
+                            android:padding="3dp"/>
+
+                        <EditText
+                            android:id="@+id/pincodenumber"
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:textColor="@color/black"
+                            android:background="@drawable/textfieldbg"
+                            android:focusable="true"
+                            android:maxLength="6"
+                            android:maxLines="1"
+                            android:textSize="16sp"
+                            android:singleLine="true"
+                            android:inputType="number"
+                            android:hint="@string/enter_pincode_number"
+                            android:paddingLeft="10dp" />
+                        <TextView
+                            android:id="@+id/contactLabel"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:text="@string/contact_number"
+                            android:paddingTop="5dp"
+                            android:visibility="gone"
+                            android:textSize="16sp"
+                            android:paddingBottom="5dp"
+                            android:paddingLeft="5dp"
+                            android:paddingRight="5dp"/>
+                        <TextView
+                            android:id="@+id/errorTextContact"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:visibility="gone"
+                            android:textColor="@color/Red"
+                            android:padding="3dp"/>
+
+                        <EditText
+                            android:id="@+id/contactnumber"
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:background="@drawable/textfieldbg"
+                            android:focusable="true"
+                            android:inputType="number"
+                            android:maxLines="1"
+                            android:maxLength="10"
+                            android:textSize="16sp"
+                            android:hint="@string/enter_contact_person_number"
+                            android:paddingLeft="10dp"
+                            android:visibility="gone" />
+
+                    </LinearLayout>
+
+
+
+                </android.support.v7.widget.CardView>
+
+            </LinearLayout>
+
+
+
+        </ScrollView>
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/footer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="20dp"
+        android:gravity="right"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/cancelFAC"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/cancel"
+            android:textColor="#FFF" />
+
+        <Button
+            android:id="@+id/btnFacilitySave"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#fff"
+            />
+
+    </LinearLayout>
+
+</RelativeLayout>

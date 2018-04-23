@@ -1,0 +1,409 @@
+<resources>
+
+
+    <!--App and urls String Labels-->
+    <string name="app_name">Convene 2.0</string>
+    <string name="application_name">AKRSPI</string>
+    <string name="labelusername">Username</string>
+    <string name="English">English</string>
+    <string name="Kannada">Kannada</string>
+    <string name="SelectLanguage">Select Language</string>
+    <string name="details">Enter login details</string>
+    <string name="language">Select Language</string>
+    <string name="passHint">Enter Password</string>
+    <string name="password_hint">Enter Password</string>
+    <string name="user_hint">Enter User Name</string>
+    <string name="labelpassword">Password</string>
+    <string name="CLEAR">Clear login</string>
+    <!--Server URL-->
+    <!--<string name="main_url">http://crydemo.mahiti.org/api/</string>-->
+    <!--<string name="answer_upload_url">http://crydemo.mahiti.org/api/add-survey-answers/</string>-->
+    <!--<string name="main_Url">http://crydemo.mahiti.org/</string>-->
+    <!--<string name="main_url_Beneficiary">http://crydemo.mahiti.org/</string>-->
+    <!--<string name="regionalLanguageURLS">http://crydemo.mahiti.org/api/language-list/</string>-->
+
+
+    <!--Demo url-->
+    <string name="main_url">http://convenebackend.mahiti.org/api/</string>
+    <string name="answer_upload_url">http://convenebackend.mahiti.org/api/add-survey-answers/</string>
+    <string name="main_Url">http://convenebackend.mahiti.org/</string>
+    <string name="main_url_Beneficiary">http://convenebackend.mahiti.org/</string>
+    <string name="regionalLanguageURLS">http://convenebackend.mahiti.org/api/language-list/</string>
+
+
+    <string name="loadmore_facility">Loading more Facility please wait&#8230;</string>
+    <string name="loadmore_beneficiary">Loading more Beneficiary please wait&#8230;</string>
+    <!--Urls string labels-->
+    <string name="mahitiURL">http://www.mahiti.org/</string>
+    <string name="captureTabInfoUrl">"capture-tab-info/"</string>
+    <string name="schemas_url">http://akrspistaging.mahiti.org/api/schemecriterias/</string>
+
+
+    <!--Alert,Toasts and Progress Dialog  string labels -->
+
+    <string name="checkNet">Please check internet connection</string>
+    <string name="surveyListProgress">Loading survey data</string>
+    <string name="levelsProgress">Loading master data</string>
+    <string name="progressMaster">Please wait loading master data</string>
+    <string name="loadingUpdateTableData">Loading updated tables data</string>
+    <string name="of">of</string>
+    <string name="enableGps">Gps is not enabled</string>
+    <string name="gpsAlert">Please enable the gps</string>
+    <string name="ok">Ok</string>
+    <string name="cancel">Cancel</string>
+    <string name="loading">Loading</string>
+    <string name="exitSurvey">Are you sure,you wanted to exit from response collection ?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="deleteSurvey">This form will not be saved</string>
+    <string name="proceed">Proceed</string>
+    <string name="pressToExit">Press once again to exit!</string>
+    <string name="mandatoryQuestion">Mandatory question</string>
+    <string name="updateSuccess">Updated successfully</string>
+    <string name="somethingWentWrong">Something went wrong</string>
+    <string name="agpsSelected">"Agps selected"</string>
+    <string name="gpsSelected">"Gps selected"</string>
+    <string name="agps">"Agps"</string>
+    <string name="syncingPendingData">Syncing pending data</string>
+    <string name="noPendingRecordsToSync">There is no pending records to sync</string>
+
+    <!--Login String labels-->
+    <string name="nameHint">Enter username</string>
+    <string name="passwordHint">Enter password</string>
+    <string name="validationMsg">Invalid username and password</string>
+    <string name="login">Login</string>
+
+    <!--Survey Selection String labels-->
+    <string name="loginUrlKey">urlLogin</string>
+    <string name="appLogin">app-login/</string>
+
+
+    <!--Summery report String labels-->
+    <!--SurveyQuestionActivity labels-->
+    <!--AutoSyncActivity String Labels-->
+
+    <string name="que_title">20dp</string>
+    <string name="videoText">Edit images,videos *</string>
+    <string name="SURVEY_STATUS">Survey completed successfully</string>
+
+    <string name="tittle_small">10sp</string>
+    <string name="question_small">9sp</string>
+    <string name="answer_small">8sp</string>
+
+    <string name="tittle_medium">15sp</string>
+    <string name="question_medium">12sp</string>
+    <string name="answer_medium">10sp</string>
+
+    <string name="tittle_large">20sp</string>
+    <string name="question_large">15sp</string>
+    <string name="answer_large">12sp</string>
+    <string name="SETTING">Select Font Size</string>
+    <string name="SUBMIT">Submit</string>
+    <string name="NEXT">Next</string>
+
+    <string name="file_upload">File Upload</string>
+    <string name="question">Question</string>
+    <string name="file_saved">File Saved</string>
+    <string name="pick_date">Pick Date</string>
+
+    <string name="LOGOUT">Logout</string>
+    <string name="header">heading</string>
+    <string name="sync">Sync</string>
+    <string name="star"><b><font fgcolor="red">*</font></b></string>
+
+    <!-- For multiple languages support need to configure the strings
+-->
+
+    <string name="created">Created</string>
+    <string name="logout">Logout</string>
+    <string name="completed">Completed</string>
+    <string name="total">Total</string>
+    <string name="pending">Pending</string>
+    <string name="synchronised">Synchronised</string>
+    <string name="syncData">Sync data</string>
+    <string name="testServer">Test server connection</string>
+    <string name="locationModes">Location selection mode</string>
+    <string name="buildMahiti">Built by Mahiti</string>
+    <string name="continueButton">Continue</string>
+    <string name="previous">Previous</string>
+    <string name="next">Next</string>
+    <string name="submit">Submit</string>
+    <string name="completeSurvey">Survey completed</string>
+    <string name="noRecords">No records to display</string>
+    <string name="select">Select</string>
+    <string name="chooseFont">select font size</string>
+    <string name="small">Small</string>
+    <string name="medium">Medium</string>
+    <string name="large">Large</string>
+    <string name="changeTheme">Change theme</string>
+    <string name="title_activity_base">BaseActivity</string>
+    <string name="updatedatabase">Update Database</string>
+    <string name="create_new">Create new +</string>
+
+    <string name="enter_name">Name</string>
+    <string name="address1">Address1</string>
+    <string name="address2">Address2</string>
+    <string name="enter_age">Age</string>
+    <string name="enter_contact_number">Contact number</string>
+    <string name="enter_pincode">Pincode</string>
+    <string name="state">State</string>
+    <string name="district">District</string>
+    <string name="taluk">Taluk</string>
+    <string name="gramapanchayath">Gramapanchayath</string>
+    <string name="village">Village</string>
+    <string name="beneficiary">Beneficiary</string>
+    <string name="institution">Institution</string>
+    <string name="survey_form">Survey Form</string>
+    <string name="data_collection_form">Pending data collection forms</string>
+    <string name="issues_management">Issues Management</string>
+    <string name="meeting">Meetings</string>
+    <string name="addinstitution">Add Institution</string>
+    <string name="modules">Modules</string>
+    <string name="back">Back</string>
+    <string name="meetingheldon">Meeting held on </string>
+    <string name="meetingheldby">Meeting held by </string>
+    <string name="close">Close</string>
+    <string name="agenda">Agenda</string>
+    <string name="agendaofmeeting">Enter agenda of the meeting...</string>
+    <string name="createnew">New +</string>
+    <string name="moduleslist">Meetings</string>
+
+    <string name="anyissues">Any Issues</string>
+    <string name="meetingmodules">Meeting Module</string>
+    <string name="locationlevel">Location level</string>
+    <string name="levelofprocessing">Level of process</string>
+    <string name="venue">Venue</string>
+    <string name="participatingGroup">Participating group</string>
+    <string name="participatingSubGroup">Participation Sub Groups</string>
+    <string name="sdmcmembers">SDMC Members</string>
+    <string name="teacher">Teachers</string>
+    <string name="children">Children</string>
+    <string name="issues">Issues</string>
+
+
+    <string name="mandatory_star"><font color='#ff4500'>*</font></string>
+
+    <string name="opened_issue">OPENED</string>
+    <string name="closed_issue">CLOSED</string>
+    <string name="status">Status</string>
+    <string name="remarks">Remarks</string>
+    <string name="created_on">Created On - </string>
+    <string name="cost">Cost :</string>
+    <string name="location_level">Location level</string>
+    <string name="issue_type">Issue type</string>
+
+    <string-array name="issues_tab_names">
+
+        <item>"Opened"</item>
+        <item>"Closed"</item>
+        <!-- <item>@string/reminder</item>-->
+    </string-array>
+    <string name="child_enrollment_attendance"><![CDATA[Child Enrollment & Attendance]]></string>
+    <string name="category">Category</string>
+    <string name="sub_category">Sub category</string>
+    <string name="requirement">Requirement</string>
+    <string name="responsible_person">Responsible person</string>
+    <string name="is_financial_issue">Is Financial issue ?</string>
+    <string name="total_cost">Total cost</string>
+    <string name="select_date">Select date</string>
+    <string name="add_issue">Add Issue +</string>
+    <string name="save">Save</string>
+    <string name="designation">Designation</string>
+    <string name="date_of_completion">Date of completion</string>
+    <string name="enter_money">Enter money</string>
+    <string name="enter_person_name">Enter name</string>
+    <string name="add_issues">Add Issue</string>
+
+    <string name="Participatingmembers">Participating members</string>
+
+    <string name="saveandsubmit"><![CDATA[Save & submit]]></string>
+    <string name="saveandissue"><![CDATA[Save & Add issue]]></string>
+    <string name="saveandcreate"><![CDATA[save & Create New]]></string>
+    <string name="contact_person">Contact person</string>
+    <string name="contact_number">Contact person mobile number</string>
+    <string name="next_meeting_date">Date of followup meeting</string>
+    <string name="dateofmeeting">Date of meeting</string>
+
+    <string name="type_to_search">Type to search</string>
+    <string name="selectsublocation">Select sub location</string>
+    <string name="selectbeneficiary">Select beneficiary</string>
+    <string name="contact_person_name">Contact person name</string>
+    <string name="contact_person_number">Contact person number</string>
+    <string name="Institution_Type">Institute Type</string>
+    <string name="facingissue">Facing Issue</string>
+    <string name="OFFLINE">Offline records</string>
+    <string name="choose_language">Choose Language</string>
+    <string name="Hindi">Hindi</string>
+    <string name="male">Male</string>
+    <string name="female">Female</string>
+    <string name="viewIssues">"View Issues"</string>
+    <string name="addIssues">"Add Issues"</string>
+    <string name="select_school_type">Select schooltype</string>
+    <string name="enter_venue">Enter venue</string>
+    <string name="enter_contact_person_name">Enter contact person name</string>
+    <string name="enter_contact_person_number">Enter contact person number</string>
+    <string name="enter_meeting_date">Enter meeting date</string>
+    <string name="Issues">Issues</string>
+    <string name="mother_enter_name">Mother name</string>
+    <string name="father_enter_name">Father name</string>
+    <string name="gender">Gender</string>
+    <string name="caste">Caste</string>
+    <string name="classs">Class</string>
+    <string name="Intervention">Intervention</string>
+    <string name="Date_of_identification">Date of identification</string>
+    <string name="child_disablity">child disablity</string>
+    <string name="Impairment">Impairment</string>
+    <string name="selectBeneficiary">Select Beneficiary</string>
+    <string name="facilitiesName">Facility</string>
+    <string name="beneficiary_title">Beneficiary details</string>
+    <string name="facility_title">Facility details</string>
+    <string name="service_title">Service details</string>
+    <string name="household">Household</string>
+    <string name="mother_title">Mother</string>
+    <string name="child_title">Child</string>
+    <string name="partner">Partner</string>
+    <string name="house_hold">Household</string>
+    <string name="mother">Mother</string>
+    <string name="mother_name">Mother name</string>
+    <string name="name">Name</string>
+    <string name="age">Age</string>
+    <string name="boundary">Boundary</string>
+    <string name="Hamlet">Hamlet</string>
+    <string name="pincode">Pincode</string>
+    <string name="facility_type">Facility type</string>
+    <string name="subfacility_type">Subfacility type</string>
+    <string name="thematic_area">Thematic area</string>
+    <string name="location_type">Location type</string>
+    <string name="services">Services</string>
+    <string name="father_name">Father name</string>
+    <string name="guardian_name">Guardian name</string>
+    <string name="guardian">Guardian</string>
+    <string name="parents">Parents</string>
+    <string name="select_guardian">Select Guardian</string>
+    <string name="location">Location</string>
+    <string name="beneficiaries_are_empty">Beneficiaries are empty</string>
+    <string name="name_location"><![CDATA[Name & Location]]></string>
+    <string name="add_more">Add More</string>
+    <string name="remove">Remove</string>
+    <string name="check_empty_facility">Facilities are empty</string>
+    <string name="check_empty_beneficiary">Beneficiaries are empty</string>
+    <string name="pending_label">Pending beneficiary</string>
+    <string name="pending_facility_label">Pending facility</string>
+    <string name="completed_facility_label">Completed facility</string>
+    <string name="loading_regional_langauge">Loading regional language...</string>
+    <string name="loading_options">Loading options...</string>
+    <string name="loading_skip_rules">Loading skip rules ...</string>
+    <string name="loading_skip_mandatory">Loading skip mandatory...</string>
+    <string name="loading_language_assessment">Loading mandatory...</string>
+    <string name="loading_assessment">Loading language assessement...</string>
+    <string name="loading_question">Loading question...</string>
+    <string name="loading_langauge_block">Loading languageblock...</string>
+    <string name="loading_block">Loading block...</string>
+    <string name="loading_service">Loading service...</string>
+    <string name="loading_facility">Loading facilities...</string>
+    <string name="loading_location">Loading Location...</string>
+    <string name="location_location_level">Loading location level...</string>
+    <string name="loading_beneficiary">Loading beneficiary level...</string>
+    <string name="loading_level6">Loading level 6...</string>
+    <string name="loading_level5">Loading level 5...</string>
+    <string name="loading_level4">Loading level 4...</string>
+    <string name="loading_level3">Loading level 3...</string>
+    <string name="loading_level2">Loading level 2...</string>
+    <string name="loading_level1">Loading level 1...</string>
+    <string name="completed_beneficiary">Completed beneficiary</string>
+    <string name="please_select_district">Please select district</string>
+    <string name="please_select_state">Please select state</string>
+    <string name="please_select_gender">Please select gender</string>
+    <string name="please_select_guardian">Please enter guardian name</string>
+    <string name="please_enter_father_name">Please enter father name</string>
+    <string name="please_enter_valid_age">Please enter valid age</string>
+    <string name="please_enter_age">Please enter age</string>
+    <string name="please_enter_name">Please enter name</string>
+    <string name="please_select_household">Please select household</string>
+    <string name="please_enter_address1">Please enter line 1</string>
+    <string name="please_enter_address2">Please enter line 2</string>
+    <string name="please_enter_6_digit_pincode">Please enter 6 digit pincode</string>
+    <string name="please_select_hamlet">Please select Hamlet</string>
+    <string name="please_add_mothers">Please add mothers</string>
+    <string name="please_select_taluk">Please select taluk</string>
+    <string name="please_select_grampanchayat">Please select gramapanchayat</string>
+    <string name="please_select_village">Please select village</string>
+    <string name="please_enter_10_digit_mobile_number">Please enter 10 digit mobile number</string>
+    <string name="select_subtype">Select sub type</string>
+    <string name="select_thematic_type">Select thematic type</string>
+    <string name="please_select_location_type">Please select location type</string>
+    <string name="please_select_location_level">Please select location level</string>
+    <string name="please_select_location">Please select location</string>
+    <string name="please_select_atleast_one_service">Select at least one service</string>
+    <string name="please_enter_pincode">Please enter the  pincode</string>
+    <string name="secondary_address">Secondary Address</string>
+    <string name="databasepath">/data/data/%s/databases/</string>
+    <string name="loading_survey">Loading survey...</string>
+    <string name="datepicker">Date Picker</string>
+    <string name="mandatoryfield">Mandatory field</string>
+    <string name="filesaved">File Saved</string>
+    <string name="updating_beneficiary">Updating beneficiary</string>
+    <string name="PREVIEW">PREVIEW</string>
+    <string name="closed">CLOSED</string>
+    <string name="all_data_collected">All data has been collected</string>
+    <string name="Home">Home</string>
+    <string name="recently_completed_data_collection_forms">Recently Completed data collection forms</string>
+    <string name="no_records_has_been_collected">No responses are available</string>
+    <string name="Edit">Edit</string>
+    <string name="data_collection_not_availabe">Data collection form not available</string>
+    <string name="no_completd_records_available">No completed records available</string>
+    <string name="content_update">Content update</string>
+    <string name="sort_by">Sort by</string>
+    <string name="please_enter_valid_mobile_number">Please enter valid mobile number</string>
+    <string name="city">City</string>
+    <string name="area">Area</string>
+    <string name="ward">Ward</string>
+    <string name="mohallam">Mohalla / Slum</string>
+    <string name="LocationType">Location type</string>
+    <string name="personal_information">Personal Information</string>
+    <string name="primary_details">Primary Details</string>
+    <string name="updateaddress">Update Address</string>
+    <string name="updateBasic">Update</string>
+    <string name="update">Update</string>
+    <string name="Editbeneficiary">Edit</string>
+    <string name="Location">Location</string>
+    <string name="edit">Edit</string>
+    <string name="title_activity_data_collection_listing">DataCollectionListingActivity</string>
+    <string name="title_activity_choose_beneficiary">ChooseBeneficiaryActivity</string>
+    <string name="completed_data_collection_forms">Completed Data collection form</string>
+    <string name="offline"><font color='#ff4500'>Offline</font></string>
+    <string name="data_collection_forms">Data collection forms</string>
+    <string name="previous_response">Previous response</string>
+    <string name="please_enter_age_between_0_to_18">Please enter the age between 0 and 18</string>
+
+    <string name="baseline">Baseline</string>
+
+    <string name="hint_enter_name">Enter Name</string>
+    <string name="primary_address">Primary Address</string>
+
+    <string name="enter_pincode_number">Enter Pincode Number</string>
+    <string name="boundary_name">Boundary</string>
+    <string name="facility_loading">Loading facility level...</string>
+    <string name="loading_thematic">Loading thematic area ....</string>
+    <string name="please_add_household">Please add household</string>
+    <string name="change_language">Change Language</string>
+    <string name="alert_message">No Questions are available for the selected language. </string>
+    <string name="line_one">Line 1</string>
+    <string name="line_two">Line 2</string>
+    <string name="name_of_the_facility">Name of the facility</string>
+    <string name="enter_name_of_the_facility">Enter name of the facility</string>
+    <string name="continue_text">Continue</string>
+    <string name="address_details">ADDRESS DETAILS</string>
+    <string name="do_you_know_date_of_birth">Do you know Date of birth ?</string>
+    <string name="please_choose">Please choose</string>
+    <string name="please_select_address_proof">Please select address proof</string>
+    <string name="alias_name">Alias Name</string>
+    <string name="age_in_years_and_months">Age in years and months</string>
+    <string name="is_add_valid">Is Address valid ?</string>
+    <string name="previous_survey">Since previous survey is pending this survey will be add to previous periodicity</string>
+    <string name="previous_pending_note">Note: previous response pending</string>
+    <string name="edit_or_view">EDIT/VIEW</string>
+    <string name="selected_language_str">Selected language:</string>
+    <string name="proofs">Proofs</string>
+
+</resources>

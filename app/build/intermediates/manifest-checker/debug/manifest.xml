@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="org.mahiti.convenemis"
+    android:versionCode="4"
+    android:versionName="1.5.4" >
+
+    <uses-sdk
+        android:minSdkVersion="19"
+        android:targetSdkVersion="27" />
+
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
+
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.GET_TASKS" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />
+
+    <application
+        android:name="org.mahiti.convenemis.BaseApplication"
+        android:allowBackup="false"
+        android:debuggable="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:testOnly="true"
+        android:theme="@style/AppTheme" >
+        <activity
+            android:name="org.mahiti.convenemis.Splash"
+            android:allowBackup="true"
+            android:configChanges="orientation"
+            android:largeHeap="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.NoActionBar" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="org.mahiti.convenemis.LoginActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="org.mahiti.convenemis.LoginParentActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="org.mahiti.convenemis.SurveyQuestionActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyBjrTmIgrILwsJZ4gtg8JnT-U9uzyjGH8Y" />
+
+        <activity
+            android:name="org.mahiti.convenemis.SurveyListLevels"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="org.mahiti.convenemis.LevelsActivityNew"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="org.mahiti.convenemis.UpdateMasterLoading"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait" />
+
+        <service android:name="org.mahiti.convenemis.MyIntentService" >
+            <intent-filter>
+                <action android:name="Survey" />
+            </intent-filter>
+        </service>
+        <service android:name="org.mahiti.convenemis.network.LangService" >
+            <intent-filter>
+                <action android:name="LangService" />
+            </intent-filter>
+        </service>
+        <service
+            android:name="org.mahiti.convenemis.MyIntentPeriodicity"
+            android:enabled="true"
+            android:exported="false" >
+            <intent-filter>
+                <action android:name="PeriodicIntentReceiver" />
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+        </service>
+        <service
+            android:name="org.mahiti.convenemis.MyIntentServiceBeneficiary"
+            android:enabled="true"
+            android:exported="false" >
+            <intent-filter>
+                <action android:name="BeneficiaryIntentReceiver" />
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+        </service>
+        <service
+            android:name="org.mahiti.convenemis.IntentServiceBeneficiaryUpdate"
+            android:enabled="true"
+            android:exported="false" >
+            <intent-filter>
+                <action android:name="BeneficiaryUpdateIntentReceiver" />
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+        </service>
+        <service
+            android:name="org.mahiti.convenemis.MyIntentServiceFacility"
+            android:enabled="true"
+            android:exported="false" >
+            <intent-filter>
+                <action android:name="FacilityIntentReceiver" />
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+        </service>
+
+        <receiver android:name="org.mahiti.convenemis.receivers.BatteryChangereciever" >
+            <intent-filter>
+                <action android:name="android.intent.action.BATTERY_CHANGED" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name="org.mahiti.convenemis.receivers.PowerConnectionReceiver" >
+            <intent-filter>
+                <action android:name="android.intent.action.ACTION_POWER_CONNECTED" />
+                <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED" />
+            </intent-filter>
+        </receiver>
+
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="02925ef542d587b0d078678a1e73a90a8291f618" />
+
+        <receiver
+            android:name="org.mahiti.convenemis.AlarmService"
+            android:process=":remote" />
+        <receiver
+            android:name="org.mahiti.convenemis.receivers.ConnectivityReceiver"
+            android:enabled="true" >
+            <intent-filter>
+                <action android:name="android.net.wifi.WIFI_STATE_CHANGED" />
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+        </receiver>
+
+        <activity
+            android:name="org.mahiti.convenemis.HomeActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name="org.mahiti.convenemis.HomeActivityNew"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name="org.mahiti.convenemis.ListingActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden" />
+        <activity
+            android:name="org.mahiti.convenemis.TypeDetailsActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name="org.mahiti.convenemis.AddBeneficiaryActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="org.mahiti.convenemis.AddFacilityActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name="org.mahiti.convenemis.ShowSurveyPreview" />
+        <activity
+            android:name="org.mahiti.convenemis.DataCollectionListingActivity"
+            android:label="@string/title_activity_data_collection_listing"
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="stateAlwaysHidden" />
+        <activity android:name="org.mahiti.convenemis.FilterActivityActivity" />
+        <activity
+            android:name="org.mahiti.convenemis.SurveySummaryReport"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.google.android.gms.common.api.GoogleApiActivity"
+            android:exported="false"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
+        <provider
+            android:name="com.android.tools.ir.server.InstantRunContentProvider"
+            android:authorities="org.mahiti.convenemis.com.android.tools.ir.server.InstantRunContentProvider"
+            android:multiprocess="true" />
+    </application>
+
+</manifest>

@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/activity_vertical_margin"
+    android:background="#fff9e4">
+    <android.support.v7.widget.CardView
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/card_view"
+        android:layout_gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:elevation="5dp"
+        card_view:cardCornerRadius="3dp">
+        <RelativeLayout
+            android:id="@+id/relativeLayout"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" >
+            <RelativeLayout
+                android:id="@+id/relativeLayoutForRecord"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="15dp"
+                android:gravity="center" >
+                <TextView
+                    android:id="@+id/mainQuestion"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/question"
+                    android:padding="4dp"
+                    android:textSize="15dp"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    android:layout_marginBottom="5dp"
+                    android:layout_below="@+id/helpTextViewRecord"/>
+
+                <TextView
+                    android:id="@+id/errorTextFileview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/mainQuestion"
+                    android:padding="2dp"
+                    android:visibility="gone"
+                    android:textColor="@android:color/holo_red_light"/>
+
+                <ImageView
+                    android:id="@+id/imageUploadfile"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_centerHorizontal="true"
+                    android:visibility="gone"
+                    android:background="@drawable/fileupload"
+                    android:layout_below="@+id/errorTextFileview"/>
+                <TextView
+                    android:id="@+id/filepath"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:layout_centerHorizontal="true"
+                    android:textSize="15dp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="5dp"
+                    android:layout_below="@+id/imageUploadfile"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/actions"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:layout_below="@+id/relativeLayoutForRecord"
+                android:background="#ffffff" >
+
+                <Button
+                    android:id="@+id/fileUpload"
+                    android:layout_width="150dp"
+                    android:layout_height="60dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginLeft="10dp"
+                    android:visibility="visible"
+                    android:text="@string/file_upload"
+                    />
+                <TextView
+                    android:id="@+id/pathoffile"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginLeft="10dp"
+                    android:gravity="center"
+                    android:textSize="18sp"
+                    android:layout_gravity="center"
+                    android:text="@string/file_saved"
+                    android:visibility="gone"
+                    android:textStyle="bold"
+                    />
+
+
+            </RelativeLayout>
+        </RelativeLayout>
+        </android.support.v7.widget.CardView>
+
+</RelativeLayout>

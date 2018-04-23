@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="activity_horizontal_margin">64dp</dimen>
+    <dimen name="continue_button_width">150dp</dimen>
+    <dimen name="continue_button_height">60dp</dimen>
+    <dimen name="continue_button_textsize">18sp</dimen>
+    <dimen name="levels_textsize">18sp</dimen>
+    <dimen name="level_edittext_width">38dp</dimen>
+    <dimen name="question_textsize">15sp</dimen>
+    <dimen name="create_button_height">55dp</dimen>
+    <dimen name="rowitem_textsize">16sp</dimen>
+    <dimen name="buttonWidth">120dp</dimen>
+    <dimen name="buttonHeight">50dp</dimen>
+    <dimen name="listitem_textsize">14sp</dimen>
+    <dimen name="app_twelve_sp">12sp</dimen>
+</resources>
