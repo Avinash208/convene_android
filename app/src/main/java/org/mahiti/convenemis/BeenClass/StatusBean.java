@@ -5,7 +5,7 @@ package org.mahiti.convenemis.BeenClass;
  */
 public class StatusBean {
     private String typologyCode;
-    private int surveyId;
+    private String surveyId;
     private String caseId="";
     private String language = "";
     private String name = "";
@@ -16,7 +16,7 @@ public class StatusBean {
     public  StatusBean(){
 
     }
-    public StatusBean(String CaseId, String lang, String tCode, int sId, String clusterCode) {
+    public StatusBean(String CaseId, String lang, String tCode, String sId, String clusterCode) {
         this.caseId=CaseId;
         this.language = lang;
         this.typologyCode=tCode;
@@ -37,7 +37,7 @@ public class StatusBean {
         this.clusterName = clusterName;
     }
 
-    public StatusBean(String clusterName, String date, String surveyStatus, String section2, String language1, String typoCode, int pendSurveyId) {
+    public StatusBean(String clusterName, String date, String surveyStatus, String section2, String language1, String typoCode, String pendSurveyId) {
         this.clusterName=clusterName;
         this.date=date;
         String surveyStatus1 = surveyStatus;
@@ -94,11 +94,11 @@ public class StatusBean {
         return typologyCode;
     }
 
-    public int getSurveyId() {
+    public String  getSurveyId() {
         return surveyId;
     }
 
-    public void setSurveyId(int surveyId) {
+    public void setSurveyId(String surveyId) {
         this.surveyId = surveyId;
     }
 
@@ -106,7 +106,7 @@ public class StatusBean {
         this.typologyCode = typologyCode;
     }
 
-    public StatusBean(String CaseId, String lang, String tCode, int sId, String clusterCode, String date) {
+    public StatusBean(String CaseId, String lang, String tCode, String sId, String clusterCode, String date) {
         this.caseId=CaseId;
         this.language = lang;
         this.typologyCode=tCode;

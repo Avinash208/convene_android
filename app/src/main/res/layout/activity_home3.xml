@@ -114,7 +114,6 @@
 
    <include
        android:id="@+id/bottomLayout"
-       android:visibility="gone"
        layout="@layout/activity_setting">
    </include>
 

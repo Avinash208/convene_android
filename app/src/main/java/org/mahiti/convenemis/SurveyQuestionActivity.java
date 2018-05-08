@@ -58,6 +58,7 @@ import org.mahiti.convenemis.BeenClass.Page;
 import org.mahiti.convenemis.BeenClass.Response;
 import org.mahiti.convenemis.BeenClass.SetAnswers;
 import org.mahiti.convenemis.BeenClass.parentChild.Level1;
+import org.mahiti.convenemis.BeenClass.parentChild.LevelBeen;
 import org.mahiti.convenemis.database.ConveneDatabaseHelper;
 import org.mahiti.convenemis.database.DBHandler;
 import org.mahiti.convenemis.database.DataBaseMapperClass;
@@ -82,6 +83,8 @@ import org.mahiti.convenemis.utils.RuleEngineUtils;
 import org.mahiti.convenemis.utils.ToastUtils;
 import org.mahiti.convenemis.utils.Utils;
 import org.mahiti.convenemis.utils.ValidationUtils;
+import org.mahiti.convenemis.utils.multispinner.SingleSpinnerSearchFilter;
+import org.mahiti.convenemis.utils.multispinner.SpinnerListenerFilter;
 
 import java.io.File;
 import java.text.MessageFormat;
@@ -93,6 +96,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import io.github.douglasjunior.androidSimpleTooltip.SimpleTooltip;
 
@@ -153,7 +157,7 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
     List<String> questionPageList;
     List<String> answeredList;
     int count = 0;
-    int surveyPrimaryKeyId = 0;
+    String surveyPrimaryKeyId = "";
     String skipcode = "";
     String qValidation = "";
     Animation animShake;
@@ -181,6 +185,7 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
     HashMap<String, Spinner> hashMapDropdown = new HashMap<>();
     HashMap<String, List<AnswersPage>> hashMapForAnswerBeen = new HashMap<>();
     HashMap<String, TextView> hashMapTextError = new HashMap<>();
+    Map<String,Spinner> dynamicSpinnerHashMap= new HashMap<>();
     File mFileTemp;
     int pageSetCount = 0;
     private String radioAnswerCode;
@@ -205,6 +210,7 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
     private boolean saveToDraftFlag = false;
     private ScrollView scrollView;
     private int surveysId;
+    String getParentsBeneficiary="";
     /**
      * Date picker dialogue showing
      */
@@ -221,6 +227,9 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
         }
     };
     private ExternalDbOpenHelper dbhelper;
+    private SingleSpinnerSearchFilter spinnerSearch;
+    private List<Integer> getBenificiaryQids;
+    private List<Integer> getAddressQuestionIds;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -241,7 +250,7 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
         restUrl = new RestUrl(this);
         Intent surveyPrimaryKeyIntent = getIntent();
         if (surveyPrimaryKeyIntent != null) {
-            surveyPrimaryKeyId = Integer.parseInt(surveyPrimaryKeyIntent.getStringExtra("SurveyId"));
+            surveyPrimaryKeyId = surveyPrimaryKeyIntent.getStringExtra("SurveyId");
             Logger.logV("surveyPrimaryKeyId", "surveyPrimaryKeyId" + surveyPrimaryKeyId);
         }
         if (surveyPrimaryKeyIntent != null) {
@@ -531,12 +540,43 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
                 case 9:
                     addressWidgetDisplay(listOfPage.get(k), questionFont, answerFont, questionCode);
                     break;
+                case 10:
+                   beneficiaryParentDisplay(listOfPage.get(k), questionFont, answerFont, questionCode);
+                    break;
                 default:
                     break;
             }
         }
 
     }
+    private void beneficiaryParentDisplay(Page page, String questionFont, String answerFont, int questionCode) {
+        getBenificiaryQids= new ArrayList<>();
+        View child = this.getLayoutInflater().inflate(R.layout.parentselecting, dynamicQuestionSet, false);//child.xml
+        LinearLayout singleSpinnerContainer = (LinearLayout) child.findViewById(R.id.singlespinnercontainer);
+        spinnerSearch=new SingleSpinnerSearchFilter(this);
+        singleSpinnerContainer.addView(spinnerSearch);
+        dynamicQuestionSet.addView(child);
+        List<LevelBeen> list= DataBaseMapperClass.getBenificiaryParentDetails(db,page.getPartnerId());
+        spinnerSearch.setFilterItems(list, 0, new SpinnerListenerFilter() {
+
+            @Override
+            public void onItemsSelected(List<LevelBeen> items) {
+                try {
+                    for(int j=0;j<items.size();j++){
+                        if (items.get(j).isSelected()) {
+                            Logger.logD("Selected","Item is"+list.get(j).getUuid());
+                            getParentsBeneficiary=list.get(j).getUuid();
+                            getBenificiaryQids.add(page.getQuestionNumber());
+                        }
+                    }
+                }catch (Exception e){
+                    Logger.logE(TAG,"onItemsSelected in ",e);
+                }
+
+            }
+        });
+    }
+
     private void addressWidgetDisplay(Page page, String questionFont, String answerFont, int questionCode) {
 
         View child = this.getLayoutInflater().inflate(R.layout.address_widget, dynamicQuestionSet, false);//child.xml
@@ -655,15 +695,18 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
 
             }
         });
-
-
-
-
-
-
-
-
+        getAddressQuestionIds= new ArrayList<>();
+        getAddressQuestionIds.add(page.getQuestionNumber());
+        dynamicSpinnerHashMap.put("level1",spinner);
+        dynamicSpinnerHashMap.put("level2",statespinner);
+        dynamicSpinnerHashMap.put("level3",districtspinner);
+        dynamicSpinnerHashMap.put("level4",talukspinner);
+        dynamicSpinnerHashMap.put("level5",gramaPanchayathspinner);
+        dynamicSpinnerHashMap.put("level6",villagespinner);
+        dynamicSpinnerHashMap.put("level7",hamletspinner);
         dynamicQuestionSet.addView(child);
+
+
     }
 
     /**
@@ -1126,7 +1169,18 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
                       8 represent the Address widget newly added for beneficiary collection.
                      */
                     case 9:
+                        list.add(String.valueOf(true));
+                        Logger.logD("Validation part","Storing all the spinner values to survey table");
+                        fillAllLevelToDatabase();
 
+                        break;
+                    case 10:
+                        if (!getParentsBeneficiary.equals("")) {
+                            list.add(String.valueOf(true));
+                            fillResponseToDB(getBenificiaryQids.get(0), getParentsBeneficiary, 10);
+                        }
+                        else
+                            list.add(String.valueOf(true));
                         break;
                     default:
                         break;
@@ -1147,6 +1201,12 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
         return list;
     }
 
+    private void fillAllLevelToDatabase() {
+        int getUpdatedResult= surveyHandler.updateAddressRecordToSurveyTable(surveyPrimaryKeyId,dynamicSpinnerHashMap);
+        Spinner getLevel7Spinner = dynamicSpinnerHashMap.get("level7");
+        Level1 getLevel7Id = (Level1) getLevel7Spinner.getSelectedItem();
+        fillResponseToDB(getAddressQuestionIds.get(0), String.valueOf(getLevel7Id.getId()), 9);
+    }
     /**
      * Clearing all question counts under each type
      */

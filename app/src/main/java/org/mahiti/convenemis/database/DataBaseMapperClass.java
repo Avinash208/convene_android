@@ -10,6 +10,7 @@ import org.mahiti.convenemis.BeenClass.AnswersPage;
 import org.mahiti.convenemis.BeenClass.AssesmentBean;
 import org.mahiti.convenemis.BeenClass.Page;
 import org.mahiti.convenemis.BeenClass.Response;
+import org.mahiti.convenemis.BeenClass.parentChild.LevelBeen;
 import org.mahiti.convenemis.utils.Constants;
 import org.mahiti.convenemis.utils.Logger;
 import org.mahiti.convenemis.utils.PreferenceConstants;
@@ -110,7 +111,7 @@ public class DataBaseMapperClass {
      * @param restUrl
      * @return
      */
-    public static List<String> getPendingAnsweredQuestionIds(net.sqlcipher.database.SQLiteDatabase database, int surveyId, RestUrl restUrl) {  // getting Question Code from DB and Fill to Main List
+    public static List<String> getPendingAnsweredQuestionIds(net.sqlcipher.database.SQLiteDatabase database, String surveyId, RestUrl restUrl) {  // getting Question Code from DB and Fill to Main List
         List<String> answeredList=new ArrayList<>();
         String pendingSurveyQuery = "select * from Response where survey_id = '" + surveyId + "' order by q_id";
         Cursor cursor=null;
@@ -140,11 +141,11 @@ public class DataBaseMapperClass {
      * @param restUrl
      * @return
      */
-    public static HashMap<String,AnswersPage> getUserAnsweredResponseFromDB(int questionNumber, net.sqlcipher.database.SQLiteDatabase db, int surveyPrimaryKeyId, RestUrl restUrl) {
+    public static HashMap<String,AnswersPage> getUserAnsweredResponseFromDB(int questionNumber, net.sqlcipher.database.SQLiteDatabase db, String surveyPrimaryKeyId, RestUrl restUrl) {
         HashMap<String,AnswersPage> getStoredAnswer= new HashMap<>();
         List<AnswersPage> allAnswersList = new ArrayList<>();
         try {
-            String responseQuery="SELECT * from Response where  q_code="+questionNumber+andSurveyIdStr+surveyPrimaryKeyId;
+            String responseQuery="SELECT * from Response where  q_code="+questionNumber+andSurveyIdStr+"'"+surveyPrimaryKeyId+"'";
             Cursor questionCursor = db.rawQuery(responseQuery, null);
             if (questionCursor.moveToFirst()) {
                 do {
@@ -177,7 +178,7 @@ public class DataBaseMapperClass {
      * @param restUrl
      * @return
      */
-    public static HashMap<String,List<AnswersPage>> getUserCheckBOxAnsweredResponseFromDB(int questionNumber, net.sqlcipher.database.SQLiteDatabase db, int survey_id, RestUrl restUrl) {
+    public static HashMap<String,List<AnswersPage>> getUserCheckBOxAnsweredResponseFromDB(int questionNumber, net.sqlcipher.database.SQLiteDatabase db, String survey_id, RestUrl restUrl) {
         Cursor questionCursor=null;
         HashMap<String,List<AnswersPage>> getStoredAnswer= new HashMap<>();
         List<AnswersPage> allAnswersList = new ArrayList<>();
@@ -229,11 +230,11 @@ public class DataBaseMapperClass {
         }
         else{
             if (language_id==1)
-                QuestionQuery="SELECT DISTINCT  Question.id,Question.location_levels, Question.block_id, Question.help_text, Question.question_code, Question.answer_type,  Question.mandatory, Question.question_text, Question.validation from Question , Options  where Question.id="+qcode+" and Question.id=Options.question_pid and Question.survey_id =" + survey_id;
+                QuestionQuery="SELECT DISTINCT  Question.id,Question.validation,Question.location_levels,Question.question_id, Question.block_id, Question.help_text, Question.question_code, Question.answer_type,  Question.mandatory, Question.question_text, Question.validation from Question , Options  where Question.id="+qcode+" and Question.id=Options.question_pid and Question.survey_id =" + survey_id;
             else if(language_id!=1 && checkLanguage)
-                QuestionQuery = "SELECT DISTINCT  Question.id,Question.location_levels, Question.block_id, Question.help_text, Question.question_code, Question.answer_type,  Question.mandatory, LanguageQuestion.question_text, Question.validation from Question ,LanguageQuestion  where Question.id=" + qcode + " and  LanguageQuestion.question_pid=Question.id and LanguageQuestion.language_id=" + language_id + " and  Question.survey_id= " + survey_id;
+                QuestionQuery = "SELECT DISTINCT  Question.id,Question.location_levels,Question.question_id, Question.block_id, Question.help_text, Question.question_code, Question.answer_type,  Question.mandatory, LanguageQuestion.question_text, Question.validation from Question ,LanguageQuestion  where Question.id=" + qcode + " and  LanguageQuestion.question_pid=Question.id and LanguageQuestion.language_id=" + language_id + " and  Question.survey_id= " + survey_id;
             else
-                QuestionQuery="SELECT DISTINCT  Question.id,Question.location_levels, Question.block_id, Question.help_text, Question.question_code, Question.answer_type,  Question.mandatory, Question.question_text, Question.validation from Question , Options  where Question.id="+qcode+"  and Question.survey_id =" + survey_id;
+                QuestionQuery="SELECT DISTINCT  Question.id,Question.location_levels,Question.question_id, Question.block_id, Question.help_text, Question.question_code, Question.answer_type,  Question.mandatory, Question.question_text, Question.validation from Question , Options  where Question.id="+qcode+"  and Question.survey_id =" + survey_id;
 
         }
         Cursor cursor=null;
@@ -242,7 +243,7 @@ public class DataBaseMapperClass {
             cursor=database.rawQuery(QuestionQuery,null);
             Logger.logD(TAG,questionQueryStr + QuestionQuery);
             if (cursor.getCount()<=0){
-                QuestionQuery="SELECT DISTINCT Question.help_text,Question.location_levels, Question.id, Question.block_id, Question.question_code, Question.answer_type,  Question.mandatory, Question.question_text, Question.validation from Question , Options  where Question.id="+qcode+" and Question.active = 2 and  Question.survey_id =" + survey_id;
+                QuestionQuery="SELECT DISTINCT Question.help_text,Question.location_levels,Question.question_id, Question.id, Question.block_id, Question.question_code, Question.answer_type,  Question.mandatory, Question.question_text, Question.validation from Question , Options  where Question.id="+qcode+" and Question.active = 2 and  Question.survey_id =" + survey_id;
                 cursor=database.rawQuery(QuestionQuery,null);
             }
             if(cursor.getCount()>0 && cursor.moveToFirst()){
@@ -257,7 +258,7 @@ public class DataBaseMapperClass {
                     String validation=cursor.getString(cursor.getColumnIndex("validation"));
                     String tooltip = cursor.getString(cursor.getColumnIndex("help_text"));
                     String locationLevels = cursor.getString(cursor.getColumnIndex("help_text"));
-
+                    String partnerID = String.valueOf(cursor.getInt(cursor.getColumnIndex("question_id")));
                     Logger.logV(TAG, "tooltip : " + tooltip);
                     Logger.logV(TAG, "questionName : " + questionName);
                     Logger.logV(TAG, "questionCode : " + questionCode);
@@ -277,6 +278,7 @@ public class DataBaseMapperClass {
                     page.setMandatory(String.valueOf(mandatory));
                     page.setValidation(validation);
                     page.setLocationLevels(locationLevels);
+                    page.setPartnerId(partnerID);
                     pages.add(page);
                     Count=Count+1;
                 }while (cursor.moveToNext());
@@ -572,8 +574,8 @@ public class DataBaseMapperClass {
      * @param q_id
      * @param db
      */
-    public static void deletePreviousSetOfQuestion(String q_id, net.sqlcipher.database.SQLiteDatabase db, int surveyID) {
-        String ResponseQuery="Delete from Response where survey_id="+surveyID+" and  q_id="+q_id;
+    public static void deletePreviousSetOfQuestion(String q_id, net.sqlcipher.database.SQLiteDatabase db, String surveyID) {
+        String ResponseQuery="Delete from Response where survey_id='"+surveyID+"' and  q_id="+q_id;
         db.execSQL(ResponseQuery);
     }
 
@@ -1155,7 +1157,7 @@ public class DataBaseMapperClass {
      * @param q_id
      * @return
      */
-    public static int getPrimaryID(net.sqlcipher.database.SQLiteDatabase db, int surveyPrimaryKeyId, String q_id) {
+    public static int getPrimaryID(net.sqlcipher.database.SQLiteDatabase db, String surveyPrimaryKeyId, String q_id) {
 
         String selectQuery = "SELECT _id FROM  ResponseDump where  survey_id="+surveyPrimaryKeyId+" and q_id="+q_id;
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -1178,7 +1180,7 @@ public class DataBaseMapperClass {
      * @param db
      * @param surveyPrimaryKeyId
      */
-    public static void deletePreviousSetOfResponseJsonDump(String q_id, net.sqlcipher.database.SQLiteDatabase db, int surveyPrimaryKeyId) {
+    public static void deletePreviousSetOfResponseJsonDump(String q_id, net.sqlcipher.database.SQLiteDatabase db, String surveyPrimaryKeyId) {
         String ResponseQuery="Delete from ResponseDump where survey_id="+surveyPrimaryKeyId+" and  q_id="+q_id;
         db.execSQL(ResponseQuery);
     }
@@ -1191,7 +1193,7 @@ public class DataBaseMapperClass {
      * @param qidValueArray
      * @return
      */
-    public static JSONArray getJsonObject(int qid, net.sqlcipher.database.SQLiteDatabase autoSyncDatabase, int autoSyncSurveyID, JSONArray qidValueArray) {
+    public static JSONArray getJsonObject(int qid, net.sqlcipher.database.SQLiteDatabase autoSyncDatabase, String autoSyncSurveyID, JSONArray qidValueArray) {
 
         String selectQuery = "SELECT * FROM Response where q_id = "+qid+" and  survey_id="+autoSyncSurveyID;
         Cursor cursor = autoSyncDatabase.rawQuery(selectQuery, null);
@@ -1361,5 +1363,24 @@ public class DataBaseMapperClass {
                 cursor.close();
         }
         return count;
+    }
+
+    public static List<LevelBeen> getBenificiaryParentDetails(net.sqlcipher.database.SQLiteDatabase db, String questionid) {
+       List<LevelBeen> getBeneficiaryParentList= new ArrayList<>();
+        String selectQuery = "SELECT Response.ans_text, Survey.uuid FROM Response INNER JOIN Survey ON Response.survey_id = Survey.uuid where Response.q_code="+questionid;
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        if (cursor.moveToFirst()) {
+            do {
+                JSONObject getTempObject= new JSONObject();
+                String surveyid = cursor.getString(cursor.getColumnIndex("uuid"));
+                String name = cursor.getString(cursor.getColumnIndex("ans_text"));
+                LevelBeen levelBeen= new LevelBeen();
+                levelBeen.setUuid(surveyid);
+                levelBeen.setName(name);
+                getBeneficiaryParentList.add(levelBeen);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return getBeneficiaryParentList;
     }
 }

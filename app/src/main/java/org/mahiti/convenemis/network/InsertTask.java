@@ -19,11 +19,11 @@ import java.util.Locale;
 public class InsertTask {
 
 
-    public boolean insertTask(List<Response> response, DBHandler _handler, int questionDisplayPageCount) {
+    public boolean insertTask(List<Response> response, DBHandler _handler, String questionDisplayPageCount) {
         List<Long> responseData= new ArrayList<>();
         List<Response> capturedAnswer = response;
         DBHandler handler = _handler;
-        int pageNumber = questionDisplayPageCount;
+        String pageNumber = questionDisplayPageCount;
 
         if (capturedAnswer.isEmpty()) {
             return false;
@@ -33,7 +33,7 @@ public class InsertTask {
                 Response responseObj = capturedAnswer.get(i);
                 String answerCode = responseObj.getAns_code();
                 HashMap<String, String> checkboxInsert = new HashMap<>();
-                checkboxInsert.put(PreferenceConstants.SURVEY_ID_HASH, String.valueOf(pageNumber));
+                checkboxInsert.put(PreferenceConstants.SURVEY_ID_HASH, pageNumber);
                 checkboxInsert.put("q_id", responseObj.getQ_id());
                 checkboxInsert.put("ans_code", answerCode);
                 checkboxInsert.put(PreferenceConstants.ANS_TEXT, responseObj.getAnswer());

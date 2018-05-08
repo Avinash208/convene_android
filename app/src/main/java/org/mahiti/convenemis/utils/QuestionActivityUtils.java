@@ -454,6 +454,12 @@ public class QuestionActivityUtils {
             case  6:
                 questionType = "S";
                 break;
+            case  9:
+                questionType = "AW";
+                break;
+            case  10:
+                questionType = "AI";
+                break;
             default:
                 questionType = "";
                 break;

@@ -67,6 +67,16 @@ public class Question {
     @Expose
     private Integer extraColumn2;
 
+    @SerializedName("parent_beneficiary_id")
+    @Expose
+    private Integer parentBeneficiaryid;
+
+    @SerializedName("question_id")
+    @Expose
+    private Integer questionid;
+
+
+
     public Integer getId() {
         return id;
     }
@@ -228,4 +238,19 @@ public class Question {
         this.extraColumn2 = extraColumn2;
     }
 
+    public Integer getParentBeneficiaryid() {
+        return parentBeneficiaryid;
+    }
+
+    public void setParentBeneficiaryid(Integer parentBeneficiaryid) {
+        this.parentBeneficiaryid = parentBeneficiaryid;
+    }
+
+    public Integer getQuestionid() {
+        return questionid;
+    }
+
+    public void setQuestionid(Integer questionid) {
+        this.questionid = questionid;
+    }
 }

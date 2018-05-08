@@ -7,6 +7,7 @@ public class LevelBeen
 {
     private int id;
     private String name;
+    private String uuid;
     private int locationLevel;
     private boolean isSelected;
 
@@ -70,4 +71,11 @@ public class LevelBeen
         return name;
     }
 
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
+    }
 }

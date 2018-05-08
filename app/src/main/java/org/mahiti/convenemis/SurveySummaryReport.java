@@ -127,17 +127,6 @@ public class SurveySummaryReport extends BaseActivity implements View.OnClickLis
             this.setTitle(surveyTittle);
         }
         UpdateToolBar();
-
-       /* try {
-            SQLiteDatabase.loadLibs(SurveySummaryReport.this);
-            surveySummaryreportdbhandler = new DBHandler(this);
-            SQLiteDatabase  db=surveySummaryreportdbhandler.getdatabaseinstance_read();
-        } catch (Exception e) {
-            Logger.logE(LoginParentActivity.class.getSimpleName(), "Exception in SurveyLoginActivity onCreate method ", e);
-        }
-
-
-        */
         syncSurveyPreferences= PreferenceManager.getDefaultSharedPreferences(SurveySummaryReport.this);
         syncSurveyEditor = syncSurveyPreferences.edit();
         dbOpenHelper = ConveneDatabaseHelper.getInstance(this, syncSurveyPreferences.getString("CONVENEDB", ""), syncSurveyPreferences.getString("UID", ""));

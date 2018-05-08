@@ -13,9 +13,9 @@ import java.util.HashMap;
 public class InsertResponseDump {
     Response capturedAnswer;
     static DBHandler handler;
-    int Survey_id;
+    String Survey_id;
     String jsonDump;
-    public void InsertResponseDump(Response response, DBHandler handler, int surveyPrimaryKeyId, String jsonDump) {
+    public void InsertResponseDump(Response response, DBHandler handler, String surveyPrimaryKeyId, String jsonDump) {
 
         this.capturedAnswer = response;
         InsertResponseDump.handler = handler;
@@ -23,7 +23,7 @@ public class InsertResponseDump {
         this.jsonDump=jsonDump;
 
         HashMap<String, String> checkboxInsert = new HashMap<>();
-        checkboxInsert.put(PreferenceConstants.SURVEY_ID, String.valueOf(Survey_id));
+        checkboxInsert.put(PreferenceConstants.SURVEY_ID, Survey_id);
         checkboxInsert.put("q_id", capturedAnswer.getQ_id());
         checkboxInsert.put("json_dump", jsonDump);
        Long responseId = handler.insertResponseJSONDump(checkboxInsert);

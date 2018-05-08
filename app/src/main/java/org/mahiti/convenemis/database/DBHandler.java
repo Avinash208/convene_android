@@ -3,6 +3,8 @@ package org.mahiti.convenemis.database;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.util.ArrayMap;
+import android.widget.Spinner;
 
 import net.sqlcipher.SQLException;
 import net.sqlcipher.database.SQLiteDatabase;
@@ -12,6 +14,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.mahiti.convenemis.BeenClass.PreviewQuestionAnswerSet;
 import org.mahiti.convenemis.BeenClass.StatusBean;
+import org.mahiti.convenemis.BeenClass.parentChild.Level1;
 import org.mahiti.convenemis.utils.Constants;
 import org.mahiti.convenemis.utils.Logger;
 import org.mahiti.convenemis.utils.PreferenceConstants;
@@ -37,16 +40,17 @@ public class DBHandler extends SQLiteOpenHelper {
 
 
     private static final String SERVER_PRIMARY_KEY = "server_primary_key";
-    private static final String SURVEY_TABLE= "Survey";
-    private static final String GROUP_ID_KEY= "group_id";
-    private static final String DATE_FORMAT= "yyyy-MM-dd HH:mm:ss";
+    private static final String SURVEY_TABLE = "Survey";
+    private static final String GROUP_ID_KEY = "group_id";
+    private static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
     private String andUuidStr = " and uuid='";
     private String getServerPrimaryKeyStr = " getServerPrimaryKey";
-    private String pendingSurveyQueryStr ="pendingSurveyQuery";
+    private String pendingSurveyQueryStr = "pendingSurveyQuery";
 
 
     /**
      * getting the dbhandler instance
+     *
      * @param applicationContext
      */
     public DBHandler(Context applicationContext) {
@@ -65,7 +69,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
         // CREATING THE Survey TABLE for sending the captured details to server
         // sectionId Integer column is treating as periodicity
-        String query = "CREATE TABLE IF NOT EXISTS Survey(id INTEGER PRIMARY KEY, start_survey_status INTEGER, " +
+        String query = "CREATE TABLE IF NOT EXISTS Survey(uuid TEXT PRIMARY KEY, start_survey_status INTEGER, " +
                 "user_id INTEGER, start_date DATETIME, end_date DATETIME,version_num TEXT, app_version FLOAT, " +
                 "language_id INTEGER, latitude DOUBLE, longitude DOUBLE, survey_status INTEGER, " +
                 "sync_status  INTEGER, sync_date DATETIME, mode_status TEXT, specimen_id TEXT, reason TEXT, " +
@@ -81,12 +85,19 @@ public class DBHandler extends SQLiteOpenHelper {
                 "beneficiary_details TEXT," +
                 "beneficiary_ids TEXT," +
                 "facility_ids TEXT," +
+                "level1 TEXT," +
+                "level2 TEXT," +
+                "level3 TEXT," +
+                "level4 TEXT," +
+                "level5 TEXT," +
+                "level6 TEXT," +
+                "level7 TEXT," +
                 "capture_date DATETIME," +
-                "uuid TEXT,fac_uuid,beneficiary_type_id TEXT,facility_type_id TEXT,server_primary_key INTEGER)";
+                "fac_uuid,beneficiary_type_id TEXT,facility_type_id TEXT,server_primary_key INTEGER)";
 
         database.execSQL(query);
 
-        query = "CREATE TABLE IF NOT EXISTS  Response(_id INTEGER PRIMARY KEY,survey_id INTEGER,q_id TEXT,ans_code TEXT," +
+        query = "CREATE TABLE IF NOT EXISTS  Response(_id INTEGER PRIMARY KEY,survey_id TEXT,q_id TEXT,ans_code TEXT," +
                 "ans_text TEXT,pre_question INTEGER,next_question INTEGER,answered_on DATETIME,sub_questionId TEXT," +
                 "q_code INTEGER,primarykey INTEGER, typology_code TEXT, group_id INTEGER, primary_id INTEGER, response_dump_pid INTEGER, qtype TEXT)";
         database.execSQL(query);
@@ -98,7 +109,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
 
         String tabDetails = "CREATE TABLE IF NOT EXISTS Tabdetails ("
-                + "id INTEGER PRIMARY KEY," + "survey_id INTEGER,"
+                + "id INTEGER PRIMARY KEY," + "survey_id TEXT,"
                 + "CELL_ID TEXT," + "SIGNAL_STRENGTH TEXT," + "LAC TEXT,"
                 + "MCC TEXT," + "MNC TEXT," + "LA TEXT," + "CARRIER TEXT,"
                 + "NETWORK_TYPE TEXT," + "PHONE_NUMBER TEXT,"
@@ -126,13 +137,16 @@ public class DBHandler extends SQLiteOpenHelper {
 
     /**
      * method to add the device details to survey rable
+     *
      * @param queryValues
      * @return
      */
-    public long insertSurveyDataToDB(Map<String, String> queryValues) {
+    public String insertSurveyDataToDB(Map<String, String> queryValues) {
         long insertedRecord = 0;
+        String getPrimaryUUID = "";
         try {
             ContentValues values = new ContentValues();
+            values.put("uuid", queryValues.get("uuid"));
             values.put(Constants.START_SURVEY_STATUS, queryValues.get(Constants.START_SURVEY_STATUS));
             values.put(Constants.USER_ID, queryValues.get("inv_id"));
             values.put("start_date", queryValues.get("start_date"));
@@ -160,6 +174,13 @@ public class DBHandler extends SQLiteOpenHelper {
             values.put(benIdStr, queryValues.get(benIdStr));
             values.put("facility_ids", queryValues.get("facility_ids"));
             values.put("uuid", queryValues.get("uuid"));
+            values.put("level1", queryValues.get("level1"));
+            values.put("level2", queryValues.get("level2"));
+            values.put("level3", queryValues.get("level3"));
+            values.put("level4", queryValues.get("level4"));
+            values.put("level5", queryValues.get("level5"));
+            values.put("level6", queryValues.get("level6"));
+            values.put("level7", queryValues.get("level7"));
             values.put("capture_date", queryValues.get("captured_date"));
             values.put("beneficiary_type_id", queryValues.get("beneficiary_type_id"));
             values.put("facility_type_id", queryValues.get("facility_type_id"));
@@ -170,11 +191,14 @@ public class DBHandler extends SQLiteOpenHelper {
 
             insertedRecord = database.insert(SURVEY_TABLE, null, values);
             Logger.logD(TAG, "content values inserting into survey table " + values.toString());
+            Logger.logD(TAG, "created primaryKey " + String.valueOf(insertedRecord));
+            if (insertedRecord != -1)
+                getPrimaryUUID = queryValues.get("uuid");
         } catch (SQLException e) {
             Logger.logE(TAG, "Exception in insertSurveyDataToDB method", e);
             insertedRecord = 0;
         }
-        return insertedRecord;
+        return getPrimaryUUID;
     }
 
 
@@ -227,8 +251,8 @@ public class DBHandler extends SQLiteOpenHelper {
      * @param serverPrimaryKey
      * @return
      */
-    public int updateSurveyDataToDB(int surveyId, int serverPrimaryKey) {
-
+    public int updateSurveyDataToDB(String surveyId, int serverPrimaryKey) {
+        String getPK = "'" + surveyId + "'";
         SQLiteDatabase liteDatabase = this.getWritableDatabase(DATABASESECRETKEY);
         ContentValues values = new ContentValues();
         values.put(SERVER_PRIMARY_KEY, serverPrimaryKey);
@@ -238,7 +262,7 @@ public class DBHandler extends SQLiteOpenHelper {
         values.put(Constants.END_DATE, new SimpleDateFormat(DATE_FORMAT).format(new Date()));
         values.put(Constants.SURVEY_KEY, surveyId);
         values.put(Constants.SYNC_DATE, new SimpleDateFormat(DATE_FORMAT).format(new Date()));
-        return liteDatabase.update(SURVEY_TABLE, values, "id" + " = ?", new String[]{String.valueOf(surveyId)});
+        return liteDatabase.update(SURVEY_TABLE, values, "uuid" + " = ?", new String[]{getPK});
     }
 
     /**
@@ -259,8 +283,6 @@ public class DBHandler extends SQLiteOpenHelper {
     }
 
 
-
-
     /**
      * @param surveyId
      * @param reuse
@@ -268,7 +290,8 @@ public class DBHandler extends SQLiteOpenHelper {
      * @param charge
      * @return
      */
-    public int updateendSurvey_statusDataToDB(int surveyId, int reuse, String bloodSample, String charge) {
+    public int updateendSurvey_statusDataToDB(String surveyId, int reuse, String bloodSample, String charge) {
+        String getPrimaryKey = "'" + surveyId + "'";
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase(DATABASESECRETKEY);
         ContentValues values = new ContentValues();
         if (reuse == 1) {
@@ -281,7 +304,7 @@ public class DBHandler extends SQLiteOpenHelper {
             values.put("survey_status2", "1");
             values.put("end_date_sf12", new SimpleDateFormat(DATE_FORMAT, Locale.ENGLISH).format(new Date()));
         }
-        return sqLiteDatabase.update(SURVEY_TABLE, values, "id" + " = ?", new String[]{String.valueOf(surveyId)});
+        return sqLiteDatabase.update(SURVEY_TABLE, values, "uuid" + " = ?", new String[]{getPrimaryKey});
     }
 
 
@@ -290,7 +313,7 @@ public class DBHandler extends SQLiteOpenHelper {
      * @param tableName
      * @return
      */
-    public long insert_VenueDetails(Map<String, String> queryValues,String tableName) {
+    public long insert_VenueDetails(Map<String, String> queryValues, String tableName) {
         long insertedRecord = 0;
         try {
             SQLiteDatabase databaseWritable = this.getWritableDatabase(DATABASESECRETKEY);
@@ -367,7 +390,7 @@ public class DBHandler extends SQLiteOpenHelper {
                 Logger.logV(TAG, "the Mandatory is" + skipPage);
             }
         } finally {
-                questionCursor.close();
+            questionCursor.close();
         }
         return skipvalues;
     }
@@ -402,12 +425,13 @@ public class DBHandler extends SQLiteOpenHelper {
      * @param surveyId
      * @return
      */
-    public int updateEndSurveyStatusDataToDB(int surveyId) {
+    public int updateEndSurveyStatusDataToDB(String surveyId) {
+        String getPK = "'" + surveyId + "'";
         SQLiteDatabase databaseWritableEnd = this.getWritableDatabase(DATABASESECRETKEY);
         ContentValues values = new ContentValues();
         values.put(Constants.SURVEY_STATUS, "1");
         values.put(Constants.END_DATE, new SimpleDateFormat(DATE_FORMAT, Locale.ENGLISH).format(new Date()));
-        return databaseWritableEnd.update(SURVEY_TABLE, values, "id" + " = ?", new String[]{String.valueOf(surveyId)});
+        return databaseWritableEnd.update(SURVEY_TABLE, values, "uuid" + " = ?", new String[]{surveyId});
     }
 
     /**
@@ -431,10 +455,11 @@ public class DBHandler extends SQLiteOpenHelper {
      * @param surveyPrimaryKeyId
      * @param getDumpPrimaryID
      */
-    public void updatePrimaryidToResponse(String q_id, int surveyPrimaryKeyId, int getDumpPrimaryID) {
+    public void updatePrimaryidToResponse(String q_id, String surveyPrimaryKeyId, int getDumpPrimaryID) {
         String updateStmnt = "UPDATE  Response SET response_dump_pid = " + getDumpPrimaryID + " where survey_id=" + surveyPrimaryKeyId + " and q_id= " + q_id;
         database.execSQL(updateStmnt);
     }
+
     /**
      * @param table
      * @param columnNmae
@@ -460,9 +485,6 @@ public class DBHandler extends SQLiteOpenHelper {
         Logger.logD(TAG, "getLastUpDate--" + date);
         return date;
     }
-
-
-
 
 
     /**
@@ -502,14 +524,14 @@ public class DBHandler extends SQLiteOpenHelper {
      * @param surveysId
      * @return Questions Answer filled bean list.
      */
-    public List<PreviewQuestionAnswerSet> getAttendedQuestion(int surveyPrimaryKeyId, ConveneDatabaseHelper dbOpenHelper, int languageId, int surveysId) {
+    public List<PreviewQuestionAnswerSet> getAttendedQuestion(String surveyPrimaryKeyId, ConveneDatabaseHelper dbOpenHelper, int languageId, int surveysId) {
         Logger.logD(TAG, " surveyPrimaryKeyId" + surveyPrimaryKeyId);
 
         List<PreviewQuestionAnswerSet> questionBean = new ArrayList<>();
         String query = "";
         try {
 
-            query = "select _id, survey_id,q_id,qtype,ans_text,ans_code from Response where survey_id=" + surveyPrimaryKeyId + " ORDER BY q_id ASC";
+            query = "select _id, survey_id,q_id,qtype,ans_text,ans_code from Response where survey_id='" + surveyPrimaryKeyId + "' ORDER BY q_id ASC";
             SQLiteDatabase db = getdatabaseinstance_read();
             Cursor cursor = db.rawQuery(query, null);
             Logger.logD(TAG, "Query Options" + query + "-->" + cursor.getCount());
@@ -518,14 +540,14 @@ public class DBHandler extends SQLiteOpenHelper {
                 do {
                     String answer = "";
                     int questionID = cursor.getInt(cursor.getColumnIndex("q_id"));
-                    String getQuestion = dbOpenHelper.getQuestion(questionID,languageId,surveysId);
+                    String getQuestion = dbOpenHelper.getQuestion(questionID, languageId, surveysId);
                     Logger.logD(TAG, " attened question id" + getQuestion);
                     String questionType = cursor.getString(cursor.getColumnIndex(QTYPE));
                     if (("T").equalsIgnoreCase(questionType) || ("D").equalsIgnoreCase(questionType)) {
                         answer = cursor.getString(cursor.getColumnIndex(ANSTEXT));
                     } else if (("R").equalsIgnoreCase(questionType) || ("S").equalsIgnoreCase(questionType)) {
                         String answerCode = cursor.getString(cursor.getColumnIndex(ANSCODE));
-                        answer = dbOpenHelper.getOptionText(answerCode,1, questionID);
+                        answer = dbOpenHelper.getOptionText(answerCode, 1, questionID);
                     }
                     PreviewQuestionAnswerSet previourQuestionSet = new PreviewQuestionAnswerSet();
                     previourQuestionSet.setQuestion(getQuestion);
@@ -570,18 +592,17 @@ public class DBHandler extends SQLiteOpenHelper {
 
 
     /**
-     *
      * @param surveyPrimaryKey
      * @param uuid
      * @return
      */
-    public int checkPrymaryExist(int surveyPrimaryKey, String uuid,int clusterId) {
+    public int checkPrymaryExist(int surveyPrimaryKey, String uuid, int clusterId) {
         int getServerPrimaryKey = 0;
-        String pendingSurveyQuery="";
+        String pendingSurveyQuery = "";
         try {
-            if(!uuid.isEmpty()){
+            if (!uuid.isEmpty()) {
                 pendingSurveyQuery = "SELECT id,server_primary_key FROM Survey where survey_status=2 and survey_ids=" + surveyPrimaryKey + andUuidStr + uuid + "'";
-            }else{
+            } else {
                 pendingSurveyQuery = "SELECT id,server_primary_key FROM Survey where survey_status=2 and survey_ids=" + surveyPrimaryKey + " and cluster_id=" + clusterId;
             }
             SQLiteDatabase db = getdatabaseinstance_read();
@@ -603,7 +624,6 @@ public class DBHandler extends SQLiteOpenHelper {
     }
 
     /**
-     *
      * @param surveyPrimaryKey
      * @param deleteFlag
      */
@@ -622,6 +642,7 @@ public class DBHandler extends SQLiteOpenHelper {
             Logger.logV(TAG, "deleteExistingSurveyRecord from Survey table" + e);
         }
     }
+
     /**
      * @param surveyID
      * @param periodicityFlag
@@ -707,6 +728,7 @@ public class DBHandler extends SQLiteOpenHelper {
         }
         return getServerPrimaryKey;
     }
+
     /**
      * @param surveyPrimaryKey
      * @param uuid
@@ -733,72 +755,192 @@ public class DBHandler extends SQLiteOpenHelper {
         }
         return getServerPrimaryKey;
     }
+
     /**
-     *
      * @param loginActivityhandler
      */
     public void deleteAllRecord(DBHandler loginActivityhandler) {
         SQLiteDatabase db = loginActivityhandler.getdatabaseinstance_read();
-        String query="DELETE FROM Survey";
-        Logger.logD("TAG_LOG","deleted  query are"+query);
+        String query = "DELETE FROM Survey";
+        Logger.logD("TAG_LOG", "deleted  query are" + query);
         db.execSQL(query);
-        query="DELETE FROM Response";
-        Logger.logD("TAG_LOG","deleted  query are"+query);
+        query = "DELETE FROM Response";
+        Logger.logD("TAG_LOG", "deleted  query are" + query);
         db.execSQL(query);
     }
 
     /**
      * getAnswerFromPreviousQuestion
-     * @param previous previous
+     *
+     * @param previous  previous
      * @param dbHandler dbHandler
-     * @param surveyId surveyId
+     * @param surveyId  surveyId
      * @return
      */
 
     public static String getAnswerFromPreviousQuestion(String previous, DBHandler dbHandler, String surveyId) {
-        String answer="";
+        String answer = "";
         net.sqlcipher.database.SQLiteDatabase db;
         try {
-            String selectQuery = "SELECT ans_text FROM Response where q_id =" + previous + " and survey_id=" + surveyId ;
+            String selectQuery = "SELECT ans_text FROM Response where q_id =" + previous + " and survey_id='" + surveyId + "'";
             db = dbHandler.getdatabaseinstance_read();
             Cursor cursor = db.rawQuery(selectQuery, null);
             do {
-                if (cursor.moveToFirst() && cursor.getCount()>0) {
+                if (cursor.moveToFirst() && cursor.getCount() > 0) {
                     answer = cursor.getString(cursor.getColumnIndex(PreferenceConstants.ANS_TEXT));
-                    Logger.logD("anstext","Answer of Previous Date" + answer);
+                    Logger.logD("anstext", "Answer of Previous Date" + answer);
                 }
-            }while (cursor.moveToNext());
+            } while (cursor.moveToNext());
             cursor.close();
-        }catch (Exception e){
-            Logger.logD("exception","exception in date fragment" + e);
+        } catch (Exception e) {
+            Logger.logD("exception", "exception in date fragment" + e);
         }
         return answer;
     }
 
-    public static String getAnswerFromQuestionID(String previous, DBHandler dbHandler, String surveyId,String qtype) {
-        String answer="";
+    public static String getAnswerFromQuestionID(String previous, DBHandler dbHandler, String surveyId, String qtype) {
+        String answer = "";
         net.sqlcipher.database.SQLiteDatabase db;
-        String selectQuery="";
+        String selectQuery = "";
         try {
             if (qtype.equalsIgnoreCase("R") || qtype.equalsIgnoreCase("S"))
-                selectQuery = "SELECT * FROM Response where q_id =" + previous + " and survey_id=" + surveyId ;
+                selectQuery = "SELECT * FROM Response where q_id =" + previous + " and survey_id='" + surveyId + "'";
             else
-                selectQuery = "SELECT * FROM Response where q_id =" + previous + " and survey_id=" + surveyId ;
+                selectQuery = "SELECT * FROM Response where q_id =" + previous + " and survey_id='" + surveyId + "'";
             db = dbHandler.getdatabaseinstance_read();
             Cursor cursor = db.rawQuery(selectQuery, null);
             do {
-                if (cursor.moveToFirst() && cursor.getCount()>0) {
+                if (cursor.moveToFirst() && cursor.getCount() > 0) {
                     if (qtype.equalsIgnoreCase("R") || qtype.equalsIgnoreCase("S"))
                         answer = cursor.getString(cursor.getColumnIndex("ans_code"));
                     else
                         answer = cursor.getString(cursor.getColumnIndex(PreferenceConstants.ANS_TEXT));
-                    Logger.logD("anstext","Answer of Previous Date" + answer);
+                    Logger.logD("anstext", "Answer of Previous Date" + answer);
                 }
-            }while (cursor.moveToNext());
+            } while (cursor.moveToNext());
             cursor.close();
-        }catch (Exception e){
-            Logger.logD("exception","exception in date fragment" + e);
+        } catch (Exception e) {
+            Logger.logD("exception", "exception in date fragment" + e);
         }
         return answer;
+    }
+
+    public String getSurveyLastUpDate(String survey, String updateTime) {
+
+        String lastModifiedDate = null;
+        Cursor cursor=null;
+        try {
+            lastModifiedDate = "";
+            String query = "SELECT sync_date FROM survey WHERE sync_date In (SELECT MAX(sync_date) FROM Survey)";
+            Logger.logD("", "get parent response query" + query);
+            SQLiteDatabase database = this.getReadableDatabase(DATABASESECRETKEY);
+            cursor = database.rawQuery(query, null);
+            if (cursor != null && cursor.moveToFirst()) {
+                lastModifiedDate = cursor.getString(cursor.getColumnIndex("sync_date"));
+            } else {
+                lastModifiedDate = "";
+            }
+            if (cursor != null) {
+                cursor.close();
+            }else {
+                cursor.close();
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            cursor.close();
+        }
+        return lastModifiedDate;
+    }
+
+    public int updateAddressRecordToSurveyTable(String surveyPrimaryKeyId, Map<String, Spinner> dynamicSpinnerHashMap) {
+        int getInsertedresult=0;
+        Spinner getLevel1Spinner = dynamicSpinnerHashMap.get("level1");
+        Level1 getLevel1Id = (Level1) getLevel1Spinner.getSelectedItem();
+
+        Spinner getLevel2Spinner = dynamicSpinnerHashMap.get("level2");
+        Level1 getLevel2Id = (Level1) getLevel2Spinner.getSelectedItem();
+
+        Spinner getLevel3Spinner = dynamicSpinnerHashMap.get("level3");
+        Level1 getLevel3Id = (Level1) getLevel3Spinner.getSelectedItem();
+
+        Spinner getLevel4Spinner = dynamicSpinnerHashMap.get("level4");
+        Level1 getLevel4Id = (Level1) getLevel4Spinner.getSelectedItem();
+
+        Spinner getLevel5Spinner = dynamicSpinnerHashMap.get("level5");
+        Level1 getLevel5Id = (Level1) getLevel5Spinner.getSelectedItem();
+
+        Spinner getLevel6Spinner = dynamicSpinnerHashMap.get("level6");
+        Level1 getLevel6Id = (Level1) getLevel6Spinner.getSelectedItem();
+
+        Spinner getLevel7Spinner = dynamicSpinnerHashMap.get("level7");
+        Level1 getLevel7Id = (Level1) getLevel7Spinner.getSelectedItem();
+        try {
+            SQLiteDatabase sqLiteDatabase = this.getWritableDatabase(DATABASESECRETKEY);
+            ContentValues values = new ContentValues();
+            values.put("level1", getLevel1Id.getId());
+            values.put("level2", getLevel2Id.getId());
+            values.put("level3", getLevel3Id.getId());
+            values.put("level4", getLevel4Id.getId());
+            values.put("level5", getLevel5Id.getId());
+            values.put("level6", getLevel6Id.getId());
+            values.put("level7", getLevel7Id.getId());
+            getInsertedresult= sqLiteDatabase.update(SURVEY_TABLE, values, "uuid" + " = ?", new String[]{surveyPrimaryKeyId});
+            Logger.logD("exception", "->"+getInsertedresult);
+        } catch (Exception e) {
+            Logger.logE("exception", "exception in date fragment", e);
+        }
+
+        return getInsertedresult;
+    }
+
+    public void updateAddressRecordFromServer(JSONObject jsonObject, String surveyPrimaryKey) {
+        try {
+            String level1= jsonObject.getString("level1");
+            Logger.logD("Level1", level1+"");
+            try {
+                SQLiteDatabase sqLiteDatabase = this.getWritableDatabase(DATABASESECRETKEY);
+                ContentValues values = new ContentValues();
+                values.put("level1", jsonObject.getString("level1"));
+                values.put("level2", jsonObject.getString("level2"));
+                values.put("level3", jsonObject.getString("level3"));
+                values.put("level4", jsonObject.getString("level4"));
+                values.put("level5", jsonObject.getString("level5"));
+                values.put("level6", jsonObject.getString("level6"));
+                values.put("level7", jsonObject.getString("level7"));
+              int  getInsertedresult= sqLiteDatabase.update(SURVEY_TABLE, values, "uuid" + " = ?", new String[]{surveyPrimaryKey});
+                Logger.logD("exception", "->"+getInsertedresult);
+            } catch (Exception e) {
+                Logger.logE("exception", "exception in date fragment", e);
+            }
+        } catch (JSONException e) {
+            Logger.logE("exception", "exception in date fragment", e);
+        }
+    }
+
+    public Map<String, String> getAddressResponse(String surveyPrimaryKey) {
+       Map<String,String> fillMapTemp= new ArrayMap<>();
+        try {
+            String pendingSurveyQuery = "select level1, level2 , level3 , level4 , level5 , level6 , level7 from Survey where uuid='"+surveyPrimaryKey+"'";
+            SQLiteDatabase db = getdatabaseinstance_read();
+            Cursor cursor = db.rawQuery(pendingSurveyQuery, null);
+            Logger.logD(pendingSurveyQueryStr, " checkPrymarySaveDraftExist" + pendingSurveyQuery + "-->" + cursor.getCount());
+            if (cursor.getCount() != 0 && cursor.moveToFirst()) {
+                do {
+                    fillMapTemp.put("1",cursor.getString(cursor.getColumnIndex("level1")));
+                    fillMapTemp.put("2",cursor.getString(cursor.getColumnIndex("level2")));
+                    fillMapTemp.put("3",cursor.getString(cursor.getColumnIndex("level3")));
+                    fillMapTemp.put("4",cursor.getString(cursor.getColumnIndex("level4")));
+                    fillMapTemp.put("5",cursor.getString(cursor.getColumnIndex("level5")));
+                    fillMapTemp.put("6",cursor.getString(cursor.getColumnIndex("level6")));
+                    fillMapTemp.put("7",cursor.getString(cursor.getColumnIndex("level7")));
+                } while (cursor.moveToNext());
+                cursor.close();
+            }
+        } catch (Exception e) {
+            Logger.logV("", "checkPrymarySaveDraftExist from Survey table" + e);
+
+        }
+        return fillMapTemp;
     }
 }

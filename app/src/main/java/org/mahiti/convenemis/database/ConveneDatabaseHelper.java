@@ -537,6 +537,8 @@ public class ConveneDatabaseHelper extends SQLiteOpenHelper {
                 cv.put(extraColumn1Str,listOfObjects.getQuestion().get(i).getExtraColumn1());
                 cv.put(extraColumn2Str,listOfObjects.getQuestion().get(i).getExtraColumn2());
                 cv.put(validationStr,listOfObjects.getQuestion().get(i).getValidation());
+                cv.put("parent_beneficiary_id",String.valueOf(listOfObjects.getQuestion().get(i).getParentBeneficiaryid()));
+                cv.put("question_id",String.valueOf(listOfObjects.getQuestion().get(i).getQuestionid()));
                 database.insertWithOnConflict("Question", null, cv, SQLiteDatabase.CONFLICT_REPLACE);
             }
         }catch(Exception e){

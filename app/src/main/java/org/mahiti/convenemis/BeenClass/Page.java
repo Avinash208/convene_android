@@ -25,6 +25,7 @@ public class Page {
     private String mandatory;
     private String validation;
     private String locationLevels;
+    private  String partnerId;
 
     public static long getFirstId() {
         return firstId;
@@ -227,5 +228,13 @@ public class Page {
 
     public void setLocationLevels(String locationLevels) {
         this.locationLevels = locationLevels;
+    }
+
+    public String getPartnerId() {
+        return partnerId;
+    }
+
+    public void setPartnerId(String partnerId) {
+        this.partnerId = partnerId;
     }
 }

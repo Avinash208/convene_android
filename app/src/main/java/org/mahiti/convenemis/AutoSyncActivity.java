@@ -3,6 +3,7 @@ package org.mahiti.convenemis;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
@@ -36,6 +37,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -63,8 +65,8 @@ public class AutoSyncActivity extends Activity {
     String latestAppVersion = "";
 
 
-    int autoSyncSurveyID = 0;
-    int autoSyncSurveyIdNumber = 0;
+    String autoSyncSurveyID = "";
+    String autoSyncSurveyIdNumber = "";
     String modeStatus;
     String modeStatusEach;
     List<String> modeStatusList;
@@ -138,7 +140,7 @@ public class AutoSyncActivity extends Activity {
         @Override
         protected String doInBackground(Context... arg0) {
             modeStatusList = new ArrayList<>();
-            List<Integer> surveyIdList = new ArrayList<>();
+            List<String> surveyIdList = new ArrayList<>();
             TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
             if (ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
                 //    ActivityCompat#requestPermissions
@@ -155,7 +157,7 @@ public class AutoSyncActivity extends Activity {
             /*Selecting the list pending records as survey id's and then selecting the each record and its responce's finally sending to
              server*/
             try {
-                String selectQuery1 = "Select id,mode_status,survey_status From Survey where survey_status='1'";
+                String selectQuery1 = "Select uuid,mode_status,survey_status From Survey where survey_status='1'";
                 autoSyncDatabase = autoSyncHandler.getdatabaseinstance();
                 Cursor cursorSurveyId = autoSyncDatabase.rawQuery(selectQuery1, null);
                 if (cursorSurveyId == null || !cursorSurveyId.moveToFirst()) {
@@ -164,7 +166,7 @@ public class AutoSyncActivity extends Activity {
                 }
                 do {
                     modeStatus = cursorSurveyId.getString(cursorSurveyId.getColumnIndex("mode_status"));
-                    autoSyncSurveyIdNumber = cursorSurveyId.getInt(cursorSurveyId.getColumnIndex("id"));
+                    autoSyncSurveyIdNumber = cursorSurveyId.getString(cursorSurveyId.getColumnIndex("uuid"));
                     surveyIdList.add(autoSyncSurveyIdNumber);
                     modeStatusList.add(modeStatus);
                 } while (cursorSurveyId.moveToNext());
@@ -200,16 +202,17 @@ public class AutoSyncActivity extends Activity {
          * @param imei
          * @param commondao
          */
-        public void surveyIdListLooping(List<Integer> surveyIdList, int i, String imei, CommonDao commondao) {
+        public void surveyIdListLooping(List<String> surveyIdList, int i, String imei, CommonDao commondao) {
             try {
+                autoSyncDatabase = autoSyncHandler.getdatabaseinstance();
                 autoSyncSurveyID = surveyIdList.get(i);
                 modeStatusEach = modeStatusList.get(i);
-                String query = "Select * From Survey where id='" + autoSyncSurveyID + "'";
+                String query = "Select * From Survey where uuid='" + autoSyncSurveyID + "'";
                 Cursor cursor1 = autoSyncDatabase.rawQuery(query, null);
                 /*Calling method for fetching local database data to local variables*/
                 setDatabaseData(cursor1);
 
-                String selectQuery = "SELECT * FROM Response where survey_id=" + autoSyncSurveyID + " group by q_id";
+                String selectQuery = "SELECT * FROM Response where survey_id='" + autoSyncSurveyID + "' group by q_id";
 
                 autoSyncDatabase = autoSyncHandler.getdatabaseinstance();
 
@@ -238,7 +241,7 @@ public class AutoSyncActivity extends Activity {
         /**
          * fetching database data Answers and Syncto server to local variables
          */
-        public void fetchDatabaseValues(Cursor cursor, String imei, CommonDao commonDao, int sectionId) {
+        public void fetchDatabaseValues(Cursor cursor, String imei, CommonDao commonDao, String sectionId) {
             if (cursor == null || !cursor.moveToFirst()) {
                 return;
             }
@@ -250,7 +253,7 @@ public class AutoSyncActivity extends Activity {
             /*
             Getting tab details for this particular record
              */
-            JSONObject surveyList = autoSyncHandler.getTabInfoRecords("Select * from Tabdetails where survey_id = " + autoSyncSurveyID);
+            JSONObject surveyList = autoSyncHandler.getTabInfoRecords("Select * from Tabdetails where survey_id = '" + autoSyncSurveyID+"'");
 
             /*Calling method setPostParameters for setting postparameters from local variables that are fetched from local database*/
 
@@ -283,9 +286,9 @@ public class AutoSyncActivity extends Activity {
                 editor.putString("latest_db_version_feeds", json.getString("latestdbversion"));
                 editor.putString("q_db_version", json.getString("app_db_ve"));
                 editor.apply();
-//                Intent intent = new Intent(context, MyIntentService.class);
-//                context.startService(intent);
-                new PeriodicityNewAsyncTask(context).execute();
+                Intent intent = new Intent(context, MyIntentService.class);
+                context.startService(intent);
+               // new PeriodicityNewAsyncTask(context).execute();
 
             } catch (Exception e) {
                 Logger.logE(AutoSyncActivity.class.getSimpleName(), "Exception in fetchDatabaseValues outside loop", e);
@@ -318,6 +321,7 @@ public class AutoSyncActivity extends Activity {
                 String subQuestionCode = cursor.getString(cursor.getColumnIndex("sub_questionId"));
                 String subQuestionId = cursor.getString(cursor.getColumnIndex("primarykey"));
                 String autoSyncAnswer = cursor.getString(cursor.getColumnIndex("ans_text"));
+                String surveyPrimaryKey = cursor.getString(cursor.getColumnIndex("survey_id"));
                 Logger.logV("answers are", autoSyncAnswer);
                 String qtype = cursor.getString(cursor.getColumnIndex("qtype"));
                 int groupID= cursor.getInt(cursor.getColumnIndex("group_id"));
@@ -334,14 +338,21 @@ public class AutoSyncActivity extends Activity {
                 }
                 String answeredOn = cursor.getString(cursor.getColumnIndex("answered_on"));
                 String qCodes = cursor.getString(cursor.getColumnIndex("q_code"));
-
-
-
                 try {
-                   if (qtype.equalsIgnoreCase("T") || qtype.equalsIgnoreCase("C") || qtype.equalsIgnoreCase("D"))
+                   if (qtype.equalsIgnoreCase("T") || qtype.equalsIgnoreCase("C") || qtype.equalsIgnoreCase("D") || qtype.equalsIgnoreCase("AI"))
                        valueKeypareArray.put(qtype+"_"+subQuestionId+"_"+String.valueOf(groupID),autoSyncAnswer);
                     else if(qtype.equals("R") || qtype.equals("S") )
                         valueKeypareArray.put(qtype+"_"+subQuestionId+"_"+String.valueOf(groupID),autoSyncAnsCode);
+                   else if(qtype.equals("AW")){
+                       Map<String,String> getAddressResponse= autoSyncHandler.getAddressResponse(surveyPrimaryKey);
+                       valueKeypareArray.put("1",getAddressResponse.get("1"));
+                       valueKeypareArray.put("2",getAddressResponse.get("2"));
+                       valueKeypareArray.put("3",getAddressResponse.get("3"));
+                       valueKeypareArray.put("4",getAddressResponse.get("4"));
+                       valueKeypareArray.put("5",getAddressResponse.get("5"));
+                       valueKeypareArray.put("6",getAddressResponse.get("6"));
+                       valueKeypareArray.put("7",getAddressResponse.get("7"));
+                   }
                     else
                        valueKeypareArray.put(qtype+"_"+subQuestionId+"_"+String.valueOf(groupID),String.valueOf(primaryID));
                 } catch (JSONException e) {

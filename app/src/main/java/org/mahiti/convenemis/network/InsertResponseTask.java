@@ -16,11 +16,11 @@ import java.util.Locale;
 public class InsertResponseTask {
 
 
-    public boolean insertResponseTask(List<Response> response, DBHandler _handler, int questionDisplayPageCount) {
+    public boolean insertResponseTask(List<Response> response, DBHandler _handler, String questionDisplayPageCount) {
         List<Long> responseData= new ArrayList<>();
         List<Response> responseList = response;
         DBHandler handler = _handler;
-        int pageNumber = questionDisplayPageCount;
+        String pageNumber = questionDisplayPageCount;
 
         if (responseList.isEmpty()) {
             return false;
@@ -30,7 +30,7 @@ public class InsertResponseTask {
                 Response response1 = responseList.get(i);
                 String surveyAnswerCode = response1.getAns_code();
                 HashMap<String, String> hashMap = new HashMap<>();
-                hashMap.put(PreferenceConstants.SURVEY_ID_HASH, String.valueOf(pageNumber));
+                hashMap.put(PreferenceConstants.SURVEY_ID_HASH, pageNumber);
                 hashMap.put("q_id", response1.getQ_id());
                 hashMap.put("ans_code", surveyAnswerCode);
                 hashMap.put(PreferenceConstants.ANS_TEXT, response1.getAnswer());

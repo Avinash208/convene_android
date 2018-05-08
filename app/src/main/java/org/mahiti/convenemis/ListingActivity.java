@@ -25,6 +25,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import net.sqlcipher.database.SQLiteDatabase;
 
@@ -40,6 +41,7 @@ import org.mahiti.convenemis.api.MeetingAPIs.BeneficiaryAsyncTask;
 import org.mahiti.convenemis.database.ConveneDatabaseHelper;
 import org.mahiti.convenemis.database.DBHandler;
 import org.mahiti.convenemis.database.ExternalDbOpenHelper;
+import org.mahiti.convenemis.database.Utilities;
 import org.mahiti.convenemis.network.ClusterToTypo;
 import org.mahiti.convenemis.network.UpdateFilterInterface;
 import org.mahiti.convenemis.utils.AddBeneficiaryUtils;
@@ -437,11 +439,11 @@ public class ListingActivity extends BaseActivity implements View.OnClickListene
     public int summaryReport(int survey_id) {
         SurveySummaryReportdatabase = dbOpenHelper.getWritableDatabase();
         DBHandler surveySummaryreportdbhandler = new DBHandler(this);
-        String pendingQuery = "Select * From Survey where  survey_ids ="+survey_id + " order by id DESC";
+        String pendingQuery = "Select * From Survey where  survey_ids ="+survey_id;
         Logger.logD("pendingQuery","query->" + pendingQuery);
 
         int pendSurveyStatus = 0;
-        int pendSurveyId = 0;
+        String pendSurveyId = "";
         String specimenId = "";
         int countSurvey = 0;
         syncSurveySyncCompletedList.clear();
@@ -457,7 +459,7 @@ public class ListingActivity extends BaseActivity implements View.OnClickListene
             if (cursorPendingSurvey != null && cursorPendingSurvey.moveToFirst()) {
                 do {
                     pendSurveyStatus = cursorPendingSurvey.getInt(cursorPendingSurvey.getColumnIndex("survey_status"));
-                    pendSurveyId = cursorPendingSurvey.getInt(cursorPendingSurvey.getColumnIndex("id"));
+                    pendSurveyId = cursorPendingSurvey.getString(cursorPendingSurvey.getColumnIndex("uuid"));
                     specimenId = cursorPendingSurvey.getString(cursorPendingSurvey.getColumnIndex("cluster_name"));
                     String date = cursorPendingSurvey.getString(cursorPendingSurvey.getColumnIndex("end_date"));
                     if(date.equals("0")){
@@ -484,7 +486,7 @@ public class ListingActivity extends BaseActivity implements View.OnClickListene
         return pendSurveyStatus;
     }
 
-    private String setSummaryReport(int pendSurveyStatus, int pendSurveyId) {
+    private String setSummaryReport(int pendSurveyStatus, String pendSurveyId) {
         return null;
     }
 
@@ -571,9 +573,16 @@ public class ListingActivity extends BaseActivity implements View.OnClickListene
                 else
                     vh.surveyName.setText(statusbean.get(i).getCaseId());
             }
+
+            vh.anniversariesListDymanicLabel.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Toast.makeText(context,"Click"+statusbean.get(i).getSurveyId(),Toast.LENGTH_SHORT).show();
+                }
+            });
             return layoutView;
         }
-        private void getParentDetails(LinearLayout linearLayout, int  surveyPrimaryKey, int parentId,
+        private void getParentDetails(LinearLayout linearLayout, String  surveyPrimaryKey, int parentId,
                                       String summaryQIDs) {
             List<String> displayQuestionList = Arrays.asList(summaryQIDs.split(","));
             if (!displayQuestionList.isEmpty()) {
@@ -584,7 +593,7 @@ public class ListingActivity extends BaseActivity implements View.OnClickListene
                     String answer = "";
                     if (getQuestionType.equalsIgnoreCase("R") || getQuestionType.equalsIgnoreCase("S")) {
                         answer = surveySummaryreportdbhandler.getAnswerFromQuestionID(displayQuestionList.get(i), surveySummaryreportdbhandler, String.valueOf(surveyPrimaryKey), getQuestionType);
-                        answer = dbConveneHelper.getAnswer(displayQuestionList.get(i), answer, String.valueOf(surveyPrimaryKey));
+                        answer = dbConveneHelper.getAnswer(displayQuestionList.get(i), answer, surveyPrimaryKey);
                     } else {
                         answer = DBHandler.getAnswerFromQuestionID(displayQuestionList.get(i), surveySummaryreportdbhandler, String.valueOf(surveyPrimaryKey), getQuestionType);
                     }

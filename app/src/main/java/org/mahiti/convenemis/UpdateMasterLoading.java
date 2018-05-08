@@ -52,7 +52,9 @@ import org.mahiti.convenemis.api.OptionsAsyncTask;
 import org.mahiti.convenemis.api.QuestionsAsyncTask;
 import org.mahiti.convenemis.api.SkipMandatoryAsyncTask;
 import org.mahiti.convenemis.api.SkipRulesAsyncTask;
+import org.mahiti.convenemis.api.UpdateSurveyAsyncTask;
 import org.mahiti.convenemis.beansClassSetQuestion.CallApis;
+import org.mahiti.convenemis.beansClassSetQuestion.FillSurveyResponseInterface;
 import org.mahiti.convenemis.beansClassSetQuestion.UpdatedTablesInerface;
 import org.mahiti.convenemis.database.ExternalDbOpenHelper;
 import org.mahiti.convenemis.network.ClusterToTypo;
@@ -67,7 +69,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class UpdateMasterLoading extends BaseActivity implements ClusterToTypo ,BeneficiaryTypeAPIInterface,UpdatedTablesInerface,CallApis,
-        ServiceListInterface,FacilityListInterface,GetLocationLevelInterface,BeneficaryTypeInterface,PeriodicTypeInterface,FacilitiesAreaInterface,FacilityTypeInterface,RegionalLanguageInterface,View.OnClickListener,AddressProofsInterface {
+        ServiceListInterface,FacilityListInterface,GetLocationLevelInterface,BeneficaryTypeInterface,PeriodicTypeInterface,FacilitiesAreaInterface,FacilityTypeInterface,RegionalLanguageInterface,View.OnClickListener,AddressProofsInterface
+,FillSurveyResponseInterface{
     UpdateMasterLoading activity;
     Context context;
     String mainUrl;
@@ -345,10 +348,12 @@ public class UpdateMasterLoading extends BaseActivity implements ClusterToTypo ,
                     if(Utils.haveNetworkConnection(this)){
                         otherProgressBar.setProgress(10);
                         otherStatus.setText(R.string.loading_service);
-                        setMasterDatabaseUpdateTimeStamp();
-                        Intent intent=new Intent(context,HomeActivityNew.class);
-                        startActivity(intent);
-                        finish();
+                        if (network.checkNetwork()) {
+
+                            new UpdateSurveyAsyncTask(context,activity,UpdateMasterLoading.this).execute();
+                        } else {
+                            ToastUtils.displayToast(Constants.NO_INTERNET, this);
+                        }
                     }else{
                         ToastUtils.displayToast(CHECK_CONNECTIVITY, this);
                     }
@@ -891,5 +896,13 @@ public class UpdateMasterLoading extends BaseActivity implements ClusterToTypo ,
                 handler.post(() -> bar.setProgress(value));
             }
         }).start();
+    }
+
+    @Override
+    public void fillSurveyResponseInterfaceCallBack(boolean result) {
+   setMasterDatabaseUpdateTimeStamp();
+                        Intent intent=new Intent(context,HomeActivityNew.class);
+                        startActivity(intent);
+                        finish();
     }
 }

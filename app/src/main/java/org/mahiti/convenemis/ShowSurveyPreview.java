@@ -50,7 +50,7 @@ public class ShowSurveyPreview extends AppCompatActivity implements View.OnClick
 
         ConveneDatabaseHelper dbOpenHelper = ConveneDatabaseHelper.getInstance(this, showSurveyPreviewPreferences.getString(Constants.CONVENE_DB, ""), showSurveyPreviewPreferences.getString("UID", ""));
         Logger.logV("", "Record is getting created + dbOpenHelper");
-        createDynamicQuestionSet(ShowSurveyPreview.this,Integer.parseInt(getSurveyPrimaryID), dbOpenHelper,surveyId);
+        createDynamicQuestionSet(ShowSurveyPreview.this,getSurveyPrimaryID, dbOpenHelper,surveyId);
         if (!("").equals(showSurveyPreviewPreferences.getString("recentPreviewRecord",""))){
             editTextView.setVisibility(View.VISIBLE);
         }else{
@@ -81,7 +81,7 @@ public class ShowSurveyPreview extends AppCompatActivity implements View.OnClick
      * @param dbOpenHelper  database
      * @param surveyId
      */
-    private  void createDynamicQuestionSet(Context context, int surveyPrimaryKeyId, ConveneDatabaseHelper dbOpenHelper, String surveyId) {
+    private  void createDynamicQuestionSet(Context context, String surveyPrimaryKeyId, ConveneDatabaseHelper dbOpenHelper, String surveyId) {
         DBHandler dbHelper= new DBHandler(context);
         List<PreviewQuestionAnswerSet> getAttendedQuestion= dbHelper.getAttendedQuestion(surveyPrimaryKeyId,dbOpenHelper,showSurveyPreviewPreferences.getInt(Constants.SELECTEDLANGUAGE,0), Integer.parseInt(surveyId));
         if (!getAttendedQuestion.isEmpty()){

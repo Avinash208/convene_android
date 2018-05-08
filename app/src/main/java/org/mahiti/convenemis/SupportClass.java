@@ -34,7 +34,7 @@ public class SupportClass {
      * @param handler
      * @param surveyId
      */
-    public void backButtonFunction(final SurveyQuestionActivity context, final net.sqlcipher.database.SQLiteDatabase db, final DBHandler handler, final int surveyId) {
+    public void backButtonFunction(final SurveyQuestionActivity context, final net.sqlcipher.database.SQLiteDatabase db, final DBHandler handler, final String surveyId) {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context, AlertDialog.THEME_DEVICE_DEFAULT_LIGHT);
         alertDialogBuilder.setMessage(R.string.exitSurvey);
         alertDialogBuilder.setPositiveButton(R.string.yes,
@@ -61,11 +61,11 @@ public class SupportClass {
     private static class RemoveTask extends AsyncTask<Context, Integer, String> {
         net.sqlcipher.database.SQLiteDatabase database;
         DBHandler dbhandler;
-        int surveyID;
+        String surveyID;
         SurveyQuestionActivity ctx;
         private SharedPreferences preferences;
 
-        private RemoveTask(net.sqlcipher.database.SQLiteDatabase db, DBHandler handler, int survey_id, SurveyQuestionActivity context) {
+        private RemoveTask(net.sqlcipher.database.SQLiteDatabase db, DBHandler handler, String survey_id, SurveyQuestionActivity context) {
             database = db;
             dbhandler = handler;
             surveyID = survey_id;
@@ -77,7 +77,7 @@ public class SupportClass {
         @Override
         protected String doInBackground(Context... arg0) {
             String data = "";
-            String selectQuery = "SELECT * FROM Response where survey_id=" + surveyID;
+            String selectQuery = "SELECT * FROM Response where survey_id='" + surveyID+"'";
             database = dbhandler.getdatabaseinstance_read();
             try {
                 Cursor cursor = database.rawQuery(selectQuery, null);
@@ -129,9 +129,9 @@ public class SupportClass {
 
                 public void actualData() {
                     try {
-                        String removeData = "DELETE FROM Survey WHERE id = " + surveyID;
+                        String removeData = "DELETE FROM Survey WHERE uuid = '" + surveyID+"'";
                         database.execSQL(removeData);
-                        removeData = "DELETE FROM Response WHERE survey_id = " + surveyID;
+                        removeData = "DELETE FROM Response WHERE survey_id = '" + surveyID+"'";
                         database.execSQL(removeData);
                     } catch (Exception e) {
                         Logger.logE(SurveyQuestionActivity.class.getSimpleName(), "Exception in SurveyQuestionsActivity  actualData method ", e);
@@ -144,8 +144,6 @@ public class SupportClass {
             });
         }
     }
-
-
     /**
      * @param labelObj
      * @param text

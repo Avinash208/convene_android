@@ -35,7 +35,7 @@ public class PreviewPopUp {
      * @param previousButton
      * @param surveysId
      */
-    public  void showPreviewPopUp(final SurveyQuestionActivity activity, int surveyPrimaryKeyId, ConveneDatabaseHelper dbOpenHelper, final Button nextB, final Button previousButton, int surveysId) {
+    public  void showPreviewPopUp(final SurveyQuestionActivity activity, String surveyPrimaryKeyId, ConveneDatabaseHelper dbOpenHelper, final Button nextB, final Button previousButton, int surveysId) {
 
         surveyQuestionPreviewInterface surveyQuestionPreviewInterface = null;
         surveyQuestionPreviewInterface=activity;
@@ -78,7 +78,7 @@ public class PreviewPopUp {
      * @param preferences
      * @param surveysId
      */
-    private  void createDynamicQuestionSet(Context context, int surveyPrimaryKeyId, ConveneDatabaseHelper dbOpenHelper, SharedPreferences preferences, int surveysId) {
+    private  void createDynamicQuestionSet(Context context, String surveyPrimaryKeyId, ConveneDatabaseHelper dbOpenHelper, SharedPreferences preferences, int surveysId) {
         DBHandler dbHelper= new DBHandler(context);
         List<PreviewQuestionAnswerSet> getAttendedQuestion= dbHelper.getAttendedQuestion(surveyPrimaryKeyId,dbOpenHelper,preferences.getInt(Constants.SELECTEDLANGUAGE,0),surveysId);
         if (!getAttendedQuestion.isEmpty()){

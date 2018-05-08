@@ -1,5 +1,6 @@
 package org.mahiti.convenemis;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -21,6 +22,7 @@ import org.mahiti.convenemis.database.ExternalDbOpenHelper;
 import org.mahiti.convenemis.presenter.HomePresenter;
 import org.mahiti.convenemis.utils.Constants;
 import org.mahiti.convenemis.utils.Logger;
+import org.mahiti.convenemis.utils.Utils;
 import org.mahiti.convenemis.view.HomeViewInterface;
 
 import java.util.HashMap;
@@ -45,6 +47,7 @@ public class HomeActivityNew extends BaseActivity implements View.OnClickListene
     private LinearLayout pressBack;
     private LinearLayout dataformsLinear;
     HomePresenter homePresenter;
+    Activity activity;
 
 
     @Override
@@ -54,6 +57,7 @@ public class HomeActivityNew extends BaseActivity implements View.OnClickListene
         this.context = HomeActivityNew.this;
         homePresenter = new HomePresenter(this);
         initVariables();
+        activity=HomeActivityNew.this;
         Logger.logD("Current page is homescreen", "curent page is homescreen");
         DBHandler dbHandler = new DBHandler(this);
         dbhelper = ExternalDbOpenHelper.getInstance(HomeActivityNew.this, defaultPreferences.getString(Constants.DBNAME, ""), defaultPreferences.getString("inv_id", ""));
@@ -112,14 +116,30 @@ public class HomeActivityNew extends BaseActivity implements View.OnClickListene
 
     }
     @Override
-    public void onClick(View view) {
-        Logger.logD(TAG, "view");
-    }
-    @Override
     public void getExpandableListHeading(List<String> listDataHeader, HashMap<String, List<Datum>> listDataChild) {
         Logger.logD("MVP WORKING", listDataHeader.size() + "");
         listAdapter = new ExpandableListAdapterDataCollection(this, listDataHeader, listDataChild);
         expListView.setAdapter(listAdapter);
         expListView.expandGroup(0);
+    }
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+
+            case R.id.helptext:
+                PopUpShow.showingErrorPopUp(activity, syncSurveyPreferences.getString("UID", ""));
+                break;
+            case R.id.logout:
+                Utils.callDialogConformation(this,this);
+                break;
+            case R.id.dataformsLinear:
+              //  setToPreferenceCallNextActivity(view);
+                break;
+            case R.id.update_content:
+                Utils.contentUpdateConformation(this);
+                break;
+            default:
+                break;
+        }
     }
 }

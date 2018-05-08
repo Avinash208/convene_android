@@ -59,6 +59,7 @@ public class Constants {
     public static final String DOB = "dob";
     public static final String DOB_OPTION_KEY = "dob_option";
     public static final String YYMMDD = "yyyy-MM-dd";
+    public static final String NO_INTERNET = "Please check Internet Connection";
     public static List<Integer> blockQids=new ArrayList<>();
 
     //-------------------------*******************--------------------
