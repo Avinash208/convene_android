@@ -3890,7 +3890,7 @@ public class ExternalDbOpenHelper extends SQLiteOpenHelper {
         try {
             SQLiteDatabase db = openDataBase();
             //  String query = "select beneficiary_ids,beneficiary_type, facility_ids,facility_type from Surveys where category_id="+getCategoryID+" group by beneficiary_type";
-            String query = "select * from Surveys where category_id=" + getCategoryID;
+            String query = "select * from Surveys where category_id=" + getCategoryID +" order by order_levels";
             Cursor cursor = db.rawQuery(query, null);
             Logger.logD(TAG, "" + query);
             if (cursor != null && cursor.getCount() != 0 && cursor.moveToFirst()) {

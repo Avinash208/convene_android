@@ -58,7 +58,7 @@
     <string name="deleteSurvey">This form will not be saved</string>
     <string name="proceed">Proceed</string>
     <string name="pressToExit">Press once again to exit!</string>
-    <string name="mandatoryQuestion">Mandatory question</string>
+    <string name="mandatoryQuestion">Mandatory field</string>
     <string name="updateSuccess">Updated successfully</string>
     <string name="somethingWentWrong">Something went wrong</string>
     <string name="agpsSelected">"Agps selected"</string>
@@ -68,8 +68,8 @@
     <string name="noPendingRecordsToSync">There is no pending records to sync</string>
 
     <!--Login String labels-->
-    <string name="nameHint">Enter username</string>
-    <string name="passwordHint">Enter password</string>
+    <string name="nameHint">User name</string>
+    <string name="passwordHint">Password</string>
     <string name="validationMsg">Invalid username and password</string>
     <string name="login">Login</string>
 
@@ -352,7 +352,7 @@
     <string name="Edit">Edit</string>
     <string name="data_collection_not_availabe">Data collection form not available</string>
     <string name="no_completd_records_available">No completed records available</string>
-    <string name="content_update">Content update</string>
+    <string name="content_update">Content Update</string>
     <string name="sort_by">Sort by</string>
     <string name="please_enter_valid_mobile_number">Please enter valid mobile number</string>
     <string name="city">City</string>
@@ -405,5 +405,7 @@
     <string name="edit_or_view">EDIT/VIEW</string>
     <string name="selected_language_str">Selected language:</string>
     <string name="proofs">Proofs</string>
+    <string name="convene_2_0">Convene 2.0</string>
+    <string name="let_s_go">LET\'S GO</string>
 
 </resources>

@@ -878,15 +878,21 @@ public class ConveneDatabaseHelper extends SQLiteOpenHelper {
      */
     public String getQuestionType(String questionID) {
         String questionType="";
-        SQLiteDatabase sqldb = openDataBase();
-        String query = "SELECT id,answer FROM Question where id="+questionID;
-        Cursor cursor = sqldb.rawQuery(query, null);
-        if (cursor != null && cursor.moveToFirst()) {
-            do questionType = cursor.getString(cursor.getColumnIndex("answer"));
-            while (cursor.moveToNext());
+        try {
+            SQLiteDatabase sqldb = openDataBase();
+            String query = "SELECT id,answer FROM Question where id="+questionID;
+            Cursor cursor = sqldb.rawQuery(query, null);
+            if (cursor != null && cursor.moveToFirst()) {
+                do questionType = cursor.getString(cursor.getColumnIndex("answer"));
+                while (cursor.moveToNext());
+                cursor.close();
+
+            }
             cursor.close();
+        } catch (SQLException e) {
+            Logger.logE("Exception","in",e);
         }
-        close();
+
         return questionType;
 }
 
@@ -976,19 +982,25 @@ public class ConveneDatabaseHelper extends SQLiteOpenHelper {
         String pendingSurveyQuery = "select * from Question where id = " + qid + " and survey_id = " + surveyId;
         Cursor cursor=null;
         try {
-            SQLiteDatabase database = openDataBase();
-            cursor=database.rawQuery(pendingSurveyQuery,null);
-            Logger.logD("blockquery","Get All Questions from Response Table" + pendingSurveyQuery);
-            if(cursor.getCount()>0 && cursor.moveToFirst()){
-                question=cursor.getString(cursor.getColumnIndex("question_text"));
-            }else{
-                question="";
+
+            try {
+                SQLiteDatabase database = openDataBase();
+                cursor=database.rawQuery(pendingSurveyQuery,null);
+                Logger.logD("blockquery","Get All Questions from Response Table" + pendingSurveyQuery);
+                if(cursor.getCount()>0 && cursor.moveToFirst()){
+                    question=cursor.getString(cursor.getColumnIndex("question_text"));
+                }else{
+                    question="";
+                }
+            }catch (Exception e){
+                Logger.logE("Exception","getting questions based on blocks" , e);
+            }finally {
+                if(cursor!=null)
+                    cursor.close();
             }
-        }catch (Exception e){
-            Logger.logE("Exception","getting questions based on blocks" , e);
-        }finally {
-            if(cursor!=null)
-                cursor.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return question;
     }

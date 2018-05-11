@@ -15,7 +15,6 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
             android:orientation="horizontal"
             android:weightSum="2">
 
@@ -24,20 +23,22 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="6dp"
-                android:layout_weight="1"
+                android:layout_weight="1.7"
+                android:visibility="gone"
                 android:gravity="center_vertical"
                 android:textAllCaps="false"
                 android:textColor="@color/app_blue"
-                android:textSize="14dp" />
+                android:textSize="16dp" />
 
             <TextView
                 android:id="@+id/nameText"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_weight="1.7"
                 android:gravity="center_vertical"
                 android:text="scheme"
-                android:textSize="14dp" />
+                android:textSize="16dp" />
+
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

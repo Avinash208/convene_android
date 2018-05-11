@@ -23,8 +23,8 @@
                     android:bottom="2dp">
                     <shape>
                         <size
-                            android:height="15dp"
-                            android:width="25dp" />
+                            android:height="10dp"
+                            android:width="20dp" />
                         <solid android:color="#d5531d" />
                         <corners android:radius="10dp" />
                     </shape>

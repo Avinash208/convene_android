@@ -52,12 +52,15 @@ public class LoginParentActivity extends BaseActivity implements BeneficaryTypeI
 
 
         if (!"".equals(loginPreferences.getString("uId", "")) && !"0".equals(loginPreferences.getString("UID", ""))) {
+
             if (loginPreferences.getBoolean("MasterTable_Flag", false)) {
+                Logger.logD("going", "going HomeActivityNew");
                 Intent intent = new Intent(LoginParentActivity.this, HomeActivityNew.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
                 finish();
             } else {
+                Logger.logD("going", "going UpdateMasterLoading");
                 Intent ins = new Intent(LoginParentActivity.this, UpdateMasterLoading.class);
                 ins.putExtra("url", getString(R.string.main_url));
                 ins.putExtra("uId", uID);
@@ -67,6 +70,7 @@ public class LoginParentActivity extends BaseActivity implements BeneficaryTypeI
 
 
         } else {
+            Logger.logD("going", "going else");
             PackageManager manager = this.getPackageManager();
             PackageInfo info;
             try {
@@ -77,6 +81,7 @@ public class LoginParentActivity extends BaseActivity implements BeneficaryTypeI
                 in.putExtra("urlLogin", getString(R.string.main_url) + getString(R.string.appLogin));
                 in.putExtra("appVersion", version);
                 startActivityForResult(in, 200);
+                finish();
             } catch (PackageManager.NameNotFoundException e) {
                 Logger.logE("", "", e);
             }

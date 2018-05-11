@@ -180,6 +180,7 @@ public class Utils {
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         context.startActivity(intent);
+        context.finish();
         SharedPreferences.Editor editor = syncSurveyPreferences.edit();
         editor.putString("uId", "");
         editor.putString("UID", "");

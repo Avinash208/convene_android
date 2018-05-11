@@ -189,7 +189,7 @@ public class DBHandler extends SQLiteOpenHelper {
                 database = this.getWritableDatabase(DATABASESECRETKEY);
             Logger.logD(TAG, "SurveyTable" + values.toString());
 
-            insertedRecord = database.insert(SURVEY_TABLE, null, values);
+            insertedRecord = database.insertWithOnConflict(SURVEY_TABLE, null, values,SQLiteDatabase.CONFLICT_REPLACE);
             Logger.logD(TAG, "content values inserting into survey table " + values.toString());
             Logger.logD(TAG, "created primaryKey " + String.valueOf(insertedRecord));
             if (insertedRecord != -1)
@@ -531,7 +531,7 @@ public class DBHandler extends SQLiteOpenHelper {
         String query = "";
         try {
 
-            query = "select _id, survey_id,q_id,qtype,ans_text,ans_code from Response where survey_id='" + surveyPrimaryKeyId + "' ORDER BY q_id ASC";
+            query = "select _id, survey_id,q_id,qtype,ans_text,ans_code,sub_questionId from Response where survey_id='" + surveyPrimaryKeyId + "' ORDER BY q_id ASC";
             SQLiteDatabase db = getdatabaseinstance_read();
             Cursor cursor = db.rawQuery(query, null);
             Logger.logD(TAG, "Query Options" + query + "-->" + cursor.getCount());
@@ -543,9 +543,13 @@ public class DBHandler extends SQLiteOpenHelper {
                     String getQuestion = dbOpenHelper.getQuestion(questionID, languageId, surveysId);
                     Logger.logD(TAG, " attened question id" + getQuestion);
                     String questionType = cursor.getString(cursor.getColumnIndex(QTYPE));
-                    if (("T").equalsIgnoreCase(questionType) || ("D").equalsIgnoreCase(questionType)) {
+                    if (("T").equalsIgnoreCase(questionType) || ("D").equalsIgnoreCase(questionType) || ("AW").equalsIgnoreCase(questionType)) {
                         answer = cursor.getString(cursor.getColumnIndex(ANSTEXT));
-                    } else if (("R").equalsIgnoreCase(questionType) || ("S").equalsIgnoreCase(questionType)) {
+                    }
+                    else if(("AI").equalsIgnoreCase(questionType)){
+                        answer = cursor.getString(cursor.getColumnIndex("sub_questionId"));
+                    }
+                    else if (("R").equalsIgnoreCase(questionType) || ("S").equalsIgnoreCase(questionType)) {
                         String answerCode = cursor.getString(cursor.getColumnIndex(ANSCODE));
                         answer = dbOpenHelper.getOptionText(answerCode, 1, questionID);
                     }

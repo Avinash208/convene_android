@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Build;
@@ -130,7 +131,7 @@ public class UpdateMasterLoading extends BaseActivity implements ClusterToTypo ,
 
         beneficiaryStatus= findViewById(R.id.beneficiary_status);
         progressBarBeneficiary = findViewById(R.id.beneficiary_progressbar);
-        beneficaryimagestatus= findViewById(R.id.beneficaryimageStatus);
+      //  beneficaryimagestatus= findViewById(R.id.beneficaryimageStatus);
         progressBarBeneficiary.setMax(100);
 
         beneficiaryDatacolledtionText= findViewById(R.id.datacollection_status);
@@ -168,7 +169,7 @@ public class UpdateMasterLoading extends BaseActivity implements ClusterToTypo ,
         dbOpenHelper= ExternalDbOpenHelper.getInstance(context, sharedPreferences.getString(dbName,""),String.valueOf(uId));
         network= new CheckNetwork(context);
         methodToNavigateHome();
-        runProgressBar();
+       // runProgressBar();
     }
 
     /**
@@ -176,10 +177,10 @@ public class UpdateMasterLoading extends BaseActivity implements ClusterToTypo ,
      *
      */
     private void initializeVariables() {
-        TextView helptextTextView = findViewById(R.id.helptext);
+       /* TextView helptextTextView = findViewById(R.id.helptext);
         TextView logoutTextView = findViewById(R.id.logout);
         helptextTextView.setOnClickListener(this);
-        logoutTextView.setOnClickListener(this);
+        logoutTextView.setOnClickListener(this);*/
     }
 
     /**
@@ -194,7 +195,7 @@ public class UpdateMasterLoading extends BaseActivity implements ClusterToTypo ,
             setMasterDatabaseUpdateTimeStamp();
             // Launching home activity after
             Intent intent=new Intent(context,HomeActivityNew.class);
-            context.startActivity(intent);
+            startActivity(intent);
             finish();
         }
     }
@@ -217,10 +218,9 @@ public class UpdateMasterLoading extends BaseActivity implements ClusterToTypo ,
     public void callTypoScreen(boolean flag) {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            progressBarBeneficiary.getProgressDrawable().setColorFilter(Color.parseColor(LOADING_COLOR), PorterDuff.Mode.SRC_IN);
-        }
-        beneficaryimagestatus.setVisibility(View.VISIBLE);
-        beneficaryimagestatus.setBackgroundResource(R.drawable.done);
+            progressBarBeneficiary.setProgressTintList(ColorStateList.valueOf(Color.parseColor(LOADING_COLOR)));        }
+     //   beneficaryimagestatus.setVisibility(View.VISIBLE);
+     //   beneficaryimagestatus.setBackgroundResource(R.drawable.done);
         beneficiaryStatus.setTextColor(Color.parseColor(LOADING_COLOR));
         beneficiaryStatus.setText(getString(R.string.completed));
         progressBarBeneficiary.setProgress(100);
@@ -264,9 +264,9 @@ public class UpdateMasterLoading extends BaseActivity implements ClusterToTypo ,
     public void onSuccessfulBeneficiary(boolean flag) {
         locationStatus.setTextColor(Color.parseColor(LOADING_COLOR));
         locationStatus.setText(getString(R.string.completed));
-        locationStatus.setAnimation(translatebu);
+     //   locationStatus.setAnimation(translatebu);
         locationimageStatus.setImageResource(R.drawable.done);
-        beneficaryimagestatus.setVisibility(View.VISIBLE);
+       // beneficaryimagestatus.setVisibility(View.VISIBLE);
         FileUtils.copyEncryptedDataBase(context);
         if(flag) {
             if (Utils.haveNetworkConnection(this)) {
@@ -333,7 +333,8 @@ public class UpdateMasterLoading extends BaseActivity implements ClusterToTypo ,
                 FileUtils.copyEncryptedDataBaseForMasterData(context, sharedPreferences.getString(Constants.CONVENE_DB, ""), DB_FILE);
                 ohterimagestatus.setVisibility(View.VISIBLE);
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    beneficiaryDatacolledtionProgressbar.getProgressDrawable().setColorFilter(Color.parseColor(LOADING_COLOR), PorterDuff.Mode.SRC_IN);
+                    beneficiaryDatacolledtionProgressbar.setProgressTintList(ColorStateList.valueOf(Color.parseColor(LOADING_COLOR)));
+                    beneficiaryDatacolledtionProgressbar.setMinimumHeight(20);
                     beneficiaryDatacolledtionProgressbar.setProgress(100);
                 }
                 SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -341,8 +342,8 @@ public class UpdateMasterLoading extends BaseActivity implements ClusterToTypo ,
                 beneficiaryDatacolledtionText.setTextColor(Color.parseColor(LOADING_COLOR));
                 beneficiaryDatacolledtionText.setText(getString(R.string.completed));
                 beneficiaryDatacolledtionText.setAnimation(translatebu);
-                beneficaryimagestatus.setVisibility(View.VISIBLE);
-                beneficaryimagestatus.setImageResource(R.drawable.done);
+              //  beneficaryimagestatus.setVisibility(View.VISIBLE);
+               // beneficaryimagestatus.setImageResource(R.drawable.done);
                 try {
                     //calling Service listing Api
                     if(Utils.haveNetworkConnection(this)){
@@ -883,7 +884,7 @@ public class UpdateMasterLoading extends BaseActivity implements ClusterToTypo ,
         }
     }
 
-    public void runProgressBar() {
+    /*public void runProgressBar() {
         bar = findViewById(R.id.progressBar1);
         new Thread(() -> {
             while (value < 100) {
@@ -896,7 +897,7 @@ public class UpdateMasterLoading extends BaseActivity implements ClusterToTypo ,
                 handler.post(() -> bar.setProgress(value));
             }
         }).start();
-    }
+    }*/
 
     @Override
     public void fillSurveyResponseInterfaceCallBack(boolean result) {

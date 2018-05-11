@@ -7,7 +7,7 @@
 <!--    <color name="colorPrimary">#3F51B5</color>-->
     <color name="colorPrimary">@color/yellow</color>
     <color name="colorPrimaryDark">#f0f255</color>
-    <color name="orange">#e06216</color>
+    <color name="orange">#ff9800</color>
     <color name="colorGreen">#089062</color>
     <color name="tabLabelColor">#3f51b5</color>
 
@@ -55,5 +55,8 @@
     <color name="sa_green_dark">#156912</color>
     <color name="error_text_colour">#806060FF</color>
     <color name="app_blue">#3f51b5</color>
+    <color name="pink">#db2064</color>
+    <color name="greywhite">#eeeeee</color>
+    <color name="convenebg">#eeeeee</color>
 
 </resources>

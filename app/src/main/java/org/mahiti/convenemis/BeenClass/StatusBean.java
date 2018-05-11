@@ -1,5 +1,8 @@
 package org.mahiti.convenemis.BeenClass;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by mahiti on 9/4/15.
  */
@@ -12,6 +15,7 @@ public class StatusBean {
     private String primaryId = "";
     private String date ;
     private String clusterName;
+    private List<QuestionAnswer> questionAnswerList;
 
     public  StatusBean(){
 
@@ -37,13 +41,15 @@ public class StatusBean {
         this.clusterName = clusterName;
     }
 
-    public StatusBean(String clusterName, String date, String surveyStatus, String section2, String language1, String typoCode, String pendSurveyId) {
+    public StatusBean(String clusterName, String date, String surveyStatus, String section2, String language1, String typoCode, String pendSurveyId,
+                      List<QuestionAnswer> questionAnswerList) {
         this.clusterName=clusterName;
         this.date=date;
         String surveyStatus1 = surveyStatus;
         this.language=language1;
         this.surveyId=pendSurveyId;
         this.typologyCode=typoCode;
+        this.questionAnswerList=questionAnswerList;
 
     }
 
@@ -124,4 +130,11 @@ public class StatusBean {
         return language;
     }
 
+    public List<QuestionAnswer> getQuestionAnswerList() {
+        return questionAnswerList;
+    }
+
+    public void setQuestionAnswerList(List<QuestionAnswer> questionAnswerList) {
+        this.questionAnswerList = questionAnswerList;
+    }
 }

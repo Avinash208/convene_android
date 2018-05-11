@@ -4,7 +4,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/black"
+    android:background="@color/pink"
     android:minHeight="@dimen/abc_action_bar_default_height_material">
     <LinearLayout
         android:id="@+id/backPress"
@@ -27,7 +27,7 @@
         android:layout_gravity="center"
         android:textColor="@color/white"
         android:text=""
-        android:textSize="18sp"
+        android:textSize="20sp"
         android:fontFamily="fonts/Roboto-Light.ttf"
         />
     <ImageView

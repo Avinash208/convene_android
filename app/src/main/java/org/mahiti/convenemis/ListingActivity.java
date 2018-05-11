@@ -1,6 +1,7 @@
 package org.mahiti.convenemis;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -31,13 +32,16 @@ import net.sqlcipher.database.SQLiteDatabase;
 
 import org.mahiti.convenemis.BeenClass.QuestionAnswer;
 import org.mahiti.convenemis.BeenClass.StatusBean;
+import org.mahiti.convenemis.BeenClass.SurveysBean;
 import org.mahiti.convenemis.BeenClass.beneficiary.Datum;
 import org.mahiti.convenemis.BeenClass.facilities.FacilityListInterface;
 import org.mahiti.convenemis.adapter.BeneficiaryTypeAdapter;
 import org.mahiti.convenemis.adapter.FacilityTypeAdapter;
+import org.mahiti.convenemis.api.BeneficiaryApis.BeneficaryTypeInterface;
 import org.mahiti.convenemis.api.BeneficiaryApis.FacilitySubTypeInterface;
 import org.mahiti.convenemis.api.FacilitiesListAsyncTask;
 import org.mahiti.convenemis.api.MeetingAPIs.BeneficiaryAsyncTask;
+import org.mahiti.convenemis.backgroundcallbacks.BenificiaryListingCallback;
 import org.mahiti.convenemis.database.ConveneDatabaseHelper;
 import org.mahiti.convenemis.database.DBHandler;
 import org.mahiti.convenemis.database.ExternalDbOpenHelper;
@@ -59,7 +63,7 @@ import java.util.List;
 
 
 public class ListingActivity extends BaseActivity implements View.OnClickListener,
-        UpdateFilterInterface {
+        UpdateFilterInterface, BenificiaryListingCallback {
     String typeValue;
     SharedPreferences sharedPreferences;
     ListView typeListView;
@@ -186,7 +190,9 @@ public class ListingActivity extends BaseActivity implements View.OnClickListene
                 myAutoComplete.setText("");
             }
         });
+
         new  summaryReportSync().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        setQuestionTOheading();
         backPress.setOnClickListener(this);
         filterPopUp.setOnClickListener(this);
         createNewButton.setOnClickListener(new View.OnClickListener() {
@@ -196,35 +202,25 @@ public class ListingActivity extends BaseActivity implements View.OnClickListene
             }
         });
 
-        /*filterList.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                *//*setting the filter options on list of string*//*
 
-                List<String> filterBy = new ArrayList<>();
-                filterBy.add("Alphabetical ");
-                filterBy.add("Oldest ");
-                filterBy.add("Recent " + typeValue);
-                showFilterList(filterBy);
+
+    }
+
+    private void setQuestionTOheading() {
+        TextView questionDisplayDynamictextView = findViewById(R.id.question_display);
+        String getQuestion;
+                List<String> displayQuestionList = Arrays.asList(qid.split(","));
+        if (!displayQuestionList.isEmpty()) {
+            for (int i = 0; i < displayQuestionList.size(); i++) {
+                String question = dbConveneHelper.getQuestionFromDb(displayQuestionList.get(i), prefs.getInt("survey_id", 0));
+               if (i==0)
+                    questionDisplayDynamictextView.setText(questionDisplayDynamictextView.getText()+question);
+               else if ((displayQuestionList.size()-1)==i)
+                   questionDisplayDynamictextView.setText(questionDisplayDynamictextView.getText()+" and "+question);
+               else
+                   questionDisplayDynamictextView.setText(questionDisplayDynamictextView.getText()+", "+question);
             }
-        });*/
-
-
-        /*based on facility and Beneficiary call the sorting popup*/
-        filterPopUp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-//                if ((FACILITIES_TITLE).equalsIgnoreCase(headerName)) {
-//                    PopUpFilterFacility popUpFilterFacility = new PopUpFilterFacility();
-//                    popUpFilterFacility.showingErrorPopUp(ListingActivity.this, dbOpenHelper, beneficiaryTypeId);
-//                } else {
-//                    PopUpFilter popUpFilter = new PopUpFilter();
-//                    popUpFilter.showingErrorPopUp(ListingActivity.this, dbOpenHelper, beneficiaryTypeId);
-//                }
-                startActivity(new Intent(context,FilterActivityActivity.class));
-            }
-        });
-
+        }
     }
 
     private void hideFilter() {
@@ -293,6 +289,7 @@ public class ListingActivity extends BaseActivity implements View.OnClickListene
         filterPopUp = findViewById(R.id.filter);
         myAutoComplete = findViewById(R.id.autosearch_names);
         resetAutoSearch = findViewById(R.id.resetautosearch);
+
     }
     @Override
     protected void onResume() {
@@ -367,6 +364,11 @@ public class ListingActivity extends BaseActivity implements View.OnClickListene
         }
     }
 
+    @Override
+    public void surveysDetails(List<SurveysBean> pendingSurvey) {
+
+
+    }
 
 
     public class Myreceiver extends BroadcastReceiver {
@@ -406,6 +408,16 @@ public class ListingActivity extends BaseActivity implements View.OnClickListene
         editor2.apply();
     }
     private class summaryReportSync  extends AsyncTask {
+        ProgressDialog progress = new ProgressDialog(ListingActivity.this);
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progress.setMessage("Loading...");
+            progress.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+            progress.setIndeterminate(true);
+            progress.show();
+        }
+
         @Override
         protected Object doInBackground(Object[] objects) {
 
@@ -421,7 +433,9 @@ public class ListingActivity extends BaseActivity implements View.OnClickListene
         @Override
         protected void onPostExecute(Object o) {
             super.onPostExecute(o);
+            Logger.logD("-->start time","ended");
             if (!syncSurveyList.isEmpty()){
+                progress.dismiss();
                 typeListView.setVisibility(View.VISIBLE);
                 setstatusAdapter =new SetSurveyStatus(ListingActivity.this,syncSurveyList);
                 typeListView.setAdapter(setstatusAdapter);
@@ -431,6 +445,41 @@ public class ListingActivity extends BaseActivity implements View.OnClickListene
             }
         }
     }
+
+    private List<QuestionAnswer> getParentDetails(String surveyPrimaryKey, int parentId,
+                                  String summaryQIDs) {
+        List<QuestionAnswer> questionAnswerList= new ArrayList<>();
+        List<String> displayQuestionList = Arrays.asList(summaryQIDs.split(","));
+        String question="";
+        if (!displayQuestionList.isEmpty()) {
+            for (int i = 0; i < displayQuestionList.size(); i++) {
+               // View schemeChildView = getLayoutInflater().inflate(R.layout.scheme_inflate_row_summary, linearLayout, false);//child.xml
+                String getQuestionType = dbConveneHelper.getQuestionType(displayQuestionList.get(i));
+                question = dbConveneHelper.getQuestionFromDb(displayQuestionList.get(i), parentId);
+                String answer = "";
+                if (getQuestionType.equalsIgnoreCase("R") || getQuestionType.equalsIgnoreCase("S")) {
+                    answer = surveySummaryreportdbhandler.getAnswerFromQuestionID(displayQuestionList.get(i), surveySummaryreportdbhandler, String.valueOf(surveyPrimaryKey), getQuestionType);
+                    answer = dbConveneHelper.getAnswer(displayQuestionList.get(i), answer, surveyPrimaryKey);
+                } else {
+                    answer = DBHandler.getAnswerFromQuestionID(displayQuestionList.get(i), surveySummaryreportdbhandler, String.valueOf(surveyPrimaryKey), getQuestionType);
+                }
+
+                QuestionAnswer filledBean = new QuestionAnswer();
+                filledBean.setQuestionText(question);
+                filledBean.setAnswerText(answer);
+                filledBean.setParentId(parentId);
+                questionAnswerList.add(filledBean);
+
+
+
+
+
+            }
+
+        }
+        return questionAnswerList;
+    }
+
     /**
      *
      * @param survey_id
@@ -439,7 +488,8 @@ public class ListingActivity extends BaseActivity implements View.OnClickListene
     public int summaryReport(int survey_id) {
         SurveySummaryReportdatabase = dbOpenHelper.getWritableDatabase();
         DBHandler surveySummaryreportdbhandler = new DBHandler(this);
-        String pendingQuery = "Select * From Survey where  survey_ids ="+survey_id;
+        String pendingQuery = "Select * From Survey where  survey_ids ="+survey_id+" order by start_date desc";
+      //  String pendingQuery = "Select * From Survey where  survey_ids ="+survey_id+" order by sync_date desc";
         Logger.logD("pendingQuery","query->" + pendingQuery);
 
         int pendSurveyStatus = 0;
@@ -468,10 +518,8 @@ public class ListingActivity extends BaseActivity implements View.OnClickListene
                     specimenId = specimenId +"# Entered on: "+date;
                     String language1 = cursorPendingSurvey.getString(cursorPendingSurvey.getColumnIndex("language_id"));
                     section2 = setSummaryReport(pendSurveyStatus, pendSurveyId);
-                    /*if ( pendSurveyStatus==1){
-                            syncSurveyListPending.add(new StatusBean(specimenId, String.valueOf(pendSurveyStatus), "", section2, language1, "", pendSurveyId, ""));
-                        }*/
-                    syncSurveyList.add(new StatusBean(specimenId, String.valueOf(pendSurveyStatus), "", section2, language1, "", pendSurveyId));
+                    List<QuestionAnswer> questionAnswerList=  getParentDetails(pendSurveyId,prefs.getInt(Constants.SURVEY_ID, 0),qid);
+                    syncSurveyList.add(new StatusBean(specimenId, String.valueOf(pendSurveyStatus), "", section2, language1, "", pendSurveyId,questionAnswerList));
                     countSurvey = countSurvey + 1;
                 } while (cursorPendingSurvey.moveToNext());
                 cursorPendingSurvey.close();
@@ -494,10 +542,12 @@ public class ListingActivity extends BaseActivity implements View.OnClickListene
 
         Context context;
         List<StatusBean> statusbean;
+        LinearLayout filledlinearLayout;
 
         public SetSurveyStatus(ListingActivity surveySummaryReport, List<StatusBean> statusBeanList) {
             this.context = surveySummaryReport;
             statusbean = statusBeanList;
+
 
         }
         @Override
@@ -535,9 +585,6 @@ public class ListingActivity extends BaseActivity implements View.OnClickListene
             if (layoutView == null) {
                 vh = new ListingActivity.SetSurveyStatus.Viewholder();
                 layoutView = inflater.inflate(R.layout.surveysummary_detail_row, viewGroup, false);
-              //  vh.surveyName = (TextView) layoutView.findViewById(R.id.survey_id);
-                //  vh.schemasTextView=(TextView)layoutView.findViewById(R.id.scheme_btm);
-                //  vh.tvPart1 = (TextView) layoutView.findViewById(R.id.date);
                 vh.anniversariesListDymanicLabel= (LinearLayout) layoutView.findViewById(R.id.linearLayout);
                 layoutView.setTag(vh);
             } else {
@@ -553,13 +600,10 @@ public class ListingActivity extends BaseActivity implements View.OnClickListene
                 {
                     summary=summary + DBHandler.getAnswerFromPreviousQuestion(qids[k],surveySummaryreportdbhandler , String.valueOf(statusbean.get(i).getSurveyId()));
                 }
-                String[] getClusterName=statusbean.get(i).getCaseId().split("#");
-             //   vh.surveyName.setText(getClusterName[0]);
-//                vh.tvPart1.setText(getClusterName[1]);
+                     String[] getClusterName=statusbean.get(i).getCaseId().split("#");
                 Logger.logD("Getting many times","->"+i);
                 vh.anniversariesListDymanicLabel.removeAllViews();
-                 getParentDetails(vh.anniversariesListDymanicLabel,statusbean.get(i).getSurveyId(),
-                        prefs.getInt(Constants.SURVEY_ID, 0),qid);
+                setParentView(vh.anniversariesListDymanicLabel,statusbean.get(i).getQuestionAnswerList(),vh.anniversariesListDymanicLabel);
 
             }
             else if(!"".equals(qid))
@@ -577,38 +621,12 @@ public class ListingActivity extends BaseActivity implements View.OnClickListene
             vh.anniversariesListDymanicLabel.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Toast.makeText(context,"Click"+statusbean.get(i).getSurveyId(),Toast.LENGTH_SHORT).show();
+                   // Toast.makeText(context,"Click"+statusbean.get(i).getSurveyId(),Toast.LENGTH_SHORT).show();
                 }
             });
             return layoutView;
         }
-        private void getParentDetails(LinearLayout linearLayout, String  surveyPrimaryKey, int parentId,
-                                      String summaryQIDs) {
-            List<String> displayQuestionList = Arrays.asList(summaryQIDs.split(","));
-            if (!displayQuestionList.isEmpty()) {
-                for (int i = 0; i < displayQuestionList.size(); i++) {
-                    View schemeChildView = getLayoutInflater().inflate(R.layout.scheme_inflate_row_summary, linearLayout, false);//child.xml
-                    String getQuestionType = dbConveneHelper.getQuestionType(displayQuestionList.get(i));
-                    String question = dbConveneHelper.getQuestionFromDb(displayQuestionList.get(i), parentId);
-                    String answer = "";
-                    if (getQuestionType.equalsIgnoreCase("R") || getQuestionType.equalsIgnoreCase("S")) {
-                        answer = surveySummaryreportdbhandler.getAnswerFromQuestionID(displayQuestionList.get(i), surveySummaryreportdbhandler, String.valueOf(surveyPrimaryKey), getQuestionType);
-                        answer = dbConveneHelper.getAnswer(displayQuestionList.get(i), answer, surveyPrimaryKey);
-                    } else {
-                        answer = DBHandler.getAnswerFromQuestionID(displayQuestionList.get(i), surveySummaryreportdbhandler, String.valueOf(surveyPrimaryKey), getQuestionType);
-                    }
 
-                    QuestionAnswer filledBean = new QuestionAnswer();
-                    filledBean.setQuestionText(question);
-                    filledBean.setAnswerText(answer);
-                    filledBean.setParentId(parentId);
-                    setParentView(filledBean, schemeChildView);
-                    linearLayout.addView(schemeChildView);
-
-
-                }
-            }
-        }
         private class Viewholder {
             TextView surveyName;
             TextView schemasTextView;
@@ -617,14 +635,17 @@ public class ListingActivity extends BaseActivity implements View.OnClickListene
             LinearLayout schemeparentlayout ;
         }
     }
-     private void setParentView(QuestionAnswer questionAnswersList, View schemeChildView) {
-        TextView questionButton = (TextView) schemeChildView.findViewById(R.id.nameTextLebel);
-        questionButton.setText(questionAnswersList.getQuestionText());
-        TextView answerText = (TextView) schemeChildView.findViewById(R.id.nameText);
-        answerText.setText(questionAnswersList.getAnswerText());
-    }
+     private void setParentView(View schemeChildView,List<QuestionAnswer> questionAnswersList,LinearLayout ll) {
+         try {
+             for (int i=0;i<questionAnswersList.size();i++){
+                 TextView answerText = new TextView(this);
+                 answerText.setTextSize(18);
+                 answerText.setText(questionAnswersList.get(i).getAnswerText());
+                 ll.addView(answerText);
 
-
-
-
+             }
+         } catch (Exception e) {
+             Logger.logE(TAG,"exception here",e);
+         }
+     }
 }

@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#fff9e4"
+    android:background="#eeeeee"
     tools:context="org.mahiti.convenemis.SurveyQuestionActivity">
     <include
         android:id="@+id/toolbar1"

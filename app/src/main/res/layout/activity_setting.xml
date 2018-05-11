@@ -8,7 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:layout_alignParentBottom="true"
-        android:background="#000"
+        android:background="#828282"
         android:gravity="center"
         android:weightSum="3">
 
@@ -18,12 +18,15 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="Contact support"
+            android:textSize="14dp"
+            android:visibility="gone"
+            android:text="Support"
             android:textColor="#fff" />
         <View
             android:layout_width="1dp"
             android:layout_height="match_parent"
             android:layout_marginLeft="1dp"
+            android:visibility="gone"
             android:layout_marginRight="1dp"
             android:background="#fff9e4" />
         <TextView
@@ -31,14 +34,16 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:textSize="14dp"
             android:gravity="center"
-            android:text="Update content"
+            android:text="Update"
             android:textColor="#fff" />
 
         <View
             android:layout_width="1dp"
             android:layout_height="match_parent"
             android:layout_marginLeft="1dp"
+            android:visibility="gone"
             android:layout_marginRight="1dp"
             android:background="#fff9e4" />
 
@@ -48,6 +53,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
+            android:textSize="14dp"
             android:text="Logout"
             android:textColor="#fff" />
     </LinearLayout>

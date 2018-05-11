@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.mahiti.convenemis.BeenClass.beneficiary.Datum;
@@ -59,6 +60,7 @@ public class ExpandableListAdapterDataCollection extends BaseExpandableListAdapt
         return childPosition;
     }
 
+
     @Override
     public View getChildView(final int groupPosition, final int childPosition,
                              boolean isLastChild, View convertView, ViewGroup parent) {
@@ -68,7 +70,7 @@ public class ExpandableListAdapterDataCollection extends BaseExpandableListAdapt
         if (convertView == null) {
             LayoutInflater infalInflater = (LayoutInflater) this._context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = infalInflater.inflate(R.layout.list_item, null);
+               convertView = infalInflater.inflate(R.layout.list_item, null);
         }
 
         final TextView txtListChild = convertView
@@ -77,12 +79,15 @@ public class ExpandableListAdapterDataCollection extends BaseExpandableListAdapt
         txtListChild.setText(childText.getName());
         txtListChild.setOnClickListener(v -> {
             try {
+                txtListChild.setTextColor(_context.getResources().getColor(R.color.pink));
+                // v.setBackgroundColor(_context.getResources().getColor(R.color.pink));
                 AnimationUtils.viewAnimation(v);
                 getDataCollectionDetails(groupPosition,childPosition);
             }catch (Exception e){
                 Logger.logE("","",e);
             }
         });
+
 
         return convertView;
     }
@@ -135,11 +140,13 @@ public class ExpandableListAdapterDataCollection extends BaseExpandableListAdapt
                 }
             }
         }else {
+            Logger.logD("-->start time","checking time line");
             Intent intent = new Intent(_context, ListingActivity.class);
             intent.putExtra(Constants.HEADER_NAME,headerList.get(groupPosition));
             intent.putExtra("beneficiary_type_id",String.valueOf(dataChildList.get(headerList.get(groupPosition)).get(childPosition).getId()));
             intent.putExtra(Constants.TYPE_VALUE, dataChildList.get(headerList.get(groupPosition)).get(childPosition).getName());
             _context.startActivity(intent);
+
         }
     }
 
@@ -178,6 +185,12 @@ public class ExpandableListAdapterDataCollection extends BaseExpandableListAdapt
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = infalInflater.inflate(R.layout.list_group, null);
         }
+        ImageView img = (ImageView) convertView.findViewById(R.id.image);
+        if (isExpanded) {
+            img.setImageResource(R.drawable.ic_keyboard_arrow_down_white_24dp);
+        } else {
+            img.setImageResource(R.drawable.ic_keyboard_arrow_up_white_24dp);
+        }
 
         TextView lblListHeader = convertView
                 .findViewById(R.id.lblListHeader);
@@ -190,4 +203,6 @@ public class ExpandableListAdapterDataCollection extends BaseExpandableListAdapt
     public boolean isChildSelectable(int groupPosition, int childPosition) {
         return true;
     }
+
+
 }

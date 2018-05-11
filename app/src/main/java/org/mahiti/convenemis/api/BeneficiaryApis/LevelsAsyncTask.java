@@ -3,6 +3,9 @@ package org.mahiti.convenemis.api.BeneficiaryApis;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.view.animation.Animation;
@@ -36,6 +39,7 @@ import java.util.Arrays;
 import java.util.List;
 
 
+
 public class LevelsAsyncTask extends AsyncTask<Context, Integer, String> {
     /*
      * Declaring all the variables and views
@@ -58,6 +62,7 @@ public class LevelsAsyncTask extends AsyncTask<Context, Integer, String> {
     private static final String MODIFIED_DATE="modified_date";
     private String globleDate = "";
     private String statusStr = "the status";
+    private static final String LOADING_COLOR="#098759";
 
     /**
      * LevelsAsyncTask constructor
@@ -162,33 +167,36 @@ public class LevelsAsyncTask extends AsyncTask<Context, Integer, String> {
             case 1:
                 progressBar.setProgress(50);
                 locationStatus.setText(R.string.loading_level1);
-                locationStatus.startAnimation(translatebu);
+               // locationStatus.startAnimation(translatebu);
 
                 break;
             case 2:
                 progressBar.setProgress(60);
                 locationStatus.setText(R.string.loading_level2);
-                locationStatus.startAnimation(translatebu);
+            //    locationStatus.startAnimation(translatebu);
                 break;
             case 3:
                 progressBar.setProgress(70);
                 locationStatus.setText(R.string.loading_level3);
-                locationStatus.startAnimation(translatebu);
+            //    locationStatus.startAnimation(translatebu);
                 break;
             case 4:
                 progressBar.setProgress(80);
                 locationStatus.setText(R.string.loading_level4);
-                locationStatus.startAnimation(translatebu);
+             //   locationStatus.startAnimation(translatebu);
                 break;
             case 5:
                 progressBar.setProgress(90);
                 locationStatus.setText(R.string.loading_level5);
-                locationStatus.startAnimation(translatebu);
+               // locationStatus.startAnimation(translatebu);
                 break;
             case 6:
                 progressBar.setProgress(100);
                 locationStatus.setText(R.string.loading_level6);
-                locationStatus.startAnimation(translatebu);
+              //  locationStatus.startAnimation(translatebu);
+               // progressBar.setMinimumHeight(10);
+               // progressBar.getProgressDrawable().setColorFilter(Color.parseColor(LOADING_COLOR), PorterDuff.Mode.SRC_IN);
+                progressBar.setProgressTintList(ColorStateList.valueOf(Color.parseColor(LOADING_COLOR)));
                 break;
         }
 

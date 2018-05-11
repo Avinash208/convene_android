@@ -41,7 +41,7 @@ import java.util.List;
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener, SignInDetails {
     EditText edtUserName;
     EditText edtPassword;
-    Button btnLogin;
+    TextView btnLogin;
     String url = "";
     ProgressDialog progressDialog;
     private static final String USER_DETAILS_TABLE ="UserDetailsTable";
@@ -77,19 +77,16 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
-    private void initVariables() {
+   private void initVariables() {
         Typeface face = Typeface.createFromAsset(this.getAssets(), "fonts/Roboto-Light.ttf");
         edtUserName = findViewById(R.id.edtUserName);
         edtPassword = findViewById(R.id.edtPassword);
         edtPassword.setTransformationMethod(new PasswordTransformationMethod());
         edtUserName.setTypeface(face);
         edtPassword.setTypeface(face);
-        loginDetailsLabel = findViewById(R.id.detailsHint);
-        if (loginDetailsLabel != null) {
-            loginDetailsLabel.setTypeface(face);
-        }
+
         this.btnLogin = findViewById(R.id.btnLogin);
-        if (btnLogin != null) {
+       if (btnLogin != null) {
             btnLogin.setOnClickListener(this);
         }
     }
@@ -161,10 +158,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             LoginApi.callLoginApi(this.url, name, passwordEdit, this, this.progressDialog, this.preferences, this);
         }
     }
-    /**
-     * @param userName user credential
-     * @param response all response sent in the login time
-     */
+
     public void callActivity(String userName, String response) {
         Logger.logV("the Login Result", "LoginResult"+response);
         try {
@@ -229,10 +223,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         return isUserConfirm;
     }
 
-    /**
-     * To backup previous user details and deleting records
-     * @param previousUserName
-     */
+
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     private void storePreviousUserTablesToSD(String previousUserName) {
         boolean isCopied=Utils.previousUserCopyEncryptedDataBase(LoginActivity.this,"SurveyLoading",preferences.getString(Constants.DBNAME,""),previousUserName,dateformat);
@@ -294,4 +285,5 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     public void signingDetails(int uid, int languagesId, String userName, int partnerId, String response) {
         callActivity(userName,response);
-    }}
+    }
+}

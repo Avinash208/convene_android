@@ -124,7 +124,7 @@ public class SurveyListAsyncTask extends AsyncTask<Context, Integer, String> {
         progressBar.setProgress(values[0]);
         surveyStatus.setTextColor(Color.parseColor("#d24645"));
         surveyStatus.setText(R.string.loading_survey);
-        surveyStatus.startAnimation(translatebu);
+     //   surveyStatus.startAnimation(translatebu);
 
     }
 

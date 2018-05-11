@@ -211,6 +211,8 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
     private ScrollView scrollView;
     private int surveysId;
     String getParentsBeneficiary="";
+    String getParentsBeneficiaryName="";
+
     /**
      * Date picker dialogue showing
      */
@@ -566,6 +568,7 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
                         if (items.get(j).isSelected()) {
                             Logger.logD("Selected","Item is"+list.get(j).getUuid());
                             getParentsBeneficiary=list.get(j).getUuid();
+                            getParentsBeneficiaryName=list.get(j).getName();
                             getBenificiaryQids.add(page.getQuestionNumber());
                         }
                     }
@@ -580,8 +583,8 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
     private void addressWidgetDisplay(Page page, String questionFont, String answerFont, int questionCode) {
 
         View child = this.getLayoutInflater().inflate(R.layout.address_widget, dynamicQuestionSet, false);//child.xml
-      //  TextView question = child.findViewById(R.id.mainQuestion);
-       // question.setText(page.getQuestion());
+      /*  TextView question = child.findViewById(R.id.mainQuestion);
+        question.setText(page.getQuestion());*/
         LinearLayout relativeLayout = (LinearLayout) child.findViewById(R.id.relativeLayout);
         Spinner hamletspinner = (Spinner) child.findViewById(R.id.hamlet_spinner);
         Spinner villagespinner = (Spinner) child.findViewById(R.id.village_spinner);
@@ -1177,7 +1180,7 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
                     case 10:
                         if (!getParentsBeneficiary.equals("")) {
                             list.add(String.valueOf(true));
-                            fillResponseToDB(getBenificiaryQids.get(0), getParentsBeneficiary, 10);
+                            fillAIResponseToDB(getBenificiaryQids.get(0), getParentsBeneficiary, 10,getParentsBeneficiaryName);
                         }
                         else
                             list.add(String.valueOf(true));
@@ -1202,10 +1205,14 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
     }
 
     private void fillAllLevelToDatabase() {
-        int getUpdatedResult= surveyHandler.updateAddressRecordToSurveyTable(surveyPrimaryKeyId,dynamicSpinnerHashMap);
-        Spinner getLevel7Spinner = dynamicSpinnerHashMap.get("level7");
-        Level1 getLevel7Id = (Level1) getLevel7Spinner.getSelectedItem();
-        fillResponseToDB(getAddressQuestionIds.get(0), String.valueOf(getLevel7Id.getId()), 9);
+        try {
+            int getUpdatedResult= surveyHandler.updateAddressRecordToSurveyTable(surveyPrimaryKeyId,dynamicSpinnerHashMap);
+            Spinner getLevel7Spinner = dynamicSpinnerHashMap.get("level7");
+            Level1 getLevel7Id = (Level1) getLevel7Spinner.getSelectedItem();
+            fillResponseToDB(getAddressQuestionIds.get(0), String.valueOf(getLevel7Id.getName()), 9);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
     /**
      * Clearing all question counts under each type
@@ -1313,6 +1320,8 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
             if ((Constants.SELECT).equalsIgnoreCase(spinnerValues.getSelectedItem().toString())) {
                 errorText.setVisibility(View.VISIBLE);
                 errorText.setText("Please select");
+                errorText.startAnimation(animShake);
+                errorText.setFocusableInTouchMode(true);
                 spinnerBoolean = false;
             } else {
                 errorText.setVisibility(View.GONE);
@@ -2224,6 +2233,19 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
         List<AnswersPage> ans_code = hashMapForAnswerBeen.get(String.valueOf(questionCode));
         int survey_ID = getSharedPreferences(MY_PREFS_NAME_SURVEY, MODE_PRIVATE).getInt(SURVEYID, 0);
         Response response = new Response(String.valueOf(questionCode), answer, ans_code.get(0).getAnswerCode(), "0", questionCode, 0, String.valueOf(survey_ID), 0, ans_code.get(0).getId(), QuestionActivityUtils.getQuestionType(qType));
+        answersCollection.add(response);
+        hashMapAnswersEditText.put(MessageFormat.format("{0}_{1}", questionCode, qType), answersCollection);
+    }
+    /**
+     * @param questionCode
+     * @param answer
+     * @param qType
+     */
+    private void fillAIResponseToDB(int questionCode, String answer, int qType,String benificaryName) {
+        List<Response> answersCollection = new ArrayList<>();
+        List<AnswersPage> ans_code = hashMapForAnswerBeen.get(String.valueOf(questionCode));
+        int survey_ID = getSharedPreferences(MY_PREFS_NAME_SURVEY, MODE_PRIVATE).getInt(SURVEYID, 0);
+        Response response = new Response(String.valueOf(questionCode), answer, ans_code.get(0).getAnswerCode(), benificaryName, questionCode, 0, String.valueOf(survey_ID), 0, ans_code.get(0).getId(), QuestionActivityUtils.getQuestionType(qType));
         answersCollection.add(response);
         hashMapAnswersEditText.put(MessageFormat.format("{0}_{1}", questionCode, qType), answersCollection);
     }
