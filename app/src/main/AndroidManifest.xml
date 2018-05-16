@@ -22,7 +22,7 @@
     <application
         android:name="org.mahiti.convenemis.BaseApplication"
         android:allowBackup="false"
-        android:icon="@drawable/ic_launcher"
+        android:icon="@drawable/akrspi"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">

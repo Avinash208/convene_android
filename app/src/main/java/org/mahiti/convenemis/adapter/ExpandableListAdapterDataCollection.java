@@ -71,16 +71,16 @@ public class ExpandableListAdapterDataCollection extends BaseExpandableListAdapt
             LayoutInflater infalInflater = (LayoutInflater) this._context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                convertView = infalInflater.inflate(R.layout.list_item, null);
+
         }
 
         final TextView txtListChild = convertView
                 .findViewById(R.id.lblListItem);
 
         txtListChild.setText(childText.getName());
-        txtListChild.setOnClickListener(v -> {
+        convertView.setOnClickListener(v -> {
             try {
                 txtListChild.setTextColor(_context.getResources().getColor(R.color.pink));
-                // v.setBackgroundColor(_context.getResources().getColor(R.color.pink));
                 AnimationUtils.viewAnimation(v);
                 getDataCollectionDetails(groupPosition,childPosition);
             }catch (Exception e){

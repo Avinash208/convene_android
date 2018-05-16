@@ -85,8 +85,8 @@
             android:paddingTop="10dp"
             android:paddingLeft="20dp"
             android:textColor="#f44336"
-            android:textAllCaps="true"
             android:textSize="18sp"
+            android:textStyle="bold"
             android:layout_weight="1.7"
             />
     </LinearLayout>

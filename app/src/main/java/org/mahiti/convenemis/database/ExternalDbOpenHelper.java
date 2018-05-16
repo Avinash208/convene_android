@@ -3934,7 +3934,7 @@ public class ExternalDbOpenHelper extends SQLiteOpenHelper {
         List<Level1> getLevelTemp = new ArrayList<>();
         Logger.logV(TAG, "the level is............" + level);
         SQLiteDatabase db = openDataBase();
-        String query = SELECT_FROM + orderLevel+" where "+previous+"="+countryList ;
+        String query = SELECT_FROM + orderLevel+" where "+previous+"="+countryList +" and active=2" ;
         Cursor cursor = db.rawQuery(query, null);
         Logger.logV(TAG, "the value is" + query);
         if (cursor != null && cursor.getCount() != 0 && cursor.moveToFirst()) {

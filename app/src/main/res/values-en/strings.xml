@@ -1,6 +1,6 @@
 <resources>
     <!--App and urls String Labels-->
-    <string name="app_name">Convene 2.0</string>
+    <string name="app_name">AKRSPI</string>
     <string name="application_name">AKRSPI</string>
     <string name="labelusername">Username</string>
     <string name="English">English</string>
@@ -23,11 +23,11 @@
 
 
     <!--Demo url-->
-    <string name="main_url">http://convenebackend.mahiti.org/api/</string>
-    <string name="answer_upload_url">http://convenebackend.mahiti.org/api/add-survey-answers/</string>
-    <string name="main_Url">http://convenebackend.mahiti.org/</string>
-    <string name="main_url_Beneficiary">http://convenebackend.mahiti.org/</string>
-    <string name="regionalLanguageURLS">http://convenebackend.mahiti.org/api/language-list/</string>
+    <string name="main_url">http://akrspiuibackend.mahiti.org/api/</string>
+    <string name="answer_upload_url">http://akrspiuibackend.mahiti.org/api/add-survey-answers/</string>
+    <string name="main_Url">http://akrspiuibackend.mahiti.org/</string>
+    <string name="main_url_Beneficiary">http://akrspiuibackend.mahiti.org/</string>
+    <string name="regionalLanguageURLS">http://akrspiuibackend.mahiti.org/api/language-list/</string>
 
 
     <string name="loadmore_facility">Loading more Facility please wait&#8230;</string>
