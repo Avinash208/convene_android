@@ -95,6 +95,7 @@ public class UpdateSurveyAsyncTask extends AsyncTask<Context, Integer, String> {
     }
     public void parseResponse(String result) {
         try {
+            Logger.logV("the parameters are", "the result" + result);
             JSONObject jsonObject = new JSONObject(result);
 
             int status = jsonObject.getInt("status");

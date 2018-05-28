@@ -32,14 +32,16 @@
                 android:orientation="vertical"
                 android:visibility="visible"/>
             <LinearLayout
+                android:id="@+id/editbtn"
                 android:layout_width="0dp"
                 android:layout_weight="0.3"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:gravity="left"
                 android:layout_marginTop="20dp"
-                android:visibility="gone">
+                >
             <ImageView
+
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/ic_border_color_white_24dp"/>

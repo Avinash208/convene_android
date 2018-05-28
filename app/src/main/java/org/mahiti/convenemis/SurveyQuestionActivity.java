@@ -607,16 +607,22 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
         ArrayAdapter<Level1> spinnerArrayAdapter = new ArrayAdapter<Level1>(this, R.layout.spinner_multi_row_textview, countryList);
         spinnerArrayAdapter.setDropDownViewResource(R.layout.spinner_multi_row_textview);// The drop down view
         spinner.setAdapter(spinnerArrayAdapter);
-
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 Level1 countryList= (Level1)  adapterView.getSelectedItem();
+                int getStateIdFromResponse= DataBaseMapperClass.getStateResponse("level2",surveyPrimaryKeyId,db);
                 List<Level1> stateList=dbhelper.setSpinnerByID("level1_id","Level2",countryList.getId());
                 ArrayAdapter<Level1> districtArrayAdapter = new ArrayAdapter<Level1>(SurveyQuestionActivity.this, R.layout.spinner_multi_row_textview, stateList);
                 districtArrayAdapter.setDropDownViewResource(R.layout.spinner_multi_row_textview);// The drop down view
                 statespinner.setAdapter(districtArrayAdapter);
+                for(int k=0;k<stateList.size();k++){
+                    if (stateList.get(k).getId()==getStateIdFromResponse){
+                        statespinner.setSelection(k);
+                    }
+                }
             }
+
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
@@ -627,10 +633,16 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 Level1 countryList= (Level1)  adapterView.getSelectedItem();
+                int getStateIdFromResponse= DataBaseMapperClass.getStateResponse("level3",surveyPrimaryKeyId,db);
                 List<Level1> stateList=dbhelper.setSpinnerByID("level2_id","Level3",countryList.getId());
                 ArrayAdapter<Level1> districtArrayAdapter = new ArrayAdapter<Level1>(SurveyQuestionActivity.this, R.layout.spinner_multi_row_textview, stateList);
                 districtArrayAdapter.setDropDownViewResource(R.layout.spinner_multi_row_textview);// The drop down view
                 districtspinner.setAdapter(districtArrayAdapter);
+                for(int k=0;k<stateList.size();k++){
+                    if (stateList.get(k).getId()==getStateIdFromResponse){
+                        districtspinner.setSelection(k);
+                    }
+                }
             }
 
             @Override
@@ -642,10 +654,21 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 Level1 countryList= (Level1)  adapterView.getSelectedItem();
+                int getStateIdFromResponse= DataBaseMapperClass.getStateResponse("level4",surveyPrimaryKeyId,db);
+
                 List<Level1> stateList=dbhelper.setSpinnerByID("level3_id","Level4",countryList.getId());
+                if (stateList.isEmpty()) {
+                    Level1 level1 = new Level1(0, 0, "", 0, "Select Taluk");
+                    stateList.add(level1);
+                }
                 ArrayAdapter<Level1> taArrayAdapter = new ArrayAdapter<Level1>(SurveyQuestionActivity.this, R.layout.spinner_multi_row_textview, stateList);
                 taArrayAdapter.setDropDownViewResource(R.layout.spinner_multi_row_textview);// The drop down view
                 talukspinner.setAdapter(taArrayAdapter);
+                for(int k=0;k<stateList.size();k++){
+                    if (stateList.get(k).getId()==getStateIdFromResponse){
+                        talukspinner.setSelection(k);
+                    }
+                }
             }
 
             @Override
@@ -657,10 +680,21 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 Level1 countryList= (Level1)  adapterView.getSelectedItem();
+                int getStateIdFromResponse= DataBaseMapperClass.getStateResponse("level5",surveyPrimaryKeyId,db);
+
                 List<Level1> stateList=dbhelper.setSpinnerByID("level4_id","Level5",countryList.getId());
+                if (stateList.isEmpty()) {
+                    Level1 level1 = new Level1(0, 0, "", 0, "Select gramaPanchayath");
+                    stateList.add(level1);
+                }
                 ArrayAdapter<Level1> taArrayAdapter = new ArrayAdapter<Level1>(SurveyQuestionActivity.this, R.layout.spinner_multi_row_textview, stateList);
                 taArrayAdapter.setDropDownViewResource(R.layout.spinner_multi_row_textview);// The drop down view
                 gramaPanchayathspinner.setAdapter(taArrayAdapter);
+                for(int k=0;k<stateList.size();k++){
+                    if (stateList.get(k).getId()==getStateIdFromResponse){
+                        gramaPanchayathspinner.setSelection(k);
+                    }
+                }
             }
 
             @Override
@@ -672,10 +706,21 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 Level1 countryList= (Level1)  adapterView.getSelectedItem();
+                int getStateIdFromResponse= DataBaseMapperClass.getStateResponse("level6",surveyPrimaryKeyId,db);
+
                 List<Level1> stateList=dbhelper.setSpinnerByID("level5_id","Level6",countryList.getId());
+                if (stateList.isEmpty()) {
+                    Level1 level1 = new Level1(0, 0, "", 0, "Select Village");
+                    stateList.add(level1);
+                }
                 ArrayAdapter<Level1> taArrayAdapter = new ArrayAdapter<Level1>(SurveyQuestionActivity.this, R.layout.spinner_multi_row_textview, stateList);
                 taArrayAdapter.setDropDownViewResource(R.layout.spinner_multi_row_textview);// The drop down view
                 villagespinner.setAdapter(taArrayAdapter);
+                for(int k=0;k<stateList.size();k++){
+                    if (stateList.get(k).getId()==getStateIdFromResponse){
+                        villagespinner.setSelection(k);
+                    }
+                }
             }
 
             @Override
@@ -687,10 +732,21 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 Level1 countryList= (Level1)  adapterView.getSelectedItem();
+                int getStateIdFromResponse= DataBaseMapperClass.getStateResponse("level7",surveyPrimaryKeyId,db);
+
                 List<Level1> stateList=dbhelper.setSpinnerByID("level6_id","Level7",countryList.getId());
+                if (stateList.isEmpty()) {
+                    Level1 level1 = new Level1(0, 0, "", 0, "Select Hamlate");
+                    stateList.add(level1);
+                }
                 ArrayAdapter<Level1> taArrayAdapter = new ArrayAdapter<Level1>(SurveyQuestionActivity.this, R.layout.spinner_multi_row_textview, stateList);
                 taArrayAdapter.setDropDownViewResource(R.layout.spinner_multi_row_textview);// The drop down view
                 hamletspinner.setAdapter(taArrayAdapter);
+                for(int k=0;k<stateList.size();k++){
+                    if (stateList.get(k).getId()==getStateIdFromResponse){
+                        hamletspinner.setSelection(k);
+                    }
+                }
             }
 
             @Override
@@ -1974,7 +2030,7 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
                             deletedCodes.add(String.valueOf(allBlocksQList.get(deleteId)));
                             Logger.logD(TAG, "deleteId " + deleteId);
                         }
-                        deleteQidsFromResponse(deletedCodes);
+                 //       deleteQidsFromResponse(deletedCodes);
                         Toast.makeText(SurveyQuestionActivity.this, "Validating...", Toast.LENGTH_SHORT).show();
                         PreviewPopUp pre = new PreviewPopUp();
                         pre.showPreviewPopUp(SurveyQuestionActivity.this, surveyPrimaryKeyId, dbOpenHelper, nextB, previousButton, surveysId);

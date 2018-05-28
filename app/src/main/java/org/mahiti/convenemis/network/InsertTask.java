@@ -49,7 +49,7 @@ public class InsertTask {
                 checkboxInsert.put("qtype", String.valueOf(responseObj.getQ_type()));
                 responseId = handler.insertResponseDataToDB(checkboxInsert);
                 responseData.add(responseId);
-                Logger.logV("Saving", "Saved Response Successfully-->" + capturedAnswer.get(0));
+                Logger.logV("Saving", "Saved Response Successfully-->" + responseId);
             }
             if (responseData.size() == capturedAnswer.size()) {
                 SurveyQuestionActivity.answersEditText.clear();

@@ -278,9 +278,9 @@ public class AutoSyncActivity extends Activity {
                     return;
                 }
                 // getting back the primary key from the server and storing in the survey table
-                int serverPrimaryKey=json.getInt(RESPONSE_ID_KEY);
-               int getUpdatedPrimaryKey= autoSyncHandler.updateSurveyDataToDB(autoSyncSurveyID,serverPrimaryKey);
-                Logger.logD("getUpdatedPrimaryKey","Updated PrimaryKey"+serverPrimaryKey+"the table PK->"+getUpdatedPrimaryKey);
+                int responseID=json.getInt(RESPONSE_ID_KEY);
+               int getUpdatedPrimaryKey= autoSyncHandler.updateSurveyDataToDB(autoSyncSurveyID,responseID);
+                Logger.logD("getUpdatedPrimaryKey","Updated PrimaryKey"+responseID+"the table PK->"+getUpdatedPrimaryKey);
                 SharedPreferences.Editor editor = autoSyncPreferences.edit();
                 editor.putString("latest_app_version_feeds", json.getString("latestappversion"));
                 editor.putString("latest_db_version_feeds", json.getString("latestdbversion"));
@@ -458,12 +458,14 @@ public class AutoSyncActivity extends Activity {
                         facilityTypeId="0";
                     }
                     beneficiaryDetails=cursor1.getString(cursor1.getColumnIndex("beneficiary_details"));
-                    facility_id=cursor1.getString(cursor1.getColumnIndex("facility_ids"));
+                   /* facility_id=cursor1.getString(cursor1.getColumnIndex("facility_ids"));
                     if(facility_id.isEmpty()){
                         facility_id="0";
-                    }
-                    beneficiary_id=cursor1.getString(cursor1.getColumnIndex("beneficiary_ids"));
+                    }*/
+                    beneficiary_id=cursor1.getString(cursor1.getColumnIndex("uuid"));
                     if(beneficiary_id.isEmpty()){
+                        beneficiary_id="0";
+                    }else{
                         beneficiary_id="0";
                     }
                     uuid=cursor1.getString(cursor1.getColumnIndex("uuid"));
@@ -568,7 +570,7 @@ public class AutoSyncActivity extends Activity {
             builderMultiPart.addFormDataPart("t_id", typologyCode);
             builderMultiPart.addFormDataPart("clusterKey", clusterKey);
             builderMultiPart.addFormDataPart("clustername", clusterMember);
-            builderMultiPart.addFormDataPart("captured_date",captureDate);
+            builderMultiPart.addFormDataPart("captured_date","");
 
             // Is it a force sync of regular submission
             if(fromValue == 3)
@@ -590,10 +592,10 @@ public class AutoSyncActivity extends Activity {
             // Editing or inserting purpose
             if (server_primary_key!=null && !server_primary_key.equals("0")) {
                 builderMultiPart.addFormDataPart(RESPONSE_ID_KEY, server_primary_key);
-                Logger.logV(RESPONSE_ID_KEY, "server_primary_key-->" + server_primary_key);
+                Logger.logV(RESPONSE_ID_KEY, "response_id" + server_primary_key);
             }else{
                 builderMultiPart.addFormDataPart(RESPONSE_ID_KEY, "");
-                Logger.logV(RESPONSE_ID_KEY, "server_primary_key-->" + "");
+                Logger.logV(RESPONSE_ID_KEY, "response_id" + "");
             }
 
             // adding images to builder in a for loop base

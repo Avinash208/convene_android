@@ -184,7 +184,7 @@ public class DBHandler extends SQLiteOpenHelper {
             values.put("capture_date", queryValues.get("captured_date"));
             values.put("beneficiary_type_id", queryValues.get("beneficiary_type_id"));
             values.put("facility_type_id", queryValues.get("facility_type_id"));
-            values.put(SERVER_PRIMARY_KEY, queryValues.get(SERVER_PRIMARY_KEY));
+            values.put(SERVER_PRIMARY_KEY, queryValues.get("response_parent_uuid"));
             if (database == null || !database.isOpen())
                 database = this.getWritableDatabase(DATABASESECRETKEY);
             Logger.logD(TAG, "SurveyTable" + values.toString());
@@ -224,11 +224,13 @@ public class DBHandler extends SQLiteOpenHelper {
         values.put(GROUP_ID_KEY, queryValues.get(GROUP_ID_KEY));
         values.put("primary_id", queryValues.get("primaryID"));
         values.put(QTYPE, queryValues.get(QTYPE));
+        Logger.logV(TAG, "QTYPE--> " + queryValues.get(QTYPE));
         Logger.logV(TAG, "responses " + values.toString());
         Logger.logV(TAG, "group_id " + queryValues.get(GROUP_ID_KEY));
         Logger.logV(TAG, "primaryID " + queryValues.get("primaryID"));
         Logger.logV(TAG, "Values in Response" + values.toString());
-        return database.insertOrThrow("Response", null, values);
+          long getRespose=database.insertOrThrow("Response", null, values);
+        return getRespose;
 
     }
 
@@ -262,7 +264,7 @@ public class DBHandler extends SQLiteOpenHelper {
         values.put(Constants.END_DATE, new SimpleDateFormat(DATE_FORMAT).format(new Date()));
         values.put(Constants.SURVEY_KEY, surveyId);
         values.put(Constants.SYNC_DATE, new SimpleDateFormat(DATE_FORMAT).format(new Date()));
-        return liteDatabase.update(SURVEY_TABLE, values, "uuid" + " = ?", new String[]{getPK});
+        return liteDatabase.update(SURVEY_TABLE, values, "uuid" + " = ?", new String[]{surveyId});
     }
 
     /**
@@ -543,6 +545,7 @@ public class DBHandler extends SQLiteOpenHelper {
                     String getQuestion = dbOpenHelper.getQuestion(questionID, languageId, surveysId);
                     Logger.logD(TAG, " attened question id" + getQuestion);
                     String questionType = cursor.getString(cursor.getColumnIndex(QTYPE));
+                    Logger.logD(TAG, " Question TYPE" + questionType);
                     if (("T").equalsIgnoreCase(questionType) || ("D").equalsIgnoreCase(questionType) || ("AW").equalsIgnoreCase(questionType)) {
                         answer = cursor.getString(cursor.getColumnIndex(ANSTEXT));
                     }

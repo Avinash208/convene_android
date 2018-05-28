@@ -182,8 +182,8 @@ public class DataBaseMapperClass {
         Cursor questionCursor=null;
         HashMap<String,List<AnswersPage>> getStoredAnswer= new HashMap<>();
         List<AnswersPage> allAnswersList = new ArrayList<>();
-        String ResponseQuery=SELECT_FROM +Constants.RESPONSE  + " where  q_code ="+questionNumber +  " and survey_id = " + survey_id;
-
+        String ResponseQuery=SELECT_FROM +Constants.RESPONSE  + " where  q_code ="+questionNumber +  " and survey_id = '" + survey_id + "'";
+        Logger.logD("Response Fetch","query"+ResponseQuery);
         try {
             questionCursor = db.rawQuery(ResponseQuery, null);
             if (questionCursor.moveToFirst()) {
@@ -1382,5 +1382,18 @@ public class DataBaseMapperClass {
         }
         cursor.close();
         return getBeneficiaryParentList;
+    }
+
+    public static int getStateResponse(String tableName, String surveyPrimaryKeyId, net.sqlcipher.database.SQLiteDatabase db) {
+       int getLevelID=0;
+        String selectQuery = "select "+tableName+" from Survey where  uuid='"+surveyPrimaryKeyId+"'";
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        if (cursor.moveToFirst()) {
+            do {
+                getLevelID = cursor.getInt(cursor.getColumnIndex(tableName));
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return getLevelID;
     }
 }

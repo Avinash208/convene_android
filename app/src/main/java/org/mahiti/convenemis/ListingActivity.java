@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
@@ -34,19 +33,12 @@ import org.mahiti.convenemis.BeenClass.QuestionAnswer;
 import org.mahiti.convenemis.BeenClass.StatusBean;
 import org.mahiti.convenemis.BeenClass.SurveysBean;
 import org.mahiti.convenemis.BeenClass.beneficiary.Datum;
-import org.mahiti.convenemis.BeenClass.facilities.FacilityListInterface;
 import org.mahiti.convenemis.adapter.BeneficiaryTypeAdapter;
 import org.mahiti.convenemis.adapter.FacilityTypeAdapter;
-import org.mahiti.convenemis.api.BeneficiaryApis.BeneficaryTypeInterface;
-import org.mahiti.convenemis.api.BeneficiaryApis.FacilitySubTypeInterface;
-import org.mahiti.convenemis.api.FacilitiesListAsyncTask;
-import org.mahiti.convenemis.api.MeetingAPIs.BeneficiaryAsyncTask;
 import org.mahiti.convenemis.backgroundcallbacks.BenificiaryListingCallback;
 import org.mahiti.convenemis.database.ConveneDatabaseHelper;
 import org.mahiti.convenemis.database.DBHandler;
 import org.mahiti.convenemis.database.ExternalDbOpenHelper;
-import org.mahiti.convenemis.database.Utilities;
-import org.mahiti.convenemis.network.ClusterToTypo;
 import org.mahiti.convenemis.network.UpdateFilterInterface;
 import org.mahiti.convenemis.utils.AddBeneficiaryUtils;
 import org.mahiti.convenemis.utils.Constants;
@@ -54,7 +46,6 @@ import org.mahiti.convenemis.utils.Logger;
 import org.mahiti.convenemis.utils.StartSurvey;
 import org.mahiti.convenemis.utils.ToastUtils;
 import org.mahiti.convenemis.utils.Utils;
-
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -244,35 +235,7 @@ public class ListingActivity extends BaseActivity implements View.OnClickListene
      * @param userInput - based on character selection get the list of data from database
      */
     private void getAutoSearchAdapter(CharSequence userInput){
-        /*try{
-                if(BENEFICIARIES_TITLE.equalsIgnoreCase(headerName)){
-                    modifiedDate=dbOpenHelper.getBeneficiaryLastModifiedDate(beneficiaryTypeId,"");
-                    List<Datum> getBeneficiaryName= dbOpenHelper.getBeneficiaryNameForFilter(userInput.toString(),beneficiaryTypeId,modifiedDate);
-                    Logger.logV(TAG,"getBeneficiaryName"+getBeneficiaryName.size());
-                    beneficiaryFinalList.clear();
-                    if(getBeneficiaryName.isEmpty()){
-                        emptytextview.setVisibility(View.VISIBLE);
-                        emptytextview.setText("No Matches Found");
-                    }else{
-                        emptytextview.setVisibility(View.GONE);
-                        setTextViewAdapter(getBeneficiaryName);
-                    }
-                }else{
-                    modifiedDate=dbOpenHelper.getFacilityLastModifiedDate(beneficiaryTypeId,"");
-                    List<org.mahiti.convenemis.BeenClass.facilities.Datum> getBeneficiaryName= dbOpenHelper.getFacilityNameForFilter(userInput.toString(),beneficiaryTypeId,modifiedDate);
-                    Logger.logV(TAG,"getBeneficiaryName"+getBeneficiaryName.size());
-                    facilityFinalList.clear();
-                    if(getBeneficiaryName.isEmpty()){
-                        emptytextview.setVisibility(View.VISIBLE);
-                        emptytextview.setText("No Matches Found");
-                    }else{
-                        emptytextview.setVisibility(View.GONE);
-                        setTextViewAdapterFilter(getBeneficiaryName);
-                    }
-                }
-        }catch (Exception e){
-            Logger.logE(TAG,"Exception in the AutoSearch view",e);
-        }*/
+
     }
 
     /*method to intialize all the views */
@@ -294,12 +257,12 @@ public class ListingActivity extends BaseActivity implements View.OnClickListene
     @Override
     protected void onResume() {
         super.onResume();
-
-        if(!"".equals(autoSearchText)){
+        new  summaryReportSync().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+       /* if(!"".equals(autoSearchText)){
             getAutoSearchAdapter(autoSearchText);
         }
         registerReceiver(beneficiryReceiver, filter);
-        registerReceiver(beneficiryReceiver, intentFilter);
+        registerReceiver(beneficiryReceiver, intentFilter);*/
     }
     @Override
     protected void onPause() {
@@ -434,8 +397,8 @@ public class ListingActivity extends BaseActivity implements View.OnClickListene
         protected void onPostExecute(Object o) {
             super.onPostExecute(o);
             Logger.logD("-->start time","ended");
+            progress.dismiss();
             if (!syncSurveyList.isEmpty()){
-                progress.dismiss();
                 typeListView.setVisibility(View.VISIBLE);
                 setstatusAdapter =new SetSurveyStatus(ListingActivity.this,syncSurveyList);
                 typeListView.setAdapter(setstatusAdapter);
@@ -586,6 +549,7 @@ public class ListingActivity extends BaseActivity implements View.OnClickListene
                 vh = new ListingActivity.SetSurveyStatus.Viewholder();
                 layoutView = inflater.inflate(R.layout.surveysummary_detail_row, viewGroup, false);
                 vh.anniversariesListDymanicLabel= (LinearLayout) layoutView.findViewById(R.id.linearLayout);
+                vh.editbtn= (LinearLayout) layoutView.findViewById(R.id.editbtn);
                 layoutView.setTag(vh);
             } else {
                 layoutView = convertView;
@@ -621,7 +585,19 @@ public class ListingActivity extends BaseActivity implements View.OnClickListene
             vh.anniversariesListDymanicLabel.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                   // Toast.makeText(context,"Click"+statusbean.get(i).getSurveyId(),Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(ListingActivity.this, Beneficiarylinkages.class);
+                    intent.putExtra("SurveyId", statusbean.get(i).getSurveyId());
+                    intent.putExtra(Constants.SURVEY_ID, String.valueOf(prefs.getInt(Constants.SURVEY_ID, 0)));
+                    context.startActivity(intent);
+                }
+            });
+            vh.editbtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(ListingActivity.this, SurveyQuestionActivity.class);
+                    intent.putExtra("SurveyId", statusbean.get(i).getSurveyId());
+                    intent.putExtra(Constants.SURVEY_ID, String.valueOf(prefs.getInt(Constants.SURVEY_ID, 0)));
+                    context.startActivity(intent);
                 }
             });
             return layoutView;
@@ -632,7 +608,7 @@ public class ListingActivity extends BaseActivity implements View.OnClickListene
             TextView schemasTextView;
             TextView tvPart1;
             LinearLayout anniversariesListDymanicLabel ;
-            LinearLayout schemeparentlayout ;
+            LinearLayout editbtn ;
         }
     }
      private void setParentView(View schemeChildView,List<QuestionAnswer> questionAnswersList,LinearLayout ll) {

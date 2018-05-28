@@ -20,14 +20,14 @@
     <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />
 
     <application
-        android:name="org.mahiti.convenemis.BaseApplication"
+        android:name=".BaseApplication"
         android:allowBackup="false"
-        android:icon="@drawable/akrspi"
+        android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name="org.mahiti.convenemis.Splash"
+            android:name=".Splash"
             android:allowBackup="true"
             android:configChanges="orientation"
             android:largeHeap="true"
@@ -40,15 +40,15 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="org.mahiti.convenemis.LoginActivity"
+            android:name=".LoginActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait" />
         <activity
-            android:name="org.mahiti.convenemis.LoginParentActivity"
+            android:name=".LoginParentActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait" />
         <activity
-            android:name="org.mahiti.convenemis.SurveyQuestionActivity"
+            android:name=".SurveyQuestionActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden">
@@ -64,11 +64,11 @@
             android:value="AIzaSyBjrTmIgrILwsJZ4gtg8JnT-U9uzyjGH8Y" />
 
         <activity
-            android:name="org.mahiti.convenemis.SurveyListLevels"
+            android:name=".SurveyListLevels"
             android:configChanges="orientation"
             android:screenOrientation="portrait" />
         <activity
-            android:name="org.mahiti.convenemis.LevelsActivityNew"
+            android:name=".LevelsActivityNew"
             android:configChanges="orientation"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -78,22 +78,22 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="org.mahiti.convenemis.UpdateMasterLoading"
+            android:name=".UpdateMasterLoading"
             android:configChanges="orientation"
             android:screenOrientation="portrait" />
 
-        <service android:name="org.mahiti.convenemis.MyIntentService">
+        <service android:name=".MyIntentService">
             <intent-filter>
                 <action android:name="Survey" />
             </intent-filter>
         </service>
-        <service android:name="org.mahiti.convenemis.network.LangService">
+        <service android:name=".network.LangService">
             <intent-filter>
                 <action android:name="LangService" />
             </intent-filter>
         </service>
         <service
-            android:name="org.mahiti.convenemis.MyIntentPeriodicity"
+            android:name=".MyIntentPeriodicity"
             android:enabled="true"
             android:exported="false">
             <intent-filter>
@@ -102,7 +102,7 @@
             </intent-filter>
         </service>
         <service
-            android:name="org.mahiti.convenemis.MyIntentServiceBeneficiary"
+            android:name=".MyIntentServiceBeneficiary"
             android:enabled="true"
             android:exported="false">
             <intent-filter>
@@ -111,7 +111,7 @@
             </intent-filter>
         </service>
         <service
-            android:name="org.mahiti.convenemis.IntentServiceBeneficiaryUpdate"
+            android:name=".IntentServiceBeneficiaryUpdate"
             android:enabled="true"
             android:exported="false">
             <intent-filter>
@@ -120,7 +120,7 @@
             </intent-filter>
         </service>
         <service
-            android:name="org.mahiti.convenemis.MyIntentServiceFacility"
+            android:name=".MyIntentServiceFacility"
             android:enabled="true"
             android:exported="false">
             <intent-filter>
@@ -129,12 +129,12 @@
             </intent-filter>
         </service>
 
-        <receiver android:name="org.mahiti.convenemis.receivers.BatteryChangereciever">
+        <receiver android:name=".receivers.BatteryChangereciever">
             <intent-filter>
                 <action android:name="android.intent.action.BATTERY_CHANGED" />
             </intent-filter>
         </receiver>
-        <receiver android:name="org.mahiti.convenemis.receivers.PowerConnectionReceiver">
+        <receiver android:name=".receivers.PowerConnectionReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.ACTION_POWER_CONNECTED" />
                 <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED" />
@@ -146,10 +146,10 @@
             android:value="02925ef542d587b0d078678a1e73a90a8291f618" />
 
         <receiver
-            android:name="org.mahiti.convenemis.AlarmService"
+            android:name=".AlarmService"
             android:process=":remote" />
         <receiver
-            android:name="org.mahiti.convenemis.receivers.ConnectivityReceiver"
+            android:name=".receivers.ConnectivityReceiver"
             android:enabled="true">
             <intent-filter>
                 <action android:name="android.net.wifi.WIFI_STATE_CHANGED" />
@@ -158,34 +158,34 @@
         </receiver>
 
         <activity
-            android:name="org.mahiti.convenemis.HomeActivity"
+            android:name=".HomeActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="org.mahiti.convenemis.HomeActivityNew"
+            android:name=".HomeActivityNew"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="org.mahiti.convenemis.ListingActivity"
+            android:name=".ListingActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
-            android:name="org.mahiti.convenemis.TypeDetailsActivity"
+            android:name=".TypeDetailsActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="org.mahiti.convenemis.AddBeneficiaryActivity"
+            android:name=".AddBeneficiaryActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="org.mahiti.convenemis.AddFacilityActivity"
+            android:name=".AddFacilityActivity"
             android:screenOrientation="portrait" />
-        <activity android:name="org.mahiti.convenemis.ShowSurveyPreview" />
+        <activity android:name=".ShowSurveyPreview" />
         <activity
-            android:name="org.mahiti.convenemis.DataCollectionListingActivity"
+            android:name=".DataCollectionListingActivity"
             android:label="@string/title_activity_data_collection_listing"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="stateAlwaysHidden" />
-        <activity android:name="org.mahiti.convenemis.FilterActivityActivity"></activity>
+        <activity android:name=".FilterActivityActivity" />
         <activity
             android:name=".SurveySummaryReport"
             android:configChanges="orientation"
@@ -196,6 +196,10 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".Beneficiarylinkages"
+            android:label="@string/title_activity_beneficiarylinkages"
+            android:theme="@style/AppTheme"></activity>
     </application>
 
 </manifest>
