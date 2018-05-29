@@ -1,27 +1,115 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <android.support.v7.widget.CardView
-        android:layout_above="@+id/footer"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical">
+    <LinearLayout
+        android:id="@+id/header"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            >
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_weight="5"
+        >
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_weight="3"
+            android:layout_height="match_parent"
+            android:paddingBottom="15dp"
+            android:paddingEnd="15dp"
+            android:paddingStart="15dp"
+            android:paddingTop="15dp">
+
+
+            <RelativeLayout
+                android:layout_width="100dp"
+                android:layout_height="80dp"
+                android:layout_centerHorizontal="true"
+                android:id="@+id/userImageParent"
+                >
+                <ImageView
+                    android:id="@+id/userImage"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_centerHorizontal="true"
+                    android:src="@drawable/icons8_user" />
+                <TextView
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignTop="@+id/userImage"
+                    android:id="@+id/userAge"
+                    android:background="@drawable/rounded_tv"
+                    android:gravity="center"
+                    android:padding="3dp"
+                    android:textColor="@color/white"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    tools:text="10"
+                    tools:textAllCaps="true" />
+
+            </RelativeLayout>
+
             <LinearLayout
-                android:id="@+id/dynamic_question_set"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:layout_margin="10dp">
+                android:layout_centerHorizontal="true"
+                android:layout_below="@id/userImageParent">
+                <TextView
+                    android:id="@+id/userName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:singleLine="true"
+                    android:paddingTop="3dp"
+                    android:paddingBottom="3dp"
+                    android:paddingRight="30dp"
+                    android:paddingLeft="30dp"
+                    android:layout_gravity="center_horizontal"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    tools:text="KUMAR MV"
+                    tools:textAllCaps="true" />
 
+                <View
+                    android:id="@+id/viewLine"
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
 
+                    android:background="@color/purple" />
 
+                <TextView
+                    android:id="@+id/locationName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:paddingTop="3dp"
+                    android:paddingBottom="3dp"
+                    android:paddingRight="30dp"
+                    android:paddingLeft="30dp"
+                    android:layout_gravity="center_horizontal"
+                    android:singleLine="true"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    tools:text="KUMAR MV"
+                    />
 
             </LinearLayout>
-        </ScrollView>
-    </android.support.v7.widget.CardView>
+        </RelativeLayout>
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/header">
+        <LinearLayout
+            android:id="@+id/dynamic_question_set"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:orientation="vertical">
+        </LinearLayout>
+    </ScrollView>
 </RelativeLayout>

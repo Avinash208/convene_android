@@ -587,6 +587,7 @@ public class ListingActivity extends BaseActivity implements View.OnClickListene
                 public void onClick(View view) {
                     Intent intent = new Intent(ListingActivity.this, Beneficiarylinkages.class);
                     intent.putExtra("SurveyId", statusbean.get(i).getSurveyId());
+                    intent.putExtra("parentID", String.valueOf(statusbean.get(i).getQuestionAnswerList().get(0).getParentId()));
                     intent.putExtra(Constants.SURVEY_ID, String.valueOf(prefs.getInt(Constants.SURVEY_ID, 0)));
                     context.startActivity(intent);
                 }

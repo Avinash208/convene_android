@@ -408,7 +408,7 @@
     <string name="convene_2_0">Convene 2.0</string>
     <string name="let_s_go">LET\'S GO</string>
     <string name="title_activity_main">MainActivity</string>
-    <string name="tab_text_1">Details</string>
+    <string name="tab_text_1">Profile</string>
     <string name="tab_text_2">Activities </string>
     <string name="tab_text_3">Linkages</string>
     <string name="action_settings">Settings</string>

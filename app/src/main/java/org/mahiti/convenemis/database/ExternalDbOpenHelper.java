@@ -36,6 +36,7 @@ import org.mahiti.convenemis.BeenClass.parentChild.LevelSeven;
 import org.mahiti.convenemis.BeenClass.parentChild.LevelSix;
 import org.mahiti.convenemis.BeenClass.parentChild.LevelThree;
 import org.mahiti.convenemis.BeenClass.parentChild.LevelTwo;
+import org.mahiti.convenemis.BeenClass.parentChild.LinkagesList;
 import org.mahiti.convenemis.BeenClass.parentChild.LocationSurveyBeen;
 import org.mahiti.convenemis.BeenClass.parentChild.SurveyDetail;
 import org.mahiti.convenemis.BeenClass.parentChild.SurveyListDetails;
@@ -1433,12 +1434,41 @@ public class ExternalDbOpenHelper extends SQLiteOpenHelper {
                 cv.put("survey_type", surveyListDetails.getSurveyDetails().get(i).getSurveyType());
                 Log.v(TAG, "survey_type: " + surveyListDetails.getSurveyDetails().get(i).getSurveyType());
 
+
+               long getPid= updateLinkageTable(surveyListDetails.getSurveyDetails().get(i).getLinkagesDetails(),database);
+                Log.v(TAG, "linkages: " + getPid);
                 database.insertWithOnConflict("Surveys", null, cv, SQLiteDatabase.CONFLICT_REPLACE);
             }
 
         } catch (Exception e) {
             Logger.logE("", "", e);
         }
+    }
+
+    private long updateLinkageTable(List<LinkagesList> linkages, SQLiteDatabase database) {
+       long getInsertedID=-1;
+        try {
+            if (!linkages.isEmpty()){
+                ContentValues cvL = new ContentValues();
+                for (int k=0;k<linkages.size();k++){
+                    LinkagesList linkagesList=linkages.get(k);
+                    int rationalId= linkagesList.getRelation_id();
+                    int form_type_id= linkagesList.getForm_type_id();
+                    String  uuid= linkagesList.getUuid();
+                    String  name= linkagesList.getName();
+                    cvL.put("relation_id", rationalId);
+                    cvL.put("form_type_id", form_type_id);
+                    cvL.put("uuid", uuid);
+                    cvL.put("name", name);
+                    getInsertedID=  database.insertWithOnConflict("SurveyLinkage", null, cvL, SQLiteDatabase.CONFLICT_REPLACE);
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return getInsertedID;
     }
 
 
@@ -3972,6 +4002,23 @@ public class ExternalDbOpenHelper extends SQLiteOpenHelper {
     }
 
 
-
-
+    public List<String> getLinkageHeadings(int surveysId, ExternalDbOpenHelper dbHandler) {
+        List<String> getTempNames= new ArrayList<>();
+        try {
+            String selectQuery = "Select * from SurveyLinkage where SurveyLinkage.form_type_id="+surveysId;
+            SQLiteDatabase db = dbHandler.getWritableDatabase();
+            Cursor cursor = db.rawQuery(selectQuery, null);
+            do {
+                if (cursor.moveToFirst() && cursor.getCount() > 0) {
+                    String holderName = cursor.getString(cursor.getColumnIndex("name"));
+                    Logger.logD("holderName", "holderName here " + holderName);
+                    getTempNames.add(holderName);
+                }
+            } while (cursor.moveToNext());
+            cursor.close();
+        } catch (Exception e) {
+            Logger.logD("exception", "exception in date fragment" + e);
+        }
+        return getTempNames;
+    }
 }

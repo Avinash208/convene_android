@@ -91,6 +91,10 @@ public class SurveyDetail implements Parcelable{
     @SerializedName("q_config")
     @Expose
     private Integer qConfig;
+    @SerializedName("linkages")
+    @Expose
+    private List<LinkagesList> linkagesDetails = null;
+
 
     public String getCategoryName() {
         return categoryName;
@@ -439,5 +443,14 @@ public class SurveyDetail implements Parcelable{
 
     public void setSurveyType(Integer surveyType) {
         this.surveyType = surveyType;
+    }
+
+    public List<LinkagesList> getLinkagesDetails() {
+
+        return linkagesDetails;
+    }
+
+    public void setLinkagesDetails(List<LinkagesList> linkagesDetails) {
+        this.linkagesDetails = linkagesDetails;
     }
 }

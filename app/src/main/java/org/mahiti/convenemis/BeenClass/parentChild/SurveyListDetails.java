@@ -13,6 +13,9 @@ public class SurveyListDetails {
     @SerializedName("surveyDetails")
     @Expose
     private List<SurveyDetail> surveyDetails = null;
+
+
+
     @SerializedName("message")
     @Expose
     private String message;
@@ -35,7 +38,6 @@ public class SurveyListDetails {
     public void setSurveyDetails(List<SurveyDetail> surveyDetails) {
         this.surveyDetails = surveyDetails;
     }
-
     public String getMessage() {
         return message;
     }

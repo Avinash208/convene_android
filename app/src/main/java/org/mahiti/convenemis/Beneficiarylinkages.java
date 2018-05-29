@@ -1,5 +1,6 @@
 package org.mahiti.convenemis;
 
+import android.support.design.widget.TabItem;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -11,6 +12,7 @@ import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 public class Beneficiarylinkages extends AppCompatActivity {
 
@@ -28,6 +30,7 @@ public class Beneficiarylinkages extends AppCompatActivity {
      * The {@link ViewPager} that will host the section contents.
      */
     private ViewPager mViewPager;
+    private TabItem Tabthree;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +39,9 @@ public class Beneficiarylinkages extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+        Tabthree = (TabItem) findViewById(R.id.tabItem3);
+
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
@@ -44,10 +50,11 @@ public class Beneficiarylinkages extends AppCompatActivity {
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
 
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
+
+
     }
 
 
@@ -91,10 +98,14 @@ public class Beneficiarylinkages extends AppCompatActivity {
             // Return a BeneficiaryLinkageDetails (defined as a static inner class below).
            if (position==0)
                 return BeneficiaryLinkageDetails.newInstance(position + 1);
-           else
+           else   if (position==1)
+               return BeneficiaryActivityFragment.newInstance(position + 1);
+           else if (position==2)
                return BeneficiaryLinkageActivityFragment.newInstance(position + 1);
-        }
+           else
+               return BeneficiaryLinkageDetails.newInstance(position + 1);
 
+        }
         @Override
         public int getCount() {
             // Show 3 total pages.
