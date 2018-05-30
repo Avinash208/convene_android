@@ -15,6 +15,8 @@ public class StatusBean {
     private String primaryId = "";
     private String date ;
     private String clusterName;
+    private int parent_form_primaryid;
+
     private List<QuestionAnswer> questionAnswerList;
 
     public  StatusBean(){
@@ -42,7 +44,7 @@ public class StatusBean {
     }
 
     public StatusBean(String clusterName, String date, String surveyStatus, String section2, String language1, String typoCode, String pendSurveyId,
-                      List<QuestionAnswer> questionAnswerList) {
+                      List<QuestionAnswer> questionAnswerList,int parent_form_primaryid) {
         this.clusterName=clusterName;
         this.date=date;
         String surveyStatus1 = surveyStatus;
@@ -50,6 +52,7 @@ public class StatusBean {
         this.surveyId=pendSurveyId;
         this.typologyCode=typoCode;
         this.questionAnswerList=questionAnswerList;
+        this.parent_form_primaryid=parent_form_primaryid;
 
     }
 
@@ -119,7 +122,9 @@ public class StatusBean {
         this.surveyId=sId;
         this.clusterCode = clusterCode;
         this.date=date;
+
     }
+
 
 
     public void setLang(String lang) {
@@ -136,5 +141,13 @@ public class StatusBean {
 
     public void setQuestionAnswerList(List<QuestionAnswer> questionAnswerList) {
         this.questionAnswerList = questionAnswerList;
+    }
+
+    public int getParent_form_primaryid() {
+        return parent_form_primaryid;
+    }
+
+    public void setParent_form_primaryid(int parent_form_primaryid) {
+        this.parent_form_primaryid = parent_form_primaryid;
     }
 }

@@ -199,7 +199,8 @@
         <activity
             android:name=".Beneficiarylinkages"
             android:label="@string/title_activity_beneficiarylinkages"
-            android:theme="@style/AppTheme"></activity>
+            android:theme="@style/AppTheme" />
+        <activity android:name=".ShowMemberListActivity"></activity>
     </application>
 
 </manifest>

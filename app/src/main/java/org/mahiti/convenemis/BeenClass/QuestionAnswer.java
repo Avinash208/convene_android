@@ -7,9 +7,14 @@ package org.mahiti.convenemis.BeenClass;
 public class QuestionAnswer {
     private String questionText;
     private String answerText;
+    private String selectedChildUUID;
+
+    private int child_form_primaryid;
     private int clusterId;
     private int locationLevel;
     private int parentId;
+    private  int isActive;
+
 
     public int getParentId() {
         return parentId;
@@ -52,5 +57,29 @@ public class QuestionAnswer {
 
     public void setAnswerText(String answerText) {
         this.answerText = answerText;
+    }
+
+    public int getIsActive() {
+        return isActive;
+    }
+
+    public void setIsActive(int isActive) {
+        this.isActive = isActive;
+    }
+
+    public String getSelectedChildUUID() {
+        return selectedChildUUID;
+    }
+
+    public void setSelectedChildUUID(String selectedChildUUID) {
+        this.selectedChildUUID = selectedChildUUID;
+    }
+
+    public int getChild_form_primaryid() {
+        return child_form_primaryid;
+    }
+
+    public void setChild_form_primaryid(int child_form_primaryid) {
+        this.child_form_primaryid = child_form_primaryid;
     }
 }

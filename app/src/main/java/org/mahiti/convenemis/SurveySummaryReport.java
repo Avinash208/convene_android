@@ -489,40 +489,7 @@ public class SurveySummaryReport extends BaseActivity implements View.OnClickLis
 
             return layoutView;
         }
-        /*private void getParentDetails(LinearLayout linearLayout, int  surveyPrimaryKey, int parentId,
-                                      String summaryQIDs) {
-            List<String> displayQuestionList = Arrays.asList(summaryQIDs.split(","));
-            if (!displayQuestionList.isEmpty()) {
-                for (int i = 0; i < displayQuestionList.size(); i++) {
-                    View schemeChildView = getLayoutInflater().inflate(R.layout.scheme_inflate_row_summary, linearLayout, false);//child.xml
-                    String getQuestionType = dbOpenHelper.getQuestionType(displayQuestionList.get(i));
-                    String question = dbOpenHelper.getQuestionFromDb(displayQuestionList.get(i), parentId);
-                    String answer = "";
-                    if (getQuestionType.equalsIgnoreCase("R") || getQuestionType.equalsIgnoreCase("S")) {
-                        answer = DBHandler.getAnswerFromQuestionID(displayQuestionList.get(i), syncSurveyHandler, String.valueOf(surveyPrimaryKey), getQuestionType);
-                        answer = dbOpenHelper.getAnswer(displayQuestionList.get(i), answer, String.valueOf(surveyPrimaryKey));
-                    } else {
-                        answer = DBHandler.getAnswerFromQuestionID(displayQuestionList.get(i), syncSurveyHandler, String.valueOf(surveyPrimaryKey), getQuestionType);
-                    }
 
-                    QuestionAnswer filledBean = new QuestionAnswer();
-                    filledBean.setQuestionText(question);
-                    filledBean.setAnswerText(answer);
-                    filledBean.setParentId(parentId);
-                    setParentView(filledBean, schemeChildView);
-                    linearLayout.addView(schemeChildView);
-
-
-                }
-            }
-
-
-
-
-
-
-
-        }*/
         private class Viewholder {
             TextView surveyName;
             TextView schemasTextView;
@@ -531,42 +498,6 @@ public class SurveySummaryReport extends BaseActivity implements View.OnClickLis
             LinearLayout schemeparentlayout ;
         }
     }
-
-   /* private void setParentView(QuestionAnswer questionAnswersList, View schemeChildView) {
-        TextView questionButton = (TextView) schemeChildView.findViewById(R.id.nameTextLebel);
-        questionButton.setText(questionAnswersList.getQuestionText());
-        TextView answerText = (TextView) schemeChildView.findViewById(R.id.nameText);
-        answerText.setText(questionAnswersList.getAnswerText());
-    }
-*/
-
-   /* public void pendingSectionsStart(String spId, int sId, String typoCode, String anstext) {
-
-        if (spId != null && !"".equals(spId)) {
-            String[] typoArray = typoCode.split(",");
-            SharedPreferences.Editor editor = syncSurveyPreferences.edit();
-            editor.putString("resumeSurvey", "Yes");
-            editor.putString("pending_specimen_id", spId);
-            editor.putString("backupCaseId", spId);
-            editor.putString("reason_off_survey", "");
-            editor.putBoolean(PreferenceConstants.surveySkipFlag, false);
-            editor.putString(PreferenceConstants.typologyId, typoArray[typoArray.length - 1]);
-            editor.apply();
-            syncSurveyProgDialog.dismiss();
-            if (sId != 0) {
-                Intent intent = new Intent(SurveySummaryReport.this, SurveyQuestionActivity.class);
-                intent.putExtra(PreferenceConstants.surveyId, String.valueOf(sId));
-                intent.putExtra("anstext", anstext);
-                startActivity(intent);
-            } else {
-                Logger.logD("","");
-            }
-        }
-    }*/
-
-
-
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();

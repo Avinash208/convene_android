@@ -17,10 +17,9 @@
             android:layout_height="match_parent"
             android:paddingBottom="15dp"
             android:paddingEnd="15dp"
+            android:visibility="gone"
             android:paddingStart="15dp"
             android:paddingTop="15dp">
-
-
             <RelativeLayout
                 android:layout_width="100dp"
                 android:layout_height="80dp"
@@ -108,7 +107,7 @@
             android:id="@+id/dynamic_question_set"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
+            android:layout_margin="30dp"
             android:orientation="vertical">
         </LinearLayout>
     </ScrollView>

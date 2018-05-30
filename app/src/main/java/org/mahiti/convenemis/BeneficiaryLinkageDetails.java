@@ -4,7 +4,6 @@ package org.mahiti.convenemis;
  * Created by mahiti on 28/05/18.
  */
 
-import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -107,28 +106,18 @@ public class BeneficiaryLinkageDetails extends Fragment {
                  Question and options are getting from convene database .with reference of dbhandler database .
                 */
                 LinearLayout.LayoutParams  questionParamLayout = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                TextView questionLabel = new TextView(context);
-                questionLabel.setLayoutParams(questionParamLayout);
-                questionParamLayout.setMargins(4,4,4,0);
-                questionLabel.setPadding(10,0,0,10);
-                questionLabel.setTextSize(15);
-                questionLabel.setTypeface(Typeface.DEFAULT_BOLD);
-                questionLabel.setText(getAttendedQuestion.get(i).getQuestion());
-                parentLayout.addView(questionLabel);
-              /*
-                paramAnswer layout is for setting the answe#r from the  surveyDatabase.
-                */
-                LinearLayout.LayoutParams  paramAnswer = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                TextView answerLabel = new TextView(context);
-                answerLabel.setLayoutParams(paramAnswer);
-                paramAnswer.setMargins(4,0,4,4);
-                answerLabel.setPadding(10,0,0,10);
-                answerLabel.setText(String.format("Ans: %s", getAttendedQuestion.get(i).getAnswer()));
-                answerLabel.setKeyListener(null);
-                answerLabel.setCursorVisible(false);
-                answerLabel.setPressed(false);
-                answerLabel.setFocusable(false);
-                parentLayout.addView(answerLabel);
+                View child = this.getLayoutInflater().inflate(R.layout.detail_row, parentLayout, false);//child.xml
+                TextView locationlabel = (TextView) child.findViewById(R.id.locationlabel);
+                TextView namelabel = (TextView) child.findViewById(R.id.namelabel);
+                namelabel.setText(getAttendedQuestion.get(i).getQuestion());
+                locationlabel.setText(String.format(getAttendedQuestion.get(i).getAnswer()));
+                locationlabel.setKeyListener(null);
+                locationlabel.setCursorVisible(false);
+                locationlabel.setPressed(false);
+                locationlabel.setFocusable(false);
+                locationlabel.setTextColor(context.getResources().getColor(R.color.divider));
+                parentLayout.addView(child);
+
             }
 
         }

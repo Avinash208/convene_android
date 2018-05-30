@@ -474,6 +474,7 @@ public class ListingActivity extends BaseActivity implements View.OnClickListene
                     pendSurveyStatus = cursorPendingSurvey.getInt(cursorPendingSurvey.getColumnIndex("survey_status"));
                     pendSurveyId = cursorPendingSurvey.getString(cursorPendingSurvey.getColumnIndex("uuid"));
                     specimenId = cursorPendingSurvey.getString(cursorPendingSurvey.getColumnIndex("cluster_name"));
+                  int parent_form_primaryid = cursorPendingSurvey.getInt(cursorPendingSurvey.getColumnIndex("server_primary_key"));
                     String date = cursorPendingSurvey.getString(cursorPendingSurvey.getColumnIndex("end_date"));
                     if(date.equals("0")){
                         date = cursorPendingSurvey.getString(cursorPendingSurvey.getColumnIndex("start_date"));
@@ -482,7 +483,7 @@ public class ListingActivity extends BaseActivity implements View.OnClickListene
                     String language1 = cursorPendingSurvey.getString(cursorPendingSurvey.getColumnIndex("language_id"));
                     section2 = setSummaryReport(pendSurveyStatus, pendSurveyId);
                     List<QuestionAnswer> questionAnswerList=  getParentDetails(pendSurveyId,prefs.getInt(Constants.SURVEY_ID, 0),qid);
-                    syncSurveyList.add(new StatusBean(specimenId, String.valueOf(pendSurveyStatus), "", section2, language1, "", pendSurveyId,questionAnswerList));
+                    syncSurveyList.add(new StatusBean(specimenId, String.valueOf(pendSurveyStatus), "", section2, language1, "", pendSurveyId,questionAnswerList,parent_form_primaryid));
                     countSurvey = countSurvey + 1;
                 } while (cursorPendingSurvey.moveToNext());
                 cursorPendingSurvey.close();
@@ -588,6 +589,7 @@ public class ListingActivity extends BaseActivity implements View.OnClickListene
                     Intent intent = new Intent(ListingActivity.this, Beneficiarylinkages.class);
                     intent.putExtra("SurveyId", statusbean.get(i).getSurveyId());
                     intent.putExtra("parentID", String.valueOf(statusbean.get(i).getQuestionAnswerList().get(0).getParentId()));
+                    intent.putExtra("parent_form_primaryid", String.valueOf(statusbean.get(i).getParent_form_primaryid()));
                     intent.putExtra(Constants.SURVEY_ID, String.valueOf(prefs.getInt(Constants.SURVEY_ID, 0)));
                     context.startActivity(intent);
                 }

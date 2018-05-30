@@ -1430,13 +1430,10 @@ public class ExternalDbOpenHelper extends SQLiteOpenHelper {
 
                 cv.put("category_id", surveyListDetails.getSurveyDetails().get(i).getCategoryId());
                 Log.v(TAG, "category_id   : " + surveyListDetails.getSurveyDetails().get(i).getCategoryId());
-
-                cv.put("survey_type", surveyListDetails.getSurveyDetails().get(i).getSurveyType());
-                Log.v(TAG, "survey_type: " + surveyListDetails.getSurveyDetails().get(i).getSurveyType());
-
-
-               long getPid= updateLinkageTable(surveyListDetails.getSurveyDetails().get(i).getLinkagesDetails(),database);
+                List<String> getPid= updateLinkageTable(surveyListDetails.getSurveyDetails().get(i).getLinkagesDetails(),database);
                 Log.v(TAG, "linkages: " + getPid);
+                cv.put("survey_type", getPid.toString());
+                Log.v(TAG, "survey_type: " +  getPid.toString());
                 database.insertWithOnConflict("Surveys", null, cv, SQLiteDatabase.CONFLICT_REPLACE);
             }
 
@@ -1445,8 +1442,9 @@ public class ExternalDbOpenHelper extends SQLiteOpenHelper {
         }
     }
 
-    private long updateLinkageTable(List<LinkagesList> linkages, SQLiteDatabase database) {
-       long getInsertedID=-1;
+    private List<String> updateLinkageTable(List<LinkagesList> linkages, SQLiteDatabase database) {
+       List<String> getformTypeIds= new ArrayList<>();
+        long getInsertedID=-1;
         try {
             if (!linkages.isEmpty()){
                 ContentValues cvL = new ContentValues();
@@ -1460,7 +1458,9 @@ public class ExternalDbOpenHelper extends SQLiteOpenHelper {
                     cvL.put("form_type_id", form_type_id);
                     cvL.put("uuid", uuid);
                     cvL.put("name", name);
+
                     getInsertedID=  database.insertWithOnConflict("SurveyLinkage", null, cvL, SQLiteDatabase.CONFLICT_REPLACE);
+                    getformTypeIds.add(String.valueOf(form_type_id));
                 }
             }
 
@@ -1468,7 +1468,7 @@ public class ExternalDbOpenHelper extends SQLiteOpenHelper {
             e.printStackTrace();
         }
 
-        return getInsertedID;
+        return getformTypeIds;
     }
 
 
