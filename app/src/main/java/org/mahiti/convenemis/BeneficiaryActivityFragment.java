@@ -54,7 +54,7 @@ public class BeneficiaryActivityFragment extends Fragment{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.beneficiarylinkages, container, false);
+        View rootView = inflater.inflate(R.layout.beneficiarylinkages_activity, container, false);
         initVariable();
 
 

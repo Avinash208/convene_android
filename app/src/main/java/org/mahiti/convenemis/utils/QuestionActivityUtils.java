@@ -117,9 +117,10 @@ public class QuestionActivityUtils {
      * @param setCount
      * @param surveyid
      * @param restUrl
+     * @param dbOpenHelper
      * @return
      */
-    public static List<String> getQuestionFromMainList(int count, List<String> mainQList, SQLiteDatabase database, int setCount, int surveyid, RestUrl restUrl) {
+    public static List<String> getQuestionFromMainList(int count, List<String> mainQList, SQLiteDatabase database, int setCount, int surveyid, RestUrl restUrl, ConveneDatabaseHelper dbOpenHelper) {
         List<String> qList=new ArrayList<>();
         String questionQuery=null;
         qList.clear();
@@ -133,7 +134,8 @@ public class QuestionActivityUtils {
                     qList.add(mainQList.get(i));
                     break;
                 } else{
-                    qValidation = QuestionActivityUtils.questionSkipLogic(mainQList.get(i), database);
+                    SQLiteDatabase  surveyDatabase = dbOpenHelper.getWritableDatabase();
+                    qValidation = QuestionActivityUtils.questionSkipLogic(mainQList.get(i), surveyDatabase);
                     qList.add(mainQList.get(i));
                     if(!("").equals(qValidation)){
                         break;

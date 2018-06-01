@@ -910,7 +910,7 @@ public class UpdateMasterLoading extends BaseActivity implements ClusterToTypo, 
             BeneficiaryLinkage beneficiaryLinkage = gson.fromJson(results, BeneficiaryLinkage.class);
             Logger.logD("ParceAndUpdateToDatabase in bean",beneficiaryLinkage.getMessage());
             for (int i=0;i<beneficiaryLinkage.getLinkages().size();i++){
-                long responseId = dbHandler.insertLinkageDataToDB(beneficiaryLinkage.getLinkages().get(i));
+                long responseId = dbHandler.insertLinkageDataToDB(beneficiaryLinkage.getLinkages().get(i),"2");
                 Logger.logD("likage Updated Successfully",responseId+"");
             }
         } catch (JsonSyntaxException e) {

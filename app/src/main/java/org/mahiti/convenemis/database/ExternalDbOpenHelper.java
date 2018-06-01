@@ -17,6 +17,7 @@ import com.google.gson.Gson;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.mahiti.convenemis.BeenClass.QuestionAnswer;
 import org.mahiti.convenemis.BeenClass.ResponsesData;
 import org.mahiti.convenemis.BeenClass.StatusBean;
 import org.mahiti.convenemis.BeenClass.SurveysBean;
@@ -62,6 +63,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.concurrent.Executor;
 
 public class ExternalDbOpenHelper extends SQLiteOpenHelper {
     private static final String TAG = "ExternalDbOpenHelper";
@@ -1013,7 +1015,7 @@ public class ExternalDbOpenHelper extends SQLiteOpenHelper {
      * @return
      */
     public JSONObject getLevels7Values(String levelId, String ids) {
-		/*
+        /*
 		  Bellow code is to remove [] brackets from the array which is converted to string
 		 */
         JSONObject level7Obj = new JSONObject();
@@ -1430,10 +1432,10 @@ public class ExternalDbOpenHelper extends SQLiteOpenHelper {
 
                 cv.put("category_id", surveyListDetails.getSurveyDetails().get(i).getCategoryId());
                 Log.v(TAG, "category_id   : " + surveyListDetails.getSurveyDetails().get(i).getCategoryId());
-                List<String> getPid= updateLinkageTable(surveyListDetails.getSurveyDetails().get(i).getLinkagesDetails(),database);
+                List<String> getPid = updateLinkageTable(surveyListDetails.getSurveyDetails().get(i).getLinkagesDetails(), database);
                 Log.v(TAG, "linkages: " + getPid);
                 cv.put("survey_type", getPid.toString());
-                Log.v(TAG, "survey_type: " +  getPid.toString());
+                Log.v(TAG, "survey_type: " + getPid.toString());
                 database.insertWithOnConflict("Surveys", null, cv, SQLiteDatabase.CONFLICT_REPLACE);
             }
 
@@ -1443,23 +1445,23 @@ public class ExternalDbOpenHelper extends SQLiteOpenHelper {
     }
 
     private List<String> updateLinkageTable(List<LinkagesList> linkages, SQLiteDatabase database) {
-       List<String> getformTypeIds= new ArrayList<>();
-        long getInsertedID=-1;
+        List<String> getformTypeIds = new ArrayList<>();
+        long getInsertedID = -1;
         try {
-            if (!linkages.isEmpty()){
+            if (!linkages.isEmpty()) {
                 ContentValues cvL = new ContentValues();
-                for (int k=0;k<linkages.size();k++){
-                    LinkagesList linkagesList=linkages.get(k);
-                    int rationalId= linkagesList.getRelation_id();
-                    int form_type_id= linkagesList.getForm_type_id();
-                    String  uuid= linkagesList.getUuid();
-                    String  name= linkagesList.getName();
+                for (int k = 0; k < linkages.size(); k++) {
+                    LinkagesList linkagesList = linkages.get(k);
+                    int rationalId = linkagesList.getRelation_id();
+                    int form_type_id = linkagesList.getForm_type_id();
+                    String uuid = linkagesList.getUuid();
+                    String name = linkagesList.getName();
                     cvL.put("relation_id", rationalId);
                     cvL.put("form_type_id", form_type_id);
                     cvL.put("uuid", uuid);
                     cvL.put("name", name);
 
-                    getInsertedID=  database.insertWithOnConflict("SurveyLinkage", null, cvL, SQLiteDatabase.CONFLICT_REPLACE);
+                    getInsertedID = database.insertWithOnConflict("SurveyLinkage", null, cvL, SQLiteDatabase.CONFLICT_REPLACE);
                     getformTypeIds.add(String.valueOf(form_type_id));
                 }
             }
@@ -3920,7 +3922,7 @@ public class ExternalDbOpenHelper extends SQLiteOpenHelper {
         try {
             SQLiteDatabase db = openDataBase();
             //  String query = "select beneficiary_ids,beneficiary_type, facility_ids,facility_type from Surveys where category_id="+getCategoryID+" group by beneficiary_type";
-            String query = "select * from Surveys where category_id=" + getCategoryID +" order by order_levels";
+            String query = "select * from Surveys where category_id=" + getCategoryID + " order by order_levels";
             Cursor cursor = db.rawQuery(query, null);
             Logger.logD(TAG, "" + query);
             if (cursor != null && cursor.getCount() != 0 && cursor.moveToFirst()) {
@@ -3960,11 +3962,12 @@ public class ExternalDbOpenHelper extends SQLiteOpenHelper {
         }
         return getLevelTemp;
     }
-    public List<Level1> setSpinnerByID(String previous,String orderLevel, int countryList) {
+
+    public List<Level1> setSpinnerByID(String previous, String orderLevel, int countryList) {
         List<Level1> getLevelTemp = new ArrayList<>();
         Logger.logV(TAG, "the level is............" + level);
         SQLiteDatabase db = openDataBase();
-        String query = SELECT_FROM + orderLevel+" where "+previous+"="+countryList +" and active=2" ;
+        String query = SELECT_FROM + orderLevel + " where " + previous + "=" + countryList + " and active=2";
         Cursor cursor = db.rawQuery(query, null);
         Logger.logV(TAG, "the value is" + query);
         if (cursor != null && cursor.getCount() != 0 && cursor.moveToFirst()) {
@@ -4002,23 +4005,79 @@ public class ExternalDbOpenHelper extends SQLiteOpenHelper {
     }
 
 
-    public List<String> getLinkageHeadings(int surveysId, ExternalDbOpenHelper dbHandler) {
-        List<String> getTempNames= new ArrayList<>();
+    public List<QuestionAnswer> getLinkageHeadings(String surveysId, ExternalDbOpenHelper dbHandler) {
+        List<QuestionAnswer> getTempNames = new ArrayList<>();
         try {
-            String selectQuery = "Select * from SurveyLinkage where SurveyLinkage.form_type_id="+surveysId;
+            String selectQuery = "Select * from SurveyLinkage where SurveyLinkage.form_type_id IN (" + surveysId + ") group by name";
             SQLiteDatabase db = dbHandler.getWritableDatabase();
             Cursor cursor = db.rawQuery(selectQuery, null);
-            do {
-                if (cursor.moveToFirst() && cursor.getCount() > 0) {
+            if (cursor.getCount() != 0 && cursor.moveToFirst()) {
+                do {
                     String holderName = cursor.getString(cursor.getColumnIndex("name"));
+                    int relation_id = cursor.getInt(cursor.getColumnIndex("relation_id"));
                     Logger.logD("holderName", "holderName here " + holderName);
-                    getTempNames.add(holderName);
-                }
-            } while (cursor.moveToNext());
-            cursor.close();
-        } catch (Exception e) {
-            Logger.logD("exception", "exception in date fragment" + e);
+                    QuestionAnswer questionAnswer = new QuestionAnswer();
+                    questionAnswer.setQuestionText(holderName);
+                    questionAnswer.setRelationId(relation_id);
+                    getTempNames.add(questionAnswer);
+
+                } while (cursor.moveToNext());
+                cursor.close();
+            }
+        }catch (Exception e){
+            e.printStackTrace();
         }
+
         return getTempNames;
+    }
+
+
+    public String getGroupIds(int surveysId, ExternalDbOpenHelper dbHandler) {
+        String getSelectedUUids = "";
+        try {
+            String pendingSurveyQuery = "Select survey_type from Surveys  where Surveys.surveyid=" + surveysId;
+            SQLiteDatabase db = dbHandler.getWritableDatabase();
+            Cursor cursor = db.rawQuery(pendingSurveyQuery, null);
+            if (cursor.getCount() != 0 && cursor.moveToFirst()) {
+                do {
+                    String getChildUUId = cursor.getString(cursor.getColumnIndex("survey_type"));
+                    String trimStart = getChildUUId.replace("[", "");
+                    getSelectedUUids = trimStart.replace("]", "");
+
+                } while (cursor.moveToNext());
+                cursor.close();
+            }
+        } catch (Exception e) {
+            Logger.logV("", "checkPrymarySaveDraftExist from Survey table" + e);
+
+        }
+
+        return getSelectedUUids;
+    }
+
+    public String getQuestionids(String getGroupIds, ExternalDbOpenHelper dbOpenHelper) {
+        String getSelectedUUids = "";
+        try {
+            String pendingSurveyQuery = "Select summaryQid from Surveys  where Surveys.surveyid=" + getGroupIds;
+            SQLiteDatabase db = dbOpenHelper.getWritableDatabase();
+            Cursor cursor = db.rawQuery(pendingSurveyQuery, null);
+            if (cursor.getCount() != 0 && cursor.moveToFirst()) {
+                do {
+                    String getQids = cursor.getString(cursor.getColumnIndex("summaryQid"));
+                    if (!getQids.equals("")) {
+                        String[] getFirstQuestion = getQids.split(",");
+                        getSelectedUUids = getFirstQuestion[0];
+                    }
+
+
+                } while (cursor.moveToNext());
+                cursor.close();
+            }
+        } catch (Exception e) {
+            Logger.logV("", "checkPrymarySaveDraftExist from Survey table" + e);
+
+        }
+
+        return getSelectedUUids;
     }
 }

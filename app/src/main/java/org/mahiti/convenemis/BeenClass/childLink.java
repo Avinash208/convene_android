@@ -11,8 +11,9 @@ import java.util.List;
 
 public class childLink implements Parcelable {
 
-    String child_form_id;
-    int child_form_type;
+    private String child_form_id;
+    private int child_form_type;
+    private  int active;
 
     public childLink() {
     }
@@ -20,6 +21,7 @@ public class childLink implements Parcelable {
     protected childLink(Parcel in) {
         child_form_id = in.readString();
         child_form_type = in.readInt();
+        active = in.readInt();
     }
 
     public static final Creator<childLink> CREATOR = new Creator<childLink>() {
@@ -59,5 +61,14 @@ public class childLink implements Parcelable {
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeString(child_form_id);
         parcel.writeInt(child_form_type);
+        parcel.writeInt(active);
+    }
+
+    public int getActive() {
+        return active;
+    }
+
+    public void setActive(int active) {
+        this.active = active;
     }
 }

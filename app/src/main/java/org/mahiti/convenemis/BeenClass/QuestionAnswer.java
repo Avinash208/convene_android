@@ -14,6 +14,7 @@ public class QuestionAnswer {
     private int locationLevel;
     private int parentId;
     private  int isActive;
+    private  int relationId;
 
 
     public int getParentId() {
@@ -81,5 +82,13 @@ public class QuestionAnswer {
 
     public void setChild_form_primaryid(int child_form_primaryid) {
         this.child_form_primaryid = child_form_primaryid;
+    }
+
+    public int getRelationId() {
+        return relationId;
+    }
+
+    public void setRelationId(int relationId) {
+        this.relationId = relationId;
     }
 }

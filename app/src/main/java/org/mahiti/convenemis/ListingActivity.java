@@ -258,11 +258,6 @@ public class ListingActivity extends BaseActivity implements View.OnClickListene
     protected void onResume() {
         super.onResume();
         new  summaryReportSync().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-       /* if(!"".equals(autoSearchText)){
-            getAutoSearchAdapter(autoSearchText);
-        }
-        registerReceiver(beneficiryReceiver, filter);
-        registerReceiver(beneficiryReceiver, intentFilter);*/
     }
     @Override
     protected void onPause() {

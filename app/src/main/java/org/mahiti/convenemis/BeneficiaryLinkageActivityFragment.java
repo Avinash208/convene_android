@@ -54,6 +54,8 @@ public class BeneficiaryLinkageActivityFragment extends Fragment implements Push
     ExternalDbOpenHelper dbOpenHelper;
     private int parent_form_primaryid;
     private boolean statusFlag=true;
+    private String getGroupIds;
+    private String getQuestionIds;
 
 
     public BeneficiaryLinkageActivityFragment() {
@@ -76,11 +78,17 @@ public class BeneficiaryLinkageActivityFragment extends Fragment implements Push
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.beneficiarylinkages, container, false);
         initVariable(rootView);
-       // callBeneficiaryLiakageApi();
-        List<String> headingNameList= dbOpenHelper.getLinkageHeadings(surveysId,dbOpenHelper);
+        getGroupIds= dbOpenHelper.getGroupIds(surveysId,dbOpenHelper);
+        getQuestionIds= dbOpenHelper.getQuestionids(getGroupIds,dbOpenHelper);
+        List<QuestionAnswer> headingNameList= dbOpenHelper.getLinkageHeadings(getGroupIds,dbOpenHelper);
         renderView(headingNameList);
-
         return rootView;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        callBeneficiaryLiakageApi();
     }
 
     private void initVariable(View rootView) {
@@ -105,10 +113,13 @@ public class BeneficiaryLinkageActivityFragment extends Fragment implements Push
     private void callBeneficiaryLiakageApi() {
         HashMap<String,String> nextBirthDayParams= new HashMap<>();
         nextBirthDayParams.put("URL","survey/all-linkages/");
-
         if(Utils.haveNetworkConnection(getActivity())){
             CallServerForApi.callServerApi(getActivity(),this,nextBirthDayParams,null, GETBENEFICIARYCODE);
 
+        }else{
+            String getGroupIds= dbOpenHelper.getGroupIds(surveysId,dbOpenHelper);
+            List<QuestionAnswer> headingNameList= dbOpenHelper.getLinkageHeadings(getGroupIds,dbOpenHelper);
+            renderView(headingNameList);
         }
 
 
@@ -128,31 +139,34 @@ public class BeneficiaryLinkageActivityFragment extends Fragment implements Push
             BeneficiaryLinkage beneficiaryLinkage = gson.fromJson(result, BeneficiaryLinkage.class);
             Logger.logD("ParceAndUpdateToDatabase in bean",beneficiaryLinkage.getMessage());
             for (int i=0;i<beneficiaryLinkage.getLinkages().size();i++){
-                long responseId = dbHandler.insertLinkageDataToDB(beneficiaryLinkage.getLinkages().get(i));
+                long responseId = dbHandler.insertLinkageDataToDB(beneficiaryLinkage.getLinkages().get(i),"2");
                 Logger.logD("likage Updated Successfully",responseId+"");
             }
         } catch (JsonSyntaxException e) {
             e.printStackTrace();
         }
-        List<String> headingNameList= dbOpenHelper.getLinkageHeadings(surveysId,dbOpenHelper);
+        String getGroupIds= dbOpenHelper.getGroupIds(surveysId,dbOpenHelper);
+        List<QuestionAnswer> headingNameList= dbOpenHelper.getLinkageHeadings(getGroupIds,dbOpenHelper);
         renderView(headingNameList);
     }
-    private void renderView(List<String> headingNameList) {
+    private void renderView(List<QuestionAnswer> headingNameList) {
         if (!headingNameList.isEmpty()){
             try {
                 getHeadingLayout.removeAllViews();
                 for (int i=0;i<headingNameList.size();i++){
                     View child = this.getLayoutInflater().inflate(R.layout.beneficiarylinkage_heading_row, getHeadingLayout, false);//child.xml
                     LinearLayout childdynamicinflater = (LinearLayout) child.findViewById(R.id.child_dynamic_inflater);
-                    ImageView showmore = (ImageView) child.findViewById(R.id.showmore);
+                   // ImageView showmore = (ImageView) child.findViewById(R.id.showmore);
                     TextView addlink = (TextView) child.findViewById(R.id.addlink);
                     ImageView addmembers = (ImageView) child.findViewById(R.id.addmembers);
                     TextView holdername = (TextView) child.findViewById(R.id.holdername);
-                    holdername.setText(headingNameList.get(i));
+                    holdername.setText(headingNameList.get(i).getQuestionText());
                     ArrayList<childLink> getChildUUids= dbHandler.getChildDetailsFromBeneficiaryLinkage(surveysId,surveyPrimaryKeyId,dbHandler);
                     Logger.logD("likage getChildUUids",getChildUUids+"");
-                    List<QuestionAnswer> getUnderChildList=dbHandler.getAllChildRecord(getChildUUids,dbHandler);
-                    if (!getChildUUids.isEmpty()){
+                    List<QuestionAnswer> getUnderChildList=dbHandler.getAllChildRecord(getChildUUids,dbHandler,getQuestionIds);
+                    if (!getChildUUids.isEmpty() && !getUnderChildList.isEmpty()){
+                        childdynamicinflater.setVisibility(View.VISIBLE);
+                        addlink.setText(String.valueOf(getUnderChildList.size()));
                         for (int j=0;j<getUnderChildList.size();j++){
                             View childView = this.getLayoutInflater().inflate(R.layout.linkage_custom_row, childdynamicinflater, false);//child.xml
                             TextView childaddress = (TextView) childView.findViewById(R.id.childaddress);
@@ -161,31 +175,55 @@ public class BeneficiaryLinkageActivityFragment extends Fragment implements Push
                             childaddress.setText(getUnderChildList.get(j).getQuestionText());
                             childdynamicinflater.addView(childView);
                             int finalJ = j;
+                            int finalI = i;
                             addmembers.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
 
                                     Logger.logD("likage getChildUUids",getChildUUids.get(finalJ).getChild_form_type()+"");
-                                    Bundle bundle= new Bundle();
+                                       Bundle bundle= new Bundle();
                                     bundle.putString("getChild_form_type",String.valueOf(getChildUUids.get(finalJ).getChild_form_type()));
                                     bundle.putString("surveyPrimaryKeyId",surveyPrimaryKeyId);
                                     bundle.putInt("parent_form_primaryid",parent_form_primaryid);
                                     bundle.putInt("parent_form_type",parentID);
+                                    bundle.putInt("relation_id",headingNameList.get(finalI).getRelationId());
+                                    bundle.putString("GroupIds",getGroupIds);
+                                    bundle.putString("configuredQuestion",getQuestionIds);
                                     bundle.putParcelableArrayList("getChild_form_id",getChildUUids);
                                     Intent callMemberActivityIntent= new Intent(getActivity(),ShowMemberListActivity.class);
                                     callMemberActivityIntent.putExtras(bundle);
                                     startActivity(callMemberActivityIntent);
                                 }
                             });
-                            showmore.setOnClickListener(new View.OnClickListener() {
+                            /*showmore.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
                                     statusFlag=false;
-                                    childdynamicinflater.setVisibility(View.VISIBLE);
+                                  //  childdynamicinflater.setVisibility(View.VISIBLE);
                                 }
-                            });
+                            });*/
 
                         }
+                    }else{
+                        int finalI1 = i;
+                        addmembers.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+
+                                Bundle bundle= new Bundle();
+                                bundle.putString("getChild_form_type",surveyPrimaryKeyId);
+                                bundle.putString("surveyPrimaryKeyId",surveyPrimaryKeyId);
+                                bundle.putInt("parent_form_primaryid",parent_form_primaryid);
+                                bundle.putInt("parent_form_type",parentID);
+                                bundle.putInt("relation_id",headingNameList.get(finalI1).getRelationId());
+                                bundle.putString("GroupIds",getGroupIds);
+                                bundle.putString("configuredQuestion",getQuestionIds);
+                                bundle.putParcelableArrayList("getChild_form_id",getChildUUids);
+                                Intent callMemberActivityIntent= new Intent(getActivity(),ShowMemberListActivity.class);
+                                callMemberActivityIntent.putExtras(bundle);
+                                startActivity(callMemberActivityIntent);
+                            }
+                        });
                     }
 
                     getHeadingLayout.addView(child);
@@ -197,5 +235,5 @@ public class BeneficiaryLinkageActivityFragment extends Fragment implements Push
 
         }
     }
-    
+
 }

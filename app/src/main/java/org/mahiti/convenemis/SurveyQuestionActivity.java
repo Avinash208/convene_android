@@ -451,7 +451,7 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
                 previousButton.setVisibility(View.VISIBLE);
             }
             //setting 5 Questions in One Page
-            questionPageList = QuestionActivityUtils.getQuestionFromMainList(count, tempQidsList, surveyDatabase, pageSetCount, prefs.getInt(SURVEYID, 0), restUrl);
+            questionPageList = QuestionActivityUtils.getQuestionFromMainList(count, tempQidsList, surveyDatabase, pageSetCount, prefs.getInt(SURVEYID, 0), restUrl,dbOpenHelper);
             List<String> currentPageQIDS = new ArrayList<>();
             int pageCount = questionPageList.size();
             for (int i = 0; i < pageCount; i++) {
@@ -552,6 +552,7 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
 
     }
     private void beneficiaryParentDisplay(Page page, String questionFont, String answerFont, int questionCode) {
+
         getBenificiaryQids= new ArrayList<>();
         View child = this.getLayoutInflater().inflate(R.layout.parentselecting, dynamicQuestionSet, false);//child.xml
         LinearLayout singleSpinnerContainer = (LinearLayout) child.findViewById(R.id.singlespinnercontainer);
@@ -559,7 +560,16 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
         singleSpinnerContainer.addView(spinnerSearch);
         dynamicQuestionSet.addView(child);
         List<LevelBeen> list= DataBaseMapperClass.getBenificiaryParentDetails(db,page.getPartnerId());
-        spinnerSearch.setFilterItems(list, 0, new SpinnerListenerFilter() {
+        HashMap<String, AnswersPage> getDataAnswer = getUserAnsweredResponseFromDB(page.getQuestionNumber(), db, surveyPrimaryKeyId, restUrl);   // getting if already answered question
+        int getIndex=0;
+       if (!getDataAnswer.isEmpty()){
+           for(int p=0;p<list.size();p++){
+               AnswersPage answersPage=getDataAnswer.get(String.valueOf(questionCode));
+               if (answersPage.getAnswer().equals(list.get(p).getUuid()))
+                   getIndex=p;
+           }
+       }
+        spinnerSearch.setFilterItems(list, getIndex, new SpinnerListenerFilter() {
 
             @Override
             public void onItemsSelected(List<LevelBeen> items) {
@@ -1671,6 +1681,7 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
             case R.id.backPress:
                 Logger.logD(TAG, "Clicked backPress button");
                 clearAllWidgetMapCounts();
+                finish();
                 SupportClass supportClass = new SupportClass();
                 supportClass.backButtonFunction(SurveyQuestionActivity.this, db, surveyHandler, surveyPrimaryKeyId);
                 break;

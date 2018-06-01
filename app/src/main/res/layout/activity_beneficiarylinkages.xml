@@ -23,7 +23,7 @@
             android:background="?attr/colorPrimary"
             app:layout_scrollFlags="scroll|enterAlways"
             app:popupTheme="@style/MyTheme.AppBarOverlay"
-            app:title="@string/app_name">
+            app:title="Beneficiary Linkage">
 
         </android.support.v7.widget.Toolbar>
 

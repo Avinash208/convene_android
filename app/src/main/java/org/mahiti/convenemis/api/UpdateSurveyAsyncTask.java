@@ -14,6 +14,7 @@ import org.mahiti.convenemis.BeenClass.Response;
 import org.mahiti.convenemis.beansClassSetQuestion.FillSurveyResponseInterface;
 import org.mahiti.convenemis.database.ConveneDatabaseHelper;
 import org.mahiti.convenemis.database.DBHandler;
+import org.mahiti.convenemis.database.DataBaseMapperClass;
 import org.mahiti.convenemis.network.InsertResponseTask;
 import org.mahiti.convenemis.utils.CheckNetwork;
 import org.mahiti.convenemis.utils.Logger;
@@ -250,6 +251,7 @@ public class UpdateSurveyAsyncTask extends AsyncTask<Context, Integer, String> {
 
                }
            }
+           syncSurveyHandler.deleteExistingResponse(surveyResponseID);
            new InsertResponseTask().insertResponseTask(collectResponse,syncSurveyHandler ,surveyResponseID);
        }catch (Exception e){
            Logger.logE(TAG,"Exception in the filling the response",e);
