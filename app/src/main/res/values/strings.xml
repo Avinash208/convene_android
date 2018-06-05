@@ -414,5 +414,9 @@
     <string name="action_settings">Settings</string>
     <string name="section_format">Hello World from section: %1$d</string>
     <string name="title_activity_beneficiarylinkages">Beneficiarylinkages</string>
+    <string name="confirmMessage">Confirm Dialog</string>
+    <string name="confirmMember">Could You like to delete</string>
+    <string name="YES">Delete</string>
+    <string name="Cancel">Cancel</string>
 
 </resources>

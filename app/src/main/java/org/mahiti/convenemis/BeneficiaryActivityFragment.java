@@ -4,24 +4,11 @@ package org.mahiti.convenemis;
  * Created by mahiti on 28/05/18.
  */
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-import com.google.gson.Gson;
-
-import org.mahiti.convenemis.BeenClass.BeneficiaryLinkage;
-import org.mahiti.convenemis.api.CallServerForApi;
-import org.mahiti.convenemis.api.PushingResultsInterface;
-import org.mahiti.convenemis.database.DBHandler;
-import org.mahiti.convenemis.utils.Logger;
-import org.mahiti.convenemis.utils.ToastUtils;
-import org.mahiti.convenemis.utils.Utils;
-
-import java.util.HashMap;
 
 /**
  * A placeholder fragment containing a simple view.

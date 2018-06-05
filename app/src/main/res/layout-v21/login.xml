@@ -91,7 +91,7 @@
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
                     android:singleLine="true"
-                    android:text=""
+                    android:text="admin@2018"
                     android:textColor="#000"
                     android:textColorHint="#000" />
 

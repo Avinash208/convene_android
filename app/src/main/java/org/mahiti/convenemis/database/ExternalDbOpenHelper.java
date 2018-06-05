@@ -63,7 +63,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.concurrent.Executor;
 
 public class ExternalDbOpenHelper extends SQLiteOpenHelper {
     private static final String TAG = "ExternalDbOpenHelper";

@@ -18,7 +18,6 @@ import net.sqlcipher.database.SQLiteDatabase;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.mahiti.convenemis.api.PeriodicityNewAsyncTask;
 import org.mahiti.convenemis.database.CommonDao;
 import org.mahiti.convenemis.database.DBHandler;
 import org.mahiti.convenemis.database.DataBaseMapperClass;

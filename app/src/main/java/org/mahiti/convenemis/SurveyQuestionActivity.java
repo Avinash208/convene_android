@@ -2,7 +2,6 @@ package org.mahiti.convenemis;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
-import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
@@ -407,7 +406,7 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
 
     @Override
     public void onBackPressed() {
-        clearAllWidgetMapCounts();
+       // clearAllWidgetMapCounts();
         SupportClass supportClass = new SupportClass();
         supportClass.backButtonFunction(SurveyQuestionActivity.this, db, surveyHandler, surveyPrimaryKeyId);
 
@@ -1681,7 +1680,6 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
             case R.id.backPress:
                 Logger.logD(TAG, "Clicked backPress button");
                 clearAllWidgetMapCounts();
-                finish();
                 SupportClass supportClass = new SupportClass();
                 supportClass.backButtonFunction(SurveyQuestionActivity.this, db, surveyHandler, surveyPrimaryKeyId);
                 break;

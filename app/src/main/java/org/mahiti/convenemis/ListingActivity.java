@@ -25,7 +25,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import net.sqlcipher.database.SQLiteDatabase;
 
@@ -327,14 +326,13 @@ public class ListingActivity extends BaseActivity implements View.OnClickListene
 
 
     }
-
-
     public class Myreceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
             try {
+                ToastUtils.displayToast("internet enabled",context);
                 if(Utils.haveNetworkConnection(context)){
-
+                    ToastUtils.displayToast("internet enabled",context);
                 }else{
                     ToastUtils.displayToast("No internet",context);
                 }
@@ -569,14 +567,9 @@ public class ListingActivity extends BaseActivity implements View.OnClickListene
             else if(!"".equals(qid))
             {
                 String summaryData= DBHandler.getAnswerFromPreviousQuestion(qid, surveySummaryreportdbhandler, String.valueOf(statusbean.get(i).getSurveyId()));
-                vh.surveyName.setText(summaryData);
+//                vh.surveyName.setText(summaryData);
             }
-            else {
-                if (statusbean.get(i).getCaseId().equals("0"))
-                    vh.surveyName.setText(statusbean.get(i).getCaseId());
-                else
-                    vh.surveyName.setText(statusbean.get(i).getCaseId());
-            }
+
 
             vh.anniversariesListDymanicLabel.setOnClickListener(new View.OnClickListener() {
                 @Override

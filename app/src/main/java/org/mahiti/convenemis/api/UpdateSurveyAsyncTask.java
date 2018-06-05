@@ -14,7 +14,6 @@ import org.mahiti.convenemis.BeenClass.Response;
 import org.mahiti.convenemis.beansClassSetQuestion.FillSurveyResponseInterface;
 import org.mahiti.convenemis.database.ConveneDatabaseHelper;
 import org.mahiti.convenemis.database.DBHandler;
-import org.mahiti.convenemis.database.DataBaseMapperClass;
 import org.mahiti.convenemis.network.InsertResponseTask;
 import org.mahiti.convenemis.utils.CheckNetwork;
 import org.mahiti.convenemis.utils.Logger;

@@ -1,8 +1,6 @@
 package org.mahiti.convenemis.adapter;
 
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 
 import org.mahiti.convenemis.BeenClass.QuestionAnswer;
 import org.mahiti.convenemis.R;
@@ -71,11 +68,15 @@ public class HomeTileAdapter extends RecyclerView.Adapter<HomeTileAdapter.MyTask
             holder.checkBoxImage.setVisibility(View.VISIBLE);
         else
             holder.checkBoxImage.setVisibility(View.GONE);
-        holder.textView.setText(schoolTypeBean.getAnswerText());
 
+        holder.textView.setText(schoolTypeBean.getAnswerText());
         holder.tileVillage.setText(MessageFormat.format("Village: {0}", schoolTypeBean.getQuestionText()));
         //holder.backgroundImage.setImageDrawable(context.getResources().getDrawable(R.drawable.school_yellow));
-        holder.rootView.setOnLongClickListener(new View.OnLongClickListener() {
+        checkBoxVisible = true;
+        holder.checkBoxImage.setVisibility(View.VISIBLE);
+        holder.checkBoxImage.setImageDrawable(context.getResources().getDrawable(R.drawable.iic_check_box_outline_blank_pink_400_24dp));
+
+        /*holder.rootView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
 
@@ -87,7 +88,7 @@ public class HomeTileAdapter extends RecyclerView.Adapter<HomeTileAdapter.MyTask
                 notifyDataSetChanged();
                 return false;
             }
-        });
+        });*/
         if (schoolTypeBean.getIsActive() == 0)
         {
             holder.checkBoxImage.setImageDrawable(context.getResources().getDrawable(R.drawable.iic_check_box_outline_blank_pink_400_24dp));
@@ -143,11 +144,10 @@ public class HomeTileAdapter extends RecyclerView.Adapter<HomeTileAdapter.MyTask
 
 
     }
-
     private boolean isContains(List<QuestionAnswer> selectedList, QuestionAnswer schoolTypeBean) {
         for (QuestionAnswer schoolTypeBean1 : selectedList)
         {
-            if (schoolTypeBean1.getQuestionText() == schoolTypeBean.getQuestionText())
+            if (schoolTypeBean1.getAnswerText().equalsIgnoreCase(schoolTypeBean.getAnswerText()))
                 return true;
         }
 
@@ -157,7 +157,11 @@ public class HomeTileAdapter extends RecyclerView.Adapter<HomeTileAdapter.MyTask
     private void removeItem(QuestionAnswer schoolTypeBean) {
        if (isContains(selectedItems,schoolTypeBean))
        {
-           selectedItems.remove(schoolTypeBean);
+           for (int i=0;i<selectedItems.size();i++){
+               if(selectedItems.get(i).getAnswerText().equals(schoolTypeBean.getAnswerText())){
+                   selectedItems.remove(i);
+               }
+           }
            itemSelectedListenerListener.itemSelected(selectedItems);
        }
     }
@@ -203,6 +207,7 @@ public class HomeTileAdapter extends RecyclerView.Adapter<HomeTileAdapter.MyTask
 
     public interface ItemSelectedListener {
        void itemSelected(List<QuestionAnswer> selectedList);
+
     }
 
 }

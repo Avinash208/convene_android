@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#fff9e4"
+    android:background="#eeeeee"
     android:padding="8dp">
     <android.support.v7.widget.CardView
         xmlns:card_view="http://schemas.android.com/apk/res-auto"
@@ -10,7 +10,7 @@
         android:layout_gravity="center"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        card_view:cardBackgroundColor="#fff9e4"
+        card_view:cardBackgroundColor="#eeeeee"
         card_view:cardCornerRadius="4dp">
         <LinearLayout
             android:id="@+id/relativeLayoutcheck"

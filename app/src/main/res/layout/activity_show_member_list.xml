@@ -5,33 +5,44 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="org.mahiti.convenemis.ShowMemberListActivity">
-    <android.support.design.widget.AppBarLayout
-        android:id="@+id/appbar"
+    <RelativeLayout
+        android:id="@+id/heading"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="@dimen/appbar_padding_top"
-        android:theme="@style/MyTheme.AppBarOverlay">
+        android:background="@color/pink"
+        android:layout_height="60dp">
+        <com.mancj.materialsearchbar.MaterialSearchBar
+            android:id="@+id/searchBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:mt_textColor="@color/white"
+            app:mt_textCursorTint="@color/white"
+            app:mt_maxSuggestionsCount="10"
+            android:layout_centerInParent="true"
+            app:mt_searchIconTint="@color/white"
+            app:mt_backIconTint="@color/white"
+            app:mt_clearIconTint="@color/white"
+            app:mt_searchBarColor="@color/pink" />
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:layout_weight="1"
-            android:background="?attr/colorPrimary"
-            app:layout_scrollFlags="scroll|enterAlways"
-            app:popupTheme="@style/MyTheme.AppBarOverlay"
-            app:title="Add Members">
+        <TextView
+            android:id="@+id/title_heading"
+            android:layout_width="wrap_content"
+            android:layout_height="60dp"
+            android:layout_weight="2.6"
+            android:gravity="center"
+            android:paddingLeft="10dp"
+            android:text="Add Members"
+            android:textColor="#ffffff"
+            android:textSize="18dp" />
 
-        </android.support.v7.widget.Toolbar>
+    </RelativeLayout>
 
 
-    </android.support.design.widget.AppBarLayout>
 
     <HorizontalScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/selectedSchoolLayout"
-        android:layout_below="@+id/appbar"
+        android:layout_below="@+id/heading"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
         android:layout_marginTop="10dp"

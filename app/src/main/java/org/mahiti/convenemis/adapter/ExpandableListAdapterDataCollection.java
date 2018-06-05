@@ -13,11 +13,9 @@ import android.widget.TextView;
 
 import org.mahiti.convenemis.BeenClass.beneficiary.Datum;
 import org.mahiti.convenemis.BeenClass.parentChild.SurveyDetail;
-import org.mahiti.convenemis.LevelsActivityNew;
 import org.mahiti.convenemis.ListingActivity;
 import org.mahiti.convenemis.R;
 import org.mahiti.convenemis.SurveyListLevels;
-import org.mahiti.convenemis.SurveySummaryReport;
 import org.mahiti.convenemis.utils.AnimationUtils;
 import org.mahiti.convenemis.utils.Constants;
 import org.mahiti.convenemis.utils.Logger;

@@ -1,6 +1,5 @@
 package org.mahiti.convenemis.BeenClass;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**

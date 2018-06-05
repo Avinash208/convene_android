@@ -34,6 +34,7 @@ import java.util.Map;
 
 public class DBHandler extends SQLiteOpenHelper {
     private static final int VERSION = 12;
+    private static final String CHILD_ID = "child_form_id";
     public static SQLiteDatabase database;
     private final static String mName = "ENCRYPTED.db";
     private final static String TAG = "DbHndler";
@@ -122,7 +123,7 @@ public class DBHandler extends SQLiteOpenHelper {
                 + "LAST_CHARGE_TIME DATETIME," + "sectionId INTEGER)";
         database.execSQL(tabDetails);
 
-        String linkage="CREATE TABLE Linkages ( child_form_id TEXT, child_form_primaryid INTEGER," +
+        String linkage="CREATE TABLE Linkages ( child_form_id TEXT , child_form_primaryid INTEGER," +
                 " active INTEGER, id INTEGER , uuid TEXT PRIMARY KEY, linked_on TEXT, child_form_type INTEGER, parent_form_type INTEGER, parent_form_id TEXT,sync_status TEXT, parent_form_primaryid INTEGER, relation_id INTEGER )";
         database.execSQL(linkage);
     }
@@ -239,8 +240,7 @@ public class DBHandler extends SQLiteOpenHelper {
         Logger.logV(TAG, "group_id " + queryValues.get(GROUP_ID_KEY));
         Logger.logV(TAG, "primaryID " + queryValues.get("primaryID"));
         Logger.logV(TAG, "Values in Response" + values.toString());
-          long getRespose=database.insertWithOnConflict("Response", null, values,SQLiteDatabase.CONFLICT_REPLACE);
-        return getRespose;
+        return database.insertWithOnConflict("Response", null, values, SQLiteDatabase.CONFLICT_REPLACE);
 
     }
 
@@ -966,7 +966,7 @@ public class DBHandler extends SQLiteOpenHelper {
         if (database == null || !database.isOpen())
             database = this.getWritableDatabase(DATABASESECRETKEY);
         ContentValues values = new ContentValues();
-        values.put("child_form_id", linkage.getChildFormId());
+        values.put(CHILD_ID, linkage.getChildFormId());
         values.put("child_form_primaryid", linkage.getChildFormPrimaryid());
         values.put("active", linkage.getActive());
         values.put("id", linkage.getId());
@@ -990,7 +990,7 @@ public class DBHandler extends SQLiteOpenHelper {
             Logger.logD(pendingSurveyQueryStr, " checkPrymarySaveDraftExist" + pendingSurveyQuery + "-->" + cursor.getCount());
             if (cursor.getCount() != 0 && cursor.moveToFirst()) {
                 do {
-                   String getChildUUId= cursor.getString(cursor.getColumnIndex("child_form_id"));
+                   String getChildUUId= cursor.getString(cursor.getColumnIndex(CHILD_ID));
                    int child_form_type= cursor.getInt(cursor.getColumnIndex("child_form_type"));
                    int activeStatus= cursor.getInt(cursor.getColumnIndex("active"));
                     childLink childLink= new childLink();
@@ -1016,7 +1016,7 @@ public class DBHandler extends SQLiteOpenHelper {
         List<QuestionAnswer> getSelectedUUids= new ArrayList<>();
         for (int i=0;i<getChildUUids.size();i++){
             try {
-                String pendingSurveyQuery = "select Survey.cluster_name,Survey.survey_ids,Response.ans_text, Survey.uuid\n" +
+                String pendingSurveyQuery = "select Survey.cluster_name,Survey.survey_ids,Response.ans_text, Survey.uuid , Survey.server_primary_key\n" +
                         "from Response\n" +
                         "INNER JOIN Survey ON Response.survey_id = Survey.uuid\n" +
                         "where Survey.survey_ids="+getChildUUids.get(0).getChild_form_type()+" and Survey.uuid IN ('"+getChildUUids.get(i).getChild_form_id()+"') and Response.q_code="+getConfiguredQuestion;
@@ -1030,6 +1030,8 @@ public class DBHandler extends SQLiteOpenHelper {
                         QuestionAnswer questionAnswer= new QuestionAnswer();
                         questionAnswer.setAnswerText(childName);
                         questionAnswer.setQuestionText(childVillage);
+                        int child_form_primaryid= cursor.getInt(cursor.getColumnIndex("server_primary_key"));
+                        questionAnswer.setChild_form_primaryid(child_form_primaryid);
                         getSelectedUUids.add(questionAnswer);
 
 
@@ -1098,27 +1100,27 @@ public class DBHandler extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put("sync_status", "2");
         values.put("linked_on", created_on);
-        return liteDatabase.update("Linkages", values, "child_form_id" + " = ?", new String[]{getUUID});
+        return liteDatabase.update("Linkages", values, "uuid" + " = ?", new String[]{getUUID});
     }
 
     public JSONArray getOfflineRecord(DBHandler dbHandlershowMember) {
         JSONArray jsonArrayCreateTemp=new JSONArray();
         try {
-            String pendingSurveyQuery = "select * from Linkages where Linkages.sync_status=0 and Linkages.active=2";
+            String pendingSurveyQuery = "select * from Linkages where Linkages.sync_status=0";
             SQLiteDatabase db = getdatabaseinstance_read();
             Cursor cursor = db.rawQuery(pendingSurveyQuery, null);
             Logger.logD(pendingSurveyQueryStr, " checkPrymarySaveDraftExist" + pendingSurveyQuery + "-->" + cursor.getCount());
             if (cursor.getCount() != 0 && cursor.moveToFirst()) {
                 do {
                     JSONObject jsonObject= new JSONObject();
-                    String getChildUUId= cursor.getString(cursor.getColumnIndex("child_form_id"));
+                    String getChildUUId= cursor.getString(cursor.getColumnIndex(CHILD_ID));
                     String child_form_primaryid= cursor.getString(cursor.getColumnIndex("child_form_primaryid"));
                     String parent_form_id= cursor.getString(cursor.getColumnIndex("parent_form_id"));
                     String uuid= cursor.getString(cursor.getColumnIndex("uuid"));
                     int child_form_type= cursor.getInt(cursor.getColumnIndex("child_form_type"));
                     int relation_id= cursor.getInt(cursor.getColumnIndex("relation_id"));
                     int activeStatus= cursor.getInt(cursor.getColumnIndex("active"));
-                    jsonObject.put("child_form_id",getChildUUId);
+                    jsonObject.put(CHILD_ID,getChildUUId);
                     jsonObject.put("uuid",uuid);
                     jsonObject.put("linked_on","31-05-2018_193959");
                     jsonObject.put("active",String.valueOf(activeStatus));
@@ -1141,11 +1143,11 @@ public class DBHandler extends SQLiteOpenHelper {
         return jsonArrayCreateTemp;
     }
 
-    public String isRecordExist(String getChild_form_type) {
+    public String isRecordExist(String getChild_form_type,String parent_form_id) {
 
         String getUUIDIfExist="";
         try {
-            String pendingSurveyQuery = "select uuid from Linkages where Linkages.child_form_id='"+getChild_form_type+"'";
+            String pendingSurveyQuery = "select uuid from Linkages where Linkages.child_form_id='"+getChild_form_type+"' and Linkages.parent_form_id='"+parent_form_id+"'";
             SQLiteDatabase db = getdatabaseinstance_read();
             Cursor cursor = db.rawQuery(pendingSurveyQuery, null);
             Logger.logD(pendingSurveyQueryStr, " checkPrymarySaveDraftExist" + pendingSurveyQuery + "-->" + cursor.getCount());
@@ -1169,5 +1171,76 @@ public class DBHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = getdatabaseinstance_read();
         String ResponseQuery="Delete from Response where survey_id='"+surveyID+"'";
         db.execSQL(ResponseQuery);
+    }
+
+    public List<QuestionAnswer> getSearchChildRecord(String getGroupId,List<childLink> getChildUUids, String getConfiguredQuestion,
+                                                     String userEnteredText) {
+        List<QuestionAnswer> getSelectedUUids= new ArrayList<>();
+        String getCommaSeparate="";
+        for (int i=0;i<getChildUUids.size() && getChildUUids.get(i).getActive()==2;i++) {
+            if (i!=0)
+                getCommaSeparate=getCommaSeparate+",";
+            getCommaSeparate=getCommaSeparate+"'"+getChildUUids.get(i).getChild_form_id()+"'";
+
+        }
+        String pendingSurveyQuery="";
+        try {
+            if (!getChildUUids.isEmpty()) {
+                pendingSurveyQuery = "select Survey.cluster_name,Survey.survey_ids,Response.ans_text, Survey.uuid,Survey.server_primary_key\n" +
+                        "from Response\n" +
+                        "INNER JOIN Survey ON Response.survey_id = Survey.uuid\n" +
+                        "where Survey.survey_ids=" + getGroupId + " and Response.ans_text  LIKE '%"+userEnteredText+"%' and Survey.uuid NOT IN (" + getCommaSeparate + ") and Response.q_code="+getConfiguredQuestion+"";
+            }else{
+                pendingSurveyQuery = "select Survey.cluster_name,Survey.survey_ids,Response.ans_text, Survey.uuid,Survey.server_primary_key\n" +
+                        "from Response\n" +
+                        "INNER JOIN Survey ON Response.survey_id = Survey.uuid\n" +
+                        "where Survey.survey_ids="+getGroupId+" and Response.ans_text  LIKE '%"+userEnteredText+"%' and Survey.uuid NOT IN (" + getCommaSeparate + ") and Response.q_code="+getConfiguredQuestion+"";
+            }
+            SQLiteDatabase db = getdatabaseinstance_read();
+            Cursor cursor = db.rawQuery(pendingSurveyQuery, null);
+            Logger.logD(pendingSurveyQueryStr, " checkPrymarySaveDraftExist" + pendingSurveyQuery + "-->" + cursor.getCount());
+            if (cursor.getCount() != 0 && cursor.moveToFirst()) {
+                do {
+                    String childName= cursor.getString(cursor.getColumnIndex("ans_text"));
+                    String childVillage= cursor.getString(cursor.getColumnIndex("cluster_name"));
+                    String childUUID= cursor.getString(cursor.getColumnIndex("uuid"));
+                    int child_form_primaryid= cursor.getInt(cursor.getColumnIndex("server_primary_key"));
+                    QuestionAnswer questionAnswer= new QuestionAnswer();
+                    questionAnswer.setAnswerText(childName);
+                    questionAnswer.setQuestionText(childVillage);
+                    questionAnswer.setSelectedChildUUID(childUUID);
+                    questionAnswer.setChild_form_primaryid(child_form_primaryid);
+                    getSelectedUUids.add(questionAnswer);
+
+
+                } while (cursor.moveToNext());
+                cursor.close();
+            }
+        } catch (Exception e) {
+            Logger.logV("", "checkPrymarySaveDraftExist from Survey table" + e);
+
+        }
+        return getSelectedUUids;
+    }
+
+    public int getSyncStatus(int child_form_primaryid, String child_form_id) {
+        int getSyncStatus=2;
+        try {
+            String pendingSurveyQuery = "select  sync_status from Linkages where  Linkages.child_form_id='"+child_form_id+"'  and Linkages.parent_form_primaryid="+child_form_primaryid;
+            SQLiteDatabase db = getdatabaseinstance_read();
+            Cursor cursor = db.rawQuery(pendingSurveyQuery, null);
+            Logger.logD(pendingSurveyQueryStr, " checkPrymarySaveDraftExist" + pendingSurveyQuery + "-->" + cursor.getCount());
+            if (cursor.getCount() != 0 && cursor.moveToFirst()) {
+                do {
+                    getSyncStatus= cursor.getInt(cursor.getColumnIndex("sync_status"));
+                } while (cursor.moveToNext());
+                cursor.close();
+            }
+        } catch (Exception e) {
+            Logger.logV("", "checkPrymarySaveDraftExist from Survey table" + e);
+
+        }
+
+        return getSyncStatus;
     }
 }

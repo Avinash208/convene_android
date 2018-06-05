@@ -1,7 +1,6 @@
 package org.mahiti.convenemis.receivers;
 
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -30,8 +29,6 @@ import org.mahiti.convenemis.api.BeneficiaryApis.SaveBeneficiary;
 import org.mahiti.convenemis.api.BeneficiaryApis.SaveFacility;
 import org.mahiti.convenemis.api.BeneficiaryApis.UpdateBeneficiary;
 import org.mahiti.convenemis.api.BeneficiaryApis.UpdateFacility;
-import org.mahiti.convenemis.api.CallServerForApi;
-import org.mahiti.convenemis.api.PushingResultsInterface;
 import org.mahiti.convenemis.database.DBHandler;
 import org.mahiti.convenemis.database.ExternalDbOpenHelper;
 import org.mahiti.convenemis.utils.Constants;
@@ -107,7 +104,8 @@ public class ConnectivityReceiver extends BroadcastReceiver {
             }
             AutoSyncActivity autoSyncObj = new AutoSyncActivity(context);
             autoSyncObj.callingAutoSync(1);
-           updateBeneficiaryLinkage();
+
+            updateBeneficiaryLinkage();
 
         } catch (Exception e) {
             Logger.logE("", "", e);

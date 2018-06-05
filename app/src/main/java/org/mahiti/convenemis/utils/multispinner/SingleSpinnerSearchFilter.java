@@ -24,7 +24,6 @@ import android.widget.Filterable;
 import android.widget.ListView;
 import android.widget.TextView;
 
-
 import org.mahiti.convenemis.BeenClass.parentChild.LevelBeen;
 import org.mahiti.convenemis.R;
 import org.mahiti.convenemis.utils.Logger;

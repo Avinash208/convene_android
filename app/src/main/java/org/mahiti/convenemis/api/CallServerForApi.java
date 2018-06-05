@@ -2,10 +2,8 @@ package org.mahiti.convenemis.api;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.SharedPreferences;
 import android.util.Log;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -13,13 +11,9 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
-
 import org.mahiti.convenemis.R;
-import org.mahiti.convenemis.database.Utilities;
 import org.mahiti.convenemis.utils.Logger;
-import org.mahiti.convenemis.utils.Utils;
 
-import java.util.HashMap;
 import java.util.Map;
 
 
