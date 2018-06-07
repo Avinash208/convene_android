@@ -2,7 +2,7 @@
 
 
     <!--App and urls String Labels-->
-    <string name="app_name">Convene 2.0</string>
+    <string name="app_name">AKRSP(I) MIS</string>
     <string name="application_name">AKRSPI</string>
     <string name="labelusername">Username</string>
     <string name="English">English</string>
@@ -418,5 +418,6 @@
     <string name="confirmMember">Could You like to delete</string>
     <string name="YES">Delete</string>
     <string name="Cancel">Cancel</string>
+    <string name="activity_module_is_on_progress">Activity module in progress</string>
 
 </resources>

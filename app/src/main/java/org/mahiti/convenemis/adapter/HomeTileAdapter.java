@@ -76,19 +76,6 @@ public class HomeTileAdapter extends RecyclerView.Adapter<HomeTileAdapter.MyTask
         holder.checkBoxImage.setVisibility(View.VISIBLE);
         holder.checkBoxImage.setImageDrawable(context.getResources().getDrawable(R.drawable.iic_check_box_outline_blank_pink_400_24dp));
 
-        /*holder.rootView.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-
-                holder.checkBoxImage.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_check_box_pink_400_24dp));
-                schoolTypeBeanList.get(position).setIsActive(1);
-                insertItem(schoolTypeBean);
-                notifyItemChanged(position);
-                checkBoxVisible = true;
-                notifyDataSetChanged();
-                return false;
-            }
-        });*/
         if (schoolTypeBean.getIsActive() == 0)
         {
             holder.checkBoxImage.setImageDrawable(context.getResources().getDrawable(R.drawable.iic_check_box_outline_blank_pink_400_24dp));

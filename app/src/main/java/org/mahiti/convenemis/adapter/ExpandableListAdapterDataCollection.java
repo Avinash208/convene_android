@@ -19,6 +19,7 @@ import org.mahiti.convenemis.SurveyListLevels;
 import org.mahiti.convenemis.utils.AnimationUtils;
 import org.mahiti.convenemis.utils.Constants;
 import org.mahiti.convenemis.utils.Logger;
+import org.mahiti.convenemis.utils.ToastUtils;
 
 import java.util.HashMap;
 import java.util.List;
@@ -120,7 +121,11 @@ public class ExpandableListAdapterDataCollection extends BaseExpandableListAdapt
                     String[] orderLevels = surveyDetailBean.getOrderLevels().split(",");
                     editor.putString(Constants.O_LEAVEL, orderLevels[orderLevels.length-1]);
                     editor.putString(Constants.CODE, surveyDetailBean.getPcode());
-                    editor.putInt(Constants.SURVEY_ID, surveyDetailBean.getSurveyId());
+                    if (datum.getActive()==0)
+                        editor.putInt(Constants.SURVEY_ID, datum.getBeneficiaryTypeId());
+                    else
+                        editor.putInt(Constants.SURVEY_ID, surveyDetailBean.getSurveyId());
+
                     editor.putString(Constants.BENEFICIARY_TYPE,surveyDetailBean.getBeneficiaryType());
                     editor.putString(Constants.BENEFICIARY_IDS,surveyDetailBean.getBeneficiaryIds());
                     editor.putString(Constants.FACILITY_IDS,surveyDetailBean.getFacilityIds());
@@ -129,21 +134,27 @@ public class ExpandableListAdapterDataCollection extends BaseExpandableListAdapt
                     editor.putInt(Constants.Q_CONFIGS, surveyDetailBean.getQConfig());
                     editor.apply();
                     Logger.logD("-->start time","checking time line");
-                   /* Intent serveyselectionintent= new Intent(_context, SurveySummaryReport.class);
-                    _context.startActivity(serveyselectionintent);*/
-
-                    Intent survrySummaryReport= new Intent(_context,ListingActivity.class);
-                    survrySummaryReport.putExtra(Constants.HEADER_NAME,surveyDetailBean.getBeneficiaryType());
-                    _context.startActivity(survrySummaryReport);
+                  if (sharedpreferences.getInt(Constants.SURVEY_ID,0)!=0) {
+                      Intent survrySummaryReport = new Intent(_context, ListingActivity.class);
+                      survrySummaryReport.putExtra(Constants.HEADER_NAME, surveyDetailBean.getBeneficiaryType());
+                      _context.startActivity(survrySummaryReport);
+                  }else{
+                      ToastUtils.displayToast("Sorry no beneficiary records",_context);
+                  }
                 }
             }
         }else {
-            Logger.logD("-->start time","checking time line");
-            Intent intent = new Intent(_context, ListingActivity.class);
-            intent.putExtra(Constants.HEADER_NAME,headerList.get(groupPosition));
-            intent.putExtra("beneficiary_type_id",String.valueOf(dataChildList.get(headerList.get(groupPosition)).get(childPosition).getId()));
-            intent.putExtra(Constants.TYPE_VALUE, dataChildList.get(headerList.get(groupPosition)).get(childPosition).getName());
-            _context.startActivity(intent);
+            if (preferences.getInt(Constants.SURVEY_ID,0)!=0) {
+                Logger.logD("-->start time","checking time line");
+                Intent intent = new Intent(_context, ListingActivity.class);
+                intent.putExtra(Constants.HEADER_NAME,headerList.get(groupPosition));
+                intent.putExtra("beneficiary_type_id",String.valueOf(dataChildList.get(headerList.get(groupPosition)).get(childPosition).getId()));
+                intent.putExtra(Constants.TYPE_VALUE, dataChildList.get(headerList.get(groupPosition)).get(childPosition).getName());
+                _context.startActivity(intent);
+            }else {
+                ToastUtils.displayToast("Sorry no beneficiary records",_context);
+            }
+
 
         }
     }

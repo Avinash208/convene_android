@@ -406,9 +406,25 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
 
     @Override
     public void onBackPressed() {
-       // clearAllWidgetMapCounts();
-        SupportClass supportClass = new SupportClass();
-        supportClass.backButtonFunction(SurveyQuestionActivity.this, db, surveyHandler, surveyPrimaryKeyId);
+      if (surveyPreferences.getString(Constants.SURVEYSTATUSTYPR,"").equals("new")){
+          Logger.logD(TAG,"New Survey");
+          SupportClass supportClass = new SupportClass();
+          supportClass.backButtonFunction(SurveyQuestionActivity.this, db, surveyHandler, surveyPrimaryKeyId);
+      }else{
+          Logger.logD(TAG,"Edit Survey");
+          AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+          alertDialogBuilder.setTitle(R.string.exitSurvey).setPositiveButton("YES", new DialogInterface.OnClickListener() {
+              public void onClick(DialogInterface dialog, int which) {
+                  finish();
+              }
+          }).setNegativeButton("NO", new DialogInterface.OnClickListener() {
+              public void onClick(DialogInterface dialog, int which) {
+
+              }
+          }).show();
+
+      }
+
 
     }
 
@@ -1680,8 +1696,24 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
             case R.id.backPress:
                 Logger.logD(TAG, "Clicked backPress button");
                 clearAllWidgetMapCounts();
-                SupportClass supportClass = new SupportClass();
-                supportClass.backButtonFunction(SurveyQuestionActivity.this, db, surveyHandler, surveyPrimaryKeyId);
+                if (surveyPreferences.getString(Constants.SURVEYSTATUSTYPR,"").equals("new")){
+                    Logger.logD(TAG,"New Survey");
+                    SupportClass supportClass = new SupportClass();
+                    supportClass.backButtonFunction(SurveyQuestionActivity.this, db, surveyHandler, surveyPrimaryKeyId);
+                }else{
+                    Logger.logD(TAG,"Edit Survey");
+                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+                    alertDialogBuilder.setTitle(R.string.exitSurvey).setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            finish();
+                        }
+                    }).setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+
+                        }
+                    }).show();
+
+                }
                 break;
             case R.id.imageMenu:
                 Logger.logD(TAG, "Clicked saveDraft button");
@@ -1696,7 +1728,7 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
      * method
      */
     private void saveAsDraft() {
-        //Modify by guru
+
         answeredList.clear();
         hashMapAnswersEditText.clear();
         saveToDraftFlag = true;
@@ -1720,7 +1752,6 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
         InsertTask insertTask = new InsertTask();
         Boolean booleanValue = insertTask.insertTask(answersEditText, surveyHandler, surveyPrimaryKeyId);
         Logger.logD(TAG, booleanValue.toString());
-        // Intimate previous screen by initialing intent service
         Intent intent = new Intent(this, MyIntentService.class);
         startService(intent);
         finish();

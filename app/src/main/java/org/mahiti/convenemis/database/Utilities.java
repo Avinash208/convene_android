@@ -50,6 +50,13 @@ public class Utilities
         Logger.logD("getLastUpDate", "getLastUpDate--" + name);
         return name;
     }
+
+    public static void setSurveyStatus(SharedPreferences sharedPreferences, String aNew) {
+        SharedPreferences.Editor editList= sharedPreferences.edit();
+        editList.putString(Constants.SURVEYSTATUSTYPR,aNew);
+        editList.apply();
+
     }
+}
 
 

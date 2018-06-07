@@ -13,7 +13,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:textColor="@color/divider"
-            android:text="No records to display"/>
+            android:text="@string/activity_module_is_on_progress"/>
     </LinearLayout>
 
 </RelativeLayout>

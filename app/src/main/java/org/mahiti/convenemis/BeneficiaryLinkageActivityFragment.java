@@ -32,6 +32,7 @@ import org.mahiti.convenemis.api.CallServerForApi;
 import org.mahiti.convenemis.api.PushingResultsInterface;
 import org.mahiti.convenemis.database.DBHandler;
 import org.mahiti.convenemis.database.ExternalDbOpenHelper;
+import org.mahiti.convenemis.database.Utilities;
 import org.mahiti.convenemis.utils.Constants;
 import org.mahiti.convenemis.utils.Logger;
 import org.mahiti.convenemis.utils.StartSurvey;
@@ -43,7 +44,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.UUID;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -59,6 +59,14 @@ public class BeneficiaryLinkageActivityFragment extends Fragment implements Push
     private static final int GETBENEFICIARYCODE = 100;
     private static final String PARENT_FORM_ID = "parent_form_primaryid";
     private static final int APIUPDATECODE = 200;
+    private static final String GETCHILDFORMTYPE = "getChild_form_type";
+    private static final String PARENTFORMPRIMARYID = "parent_form_type";
+    private static final String RELATIONID = "relation_id";
+    private static final java.lang.String GROUPID = "GroupIds";
+    private static final String CONFIGURTATIONQUESTION = "configuredQuestion";
+    private static final String GETCHILDFORMPRIMARYID = "getChild_form_primaryid";
+    private static final String GETCHILDFORMID = "getChild_form_id";
+    private static final String TAG = "BeneficiaryLinkageActivityFragment";
     private DBHandler dbHandler;
     private String surveyPrimaryKeyId = "";
     private int surveysId;
@@ -185,7 +193,6 @@ public class BeneficiaryLinkageActivityFragment extends Fragment implements Push
                     LinearLayout addlinkContainer = (LinearLayout) child.findViewById(R.id.linklabelcontainer);
                     ImageView addmembers = (ImageView) child.findViewById(R.id.addmembers);
                     TextView holdername = (TextView) child.findViewById(R.id.holdername);
-                    TextView linkLabel = (TextView) child.findViewById(R.id.linklabel);
                     holdername.setText(headingNameList.get(i).getQuestionText());
                     ArrayList<childLink> getChildUUids = dbHandler.getChildDetailsFromBeneficiaryLinkage(surveysId, surveyPrimaryKeyId, dbHandler);
                     Logger.logD("likage getChildUUids", getChildUUids + "");
@@ -196,7 +203,7 @@ public class BeneficiaryLinkageActivityFragment extends Fragment implements Push
                         for (int j = 0; j < getUnderChildList.size(); j++) {
                             View childView = this.getLayoutInflater().inflate(R.layout.linkage_custom_row, childdynamicinflater, false);
                             TextView syncLabel = (TextView) childView.findViewById(R.id.synclabel);
-                            int getSyncStatus= dbHandler.getSyncStatus(getUnderChildList.get(j).getChild_form_primaryid(),getChildUUids.get(j).getChild_form_id());
+                            int getSyncStatus= dbHandler.getSyncStatus(String.valueOf(getChildUUids.get(j).getChild_form_id()),surveyPrimaryKeyId);
                             if (getSyncStatus==0)
                                 syncLabel.setText("Offline");
                             TextView childaddress = (TextView) childView.findViewById(R.id.childaddress);
@@ -215,15 +222,15 @@ public class BeneficiaryLinkageActivityFragment extends Fragment implements Push
 
                                     Logger.logD("likage getChildUUids", getChildUUids.get(finalJ).getChild_form_type() + "");
                                     Bundle bundle = new Bundle();
-                                    bundle.putString("getChild_form_type", String.valueOf(getChildUUids.get(finalJ).getChild_form_type()));
+                                    bundle.putString(GETCHILDFORMTYPE, String.valueOf(getChildUUids.get(finalJ).getChild_form_type()));
                                     bundle.putString("surveyPrimaryKeyId", surveyPrimaryKeyId);
                                     bundle.putInt(PARENT_FORM_ID, parent_form_primaryid);
-                                    bundle.putInt("parent_form_type", parentID);
-                                    bundle.putInt("relation_id", headingNameList.get(finalI).getRelationId());
-                                    bundle.putString("GroupIds", getGroupIds);
-                                    bundle.putString("configuredQuestion", getQuestionIds);
-                                    bundle.putInt("getChild_form_primaryid", getUnderChildList.get(finalJ).getChild_form_primaryid());
-                                    bundle.putParcelableArrayList("getChild_form_id", getChildUUids);
+                                    bundle.putInt(PARENTFORMPRIMARYID, parentID);
+                                    bundle.putInt(RELATIONID, headingNameList.get(finalI).getRelationId());
+                                    bundle.putString(GROUPID, getGroupIds);
+                                    bundle.putString(CONFIGURTATIONQUESTION, getQuestionIds);
+                                    bundle.putInt(GETCHILDFORMPRIMARYID, getUnderChildList.get(finalJ).getChild_form_primaryid());
+                                    bundle.putParcelableArrayList(GETCHILDFORMID, getChildUUids);
                                     Intent callMemberActivityIntent = new Intent(getActivity(), ShowMemberListActivity.class);
                                     callMemberActivityIntent.putExtras(bundle);
                                     startActivity(callMemberActivityIntent);
@@ -238,6 +245,7 @@ public class BeneficiaryLinkageActivityFragment extends Fragment implements Push
                                     SharedPreferences.Editor preferenceEd = sharedPreferences.edit();
                                     preferenceEd.putBoolean("isLocationBased", true);
                                     preferenceEd.apply();
+                                    Utilities.setSurveyStatus(sharedPreferences,"new");
                                     new StartSurvey(getActivity(), getActivity(), sharedPreferences.getInt(Constants.SURVEY_ID, 0), sharedPreferences.getInt(Constants.SURVEY_ID, 0), "Village Name", "", "", "", "").execute();
                                 }
                             });
@@ -247,20 +255,12 @@ public class BeneficiaryLinkageActivityFragment extends Fragment implements Push
                                     AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity(), R.style.Theme_AppCompat_Light_Dialog_Alert);
                                     alertDialogBuilder.setTitle(R.string.confirmMessage).setMessage("Do you want to remove " + " " + getUnderChildList.get(finalJ).getAnswerText()).setPositiveButton(R.string.YES, new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int which) {
-                                            Bundle bundle = new Bundle();
-                                            bundle.putString("getChild_form_type", String.valueOf(getChildUUids.get(finalJ).getChild_form_type()));
-                                            bundle.putString("surveyPrimaryKeyId", surveyPrimaryKeyId);
-                                            bundle.putInt(PARENT_FORM_ID, parent_form_primaryid);
-                                            bundle.putInt("parent_form_type", parentID);
-                                            bundle.putInt("relation_id", headingNameList.get(finalI).getRelationId());
-                                            bundle.putString("GroupIds", getGroupIds);
-                                            bundle.putString("configuredQuestion", getQuestionIds);
-                                            bundle.putInt("getChild_form_primaryid", getUnderChildList.get(finalJ).getChild_form_primaryid());
-                                            bundle.putString("getChild_form_id", String.valueOf(getChildUUids.get(finalJ).getChild_form_id()));
-                                            createLinkageBundle(bundle);
+                                            deleteFunctionality(getChildUUids,finalJ,headingNameList,finalI,getUnderChildList);
+
                                         }
                                     }).setNegativeButton(R.string.Cancel, new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int which) {
+                                            Logger.logD(TAG, "cancel case");
                                         }
                                     }).show();
                                 }
@@ -272,30 +272,14 @@ public class BeneficiaryLinkageActivityFragment extends Fragment implements Push
                             @Override
                             public void onClick(View view) {
 
-                                Bundle bundle = new Bundle();
-                                bundle.putString("getChild_form_type", surveyPrimaryKeyId);
-                                bundle.putString("surveyPrimaryKeyId", surveyPrimaryKeyId);
-                                bundle.putInt(PARENT_FORM_ID, parent_form_primaryid);
-                                bundle.putInt("parent_form_type", parentID);
-                                bundle.putInt("relation_id", headingNameList.get(finalI1).getRelationId());
-                                bundle.putString("GroupIds", getGroupIds);
-                                bundle.putString("configuredQuestion", getQuestionIds);
-                                bundle.putParcelableArrayList("getChild_form_id", getChildUUids);
-                                Intent callMemberActivityIntent = new Intent(getActivity(), ShowMemberListActivity.class);
-                                callMemberActivityIntent.putExtras(bundle);
-                                startActivity(callMemberActivityIntent);
+                               addlinkContainerFunctionality(headingNameList,headingNameList,finalI1,getChildUUids);
+
                             }
                         });
                         addmembers.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                SharedPreferences.Editor preferenceEditer = prefs.edit();
-                                preferenceEditer.putInt(Constants.SURVEY_ID, Integer.valueOf(getGroupIds));
-                                preferenceEditer.apply();
-                                SharedPreferences.Editor preferenceEd = sharedPreferences.edit();
-                                preferenceEd.putBoolean("isLocationBased", true);
-                                preferenceEd.apply();
-                                new StartSurvey(getActivity(), getActivity(), sharedPreferences.getInt(Constants.SURVEY_ID, 0), sharedPreferences.getInt(Constants.SURVEY_ID, 0), "Village Name", "", "", "", "").execute();
+                                addMemberFunctionality();
                             }
                         });
                     }
@@ -310,13 +294,56 @@ public class BeneficiaryLinkageActivityFragment extends Fragment implements Push
         }
     }
 
+    private void addlinkContainerFunctionality(List<QuestionAnswer> headingNameList, List<QuestionAnswer> nameList, int finalI1, ArrayList<childLink> getChildUUids) {
+        Bundle bundle = new Bundle();
+        bundle.putString(GETCHILDFORMTYPE, surveyPrimaryKeyId);
+        bundle.putString("surveyPrimaryKeyId", surveyPrimaryKeyId);
+        bundle.putInt(PARENT_FORM_ID, parent_form_primaryid);
+        bundle.putInt(PARENTFORMPRIMARYID, parentID);
+        bundle.putInt(RELATIONID, headingNameList.get(finalI1).getRelationId());
+        bundle.putString(GROUPID, getGroupIds);
+        bundle.putString(CONFIGURTATIONQUESTION, getQuestionIds);
+        bundle.putParcelableArrayList(GETCHILDFORMID, getChildUUids);
+        Intent callMemberActivityIntent = new Intent(getActivity(), ShowMemberListActivity.class);
+        callMemberActivityIntent.putExtras(bundle);
+        startActivity(callMemberActivityIntent);
+    }
+
+    private void addMemberFunctionality() {
+        SharedPreferences.Editor preferenceEditer = prefs.edit();
+        preferenceEditer.putInt(Constants.SURVEY_ID, Integer.valueOf(getGroupIds));
+        preferenceEditer.apply();
+        SharedPreferences.Editor preferenceEd = sharedPreferences.edit();
+        preferenceEd.putBoolean("isLocationBased", true);
+        preferenceEd.apply();
+        Utilities.setSurveyStatus(sharedPreferences,"new");
+        new StartSurvey(getActivity(), getActivity(), sharedPreferences.getInt(Constants.SURVEY_ID, 0), sharedPreferences.getInt(Constants.SURVEY_ID, 0), "Village Name", "", "", "", "").execute();
+    }
+
+    private void deleteFunctionality(ArrayList<childLink> getChildUUids, int finalJ, List<QuestionAnswer> headingNameList, int finalI, List<QuestionAnswer> getUnderChildList) {
+        Bundle bundle = new Bundle();
+        bundle.putString(GETCHILDFORMTYPE, String.valueOf(getChildUUids.get(finalJ).getChild_form_type()));
+        bundle.putString("surveyPrimaryKeyId", surveyPrimaryKeyId);
+        bundle.putInt(PARENT_FORM_ID, parent_form_primaryid);
+        bundle.putInt(PARENTFORMPRIMARYID, parentID);
+        bundle.putInt(RELATIONID, headingNameList.get(finalI).getRelationId());
+        bundle.putString(GROUPID, getGroupIds);
+        bundle.putString(CONFIGURTATIONQUESTION, getQuestionIds);
+        bundle.putInt(GETCHILDFORMPRIMARYID, getUnderChildList.get(finalJ).getChild_form_primaryid());
+        bundle.putString(GETCHILDFORMID, String.valueOf(getChildUUids.get(finalJ).getChild_form_id()));
+        createLinkageBundle(bundle);
+    }
+
+    /**
+     * @param bundle bundle to create link.
+     */
     private void createLinkageBundle(Bundle bundle) {
         try {
             JSONObject jsonObjectMain = new JSONObject();
             JSONArray jsonArray = new JSONArray();
             List<Linkage> fillLinkagebean = new ArrayList<>();
             Linkage linkage = new Linkage();
-            String getUUIDIfExist = dbHandler.isRecordExist(bundle.getString("getChild_form_id"),surveyPrimaryKeyId);
+            String getUUIDIfExist = dbHandler.isRecordExist(bundle.getString(GETCHILDFORMID),surveyPrimaryKeyId);
             SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy_HHmmss");
             String currentDateandTime = sdf.format(new Date());
             JSONObject jsonObject = new JSONObject();
@@ -327,21 +354,21 @@ public class BeneficiaryLinkageActivityFragment extends Fragment implements Push
             jsonObject.put("active", "0");
             linkage.setActive(0);
             jsonObject.put("modified_on", currentDateandTime);
-            jsonObject.put("parent_form_type", parent_form_primaryid);
+            jsonObject.put(PARENTFORMPRIMARYID, parent_form_primaryid);
             linkage.setParentFormType(parentID);
             jsonObject.put("parent_form_id", surveyPrimaryKeyId);
             linkage.setParentFormId(surveyPrimaryKeyId);
 
-            jsonObject.put("child_form_id", bundle.getString("getChild_form_id"));
-            linkage.setChildFormId(bundle.getString("getChild_form_id"));
+            jsonObject.put("child_form_id", bundle.getString(GETCHILDFORMID));
+            linkage.setChildFormId(bundle.getString(GETCHILDFORMID));
 
-            jsonObject.put("child_form_type", bundle.getInt("getChild_form_primaryid"));
-            jsonObject.put("relation_id", bundle.getInt("relation_id"));
+            jsonObject.put("child_form_type", bundle.getInt(GETCHILDFORMPRIMARYID));
+            jsonObject.put(RELATIONID, bundle.getInt(RELATIONID));
 
-            linkage.setRelationId(bundle.getInt("relation_id"));
-            linkage.setParentFormPrimaryid(bundle.getInt("getChild_form_primaryid"));
-            linkage.setChildFormPrimaryid(bundle.getInt("getChild_form_primaryid"));
-            linkage.setChildFormType(bundle.getInt("GroupIds"));
+            linkage.setRelationId(bundle.getInt(RELATIONID));
+            linkage.setParentFormPrimaryid(bundle.getInt(GETCHILDFORMPRIMARYID));
+            linkage.setChildFormPrimaryid(bundle.getInt(GETCHILDFORMPRIMARYID));
+            linkage.setChildFormType(bundle.getInt(GROUPID));
 
             jsonArray.put(jsonObject);
             fillLinkagebean.add(linkage);
@@ -359,6 +386,9 @@ public class BeneficiaryLinkageActivityFragment extends Fragment implements Push
 
     }
 
+    /**
+     * @param responseJson response Json array
+     */
     private void callApiToUpdateBeneficiaryLinkage(JSONArray responseJson) {
         HashMap<String, String> beneficiaryLinkageParms = new HashMap<>();
         beneficiaryLinkageParms.put("URL", "/api/beneficiary-link/");
@@ -374,6 +404,9 @@ public class BeneficiaryLinkageActivityFragment extends Fragment implements Push
         }
     }
 
+    /**
+     * @param filledList updated filled list
+     */
     private void updateMemberToBeneficiaryLinkageTodatabase(List<Linkage> filledList) {
         if (!filledList.isEmpty()) {
             for (int i = 0; i < filledList.size(); i++) {
@@ -383,6 +416,10 @@ public class BeneficiaryLinkageActivityFragment extends Fragment implements Push
 
         }
     }
+
+    /**
+     * @param results updated Result.
+     */
     private void updateResponse(String results) {
         try {
             JSONObject jsonObject = new JSONObject(results);

@@ -64,7 +64,7 @@
                     android:paddingBottom="20dp"
                     android:paddingLeft="10dp"
                     android:singleLine="true"
-                    android:text="akrspi"
+                    android:text=""
                     android:textColor="#000"
                     android:textColorHint="#000" />
             </android.support.design.widget.TextInputLayout>
@@ -91,7 +91,7 @@
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
                     android:singleLine="true"
-                    android:text="admin@2018"
+                    android:text=""
                     android:textColor="#000"
                     android:textColorHint="#000" />
 

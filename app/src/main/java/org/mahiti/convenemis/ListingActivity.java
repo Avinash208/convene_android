@@ -38,6 +38,7 @@ import org.mahiti.convenemis.backgroundcallbacks.BenificiaryListingCallback;
 import org.mahiti.convenemis.database.ConveneDatabaseHelper;
 import org.mahiti.convenemis.database.DBHandler;
 import org.mahiti.convenemis.database.ExternalDbOpenHelper;
+import org.mahiti.convenemis.database.Utilities;
 import org.mahiti.convenemis.network.UpdateFilterInterface;
 import org.mahiti.convenemis.utils.AddBeneficiaryUtils;
 import org.mahiti.convenemis.utils.Constants;
@@ -114,6 +115,7 @@ public class ListingActivity extends BaseActivity implements View.OnClickListene
     private DBHandler surveySummaryreportdbhandler;
     private String qid;
     private ConveneDatabaseHelper dbConveneHelper;
+    private int surveyUUIDKEY=0;
 
 
     @Override
@@ -153,6 +155,8 @@ public class ListingActivity extends BaseActivity implements View.OnClickListene
         syncCompletedPendingListPending = new ArrayList<>();
         syncSurveySyncCompletedList = new ArrayList<>();
         syncSurveySyncPendingList = new ArrayList<>();
+        updateSurveyKey(prefs);
+
         myAutoComplete.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -188,12 +192,17 @@ public class ListingActivity extends BaseActivity implements View.OnClickListene
         createNewButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Utilities.setSurveyStatus(sharedPreferences,"new");
                 new StartSurvey(ListingActivity.this,ListingActivity.this,prefs.getInt(Constants.SURVEY_ID, 0), prefs.getInt(Constants.SURVEY_ID, 0), "Village Name", "", "","", "").execute();
             }
         });
 
 
 
+    }
+
+    private void updateSurveyKey(SharedPreferences prefs) {
+       surveyUUIDKEY= prefs.getInt("survey_id", 0);
     }
 
     private void setQuestionTOheading() {
@@ -380,7 +389,7 @@ public class ListingActivity extends BaseActivity implements View.OnClickListene
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    summaryReport(prefs.getInt("survey_id", 0));
+                    summaryReport(surveyUUIDKEY);
                 }
             });
 
@@ -409,7 +418,6 @@ public class ListingActivity extends BaseActivity implements View.OnClickListene
         String question="";
         if (!displayQuestionList.isEmpty()) {
             for (int i = 0; i < displayQuestionList.size(); i++) {
-               // View schemeChildView = getLayoutInflater().inflate(R.layout.scheme_inflate_row_summary, linearLayout, false);//child.xml
                 String getQuestionType = dbConveneHelper.getQuestionType(displayQuestionList.get(i));
                 question = dbConveneHelper.getQuestionFromDb(displayQuestionList.get(i), parentId);
                 String answer = "";
@@ -445,9 +453,7 @@ public class ListingActivity extends BaseActivity implements View.OnClickListene
         SurveySummaryReportdatabase = dbOpenHelper.getWritableDatabase();
         DBHandler surveySummaryreportdbhandler = new DBHandler(this);
         String pendingQuery = "Select * From Survey where  survey_ids ="+survey_id+" order by start_date desc";
-      //  String pendingQuery = "Select * From Survey where  survey_ids ="+survey_id+" order by sync_date desc";
         Logger.logD("pendingQuery","query->" + pendingQuery);
-
         int pendSurveyStatus = 0;
         String pendSurveyId = "";
         String specimenId = "";
@@ -481,7 +487,7 @@ public class ListingActivity extends BaseActivity implements View.OnClickListene
                 } while (cursorPendingSurvey.moveToNext());
                 cursorPendingSurvey.close();
             }
-           // setPendingText();
+
             cursorPendingSurvey.close();
             syncSurveyDatabase.close();
             Logger.logV("Listsize","List size of summery report" + syncSurveyList.size());
@@ -564,11 +570,10 @@ public class ListingActivity extends BaseActivity implements View.OnClickListene
                 setParentView(vh.anniversariesListDymanicLabel,statusbean.get(i).getQuestionAnswerList(),vh.anniversariesListDymanicLabel);
 
             }
-            else if(!"".equals(qid))
+           /* else if(!"".equals(qid))
             {
                 String summaryData= DBHandler.getAnswerFromPreviousQuestion(qid, surveySummaryreportdbhandler, String.valueOf(statusbean.get(i).getSurveyId()));
-//                vh.surveyName.setText(summaryData);
-            }
+            }*/
 
 
             vh.anniversariesListDymanicLabel.setOnClickListener(new View.OnClickListener() {
@@ -585,6 +590,7 @@ public class ListingActivity extends BaseActivity implements View.OnClickListene
             vh.editbtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    Utilities.setSurveyStatus(sharedPreferences,"edit");
                     Intent intent = new Intent(ListingActivity.this, SurveyQuestionActivity.class);
                     intent.putExtra("SurveyId", statusbean.get(i).getSurveyId());
                     intent.putExtra(Constants.SURVEY_ID, String.valueOf(prefs.getInt(Constants.SURVEY_ID, 0)));

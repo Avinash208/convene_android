@@ -2448,7 +2448,7 @@ public class ExternalDbOpenHelper extends SQLiteOpenHelper {
         if ("Beneficiary".equalsIgnoreCase(beneficiary)) {
             query = "SELECT  * FROM Surveys where " + columnName + "=" + beneficiaryType;
         } else {
-            query = "SELECT * FROM Surveys where " + columnName + " = '" + beneficiaryType + "' and beneficiary_ids=''";
+            query = "SELECT * FROM Surveys where Surveys.surveyId="+beneficiaryType;
         }
         Cursor cursor = db.rawQuery(query, null);
         Logger.logV(TAG, tagStr + query);
@@ -3920,7 +3920,6 @@ public class ExternalDbOpenHelper extends SQLiteOpenHelper {
         List<Datum> childTempList = new ArrayList<>();
         try {
             SQLiteDatabase db = openDataBase();
-            //  String query = "select beneficiary_ids,beneficiary_type, facility_ids,facility_type from Surveys where category_id="+getCategoryID+" group by beneficiary_type";
             String query = "select * from Surveys where category_id=" + getCategoryID + " order by order_levels";
             Cursor cursor = db.rawQuery(query, null);
             Logger.logD(TAG, "" + query);
@@ -3929,6 +3928,8 @@ public class ExternalDbOpenHelper extends SQLiteOpenHelper {
                     Datum datum = new Datum();
                     datum.setId(Integer.parseInt(cursor.getString(cursor.getColumnIndex("id"))));
                     datum.setName(cursor.getString(cursor.getColumnIndex("surveyName")));
+                    datum.setBeneficiaryTypeId(cursor.getInt(cursor.getColumnIndex("beneficiary_ids")));
+                    datum.setActive(cursor.getInt(cursor.getColumnIndex("category_id")));
                     childTempList.add(datum);
                 }
                 while (cursor.moveToNext());

@@ -45,8 +45,10 @@ public class PendingSurveyAsyncTask extends AsyncTask<String, Integer, List<Surv
 
     protected List<SurveysBean> doInBackground(String... strings) {
         for(int i=0;i<sourceList.size();i++) {
-            int getCount = externalDbOpenHelper.getPeriodicityPreviousCountOnline(sourceList.get(i).getId(), sourceList.get(i).getPeriodicityFlag(), sourceList.get(i).getBeneficiaryIds(), sourceList.get(i).getFacilityIds(), defaultPreferences.getString(Constants.UUID,""), new Date());
-            int getSurveyCount = periodicityCheckControllerDbHelper.getPeriodicityPreviousCountOffline(String.valueOf(sourceList.get(i).getId()), sourceList.get(i).getPeriodicityFlag(), defaultPreferences.getString(Constants.UUID,""), new Date());
+           // int getCount = externalDbOpenHelper.getPeriodicityPreviousCountOnline(sourceList.get(i).getId(), sourceList.get(i).getPeriodicityFlag(), sourceList.get(i).getBeneficiaryIds(), sourceList.get(i).getFacilityIds(), defaultPreferences.getString(Constants.UUID,""), new Date());
+           // int getSurveyCount = periodicityCheckControllerDbHelper.getPeriodicityPreviousCountOffline(String.valueOf(sourceList.get(i).getId()), sourceList.get(i).getPeriodicityFlag(), defaultPreferences.getString(Constants.UUID,""), new Date());
+            int getCount =0;
+            int getSurveyCount = 0;
             int addCount = getCount + getSurveyCount;
             if(sourceList.get(i).getPeriodicity()>addCount)
             {

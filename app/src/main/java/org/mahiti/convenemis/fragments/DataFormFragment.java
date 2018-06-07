@@ -56,6 +56,8 @@ import org.mahiti.convenemis.utils.multispinner.SingleSpinnerSearch;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.content.Context.MODE_PRIVATE;
+
 
 public class DataFormFragment extends Fragment implements PeriodicTypeInterface, PendingCompletedSurveyAsyncResultListener {
     private static final String TAG = "DataFormFragment";
@@ -104,6 +106,8 @@ public class DataFormFragment extends Fragment implements PeriodicTypeInterface,
     private LangReceiver langReceiver;
     private IntentFilter langFilter;
     private String isEditableStr = "isEditable";
+    private static final String MY_PREFS_NAME = "MyPrefs";
+    private SharedPreferences prefs;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -115,8 +119,8 @@ public class DataFormFragment extends Fragment implements PeriodicTypeInterface,
         langReceiver=new LangReceiver();
         langFilter = new IntentFilter("LangService");
         addBeneficiaryUtils=new AddBeneficiaryUtils(getActivity());
-
         defaultPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        prefs = getActivity().getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
         setToStringFromBundle(args);
     }
 
@@ -127,7 +131,7 @@ public class DataFormFragment extends Fragment implements PeriodicTypeInterface,
      * @param args
      */
     private void setToStringFromBundle(Bundle args) {
-        if(args!=null){
+        if(false){
             beneficiaryType=args.getString("beneficiary_type");
             beneficiaryTypeId=args.getString("beneficiary_type_id");
             locationName=args.getString("locationName");
@@ -140,10 +144,10 @@ public class DataFormFragment extends Fragment implements PeriodicTypeInterface,
             uuid=args.getString("uuid");
             surveyIdDCF = args.getInt("surveyIdDCF",-1);
         }else{
-            address=defaultPreferences.getString("address","");
+         //   address=defaultPreferences.getString("address","");
             beneficiaryType= defaultPreferences.getString("beneficiary_type","");
             locationName= defaultPreferences.getString("locationName","");
-            beneficiaryArray= defaultPreferences.getString(Constants.BENEFICIARY_ARRAY,"");
+          //  beneficiaryArray= defaultPreferences.getString(Constants.BENEFICIARY_ARRAY,"");
             locationId= defaultPreferences.getString("location_id","");
             boundaryLevel= defaultPreferences.getString("boundary_level","");
             btype= defaultPreferences.getString("typeName","");
@@ -205,7 +209,7 @@ public class DataFormFragment extends Fragment implements PeriodicTypeInterface,
      * method to get the facility based survey based on facility id in survey table
      */
     private void getTheFacilityBasedForm() {
-        surveyList = externalDbOpenHelper.getTypeBasedSurvey("Facility",beneficiaryTypeId, "facility_ids");
+        surveyList = externalDbOpenHelper.getTypeBasedSurvey("Facility",String.valueOf(prefs.getInt("survey_id", 0)), "facility_ids");
     }
 
 
@@ -247,8 +251,8 @@ public class DataFormFragment extends Fragment implements PeriodicTypeInterface,
         dynamicDataCollectionForm.removeAllViews();
         for (int surveyPosition =0 ; surveyPosition<pendingSurvey.size();surveyPosition++) {
             String benAndFaci ="";
-            if(!pendingSurvey.get(surveyPosition).getBeneficiaryIds().isEmpty() && !pendingSurvey.get(surveyPosition).getFacilityIds().isEmpty())
-                benAndFaci ="BenAndFaci";
+           /* if(!pendingSurvey.get(surveyPosition).getBeneficiaryIds().isEmpty() && !pendingSurvey.get(surveyPosition).getFacilityIds().isEmpty())
+                benAndFaci ="BenAndFaci";*/
             callPendingView(pendingSurvey.get(surveyPosition), benAndFaci);
 
         }

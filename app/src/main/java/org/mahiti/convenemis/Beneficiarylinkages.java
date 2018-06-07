@@ -79,7 +79,6 @@ public class Beneficiarylinkages extends AppCompatActivity {
     }
 
 
-
     /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
      * one of the sections/tabs/pages.
@@ -94,16 +93,21 @@ public class Beneficiarylinkages extends AppCompatActivity {
         public Fragment getItem(int position) {
             // getItem is called to instantiate the fragment for the given page.
             // Return a BeneficiaryLinkageDetails (defined as a static inner class below).
-           if (position==0)
+            if (position == 0)
                 return BeneficiaryLinkageDetails.newInstance(position + 1);
-           else   if (position==1)
-               return BeneficiaryActivityFragment.newInstance(position + 1);
-           else if (position==2)
-               return BeneficiaryLinkageActivityFragment.newInstance(position + 1);
-           else
-               return BeneficiaryLinkageDetails.newInstance(position + 1);
+            else if (position == 1) {
+                return BeneficiaryActivityFragment.newInstance(position + 1);
+              /*  Bundle bundle= new Bundle();
+                DataFormFragment dataFormFragment=new DataFormFragment();
+                dataFormFragment.setArguments(bundle);
+                return dataFormFragment;*/
+            } else if (position == 2)
+                return BeneficiaryLinkageActivityFragment.newInstance(position + 1);
+            else
+                return BeneficiaryLinkageDetails.newInstance(position + 1);
 
         }
+
         @Override
         public int getCount() {
             // Show 3 total pages.

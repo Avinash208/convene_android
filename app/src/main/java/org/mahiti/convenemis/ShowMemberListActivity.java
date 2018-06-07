@@ -7,7 +7,6 @@ import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -43,6 +42,7 @@ public class ShowMemberListActivity extends AppCompatActivity implements HomeTil
         , View.OnClickListener, PushingResultsInterface,MaterialSearchBar.OnSearchActionListener {
 
     private static final int APIUPDATECODE = 200;
+    private static final String TAG = "ShowMemberListActivity";
     private RecyclerView memberListRV;
     private String getChild_form_type = "";
 
@@ -58,7 +58,7 @@ public class ShowMemberListActivity extends AppCompatActivity implements HomeTil
     private int parent_form_type;
     private LinearLayout noDataLabel;
     private int relationId;
-    private String Groupids;
+    private String groupids;
     private String configuredQuestion;
     private MaterialSearchBar searchBar;
     private TextView tittleHeading;
@@ -74,12 +74,12 @@ public class ShowMemberListActivity extends AppCompatActivity implements HomeTil
         searchBar.addTextChangeListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
+                Logger.logD(TAG,"beforeTextChanged");
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-
+                Logger.logD(TAG,"onTextChanged");
             }
 
             @Override
@@ -91,7 +91,7 @@ public class ShowMemberListActivity extends AppCompatActivity implements HomeTil
     }
 
     private void callDatabaseToGetList() {
-        List<QuestionAnswer> getMemberList = dbHandlershowMember.getSortedChildRecord(Groupids, fss, configuredQuestion);
+        List<QuestionAnswer> getMemberList = dbHandlershowMember.getSortedChildRecord(groupids, fss, configuredQuestion);
         if (!getMemberList.isEmpty()) {
             Logger.logD("getChild_form_id", getMemberList.get(0).getAnswerText() + "");
             setAdapterAsigne(getMemberList, false);
@@ -111,7 +111,7 @@ public class ShowMemberListActivity extends AppCompatActivity implements HomeTil
             getChild_form_type = getBundle.getString("getChild_form_type");
             parent_form_id = getBundle.getString("surveyPrimaryKeyId");
             configuredQuestion = getBundle.getString("configuredQuestion");
-            Groupids = getBundle.getString("GroupIds");
+            groupids = getBundle.getString("GroupIds");
             parent_form_primaryid = getBundle.getInt("parent_form_primaryid");
             parent_form_type = getBundle.getInt("parent_form_type");
             relationId = getBundle.getInt("relation_id");
@@ -143,7 +143,7 @@ public class ShowMemberListActivity extends AppCompatActivity implements HomeTil
     }
 
     private void filterMemberList(String userEnteredText) {
-        List<QuestionAnswer> getMemberList = dbHandlershowMember.getSearchChildRecord(Groupids, fss, configuredQuestion,userEnteredText);
+        List<QuestionAnswer> getMemberList = dbHandlershowMember.getSearchChildRecord(groupids, fss, configuredQuestion,userEnteredText);
         if (!getMemberList.isEmpty()) {
             Logger.logD("getChild_form_id", getMemberList.get(0).getAnswerText() + "");
             setAdapterAsigne(getMemberList, false);
@@ -241,7 +241,7 @@ public class ShowMemberListActivity extends AppCompatActivity implements HomeTil
                 linkage.setRelationId(relationId);
                 linkage.setParentFormPrimaryid(parent_form_primaryid);
                 linkage.setChildFormPrimaryid(getSelectedChildList.get(i).getChild_form_primaryid());
-                linkage.setChildFormType(Integer.parseInt(Groupids));
+                linkage.setChildFormType(Integer.parseInt(groupids));
 
                 jsonArray.put(jsonObject);
                 fillLinkagebean.add(linkage);
@@ -326,11 +326,12 @@ public class ShowMemberListActivity extends AppCompatActivity implements HomeTil
 
     @Override
     public void onSearchConfirmed(CharSequence text) {
+        Logger.logD(TAG,"onSearchConfirmed");
 
     }
 
     @Override
     public void onButtonClicked(int buttonCode) {
-
+        Logger.logD(TAG,"onButtonClicked");
     }
 }
