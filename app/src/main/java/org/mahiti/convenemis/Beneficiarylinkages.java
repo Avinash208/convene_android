@@ -12,6 +12,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import org.mahiti.convenemis.fragments.DataFormFragment;
+
 public class Beneficiarylinkages extends AppCompatActivity {
 
     /**
@@ -96,11 +98,11 @@ public class Beneficiarylinkages extends AppCompatActivity {
             if (position == 0)
                 return BeneficiaryLinkageDetails.newInstance(position + 1);
             else if (position == 1) {
-                return BeneficiaryActivityFragment.newInstance(position + 1);
-              /*  Bundle bundle= new Bundle();
+
+                Bundle bundle= new Bundle();
                 DataFormFragment dataFormFragment=new DataFormFragment();
                 dataFormFragment.setArguments(bundle);
-                return dataFormFragment;*/
+                return dataFormFragment;
             } else if (position == 2)
                 return BeneficiaryLinkageActivityFragment.newInstance(position + 1);
             else

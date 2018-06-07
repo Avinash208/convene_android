@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 
 import org.mahiti.convenemis.BeenClass.SurveysBean;
 import org.mahiti.convenemis.backgroundcallbacks.PendingCompletedSurveyAsyncResultListener;
+import org.mahiti.convenemis.database.DBHandler;
 import org.mahiti.convenemis.database.ExternalDbOpenHelper;
 import org.mahiti.convenemis.database.ResponseCheckController;
 import org.mahiti.convenemis.database.SurveyControllerDbHelper;
@@ -30,23 +31,26 @@ public class PendingSurveyAsyncTask extends AsyncTask<String, Integer, List<Surv
     private SurveyControllerDbHelper periodicityCheckControllerDbHelper;
     private PendingCompletedSurveyAsyncResultListener pendingCompletedSurveyAsyncResultListener;
     private ResponseCheckController responseCheckController;
+    private DBHandler handler;
     protected void onPreExecute() {
         // Executed in UIThread
     }
 
-    public PendingSurveyAsyncTask(Context con, List<SurveysBean> sourceList, ExternalDbOpenHelper externalDbOpenHelper, SharedPreferences defaultPreferences, SurveyControllerDbHelper periodicityCheckControllerDbHelper, PendingCompletedSurveyAsyncResultListener pendingCompletedSurveyAsyncResultListener) {
+    public PendingSurveyAsyncTask(Context con, List<SurveysBean> sourceList, ExternalDbOpenHelper externalDbOpenHelper, SharedPreferences defaultPreferences, SurveyControllerDbHelper periodicityCheckControllerDbHelper,
+                                  PendingCompletedSurveyAsyncResultListener pendingCompletedSurveyAsyncResultListener, DBHandler handler) {
         this.sourceList = sourceList;
         this.responseCheckController = new ResponseCheckController(con);
         this.externalDbOpenHelper = externalDbOpenHelper;
         this.defaultPreferences = defaultPreferences;
         this.periodicityCheckControllerDbHelper = periodicityCheckControllerDbHelper;
         this.pendingCompletedSurveyAsyncResultListener = pendingCompletedSurveyAsyncResultListener;
+        this.handler=handler;
     }
 
     protected List<SurveysBean> doInBackground(String... strings) {
         for(int i=0;i<sourceList.size();i++) {
-           // int getCount = externalDbOpenHelper.getPeriodicityPreviousCountOnline(sourceList.get(i).getId(), sourceList.get(i).getPeriodicityFlag(), sourceList.get(i).getBeneficiaryIds(), sourceList.get(i).getFacilityIds(), defaultPreferences.getString(Constants.UUID,""), new Date());
-           // int getSurveyCount = periodicityCheckControllerDbHelper.getPeriodicityPreviousCountOffline(String.valueOf(sourceList.get(i).getId()), sourceList.get(i).getPeriodicityFlag(), defaultPreferences.getString(Constants.UUID,""), new Date());
+           /* int getCount = externalDbOpenHelper.getPeriodicityPreviousCountOnline(sourceList.get(i).getId(), sourceList.get(i).getPeriodicityFlag(), sourceList.get(i).getBeneficiaryIds(), sourceList.get(i).getFacilityIds(), defaultPreferences.getString(Constants.UUID,""), new Date());
+            int getSurveyCount = periodicityCheckControllerDbHelper.getPeriodicityPreviousCountOffline(String.valueOf(sourceList.get(i).getId()), sourceList.get(i).getPeriodicityFlag(), defaultPreferences.getString(Constants.UUID,""), new Date());*/
             int getCount =0;
             int getSurveyCount = 0;
             int addCount = getCount + getSurveyCount;
@@ -65,6 +69,11 @@ public class PendingSurveyAsyncTask extends AsyncTask<String, Integer, List<Surv
 
         protected void onPostExecute(List<SurveysBean> result) {
             // Executed in UIThread
+           for (int i=0;i<result.size();i++){
+               if (handler.isSurveyCompleted(result.get(i).getId())){
+                   result.remove(i);
+               }
+           }
             pendingCompletedSurveyAsyncResultListener.pendingSurveys(result);
         }
 

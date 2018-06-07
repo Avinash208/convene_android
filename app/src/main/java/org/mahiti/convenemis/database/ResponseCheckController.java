@@ -5,11 +5,7 @@ import android.database.Cursor;
 
 import net.sqlcipher.database.SQLiteDatabase;
 
-import org.mahiti.convenemis.BeenClass.StatusBean;
 import org.mahiti.convenemis.utils.Logger;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Copyright Mahiti Infotech Pvt Ltd (here after referred to as Mahiti) 2017.
@@ -57,26 +53,26 @@ public class ResponseCheckController {
         return getServerPrimaryKey;
     }
 
-    /**
+   /* *//**
      * @param id
      * @param dbOpenHelper
      * @return
-     */
-    public List<StatusBean> getPauseCompletedRecords(int id, ExternalDbOpenHelper dbOpenHelper) {
-        List<StatusBean> syncedList = new ArrayList<>();
+     *//*
+    public StatusBean getPauseCompletedRecords(int id, ExternalDbOpenHelper dbOpenHelper) {
+        StatusBean syncedList = new StatusBean();
             String pendingSurveyQuery = "SELECT id,capture_date,survey_ids FROM Survey where survey_ids="+ id ;
             Cursor cursor = db.rawQuery(pendingSurveyQuery, null);
             Logger.logD(TAG, " getPauseCompletedRecords" + pendingSurveyQuery + "-->" + cursor.getCount());
             if (cursor.getCount() != 0 && cursor.moveToFirst()) {
                 do {
                     String getEndDate = cursor.getString(cursor.getColumnIndex("capture_date"));
-                    syncedList = dbOpenHelper.getDetails(getEndDate, id);
+                    StatusBean = dbOpenHelper.getDetails(getEndDate, id);
 
                 } while (cursor.moveToNext());
                 cursor.close();
             }
 
         return syncedList;
-    }
+    }*/
 
 }

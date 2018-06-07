@@ -15,6 +15,7 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 
+import org.mahiti.convenemis.BeenClass.SurveysBean;
 import org.mahiti.convenemis.BeenClass.parentChild.LocationSurveyBeen;
 import org.mahiti.convenemis.R;
 import org.mahiti.convenemis.ShowSurveyPreview;
@@ -208,7 +209,8 @@ public class LocationBasedFormAdapter extends BaseAdapter {
         Intent intent;
         switch(btn.getText().toString()){
             case "Pending":
-                addBeneficiaryUtils.setToPreferences(mcontext, surveyName, boundaryId, boundarylevel, surveyBeen.getLocationName(), "", preferences);
+                SurveysBean surveysBean= new SurveysBean();
+                addBeneficiaryUtils.setToPreferences(mcontext, surveyName, boundaryId, boundarylevel, surveyBeen.getLocationName(), "", preferences, surveysBean);
                 editor11.putBoolean(ISLOCATIONBASED, true);
                 editor11.putBoolean(ISNOTLOCATIONBASED, false);
                 editor11.putBoolean(SAVEDRAFTBUTTON_FLAG, true);
@@ -217,7 +219,8 @@ public class LocationBasedFormAdapter extends BaseAdapter {
                 checkGPSConnection(surveyBeen, false);
                 break;
             case "Pending *":
-                addBeneficiaryUtils.setToPreferences(mcontext, surveyName, boundaryId, boundarylevel, surveyBeen.getLocationName(), "", preferences);
+                SurveysBean surveysB= new SurveysBean();
+                addBeneficiaryUtils.setToPreferences(mcontext, surveyName, boundaryId, boundarylevel, surveyBeen.getLocationName(), "", preferences, surveysB);
 
                 editor11.putBoolean(ISLOCATIONBASED, true);
                 editor11.putBoolean(ISNOTLOCATIONBASED, false);
@@ -239,7 +242,8 @@ public class LocationBasedFormAdapter extends BaseAdapter {
             case "Edit/View":
                 if(surveyBeen.getIsOnline() == 1) {
                     if (Utils.haveNetworkConnection(mcontext)) {
-                        addBeneficiaryUtils.setToPreferences(mcontext, surveyName, boundaryId, boundarylevel, surveyBeen.getLocationName(), "", preferences);
+                        SurveysBean surveys= new SurveysBean();
+                        addBeneficiaryUtils.setToPreferences(mcontext, surveyName, boundaryId, boundarylevel, surveyBeen.getLocationName(), "", preferences, surveys);
                         SharedPreferences.Editor editorSaveDraft = preferences.edit();
                         editorSaveDraft.putBoolean(SAVEDRAFTBUTTON_FLAG, true);
                         editorSaveDraft.putString("recentPreviewRecord", String.valueOf(surveyBeen.getResponseId()));

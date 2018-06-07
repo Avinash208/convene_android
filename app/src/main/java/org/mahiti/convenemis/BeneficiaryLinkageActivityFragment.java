@@ -272,7 +272,7 @@ public class BeneficiaryLinkageActivityFragment extends Fragment implements Push
                             @Override
                             public void onClick(View view) {
 
-                               addlinkContainerFunctionality(headingNameList,headingNameList,finalI1,getChildUUids);
+                               addlinkContainerFunctionality(headingNameList,finalI1,getChildUUids);
 
                             }
                         });
@@ -294,7 +294,7 @@ public class BeneficiaryLinkageActivityFragment extends Fragment implements Push
         }
     }
 
-    private void addlinkContainerFunctionality(List<QuestionAnswer> headingNameList, List<QuestionAnswer> nameList, int finalI1, ArrayList<childLink> getChildUUids) {
+    private void addlinkContainerFunctionality(List<QuestionAnswer> headingNameList, int finalI1, ArrayList<childLink> getChildUUids) {
         Bundle bundle = new Bundle();
         bundle.putString(GETCHILDFORMTYPE, surveyPrimaryKeyId);
         bundle.putString("surveyPrimaryKeyId", surveyPrimaryKeyId);

@@ -570,12 +570,6 @@ public class ListingActivity extends BaseActivity implements View.OnClickListene
                 setParentView(vh.anniversariesListDymanicLabel,statusbean.get(i).getQuestionAnswerList(),vh.anniversariesListDymanicLabel);
 
             }
-           /* else if(!"".equals(qid))
-            {
-                String summaryData= DBHandler.getAnswerFromPreviousQuestion(qid, surveySummaryreportdbhandler, String.valueOf(statusbean.get(i).getSurveyId()));
-            }*/
-
-
             vh.anniversariesListDymanicLabel.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

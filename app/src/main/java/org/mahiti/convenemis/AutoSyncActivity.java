@@ -456,15 +456,13 @@ public class AutoSyncActivity extends Activity {
                     if(facilityTypeId==null){
                         facilityTypeId="0";
                     }
-                    beneficiaryDetails=cursor1.getString(cursor1.getColumnIndex("beneficiary_details"));
+                    beneficiaryDetails=cursor1.getString(cursor1.getColumnIndex("beneficiary_ids"));
                    /* facility_id=cursor1.getString(cursor1.getColumnIndex("facility_ids"));
                     if(facility_id.isEmpty()){
                         facility_id="0";
                     }*/
-                    beneficiary_id=cursor1.getString(cursor1.getColumnIndex("uuid"));
+                    beneficiary_id=cursor1.getString(cursor1.getColumnIndex("beneficiary_ids"));
                     if(beneficiary_id.isEmpty()){
-                        beneficiary_id="0";
-                    }else{
                         beneficiary_id="0";
                     }
                     uuid=cursor1.getString(cursor1.getColumnIndex("uuid"));

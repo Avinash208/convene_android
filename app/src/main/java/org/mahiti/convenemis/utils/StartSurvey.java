@@ -328,44 +328,12 @@ public class StartSurvey extends AsyncTask<Context, Integer, String> {
                 values.put(facilityTypeIdStr, "0");
                 values.put("uuid", UUID.randomUUID().toString());
             } else {
-                try {
-                    JSONArray jsonArray = new JSONArray(beneficiaryDetails);
-                    String getType = jsonArray.getJSONObject(0).getString("type");
-                    uuid = jsonArray.getJSONObject(0).getString("uuid");
-                    if ("Facility".equalsIgnoreCase(getType)) {
-                        facility_id = jsonArray.getJSONObject(0).getString("uuid");
-                    } else if ("Beneficiary".equalsIgnoreCase(getType)) {
-                        beneficiary_id = jsonArray.getJSONObject(0).getString("uuid");
-                        facility_id = jsonArray.getJSONObject(0).getString("fac_uuid");
-                    }
-                } catch (JSONException e) {
-                    Logger.logE(TAG, "Exception on Beneficiary  based survey", e);
-                }
-                values.put("uuid", uuid);
-                values.put(BENEFICIARY_IDS_KEY, beneficiary_id);
-                values.put(FACILITY_IDS_KEY, facility_id);
-                Logger.logD(TAG + "TAG", "UUID " + uuid);
-                Logger.logD(TAG + "TAG", "beneficiary_id " + beneficiary_id);
-                Logger.logD(TAG + "TAG", "facility_id " + facility_id);
-
-                Logger.logD(TAG, "beneficiaryDetails " + beneficiaryDetails);
-                if (("").equalsIgnoreCase(prefs.getString(Constants.BENEFICIARY_IDS, ""))) {
-                    values.put(BENEFICIARY_TYPE_ID, "0");
-                } else {
-                    values.put(BENEFICIARY_TYPE_ID, prefs.getString(Constants.BENEFICIARY_IDS, ""));
-                }
-                if (("").equalsIgnoreCase(prefs.getString(Constants.FACILITY_IDS, ""))) {
-                    values.put(facilityTypeIdStr, "0");
-                } else {
-                    values.put(facilityTypeIdStr, prefs.getString(Constants.FACILITY_IDS, ""));
-                }
-                if (!"".equals(sharedpreferences.getString(Constants.BENEFICIARY_IDS, "")) && !"".equals(sharedpreferences.getString(Constants.FACILITY_IDS, ""))) {
-                    setBeneficiaryDataToValues(beneficiaryDetails);
-                    values.put(BENEFICIARY_IDS_KEY, beneficiary_id);
-                    values.put(FACILITY_IDS_KEY, facility_id);
-                    //Removable
-                    values.put("uuid", uuid);
-                }
+                values.put("beneficiary_details", "");
+                values.put(BENEFICIARY_IDS_KEY, beneficiaryDetails);
+                values.put(FACILITY_IDS_KEY, "0");
+                values.put(BENEFICIARY_TYPE_ID, "0");
+                values.put(facilityTypeIdStr, "0");
+                values.put("uuid", UUID.randomUUID().toString());
             }
 
             boolean checkNetwork = chckNework.checkNetwork();

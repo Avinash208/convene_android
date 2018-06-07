@@ -1346,6 +1346,45 @@ public class ExternalDbOpenHelper extends SQLiteOpenHelper {
         }
         return surveyDetailList;
     }
+    /**
+     * @param surveyid
+     * @return
+     */
+    public List<SurveyDetail> getUpdatedSurvey(String surveyid) {
+        String query;
+        SQLiteDatabase db = openDataBase();
+        Logger.logV(TAG, "The database path name getUpdatedSurveyList==>" + db.getPath());
+        query = "SELECT * from Surveys where Surveys.surveyId="+surveyid;
+        Cursor cursor = db.rawQuery(query, null);
+        Log.v("the cursor count is", "the c count is" + cursor.getCount());
+        List<SurveyDetail> surveyDetailList = new ArrayList<>();
+        if (cursor.getCount() != 0 && cursor.moveToFirst()) {
+            do {
+                try {
+                    SurveyDetail surveyDetail = new SurveyDetail(cursor.getString(cursor.getColumnIndex(SURVEYNAME)),
+                            cursor.getInt(cursor.getColumnIndex("pFuture")),
+                            cursor.getInt(cursor.getColumnIndex(Constants.P_LIMIT)),
+                            cursor.getInt(cursor.getColumnIndex(PERIODICITY_KEY)),
+                            cursor.getString(cursor.getColumnIndex(labels)),
+                            cursor.getString(cursor.getColumnIndex("vn")),
+                            cursor.getString(cursor.getColumnIndex(BENEFICIARY_TYPE_KEY)),
+                            cursor.getString(cursor.getColumnIndex(BENEFICIARYIDS_KEY)),
+                            cursor.getInt(cursor.getColumnIndex("bConfig")),
+                            cursor.getInt(cursor.getColumnIndex("reasonDisagree")),
+                            cursor.getString(cursor.getColumnIndex(ORDER_LEVELS)),
+                            cursor.getInt(cursor.getColumnIndex(Constants.SURVEY_ID_COLUMN)),
+                            cursor.getInt(cursor.getColumnIndex("qConfig")),
+                            cursor.getString(cursor.getColumnIndex("summaryQid")), null, cursor.getString(cursor.getColumnIndex(FACILITYTYPE)), cursor.getString(cursor.getColumnIndex(FACILITIY_IDS_KEY)),
+                            cursor.getString(cursor.getColumnIndex(PERIODICITY_FLAG)));
+                    surveyDetailList.add(surveyDetail);
+                } catch (Exception e) {
+                    Logger.logE(TAG, "", e);
+                }
+            } while (cursor.moveToNext());
+            cursor.close();
+        }
+        return surveyDetailList;
+    }
 
 
     /**
@@ -2448,7 +2487,7 @@ public class ExternalDbOpenHelper extends SQLiteOpenHelper {
         if ("Beneficiary".equalsIgnoreCase(beneficiary)) {
             query = "SELECT  * FROM Surveys where " + columnName + "=" + beneficiaryType;
         } else {
-            query = "SELECT * FROM Surveys where Surveys.surveyId="+beneficiaryType;
+            query = "select * from Surveys where Surveys.beneficiary_ids="+beneficiaryType;
         }
         Cursor cursor = db.rawQuery(query, null);
         Logger.logV(TAG, tagStr + query);
@@ -3394,25 +3433,26 @@ public class ExternalDbOpenHelper extends SQLiteOpenHelper {
      * @param surveyID
      * @return
      */
-    public List<StatusBean> getDetails(String getEndDate, int surveyID) {
+    public StatusBean getDetails(String getEndDate, int surveyID) {
 
-        List<StatusBean> syncedList = new ArrayList<>();
+        StatusBean sb = new StatusBean();
         try {
             String pendingSurveyQuery = "SELECT surveyName,PeriodicityFlag,id FROM Surveys where surveyId=" + surveyID;
             Cursor cursor;
             SQLiteDatabase db = openDataBase();
             cursor = db.rawQuery(pendingSurveyQuery, null);
             Logger.logD("blockquery", "Get Periodiicty and surveys from  Table" + pendingSurveyQuery);
+
             if (cursor.moveToFirst()) {
                 do {
 
                     String surveyName = cursor.getString(cursor.getColumnIndex(SURVEYNAME));
                     String PeriodicityFlag = cursor.getString(cursor.getColumnIndex(PERIODICITY_FLAG));
-                    StatusBean sb = new StatusBean();
+
                     sb.setName(surveyName);
                     sb.setLanguage(PeriodicityFlag);
                     sb.setDate(getEndDate);
-                    syncedList.add(sb);
+                //    syncedList.add(sb);
 
                 } while (cursor.moveToNext());
                 cursor.close();
@@ -3420,7 +3460,7 @@ public class ExternalDbOpenHelper extends SQLiteOpenHelper {
         } catch (Exception e) {
             Logger.logV("", "Responses from Survey table" + e);
         }
-        return syncedList;
+        return sb;
     }
 
 

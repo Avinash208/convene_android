@@ -18,6 +18,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.mahiti.convenemis.AddBeneficiaryActivity;
 import org.mahiti.convenemis.BeenClass.StatusBean;
+import org.mahiti.convenemis.BeenClass.SurveysBean;
 import org.mahiti.convenemis.BeenClass.beneficiary.Address;
 import org.mahiti.convenemis.BeenClass.beneficiary.Datum;
 import org.mahiti.convenemis.BeenClass.boundarylevel.Boundary;
@@ -534,10 +535,11 @@ public class AddBeneficiaryUtils {
      * @param locationName
      * @param beneficiaryArray
      * @param preferences
+     * @param surveysBean
      */
-    public  void setToPreferences(Context context, String name, int locationID, Integer locationLevel, String locationName, String beneficiaryArray, SharedPreferences preferences) {
+    public  void setToPreferences(Context context, String name, int locationID, Integer locationLevel, String locationName, String beneficiaryArray, SharedPreferences preferences, SurveysBean surveysBean) {
         try{
-            List<SurveyDetail>  surveyDetail= SurveyListLevels.getSurveyList(context, preferences.getString(Constants.DBNAME,""), preferences.getString("UID",""),"");
+            List<SurveyDetail>  surveyDetail= SurveyListLevels.getSurveyDetails(context, preferences.getString(Constants.DBNAME,""), preferences.getString("UID",""),String.valueOf(surveysBean.getId()));
             SurveyDetail surveyDetailBean;
             for (int i=0;i<surveyDetail.size();i++) {
                 if (name.equalsIgnoreCase(surveyDetail.get(i).getSurveyName())) {
@@ -568,11 +570,11 @@ public class AddBeneficiaryUtils {
                     editorPreference.putString("location_name", locationName);
                     editorPreference.putString("location_id", String.valueOf(locationID));
                     editorPreference.putString("beneficiary_array", beneficiaryArray);
-                    if(beneficiaryArray.isEmpty()){
+                    if(beneficiaryArray!=null && beneficiaryArray.isEmpty()){
                         editorPreference.putString("beneficiaryPids", "0");
                         editorPreference.putString("uuid", "");
                         editorPreference.putString("facilityPids", "0");
-                    }else{
+                    }else if(beneficiaryArray!=null ){
                         JSONArray jsonArray = new JSONArray(beneficiaryArray);
                         String uuidBen = jsonArray.getJSONObject(0).getString("uuid");
                         editorPreference.putString("beneficiaryPids", jsonArray.getJSONObject(0).getString(BEN_ID_KEY));

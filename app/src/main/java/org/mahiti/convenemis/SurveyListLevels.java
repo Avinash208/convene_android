@@ -95,6 +95,19 @@ public class SurveyListLevels extends Activity implements ClusterToTypo {
        ExternalDbOpenHelper dbHelpers= ExternalDbOpenHelper.getInstance(con, dbName,uid);
        return dbHelpers.getUpdatedSurveyList(beneficiary);
    }
+   /**
+     *
+     * @param con
+     * @param dbName
+     * @param uid
+     * @param surveyid
+     * @return
+     */
+   public static List<SurveyDetail> getSurveyDetails(Context con, String dbName, String uid, String surveyid)
+   {
+       ExternalDbOpenHelper dbHelpers= ExternalDbOpenHelper.getInstance(con, dbName,uid);
+       return dbHelpers.getUpdatedSurvey(surveyid);
+   }
 
     @Override
     public void surveyListSuccess(boolean flag)

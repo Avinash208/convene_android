@@ -419,7 +419,7 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
               }
           }).setNegativeButton("NO", new DialogInterface.OnClickListener() {
               public void onClick(DialogInterface dialog, int which) {
-
+                  Logger.logD(TAG,"onClick");
               }
           }).show();
 

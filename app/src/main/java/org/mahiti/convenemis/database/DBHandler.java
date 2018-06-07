@@ -17,6 +17,7 @@ import org.mahiti.convenemis.BeenClass.Linkage;
 import org.mahiti.convenemis.BeenClass.PreviewQuestionAnswerSet;
 import org.mahiti.convenemis.BeenClass.QuestionAnswer;
 import org.mahiti.convenemis.BeenClass.StatusBean;
+import org.mahiti.convenemis.BeenClass.SurveysBean;
 import org.mahiti.convenemis.BeenClass.childLink;
 import org.mahiti.convenemis.BeenClass.parentChild.Level1;
 import org.mahiti.convenemis.utils.Constants;
@@ -585,19 +586,26 @@ public class DBHandler extends SQLiteOpenHelper {
     /**
      * @param id
      * @param dbOpenHelper
+     * @param surveyPrimaryKeyId
      * @return
      */
-    public List<StatusBean> getPauseCompletedRecords(int id, ExternalDbOpenHelper dbOpenHelper) {
-        List<StatusBean> syncedList = new ArrayList<>();
+    public SurveysBean getPauseCompletedRecords(int id, ExternalDbOpenHelper dbOpenHelper, String surveyPrimaryKeyId) {
+        StatusBean statusBean= new StatusBean();
+        SurveysBean surveysBean= new SurveysBean();
+
         try {
-            String pendingSurveyQuery = "SELECT id,end_date,survey_ids FROM Survey where survey_ids=" + id + " and survey_status=1";
+            String pendingSurveyQuery = "SELECT uuid,end_date,survey_ids FROM Survey where survey_ids=" + id + " and survey_status=2";
             SQLiteDatabase db = getdatabaseinstance_read();
             Cursor cursor = db.rawQuery(pendingSurveyQuery, null);
             Logger.logD(TAG, " getPauseCompletedRecords" + pendingSurveyQuery + "-->" + cursor.getCount());
             if (cursor.getCount() != 0 && cursor.moveToFirst()) {
                 do {
                     String getEndDate = cursor.getString(cursor.getColumnIndex("end_date"));
-                    syncedList = dbOpenHelper.getDetails(getEndDate, id);
+                    surveysBean.setUuid(cursor.getString(cursor.getColumnIndex("uuid")));
+                    statusBean = dbOpenHelper.getDetails(getEndDate, id);
+
+                    surveysBean.setSurveyName(statusBean.getName());
+
 
                 } while (cursor.moveToNext());
                 cursor.close();
@@ -605,7 +613,7 @@ public class DBHandler extends SQLiteOpenHelper {
         } catch (Exception e) {
             Logger.logV(TAG, "getPauseCompletedRecords from Survey table" + e);
         }
-        return syncedList;
+        return surveysBean;
     }
 
 
@@ -1224,11 +1232,11 @@ public class DBHandler extends SQLiteOpenHelper {
         return getSelectedUUids;
     }
 
-    public int getSyncStatus(String getChildform_type,String parentformid) {
+    public int getSyncStatus(String getChildformType,String parentformid) {
 
         int getUUIDIfExist=2;
         try {
-            String pendingSurveyQuery = "select sync_status from Linkages where Linkages.child_form_id='"+getChildform_type+"' and Linkages.parent_form_id='"+parentformid+"'";
+            String pendingSurveyQuery = "select sync_status from Linkages where Linkages.child_form_id='"+getChildformType+"' and Linkages.parent_form_id='"+parentformid+"'";
             SQLiteDatabase db = getdatabaseinstance_read();
             Cursor cursor = db.rawQuery(pendingSurveyQuery, null);
             Logger.logD(pendingSurveyQueryStr, " checkPrymarySaveDraftExist" + pendingSurveyQuery + "-->" + cursor.getCount());
@@ -1245,5 +1253,33 @@ public class DBHandler extends SQLiteOpenHelper {
         }
 
         return getUUIDIfExist;
+    }
+
+    public boolean isSurveyCompleted(int surveyid) {
+        boolean isCompleted=false;
+        try {
+            String pendingSurveyQuery = "select Survey.uuid, Response.ans_text,Survey.survey_ids\n" +
+                    "from Survey\n" +
+                    "inner Join Response on Response.survey_id=Survey.uuid\n" +
+                    "where Survey.survey_ids="+surveyid;
+            SQLiteDatabase db = getdatabaseinstance_read();
+            Cursor cursor = db.rawQuery(pendingSurveyQuery, null);
+            Logger.logD(pendingSurveyQueryStr, " checkPrymarySaveDraftExist" + pendingSurveyQuery + "-->" + cursor.getCount());
+            if (cursor.getCount() != 0 && cursor.moveToFirst()) {
+                do {
+                    String uuid = cursor.getString(cursor.getColumnIndex("uuid"));
+                    if (uuid.equals(""))
+                        isCompleted=false;
+                    else
+                        isCompleted=true;
+
+                } while (cursor.moveToNext());
+                cursor.close();
+            }
+        } catch (Exception e) {
+            Logger.logV("", "checkPrymarySaveDraftExist from Survey table" + e);
+
+        }
+        return isCompleted;
     }
 }
