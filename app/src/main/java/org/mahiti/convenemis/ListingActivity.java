@@ -433,11 +433,6 @@ public class ListingActivity extends BaseActivity implements View.OnClickListene
                 filledBean.setAnswerText(answer);
                 filledBean.setParentId(parentId);
                 questionAnswerList.add(filledBean);
-
-
-
-
-
             }
 
         }

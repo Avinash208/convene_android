@@ -259,7 +259,7 @@ public class DataFormFragment extends Fragment implements PeriodicTypeInterface,
     private void showSurveyForm() {
         if (surveyList.isEmpty())
             return;
-        new PendingSurveyAsyncTask(getActivity(),surveyList,externalDbOpenHelper,defaultPreferences,periodicityCheckControllerDbHelper,this,handler).execute();
+        new PendingSurveyAsyncTask(getActivity(),surveyList,externalDbOpenHelper,defaultPreferences,periodicityCheckControllerDbHelper,this,handler,surveyPrimaryKeyId).execute();
         new CompletedSurveyAsyncTask(getActivity(),surveyList,externalDbOpenHelper,defaultPreferences,surveyPrimaryKeyId,this,handler).execute();
 
     }
@@ -576,7 +576,7 @@ public class DataFormFragment extends Fragment implements PeriodicTypeInterface,
             surveyTextView.setTypeface(customfont);
             periodicityTextview.setTypeface(customfont);
             surveyTextView.setText(completedSurveyList.get(i).getSurveyName());
-            statusTextView.setText(R.string.edit_or_view);
+            statusTextView.setText(R.string.completed);
       //      List<StatusBean> getCompletedSurveyList= externalDbOpenHelper.getCompletedRecords(uuid,completedSurveyList.get(i).getId(),completedSurveyList.get(i).getBeneficiaryIds(),completedSurveyList.get(i).getFacilityIds());
           //  List<StatusBean> getPausedCompletedSurveyList=responseCheckController.getPauseCompletedRecords(completedSurveyList.get(i).getId(), externalDbOpenHelper);
             dynamicClosedDataCollectionForm.addView(childView);

@@ -594,7 +594,7 @@ public class DBHandler extends SQLiteOpenHelper {
         SurveysBean surveysBean= new SurveysBean();
 
         try {
-            String pendingSurveyQuery = "SELECT uuid,end_date,survey_ids FROM Survey where survey_ids=" + id + " and survey_status=2";
+            String pendingSurveyQuery = "SELECT uuid,end_date,survey_ids FROM Survey where  beneficiary_ids='" + surveyPrimaryKeyId +"'" ;
             SQLiteDatabase db = getdatabaseinstance_read();
             Cursor cursor = db.rawQuery(pendingSurveyQuery, null);
             Logger.logD(TAG, " getPauseCompletedRecords" + pendingSurveyQuery + "-->" + cursor.getCount());
@@ -1255,13 +1255,44 @@ public class DBHandler extends SQLiteOpenHelper {
         return getUUIDIfExist;
     }
 
-    public boolean isSurveyCompleted(int surveyid) {
-        boolean isCompleted=false;
+    public List<SurveysBean>  isSurveyCompleted(String surveyPrimaryKeyId, ExternalDbOpenHelper dbOpenHelper) {
+        List<SurveysBean> resultPendingTemp= new ArrayList<>();
         try {
-            String pendingSurveyQuery = "select Survey.uuid, Response.ans_text,Survey.survey_ids\n" +
+            String pendingSurveyQuery = "select Survey.uuid, Survey.end_date, Survey.survey_ids , Response.ans_text,Survey.survey_ids\n" +
                     "from Survey\n" +
                     "inner Join Response on Response.survey_id=Survey.uuid\n" +
-                    "where Survey.survey_ids="+surveyid;
+                    "where  Survey.beneficiary_ids !='"+surveyPrimaryKeyId+"' group by uuid";
+            SQLiteDatabase db = getdatabaseinstance_read();
+            Cursor cursor = db.rawQuery(pendingSurveyQuery, null);
+            Logger.logD(pendingSurveyQueryStr, " checkPrymarySaveDraftExist" + pendingSurveyQuery + "-->" + cursor.getCount());
+            if (cursor.getCount() != 0 && cursor.moveToFirst()) {
+                do {
+                    SurveysBean surveysBean= new SurveysBean();
+                    String uuid = cursor.getString(cursor.getColumnIndex("uuid"));
+                    String getEndDate = cursor.getString(cursor.getColumnIndex("end_date"));
+                    int survey_ids = cursor.getInt(cursor.getColumnIndex("survey_ids"));
+                    StatusBean statusBean = dbOpenHelper.getDetails(getEndDate, survey_ids);
+
+                    surveysBean.setSurveyName(statusBean.getName());
+                    surveysBean.setUuid(uuid);
+                    surveysBean.setId(survey_ids);
+                    resultPendingTemp.add(surveysBean);
+
+
+                } while (cursor.moveToNext());
+                cursor.close();
+            }
+        } catch (Exception e) {
+            Logger.logV("", "checkPrymarySaveDraftExist from Survey table" + e);
+
+        }
+        return resultPendingTemp;
+    }
+
+    public boolean isSurveyCompeted(String parentUUID) {
+        boolean isCompleted=false;
+        try {
+            String pendingSurveyQuery = "SELECT uuid FROM Survey where beneficiary_ids='"+parentUUID+"'";
             SQLiteDatabase db = getdatabaseinstance_read();
             Cursor cursor = db.rawQuery(pendingSurveyQuery, null);
             Logger.logD(pendingSurveyQueryStr, " checkPrymarySaveDraftExist" + pendingSurveyQuery + "-->" + cursor.getCount());

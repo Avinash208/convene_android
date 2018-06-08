@@ -63,7 +63,17 @@ public class CompletedSurveyAsyncTask extends AsyncTask<String, Integer, List<Su
 
     protected void onPostExecute(List<SurveysBean> result) {
         // Executed in UIThread
+       /* List<SurveysBean> tempUuiidList= new ArrayList<>();
+
+        for (int k=0;k<result.size();k++){
+            if (!handler.isSurveyCompeted(result.get(k).getUuid())){
+                tempUuiidList.add(result.get(k));
+            }
+        }*/
+
         pendingCompletedSurveyAsyncResultListener.completedSurveys(result);
     }
+
+
 }
                                 

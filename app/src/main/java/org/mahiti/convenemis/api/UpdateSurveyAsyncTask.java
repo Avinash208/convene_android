@@ -244,8 +244,10 @@ public class UpdateSurveyAsyncTask extends AsyncTask<Context, Integer, String> {
                        collectResponse.add(responseTemp);
                    }
                }else{
-                   JSONObject jsonObject= new JSONObject(location);
-                   syncSurveyHandler.updateAddressRecordFromServer(jsonObject,surveyPrimaryKey);
+                 /* if (location!=null) {
+                      JSONObject jsonObject = new JSONObject(location);
+                      syncSurveyHandler.updateAddressRecordFromServer(jsonObject, surveyPrimaryKey);
+                  }*/
 
 
                }

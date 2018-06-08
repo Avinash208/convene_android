@@ -32,12 +32,13 @@ public class PendingSurveyAsyncTask extends AsyncTask<String, Integer, List<Surv
     private PendingCompletedSurveyAsyncResultListener pendingCompletedSurveyAsyncResultListener;
     private ResponseCheckController responseCheckController;
     private DBHandler handler;
+    String surveyPrimaryKeyId;
     protected void onPreExecute() {
         // Executed in UIThread
     }
 
     public PendingSurveyAsyncTask(Context con, List<SurveysBean> sourceList, ExternalDbOpenHelper externalDbOpenHelper, SharedPreferences defaultPreferences, SurveyControllerDbHelper periodicityCheckControllerDbHelper,
-                                  PendingCompletedSurveyAsyncResultListener pendingCompletedSurveyAsyncResultListener, DBHandler handler) {
+                                  PendingCompletedSurveyAsyncResultListener pendingCompletedSurveyAsyncResultListener, DBHandler handler, String surveyPrimaryKeyId) {
         this.sourceList = sourceList;
         this.responseCheckController = new ResponseCheckController(con);
         this.externalDbOpenHelper = externalDbOpenHelper;
@@ -45,6 +46,7 @@ public class PendingSurveyAsyncTask extends AsyncTask<String, Integer, List<Surv
         this.periodicityCheckControllerDbHelper = periodicityCheckControllerDbHelper;
         this.pendingCompletedSurveyAsyncResultListener = pendingCompletedSurveyAsyncResultListener;
         this.handler=handler;
+        this.surveyPrimaryKeyId=surveyPrimaryKeyId;
     }
 
     protected List<SurveysBean> doInBackground(String... strings) {
@@ -69,11 +71,16 @@ public class PendingSurveyAsyncTask extends AsyncTask<String, Integer, List<Surv
 
         protected void onPostExecute(List<SurveysBean> result) {
             // Executed in UIThread
-           for (int i=0;i<result.size();i++){
-               if (handler.isSurveyCompleted(result.get(i).getId())){
-                   result.remove(i);
+            List<SurveysBean> resultPendingTemp =handler.isSurveyCompleted(surveyPrimaryKeyId,externalDbOpenHelper);
+
+
+
+           /* for (int i=0;i<result.size();i++){
+               if (handler.isSurveyCompleted(result.get(i).getId(),surveyPrimaryKeyId)){
+                   resultPendingTemp.add(result.get(i));
                }
            }
+*/
             pendingCompletedSurveyAsyncResultListener.pendingSurveys(result);
         }
 
