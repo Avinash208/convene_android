@@ -58,8 +58,10 @@ public class PendingSurveyAsyncTask extends AsyncTask<String, Integer, List<Surv
             int addCount = getCount + getSurveyCount;
             if(sourceList.get(i).getPeriodicity()>addCount)
             {
-                SurveysBean been = getSurveyPendingStuatus(sourceList.get(i));
-                resultList.add(been);
+              //  SurveysBean been = getSurveyPendingStuatus(sourceList.get(i),surveyPrimaryKeyId);
+
+                if (!handler.isSurveyCompleted(sourceList.get(i),surveyPrimaryKeyId,externalDbOpenHelper))
+                    resultList.add(sourceList.get(i));
             }
         }
         return resultList;
@@ -71,7 +73,7 @@ public class PendingSurveyAsyncTask extends AsyncTask<String, Integer, List<Surv
 
         protected void onPostExecute(List<SurveysBean> result) {
             // Executed in UIThread
-            List<SurveysBean> resultPendingTemp =handler.isSurveyCompleted(surveyPrimaryKeyId,externalDbOpenHelper);
+           // List<SurveysBean> resultPendingTemp =handler.isSurveyCompleted(surveyPrimaryKeyId,externalDbOpenHelper);
 
 
 
@@ -84,7 +86,7 @@ public class PendingSurveyAsyncTask extends AsyncTask<String, Integer, List<Surv
             pendingCompletedSurveyAsyncResultListener.pendingSurveys(result);
         }
 
-    private SurveysBean getSurveyPendingStuatus( SurveysBean surveysBean) {
+    private SurveysBean getSurveyPendingStuatus(SurveysBean surveysBean, String surveyPrimaryKeyId) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ssaa", Locale.US);
         String startPeriod = periodicityCheckControllerDbHelper.getPeriodicityPeriod(surveysBean.getPeriodicityFlag(), defaultPreferences.getString(Constants.CREATED_DATE,""));
         String currentPeriod = periodicityCheckControllerDbHelper.getPeriodicityPeriod(surveysBean.getPeriodicityFlag(), dateFormat.format(new Date()));

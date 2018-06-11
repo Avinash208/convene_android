@@ -1255,30 +1255,29 @@ public class DBHandler extends SQLiteOpenHelper {
         return getUUIDIfExist;
     }
 
-    public List<SurveysBean>  isSurveyCompleted(String surveyPrimaryKeyId, ExternalDbOpenHelper dbOpenHelper) {
-        List<SurveysBean> resultPendingTemp= new ArrayList<>();
+    public Boolean  isSurveyCompleted(SurveysBean surveysBean,String surveyPrimaryKeyId, ExternalDbOpenHelper dbOpenHelper) {
+        StatusBean statusBeanTemp= new StatusBean();
+        boolean isCompleted=false;
         try {
-            String pendingSurveyQuery = "select Survey.uuid, Survey.end_date, Survey.survey_ids , Response.ans_text,Survey.survey_ids\n" +
-                    "from Survey\n" +
-                    "inner Join Response on Response.survey_id=Survey.uuid\n" +
-                    "where  Survey.beneficiary_ids !='"+surveyPrimaryKeyId+"' group by uuid";
+            String pendingSurveyQuery = "select * from survey where beneficiary_ids='"+surveyPrimaryKeyId+"' and  survey_ids="+surveysBean.getId();
             SQLiteDatabase db = getdatabaseinstance_read();
             Cursor cursor = db.rawQuery(pendingSurveyQuery, null);
-            Logger.logD(pendingSurveyQueryStr, " checkPrymarySaveDraftExist" + pendingSurveyQuery + "-->" + cursor.getCount());
+            Logger.logD(pendingSurveyQueryStr, " isSurveyCompleted" + pendingSurveyQuery + "-->" + cursor.getCount());
+
             if (cursor.getCount() != 0 && cursor.moveToFirst()) {
                 do {
-                    SurveysBean surveysBean= new SurveysBean();
-                    String uuid = cursor.getString(cursor.getColumnIndex("uuid"));
+
+                    String uuid = cursor.getString(cursor.getColumnIndex("beneficiary_ids"));
+
+                    if (!uuid.equals(""))
+                        isCompleted=getUUIDStatus(uuid);
                     String getEndDate = cursor.getString(cursor.getColumnIndex("end_date"));
                     int survey_ids = cursor.getInt(cursor.getColumnIndex("survey_ids"));
-                    StatusBean statusBean = dbOpenHelper.getDetails(getEndDate, survey_ids);
+                    statusBeanTemp = dbOpenHelper.getDetails(getEndDate, survey_ids);
 
-                    surveysBean.setSurveyName(statusBean.getName());
+                    surveysBean.setSurveyName(statusBeanTemp.getName());
                     surveysBean.setUuid(uuid);
                     surveysBean.setId(survey_ids);
-                    resultPendingTemp.add(surveysBean);
-
-
                 } while (cursor.moveToNext());
                 cursor.close();
             }
@@ -1286,7 +1285,33 @@ public class DBHandler extends SQLiteOpenHelper {
             Logger.logV("", "checkPrymarySaveDraftExist from Survey table" + e);
 
         }
-        return resultPendingTemp;
+        return isCompleted;
+    }
+
+    private boolean getUUIDStatus(String patentuuid) {
+        boolean isCompleted=false;
+        try {
+            String pendingSurveyQuery = "select * from survey where beneficiary_ids='"+patentuuid+"'";
+            SQLiteDatabase db = getdatabaseinstance_read();
+            Cursor cursor = db.rawQuery(pendingSurveyQuery, null);
+            Logger.logD(pendingSurveyQueryStr, " isSurveyCompleted" + pendingSurveyQuery + "-->" + cursor.getCount());
+
+            if (cursor.getCount() != 0 && cursor.moveToFirst()) {
+                do {
+
+                    String uuid = cursor.getString(cursor.getColumnIndex("uuid"));
+
+                    if (!uuid.equals(""))
+                        isCompleted=true;
+                } while (cursor.moveToNext());
+                cursor.close();
+            }
+        } catch (Exception e) {
+            Logger.logV("", "checkPrymarySaveDraftExist from Survey table" + e);
+
+        }
+
+        return isCompleted;
     }
 
     public boolean isSurveyCompeted(String parentUUID) {
@@ -1295,7 +1320,6 @@ public class DBHandler extends SQLiteOpenHelper {
             String pendingSurveyQuery = "SELECT uuid FROM Survey where beneficiary_ids='"+parentUUID+"'";
             SQLiteDatabase db = getdatabaseinstance_read();
             Cursor cursor = db.rawQuery(pendingSurveyQuery, null);
-            Logger.logD(pendingSurveyQueryStr, " checkPrymarySaveDraftExist" + pendingSurveyQuery + "-->" + cursor.getCount());
             if (cursor.getCount() != 0 && cursor.moveToFirst()) {
                 do {
                     String uuid = cursor.getString(cursor.getColumnIndex("uuid"));
