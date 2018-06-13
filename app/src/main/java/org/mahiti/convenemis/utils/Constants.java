@@ -1,6 +1,14 @@
 package org.mahiti.convenemis.utils;
 
+import android.widget.Button;
+import android.widget.LinearLayout;
+
+import org.mahiti.convenemis.BeenClass.AssesmentBean;
+import org.mahiti.convenemis.BeenClass.Page;
+import org.mahiti.convenemis.BeenClass.Response;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 
@@ -157,6 +165,29 @@ public class Constants {
     public static final String SELECT_GENDER="Select gender";
     public static final String ASSESSMENT = "Assessment";
     public static final String dateCaptureStr ="date_capture";
+
+
+
+    public static HashMap<String,List<Page>> gridSubQuestionMapDialog= new HashMap<>();
+    public static HashMap<String,List<AssesmentBean>> gridAssessmentMapDialog= new HashMap<>();
+    public static HashMap<String,List<AssesmentBean>> mainGridAssessmentMapDialog= new HashMap<>();
+    public static HashMap<String,Page> gridQuestionMapDialog= new HashMap<>();
+    public static HashMap<String, List<LinearLayout>> gridRadioHashMap= new HashMap<>();
+    public static HashMap<String,List<Response>> fillInlineRow= new HashMap<>();
+    public static HashMap<String,List<String>> fillInlineHashMapKey= new HashMap<>();
+    public static HashMap<String,List<Response>> GridResponseHashMap= new HashMap<>();
+    public static HashMap<String,List<String>> GridResponseHashMapKeys= new HashMap<>();
+
+    public static ArrayList<Button> bt= new ArrayList<>();
+    public static ArrayList<Button> dateButton = new ArrayList<>();
+    public static List<String> mainAcessmentList = new ArrayList<>();
+    public static List<Integer> blockQidIntegers =new ArrayList<>();
+    public static List<String> listHashMapKey= new ArrayList<>();
+
+    public static HashMap<String,Button> buttonDynamicDateGrid = new HashMap<>();
+
+
+    public static int rowInflater=0;
 
     private Constants(){
         // not using this constructor

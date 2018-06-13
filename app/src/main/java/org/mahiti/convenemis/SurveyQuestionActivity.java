@@ -53,6 +53,7 @@ import com.ikovac.timepickerwithseconds.MyTimePickerDialog;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.mahiti.convenemis.BeenClass.AnswersPage;
+import org.mahiti.convenemis.BeenClass.AssesmentBean;
 import org.mahiti.convenemis.BeenClass.Page;
 import org.mahiti.convenemis.BeenClass.Response;
 import org.mahiti.convenemis.BeenClass.SetAnswers;
@@ -64,8 +65,10 @@ import org.mahiti.convenemis.database.DataBaseMapperClass;
 import org.mahiti.convenemis.database.ExternalDbOpenHelper;
 import org.mahiti.convenemis.network.InsertResponseDump;
 import org.mahiti.convenemis.network.InsertTask;
+import org.mahiti.convenemis.network.SurveyGridInlineInterface.surveyQuestionGridInlineInterface;
 import org.mahiti.convenemis.network.SurveyGridInlineInterface.surveyQuestionPreviewInterface;
 import org.mahiti.convenemis.utils.CheckNetwork;
+import org.mahiti.convenemis.utils.CommonForAllClasses;
 import org.mahiti.convenemis.utils.Constants;
 import org.mahiti.convenemis.utils.ConstantsUtils;
 import org.mahiti.convenemis.utils.FileUtils;
@@ -87,6 +90,7 @@ import org.mahiti.convenemis.utils.multispinner.SpinnerListenerFilter;
 
 import java.io.File;
 import java.text.MessageFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -100,11 +104,26 @@ import java.util.Map;
 import io.github.douglasjunior.androidSimpleTooltip.SimpleTooltip;
 
 import static org.mahiti.convenemis.database.DataBaseMapperClass.getUserAnsweredResponseFromDB;
+import static org.mahiti.convenemis.utils.Constants.GridResponseHashMap;
+import static org.mahiti.convenemis.utils.Constants.GridResponseHashMapKeys;
+import static org.mahiti.convenemis.utils.Constants.buttonDynamicDateGrid;
+import static org.mahiti.convenemis.utils.Constants.fillInlineHashMapKey;
+import static org.mahiti.convenemis.utils.Constants.fillInlineRow;
+import static org.mahiti.convenemis.utils.Constants.gridAssessmentMapDialog;
+import static org.mahiti.convenemis.utils.Constants.gridQuestionMapDialog;
+import static org.mahiti.convenemis.utils.Constants.gridSubQuestionMapDialog;
+import static org.mahiti.convenemis.utils.Constants.listHashMapKey;
+import static org.mahiti.convenemis.utils.Constants.rowInflater;
 
-public class SurveyQuestionActivity extends BaseActivity implements View.OnClickListener, surveyQuestionPreviewInterface {
+
+
+public class SurveyQuestionActivity extends BaseActivity implements View.OnClickListener, surveyQuestionPreviewInterface ,
+        surveyQuestionGridInlineInterface {
     public static final String MY_PREFS_NAME = "MyPrefsFile";
     public static final String dateFormat = "dd-MM-yyyy";
     public static final String TEMP_PHOTO_FILE_NAME = "temp_photo.jpg";
+    static final int DATE_DIALOG_ID = 1;
+
     //-------------------------*******************--------------------
     public static final List<String> getAllEditTextQuestionCode = new ArrayList<>();
     public static final List<String> getAllradiobuttonQuestionCode = new ArrayList<>();
@@ -112,6 +131,9 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
     public static final List<String> getAllspinnerQuestionCode = new ArrayList<>();
     public static final List<String> getAlldateQuestionCode = new ArrayList<>();
     public static final List<String> getAllImageuploadQuestionCode = new ArrayList<>();
+
+    private HashMap<String, LinearLayout> gridViewLinearLayoutHolder = new HashMap<>();
+
     private static final String TAG = "SurveyQuestionActivity";
     private static final String SURVEYID = "survey_id";
     private static final String TOOLTIP_COLOR = "#808080";
@@ -130,6 +152,7 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
     int imageUploadCount = 0;
     int dateCount = 0;
     float charge = 0;
+    static int GridCount = 0;
     LinearLayout dynamicQuestionSet;
     boolean skipBlockLevelFlag = false;
     boolean showPopUpFlag = false;
@@ -168,7 +191,6 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
     ProgressDialog loginDialog;
     TextView blockName;
     List<String> allBlocksQList;
-    org.mahiti.convenemis.network.SurveyGridInlineInterface.surveyQuestionGridInlineInterface surveyQuestionGridInlineInterface;
     boolean skipFlag = false;
     RestUrl restUrl;
     //  currentPageLastQuestionResponseCode variable is to get the response code before doing delete and insert
@@ -211,6 +233,7 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
     private int surveysId;
     String getParentsBeneficiary="";
     String getParentsBeneficiaryName="";
+    List<String> getAllGridQuestionCode = new ArrayList<>();
 
     /**
      * Date picker dialogue showing
@@ -314,6 +337,7 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
         nextB.setOnClickListener(this);
         previousButton.setOnClickListener(this);
         pressBack.setOnClickListener(this);
+        preClearAllGlobalHashMap();
         /*Resume Survey Functionality*/
         if ("Yes".equals(surveyPreferences.getString(PreferenceConstants.RESUME_SURVEY, ""))) {
             int index = 0;
@@ -362,7 +386,7 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
         }
 
         if (surveyPreferences.getBoolean("SaveDraftButtonFlag", false)) {
-            menuIconOptions.setVisibility(View.VISIBLE);
+            menuIconOptions.setVisibility(View.GONE);
         } else {
             menuIconOptions.setVisibility(View.GONE);
         }
@@ -371,6 +395,18 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
         // below code is get the device information to analyse the statistics
         operatorObj = new Operator(this);
         new OperatorTask(SurveyQuestionActivity.this).execute();
+
+    }
+
+    /**
+     * preClearAllGlobalHashMap pre clearing the global hash map
+     */
+    private void preClearAllGlobalHashMap() {
+        fillInlineRow.clear();
+        fillInlineHashMapKey.clear();
+        GridResponseHashMap.clear();
+        GridResponseHashMapKeys.clear();
+        listHashMapKey.clear();
 
     }
 
@@ -406,7 +442,9 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
 
     @Override
     public void onBackPressed() {
-      if (surveyPreferences.getString(Constants.SURVEYSTATUSTYPR,"").equals("new")){
+        //TODO need to change the above code .
+     // if (surveyPreferences.getString(Constants.SURVEYSTATUSTYPR,"").equals("new")){
+      if (true){
           Logger.logD(TAG,"New Survey");
           SupportClass supportClass = new SupportClass();
           supportClass.backButtonFunction(SurveyQuestionActivity.this, db, surveyHandler, surveyPrimaryKeyId);
@@ -560,12 +598,156 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
                 case 10:
                    beneficiaryParentDisplay(listOfPage.get(k), questionFont, answerFont, questionCode);
                     break;
+                case 14:
+                    normalGirdDisplay(listOfPage.get(k), questionCode);
+                    break;
                 default:
                     break;
             }
         }
 
     }
+
+    private void normalGirdDisplay(Page page, int questionCode) {
+     View   child = getLayoutInflater().inflate(R.layout.dialog_grid, dynamicQuestionSet, false);//child.xml
+        TextView   question = (TextView) child.findViewById(R.id.mainQuestion);
+        if (page.getMandatory().contains("1")) {
+            if (!page.getToolTip().equalsIgnoreCase("")) {
+                final String getHelpText = page.getToolTip();
+                ImageView tooltip = (ImageView) child.findViewById(R.id.tooltip);
+                tooltip.setVisibility(View.VISIBLE);
+                SupportClass.setRedStar(question, page.getQuestion());
+                tooltip.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        new SimpleTooltip.Builder(SurveyQuestionActivity.this)
+                                .anchorView(v)
+                                .text(getHelpText)
+                                .gravity(Gravity.END)
+                                .animated(true)
+                                .arrowColor(Color.parseColor("#808080"))
+                                .transparentOverlay(false)
+                                .build()
+                                .show();
+                    }
+                });
+            } else {
+                SupportClass.setRedStar(question, page.getQuestion());
+            }
+        } else {
+            if (!page.getToolTip().equalsIgnoreCase("")) {
+
+                final String getHelpText = page.getToolTip();
+                ImageView tooltip = (ImageView) child.findViewById(R.id.tooltip);
+                tooltip.setVisibility(View.VISIBLE);
+                SupportClass.setRedStar(question, page.getQuestion());
+                tooltip.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        new SimpleTooltip.Builder(SurveyQuestionActivity.this)
+                                .anchorView(v)
+                                .text(getHelpText)
+                                .gravity(Gravity.END)
+                                .animated(true)
+                                .arrowColor(Color.parseColor("#808080"))
+                                .transparentOverlay(false)
+                                .build()
+                                .show();
+                    }
+                });
+            } else {
+                question.setText(page.getQuestion());
+            }
+
+        }
+        createGridViewUpdate(child, page.getQuestionNumber(), page);
+        dynamicQuestionSet.addView(child);
+        getAllGridQuestionCode.add(String.valueOf(page.getQuestionNumber()));
+    }
+
+    private void createGridViewUpdate(final View gridchild, int questionNumber, final Page page) {
+
+        /**
+         * getting Question ID , fettching the Assessment ,subquestion, GridQuestion.
+         */
+        final List<String> GridlistHashMapKey = new ArrayList<>();
+        final int getCurrentGridQuestionID = questionNumber;
+        final List<Response> setAnswers_listInline = DataBaseMapperClass.setAnswersForGrid(getCurrentGridQuestionID, db, String.valueOf(surveyPrimaryKeyId));
+        final List<AssesmentBean> MAssesmant = DataBaseMapperClass.getAssesements(getCurrentGridQuestionID, surveyDatabase, defaultPreferences.getInt("selectedLangauge", 0));
+        final List<Page> mSubQuestions = DataBaseMapperClass.getSubquestionNew(getCurrentGridQuestionID, surveyDatabase, defaultPreferences.getInt("selectedLangauge", 0));
+        gridSubQuestionMapDialog.put(getCurrentGridQuestionID + "_SUBQ", mSubQuestions);
+        gridAssessmentMapDialog.put(String.valueOf(getCurrentGridQuestionID) + "_ASS", MAssesmant);
+        gridQuestionMapDialog.put(String.valueOf(getCurrentGridQuestionID) + "_QUESTION", page);
+        if (setAnswers_listInline.size() > 0) {
+            for (int preSubQue = 0; preSubQue < mSubQuestions.size(); preSubQue++) {
+                List<Response> getAnswer = new ArrayList<>();
+                for (int preAnswer = 0; preAnswer < setAnswers_listInline.size(); preAnswer++) {
+                    if (mSubQuestions.get(preSubQue).getQuestionId() == setAnswers_listInline.get(preAnswer).getPrimarykey()) {
+                        Response response = setAnswers_listInline.get(preAnswer);
+                        getAnswer.add(response);
+                    }
+                }
+                GridResponseHashMap.put(String.valueOf(getCurrentGridQuestionID) + "_" + String.valueOf(mSubQuestions.get(preSubQue).getQuestionId()), getAnswer);
+                GridlistHashMapKey.add(String.valueOf(getCurrentGridQuestionID) + "_" + String.valueOf(mSubQuestions.get(preSubQue).getQuestionId()));
+                GridResponseHashMapKeys.put(String.valueOf(getCurrentGridQuestionID), GridlistHashMapKey);
+            }
+        }
+        LinearLayout gridListLinearLayout = (LinearLayout) gridchild.findViewById(R.id.gridansweredList);
+
+        for (int subRow = 0; subRow < mSubQuestions.size(); subRow++) {
+            final View adapterView = getLayoutInflater().inflate(R.layout.gridviewlist_adapter, gridListLinearLayout, false);
+            TextView setSubquestionText = (TextView) adapterView.findViewById(R.id.subquestiontext);
+            TextView setAssessmentText = (TextView) adapterView.findViewById(R.id.assessmenttext);
+            Button addOrEdit = (Button) adapterView.findViewById(R.id.addEdit);
+            if (!GridResponseHashMapKeys.isEmpty()) {
+                for (int responseSet = 0; responseSet < GridlistHashMapKey.size(); responseSet++) {
+                    String[] spiltKey = GridlistHashMapKey.get(responseSet).split("_");
+                    if (String.valueOf(mSubQuestions.get(subRow).getQuestionId()).equals(spiltKey[1])) {
+                        addOrEdit.setBackgroundColor(getResources().getColor(R.color.meroon));
+                        addOrEdit.setText("Edit");
+                        addOrEdit.setTag(String.valueOf(String.valueOf(getCurrentGridQuestionID + "_" + mSubQuestions.get(subRow).getQuestionId()) + "@EDIT"));
+
+                    }
+
+                }
+
+            } else {
+                addOrEdit.setBackgroundColor(getResources().getColor(R.color.colorGreen));
+                addOrEdit.setTag(String.valueOf(String.valueOf(getCurrentGridQuestionID + "_" + mSubQuestions.get(subRow).getQuestionId()) + "@ADD"));
+
+            }
+            final int subRowTemp = subRow;
+            addOrEdit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Logger.logD(TAG, "Clicked button Tag ->" + v.getTag());
+                    String[] spiltButtonTag = v.getTag().toString().split("@");
+                    if (spiltButtonTag[1].equals("ADD")) {
+                        SupportClass.createDialogFOrGrid(mSubQuestions.get(subRowTemp), v, SurveyQuestionActivity.this, surveyDatabase, getCurrentGridQuestionID);
+                    } else if (spiltButtonTag[1].equals("EDIT")) {
+                        String getResponseHashMapKey = spiltButtonTag[0];
+                        if (GridResponseHashMap.size() > 0) {
+                            List<Response> getAnsweredResponse = GridResponseHashMap.get(getResponseHashMapKey);
+                            Logger.logD(TAG, "The Size of the edit Response ->" + getAnsweredResponse.size());
+                            if (getAnsweredResponse.size() > 0) {
+                                SupportClass.showDialogEdit(getAnsweredResponse, MAssesmant, SurveyQuestionActivity.this, SurveyQuestionActivity.this, page, surveyDatabase, spiltButtonTag[0], v, 14, mSubQuestions.get(subRowTemp));
+                            } else {
+                                ToastUtils.displayToast("Response empty", SurveyQuestionActivity.this);
+                            }
+                        }
+
+                    }
+                }
+            });
+            setSubquestionText.setText(mSubQuestions.get(subRow).getSubQuestion());
+            setAssessmentText.setText(MAssesmant.get(0).getAssessment());
+            gridListLinearLayout.addView(adapterView);
+            gridViewLinearLayoutHolder.put(String.valueOf(getCurrentGridQuestionID), gridListLinearLayout);
+
+        }
+
+    }
+
     private void beneficiaryParentDisplay(Page page, String questionFont, String answerFont, int questionCode) {
 
         getBenificiaryQids= new ArrayList<>();
@@ -927,10 +1109,10 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
                     String[] array = mathString.split(":");
                     switch (array[1]) {
                         case "NOV":
-                            showDateDialog(dateDialogId, mathString);
+                            showDateDialog(dateDialogId, mathString,button);
                             break;
                         case "D":
-                            showDateDialog(dateDialogId, mathString);
+                            showDateDialog(dateDialogId, mathString,button);
                             break;
                         case "T":
                             String timeFormatZoon = array[2];
@@ -941,7 +1123,7 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
                     }
                 } else {
                     setDateView = 1;
-                    showDateDialog(dateDialogId, mathString);
+                    showDateDialog(dateDialogId, mathString,button);
                 }
             }
 
@@ -1266,6 +1448,45 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
                         else
                             list.add(String.valueOf(true));
                         break;
+
+                    case 14:
+                        mChild = layoutCont.getChildAt(0);
+                        if (mChild instanceof ViewGroup) {
+                            JSONObject obj4 = new JSONObject();
+                            int GridviewQuestionCOde = Integer.parseInt(getAllGridQuestionCode.get(GridCount));
+                            Logger.logD(TAG, " the Count is gridViewLinearLayoutHolder ->" + gridViewLinearLayoutHolder.size());
+                            LinearLayout ll = gridViewLinearLayoutHolder.get(String.valueOf(GridviewQuestionCOde));
+                            boolean tempFlag = false;
+                            for (int gridViewCount = 0; gridViewCount < ll.getChildCount(); gridViewCount++) {
+                                View ViewContainer = (View) ll.getChildAt(gridViewCount);
+                                TextView setErrorMessage = (TextView) ViewContainer.findViewById(R.id.errorText);
+                                Button getButtonText = (Button) ViewContainer.findViewById(R.id.addEdit);
+                                if (getButtonText.getText().equals("Add")) {
+                                    setErrorMessage.setText("Mandatory field");
+                                    setErrorMessage.startAnimation(animShake);
+                                    tempFlag = false;
+                                } else {
+                                    setErrorMessage.setText("");
+                                    tempFlag = true;
+                                }
+                            }
+                            if (tempFlag){
+                                //       if (true){
+                                boolean fileBoolean = FunctionalityCodeStoreGRid(GridviewQuestionCOde);
+                                //     list.add(String.valueOf(true));
+                                list.add(String.valueOf(fileBoolean));
+                            } else {
+                                list.add(String.valueOf(false));
+                            }
+                            if (list.contains("true")) {
+                                GridCount++;
+                               // jsonArray.put(obj4);
+                            }else{
+                                GridCount=0;
+                            }
+
+                        }
+                        break;
                     default:
                         break;
                 }
@@ -1283,6 +1504,38 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
             restUrl.writeToTextFile("Exception In Getting View ", "", "dynamicallySettingView");
         }
         return list;
+    }
+
+    private boolean FunctionalityCodeStoreGRid(int gridviewQuestionCOde) {
+        final List<String> getResponseKeys = new ArrayList<>();
+        Logger.logD(TAG, "the grid QuestionID" + gridviewQuestionCOde);
+        if (GridResponseHashMap.size() > 0) {
+            List<String> getAllKeys = GridResponseHashMapKeys.get(String.valueOf(gridviewQuestionCOde));
+            Logger.logD(TAG, "the  all key count" + getAllKeys.size());
+            for (int i = 0; i < getAllKeys.size(); i++) {
+                String[] s = getAllKeys.get(i).split("_");
+                if (Integer.valueOf(s[0]) == gridviewQuestionCOde) {
+                    getResponseKeys.add(getAllKeys.get(i));
+                    Logger.logD(TAG, "the only key for this QuestioID " + getResponseKeys.toString());
+                }
+            }
+            List<Response> answersEditTextTemp = new ArrayList<>();
+            for (int j = 0; j < getResponseKeys.size(); j++) {
+                List<Response> getResponseListFrmHashmap = GridResponseHashMap.get(getResponseKeys.get(j));
+                for (int k = 0; k < getResponseListFrmHashmap.size(); k++) {
+                    answersEditTextTemp.add(getResponseListFrmHashmap.get(k));
+                    hashMapAnswersEditText.put(String.valueOf(gridviewQuestionCOde + "_" + String.valueOf(14)), answersEditTextTemp);
+                }
+
+
+                Logger.logD(TAG, "Responsed filled to Response Table-> " + answersEditTextTemp.toString());
+
+            }
+            return true;
+        } else {
+            return false;
+        }
+
     }
 
     private void fillAllLevelToDatabase() {
@@ -1319,23 +1572,145 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
         getAllcheckboxQuestionCode.clear();
         getAlldateQuestionCode.clear();
         getAllImageuploadQuestionCode.clear();
+        getAllGridQuestionCode.clear();
         buttonDynamic.clear();
         bt.clear();
         list.clear();
+        GridResponseHashMap.clear();
+        rowInflater = 0;
+        GridCount=0;
     }
 
+    private DatePickerDialog.OnDateSetListener mDateSetListenerGrid = new DatePickerDialog.OnDateSetListener() {
+
+        public void onDateSet(DatePicker view, int year, int monthOfYear,
+                              int dayOfMonth) {
+            if (view != null) {
+                mYear = year;
+                mMonth = monthOfYear;
+                mDay = dayOfMonth;
+                updateGridDateView(view);
+            }
+        }
+    };
+    private void updateGridDateView(DatePicker view) {
+        Date date = new Date();
+        String UserFormate = String.valueOf((new StringBuilder().append(mDay).append("/").append(mMonth + 1).append("/").append(mYear).append(" ")));
+        SimpleDateFormat sdf = new SimpleDateFormat(UserFormate, Locale.ENGLISH);
+        String data = sdf.format(date);
+        try {
+            Button dynamicButton = buttonDynamicDateGrid.get("1");
+            dynamicButton.setText(data);
+        } catch (Exception e) {
+            ToastUtils.displayToast("Button view not found Exception", SurveyQuestionActivity.this);
+            Logger.logE(TAG, "Exception", e);
+        }
+
+    }
+
+
     /**
-     * method to show the date picker based on selected field and array string to set the min and max in calender
-     *
      * @param dateDialogId
      */
-    public void showDateDialog(int dateDialogId, String arrayString) {
-        if (dateDialogId == this.dateDialogId) {
-            methodToShowDatePicker(arrayString);
+    public void showDateDialog(int dateDialogId, String arrayString, Button button) {
+        if (dateDialogId == DATE_DIALOG_ID) {
+            Calendar calendar = Calendar.getInstance();
+            DatePickerDialog dpd = new DatePickerDialog(this, mDateSetListener, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+            Date date = new Date();
+
+            String dt = sdf.format(date);
+
+            try {
+                Logger.logD("mathString", "mathString " + arrayString);
+                if (arrayString != null && !"".equals(arrayString)) {
+                    String[] array = arrayString.split("#");
+                    String[] array1 = array[0].split(":");
+                    if (("R".equalsIgnoreCase(array1[0]) || "o".equalsIgnoreCase(array1[0]))) {
+                        if (array.length > 1) {
+                            String[] array2 = array[1].split(":");
+                            String prev = DBHandler.getAnswerFromPreviousQuestion(array2[1], surveyHandler, defaultPreferences.getString(PreferenceConstants.SURVEY_ID, ""));
+                            Date date1 = sdf.parse(prev);
+                            dpd.getDatePicker().setMinDate(date1.getTime());
+                        }
+                        if (array1[3].equalsIgnoreCase("00000000")) {
+                            /*displaying all previous Dates*/
+                            String getINTODateformate = CommonForAllClasses.getINTODateformate(array1[4]);
+                            Date currentMax = sdf.parse(getINTODateformate);
+                            dpd.getDatePicker().setMinDate(currentMax.getTime());
+                        } else if (array1[4].equalsIgnoreCase("00000000")) {
+                            /*displaying all future Dates*/
+                            String getINTODateformate = CommonForAllClasses.getINTODateformate(array1[3]);
+                            Date currentMin = sdf.parse(getINTODateformate);
+                            Logger.logV("currentMin----> ", currentMin.toString());
+
+                            /*dpd.getDatePicker().setMaxDate(currentMin.getTime());*/
+                            dpd.getDatePicker().setMinDate(currentMin.getTime());
+                        } else {
+                            /*displaying based on Min and Max*/
+                            String minValue = array1[3];
+                            String getINTODateformate = CommonForAllClasses.getINTODateformate(minValue);
+
+                            Date minDate = sdf.parse(getINTODateformate);
+                            Logger.logD("Equation", "Equation for LMD " + array1[3]);
+                            Date maxDate = sdf.parse(array1[4]);
+                            dpd.getDatePicker().setMinDate(minDate.getTime());
+                            dpd.getDatePicker().setMaxDate(maxDate.getTime());
+                        }
+                    }
+                }
+                dpd.show();
+            } catch (ParseException e) {
+                Logger.logE(SurveyQuestionActivity.class.getSimpleName(), "Exception in TimeAndDateFragment class  edtLocaleName onclicklistener ", e);
+            }
+        } else if (dateDialogId == 2) {
+            Calendar calendar = Calendar.getInstance();
+            DatePickerDialog dpd = new DatePickerDialog(this, mDateSetListenerGrid, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+            Date date = new Date();
+
+            String dt = sdf.format(date);
+
+            try {
+                Logger.logD("mathString", "mathString " + arrayString);
+                if (arrayString != null && !"".equals(arrayString)) {
+                    String[] array = arrayString.split("#");
+                    String[] array1 = array[0].split(":");
+                    if (("R".equalsIgnoreCase(array1[0]) || "o".equalsIgnoreCase(array1[0]))) {
+                        if (array.length > 1) {
+                            String[] array2 = array[1].split(":");
+                            String prev = DBHandler.getAnswerFromPreviousQuestion(array2[1], surveyHandler, defaultPreferences.getString(PreferenceConstants.SURVEY_ID, ""));
+                            Date date1 = sdf.parse(prev);
+                            dpd.getDatePicker().setMinDate(date1.getTime());
+                        } else if (array1[3].equalsIgnoreCase("01011900") && array1[4].equalsIgnoreCase("00000000")) {
+                            dpd.getDatePicker().setMaxDate(System.currentTimeMillis() - 1000);
+                        } else if (array1[3].equalsIgnoreCase("00-00-0000")) {
+                            /*displaying all previous Dates*/
+                            Date currentMax = sdf.parse(array1[4]);
+                            dpd.getDatePicker().setMinDate(currentMax.getTime());
+                        } else if (array1[4].equalsIgnoreCase("00-00-0000")) {
+                            /*displaying all future Dates*/
+                            Date currentMin = sdf.parse(array1[3]);
+                            /*dpd.getDatePicker().setMaxDate(currentMin.getTime());*/
+                            dpd.getDatePicker().setMaxDate(currentMin.getTime());
+                        } else {
+                            /*displaying based on Min and Max*/
+                            String minValue = array1[3];
+                            Date minDate = sdf.parse(minValue);
+                            Logger.logD("Equation", "Equation for LMD " + array1[3]);
+                            Date maxDate = sdf.parse(array1[4]);
+                            dpd.getDatePicker().setMinDate(minDate.getTime());
+                            dpd.getDatePicker().setMaxDate(maxDate.getTime());
+                        }
+                    }
+                } else {
+                    dpd.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
+                }
+                dpd.show();
+            } catch (ParseException e) {
+                Logger.logE(SurveyQuestionActivity.class.getSimpleName(), "Exception in TimeAndDateFragment class  edtLocaleName onclicklistener ", e);
+            }
+
         }
-        if (dateDialogId == 2) {
-            methodToShowDatePicker(arrayString);
-        }
+
     }
 
 
@@ -2011,6 +2386,12 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
                     answersEditText.add(value.get(0));
                 }
             }
+
+            for (int delete = 0; delete < answersEditText.size(); delete++) {
+                Logger.logV(TAG, "AnswerCode Value" + answersEditText.get(delete).getQ_id());
+                DataBaseMapperClass.deletePreviousSetOfQuestion(answersEditText.get(delete).getQ_id(), db, surveyPrimaryKeyId);
+            }
+            new InsertTask().insertTask(answersEditText, surveyHandler, surveyPrimaryKeyId);
             for (String key : hashMapAnswersEditText.keySet()) {
                 List<Response> value = hashMapAnswersEditText.get(key);
                 if (value.size() > 1) {
@@ -2021,11 +2402,6 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
                     surveyHandler.updatePrimaryidToResponse(value.get(0).getQ_id(), surveyPrimaryKeyId, getDumpPrimaryID);
                 }
             }
-            for (int delete = 0; delete < answersEditText.size(); delete++) {
-                Logger.logV(TAG, "AnswerCode Value" + answersEditText.get(delete).getQ_id());
-                DataBaseMapperClass.deletePreviousSetOfQuestion(answersEditText.get(delete).getQ_id(), db, surveyPrimaryKeyId);
-            }
-            new InsertTask().insertTask(answersEditText, surveyHandler, surveyPrimaryKeyId);
         } catch (Exception e) {
             Logger.logE(TAG, "Exception on adding values to responnse", e);
         }
@@ -2506,6 +2882,124 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
     public int generateIncrementalInteger() {
         uniqueId = uniqueId + 1;
         return uniqueId;
+    }
+
+    @Override
+    public void OnSuccessfullGridInline(final HashMap<String, List<Response>> hashMapGridResponse, View v, final int currentQuestionNumber, HashMap<String, List<String>> fillInlineHashMapKey, int gridType) {
+        if (gridType == 16) {
+            LinearLayout gridListLinearLayoutOnSuccessfullGridInline = (LinearLayout) v.findViewById(R.id.gridansweredListinline);
+            try {
+                if (gridListLinearLayoutOnSuccessfullGridInline.getChildCount() > 0) {
+                    Logger.logD(TAG, "Clear all the views and added ready to add list if views");
+                    gridListLinearLayoutOnSuccessfullGridInline.removeAllViews();
+                }
+                final List<String> getResponseKeys = new ArrayList<>();
+                Logger.logD(TAG, "the Hashmap_Response Size " + hashMapGridResponse.size());
+                if (hashMapGridResponse.size() > 0) {
+                    List<String> getAllKeys = fillInlineHashMapKey.get(String.valueOf(currentQuestionNumber));
+                    Logger.logD(TAG, "the  all key count" + getAllKeys.size());
+                    for (int i = 0; i < getAllKeys.size(); i++) {
+                        String[] s = getAllKeys.get(i).split("_");
+                        if (Integer.valueOf(s[0]) == currentQuestionNumber) {
+                            getResponseKeys.add(getAllKeys.get(i));
+                            Logger.logD(TAG, "the only key for this QuestioID " + getResponseKeys.toString());
+                        }
+                    }
+                    for (int j = 0; j < getResponseKeys.size(); j++) {
+                        final View childInlineGrid = getLayoutInflater().inflate(R.layout.gridlist_adapter, null, false);
+                        final View childTemp = getLayoutInflater().inflate(R.layout.dialoginline, null, false);
+                        TextView setMandatoryText = (TextView) childInlineGrid.findViewById(R.id.mandatorytextnameEdit);
+                        Button editResponseButton = (Button) childInlineGrid.findViewById(R.id.edit);
+                        Button deleteResponseButton = (Button) childInlineGrid.findViewById(R.id.delete);
+                        List<Response> getResponseListFrmHashmap = hashMapGridResponse.get(getResponseKeys.get(j));
+                        List<AssesmentBean> MAssesmant = gridAssessmentMapDialog.get(String.valueOf(currentQuestionNumber) + "_ASS");
+                        editResponseButton.setTag(String.valueOf(getResponseKeys.get(j) + "@EDIT"));
+                        deleteResponseButton.setTag(String.valueOf(getResponseKeys.get(j) + "@DELETE"));
+                        Logger.logD("If edited new Value Print", "-->" + getResponseListFrmHashmap.get(0).getAnswer() + "ANS-->" + setMandatoryText.getText().toString());
+                        setMandatoryText.setText(String.valueOf(j) + ": " + MAssesmant.get(0).getAssessment() + " \n Ans  " + getResponseListFrmHashmap.get(0).getAnswer());
+                        Logger.logD("If edited new Value Print After", "-->" + setMandatoryText.getText().toString());
+                        deleteResponseButton.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                String[] spiltDeleteTag = v.getTag().toString().split("@");
+                                Logger.logD(TAG, "hashMapGridResponse-->before " + hashMapGridResponse.size());
+                                Logger.logD(TAG, "spiltDeleteTag " + spiltDeleteTag[0]);
+                                String[] split_GetIndex = spiltDeleteTag[0].split("_");
+                                hashMapGridResponse.remove(spiltDeleteTag[0]);
+                                methodToClearHashMapKey(split_GetIndex[1], split_GetIndex[0], spiltDeleteTag[0]);
+                                Logger.logD(TAG, "hashMapGridResponse-->after " + hashMapGridResponse.size());
+                                ((LinearLayout) childInlineGrid.getParent()).removeView(childInlineGrid);
+                            }
+                        });
+
+                        Logger.logD(TAG, "EditButton Tag for each  " + editResponseButton.getTag());
+                        editResponseButton.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                String[] spiltTag = v.getTag().toString().split("@");
+                                Logger.logD(TAG, "splitTag " + spiltTag[0]);
+                                List<Response> getResponseForEdit = hashMapGridResponse.get(spiltTag[0]);
+                                Logger.logD(TAG, " the size getResponseForEdit " + getResponseForEdit.size());
+                                List<AssesmentBean> MAssessment = gridAssessmentMapDialog.get(String.valueOf(currentQuestionNumber) + "_ASS");
+                                Page questionPagebean = gridQuestionMapDialog.get(String.valueOf(currentQuestionNumber) + "_QUESTION");
+                                String[] splitKeypare = spiltTag[0].split("_");
+                                Logger.logD(TAG, "splitTag " + spiltTag[1]);
+                                Logger.logD(TAG, "rowInflater value " + rowInflater);
+                                Logger.logD(TAG, "Key value value " + Integer.getInteger(splitKeypare[1]));
+                                  SupportClass.showDialogEdit(getResponseForEdit, MAssessment, SurveyQuestionActivity.this, SurveyQuestionActivity.this, questionPagebean, surveyDatabase, spiltTag[0], childTemp, 16, questionPagebean);
+                            }
+                        });
+
+                        Logger.logD(TAG, "gridListLinearLayoutOnSuccessfullGridInline PRE" + gridListLinearLayoutOnSuccessfullGridInline.getChildCount());
+                        gridListLinearLayoutOnSuccessfullGridInline.addView(childInlineGrid);
+                        Logger.logD(TAG, "gridListLinearLayoutOnSuccessfullGridInline POST" + gridListLinearLayoutOnSuccessfullGridInline.getChildCount());
+
+
+                    }
+                }
+            } catch (Exception e) {
+
+                Logger.logE("Exception", " Exception in Creating GridUI", e);
+            }
+        } else {
+            Button bt = (Button) v;
+            bt.setText("Edit");
+            bt.setBackgroundColor(getResources().getColor(R.color.meroon));
+            String getPreviousTag[] = bt.getTag().toString().split("@");
+
+            bt.setTag(getPreviousTag[0] + "@EDIT");
+            Logger.logD(TAG, "Button Tag" + bt.getTag());
+        }
+
+    }
+
+    /**
+     * methodToClearHashMapKey
+     *
+     * @param removeIndex removeIndex
+     * @param questionID  questionID
+     * @param hashMapKey  hashMapKey
+     */
+    private void methodToClearHashMapKey(String removeIndex, String questionID, String hashMapKey) {
+        Logger.logD(TAG, "hashMapGridResponse key  -->before " + fillInlineHashMapKey.size());
+        Logger.logD(TAG, "removeIndex" + removeIndex);
+        Logger.logD(TAG, "removeIndex" + questionID);
+        List<String> getHashMapKey = fillInlineHashMapKey.get(questionID);
+        try {
+            for (int i = 0; i < getHashMapKey.size(); i++) {
+                Logger.logD(TAG, "hashMapKey" + hashMapKey);
+
+                if (getHashMapKey.get(i).equals(hashMapKey)) {
+                    getHashMapKey.remove(i);
+                }
+            }
+            fillInlineHashMapKey.put(questionID, getHashMapKey);
+            Logger.logD(TAG, "hashMapGridResponse key  -->after " + fillInlineHashMapKey.size());
+        } catch (Exception e) {
+            Logger.logD("Exception", "" + e);
+
+        }
+
     }
 
     private class OperatorTask extends AsyncTask<Context, Integer, String> {

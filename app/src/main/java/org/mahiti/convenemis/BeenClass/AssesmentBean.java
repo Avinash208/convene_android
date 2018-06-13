@@ -30,6 +30,10 @@ public class AssesmentBean
         this.qid = qid;
     }
 
+    public int getAssessmentId() {
+        return assessmentId;
+    }
+
     public void setAssessmentId(int assessmentId) {
         this.assessmentId = assessmentId;
     }

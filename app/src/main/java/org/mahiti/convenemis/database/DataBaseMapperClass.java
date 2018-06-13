@@ -56,7 +56,7 @@ public class DataBaseMapperClass {
      */
     public static List<String> callDBForQuestionCode(SQLiteDatabase database, int surveyId, RestUrl restUrl) {  // getting Question Code from DB and Fill to Main List
         List<String> qCode=new ArrayList<>();
-        String QuestionQuery="Select Question.id, Question.question_text from Question where Question.active = 2 and Question.sub_question = '' and Question.survey_id = " + surveyId + " and  Question.id NOT IN (Select SkipData.question_id from SkipData, Question where SkipData.question_id=Question.id and Question.survey_id = " + surveyId + " ) order by question_code";
+        String QuestionQuery="Select Question.id, Question.question_text from Question where Question.active = 2 and Question.sub_question = '0' and Question.survey_id = " + surveyId + " and  Question.id NOT IN (Select SkipData.question_id from SkipData, Question where SkipData.question_id=Question.id and Question.survey_id = " + surveyId + " ) order by question_code";
         Cursor cursor=null;
         int Count=0;
         try {
@@ -224,9 +224,9 @@ public class DataBaseMapperClass {
         boolean checkLanguage= checkLanguageAviliablity(database,String.valueOf(qcode),mainQlist,language_id);
         if (gridOrNot){
             if (language_id==1)
-                QuestionQuery="SELECT DISTINCT Question.help_text, Question.id, Question.block_id, Question.question_code,  Question.answer_type,Question.mandatory, Question.question_text, Question.validation from Question , Options  where Question.id="+qcode+" and Question.active = 2 and Question.survey_id= " + survey_id;
+                QuestionQuery="SELECT DISTINCT Question.help_text, Question.id, Question.block_id, Question.question_code ,Question.question_id, Question.answer_type,Question.mandatory, Question.question_text, Question.validation from Question , Options  where Question.id="+qcode+" and Question.active = 2 and Question.survey_id= " + survey_id;
             else
-                QuestionQuery="SELECT DISTINCT Question.help_text, Question.id, Question.block_id, Question.question_code,  Question.answer_type,Question.mandatory, Question.validation, LanguageQuestion.question_text from Question , Options,LanguageQuestion  where Question.id="+qcode+" and Question.active = 2 and Question.survey_id="+survey_id+" and LanguageQuestion.question_pid=Question.id and LanguageQuestion.language_id="+language_id;
+                QuestionQuery="SELECT DISTINCT Question.help_text, Question.id, Question.block_id, Question.question_code,Question.question_id,  Question.answer_type,Question.mandatory, Question.validation, LanguageQuestion.question_text from Question , Options,LanguageQuestion  where Question.id="+qcode+" and Question.active = 2 and Question.survey_id="+survey_id+" and LanguageQuestion.question_pid=Question.id and LanguageQuestion.language_id="+language_id;
         }
         else{
             if (language_id==1)
@@ -691,7 +691,7 @@ public class DataBaseMapperClass {
             }
             blockCursor.close();
             for(int i=0;i<blockids.size();i++){
-                String blockQuestionQuery="Select * from Question where active = 2 and question_code NOT IN(97) and sub_question='' and survey_id = " + survey_id + " and block_id = " + blockids.get(i) ;
+                String blockQuestionQuery="Select * from Question where active = 2 and question_code NOT IN(97) and sub_question='0' and survey_id = " + survey_id + " and block_id = " + blockids.get(i) ;
                 blockQuestionCursor=database.rawQuery(blockQuestionQuery,null);
                 if(blockQuestionCursor.getCount()>0 && blockQuestionCursor.moveToFirst()){
                     do {
@@ -776,41 +776,36 @@ public class DataBaseMapperClass {
 
 
     /**
-     * method to get th grid answers from response based on survey id and question id
      * @param questionNumber
      * @param db
      * @param survey_id
-     * @param restUrl
      * @return
      */
-    public static List<Response> setAnswersForGrid(int questionNumber, net.sqlcipher.database.SQLiteDatabase db, String survey_id, RestUrl restUrl) {
+    public static List<Response> setAnswersForGrid(int questionNumber, net.sqlcipher.database.SQLiteDatabase db, String survey_id) {
         List<Response> list = new ArrayList<>();
-        try {
-            String selectQuery = "SELECT * FROM Response where group_id IN(select group_id from Response where survey_id="+survey_id+" and q_id = '" + questionNumber + "' ) and survey_id="+survey_id+" and q_id = '" + questionNumber + "'";
-            Cursor cursor = db.rawQuery(selectQuery, null);
-            list.clear();
-            if (cursor.moveToFirst()) {
-                do {
-                    String Qid = cursor.getString(cursor.getColumnIndex("q_id"));
-                    String answer_ans_code = cursor.getString(cursor.getColumnIndex(ansCodeStr));
-                    String answer = cursor.getString(cursor.getColumnIndex(PreferenceConstants.ANS_TEXT));
-                    Response answersObject = new Response(Qid, answer, answer_ans_code,
-                            cursor.getString(cursor.getColumnIndex("sub_questionId")),
-                            cursor.getInt(cursor.getColumnIndex("q_code")),
-                            cursor.getInt(cursor.getColumnIndex(primaryKeyStr)),
-                            cursor.getString(cursor.getColumnIndex("typology_code")),
-                            cursor.getInt(cursor.getColumnIndex(gourpIdStr)),
-                            cursor.getInt(cursor.getColumnIndex(primaryIdStr)),
-                            cursor.getString(cursor.getColumnIndex(qTypeStr)));
-                    list.add(answersObject);
-                    Logger.logD(TAG,"answer - "+answer +" - qid "+Qid +" gId - "+cursor.getInt(cursor.getColumnIndex(gourpIdStr)));
-                } while (cursor.moveToNext());
-            }
-            cursor.close();
-        }catch (Exception e){
-            Logger.logE(TAG,"Exception on setting answers for grid type question",e);
-            restUrl.writeToTextFile("Exception on setting answers for grid type question","","settingAnsweresForGrid");
+        String selectQuery = "SELECT * FROM Response where group_id IN(select group_id from Response where survey_id='"+survey_id+"' and q_id = '" + questionNumber + "' ) and survey_id='"+survey_id+"' and q_id = '" + questionNumber + "'";
+
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        list.clear();
+        if (cursor != null && cursor.moveToFirst()) {
+            do {
+                String Qid = cursor.getString(cursor.getColumnIndex("q_id"));
+                String answer_ans_code = cursor.getString(cursor.getColumnIndex("ans_code"));
+                String answer = cursor.getString(cursor.getColumnIndex(PreferenceConstants.ANS_TEXT));
+                Response answersObject = new Response(Qid, answer, answer_ans_code,
+                        cursor.getString(cursor.getColumnIndex("sub_questionId")),
+                        cursor.getInt(cursor.getColumnIndex("q_code")),
+                        cursor.getInt(cursor.getColumnIndex("primarykey")),
+                        cursor.getString(cursor.getColumnIndex("typology_code")),
+                        cursor.getInt(cursor.getColumnIndex("group_id")),
+                        cursor.getInt(cursor.getColumnIndex("primary_id")),
+                        cursor.getString(cursor.getColumnIndex("qtype")));
+                list.add(answersObject);
+                Logger.logD("assessment","answer - "+answer +" - qid "+Qid +" gId - "+cursor.getInt(cursor.getColumnIndex("group_id")));
+            } while (cursor.moveToNext());
         }
+        if (cursor != null)
+            cursor.close();
         return list;
     }
 
@@ -873,10 +868,9 @@ public class DataBaseMapperClass {
      * @param questionNumber
      * @param database
      * @param language_id
-     * @param restUrl
      * @return
      */
-    public static List<Page> getSubquestionNew(int questionNumber, SQLiteDatabase database, int language_id, RestUrl restUrl) {
+    public static List<Page> getSubquestionNew(int questionNumber, SQLiteDatabase database, int language_id) {
         Page page = null;
         List<Page> pages = new ArrayList<>();
         String query;
@@ -906,7 +900,7 @@ public class DataBaseMapperClass {
             questionCursor.close();
         } catch (Exception e){
             Logger.logE(TAG,"Exception on getting All SubQuestion",e);
-            restUrl.writeToTextFile("Exception on getting All SubQuestion","","getAllSubQUestion");
+          //  restUrl.writeToTextFile("Exception on getting All SubQuestion","","getAllSubQUestion");
         }
         return pages;
     }
@@ -951,33 +945,22 @@ public class DataBaseMapperClass {
         return list;
     }
 
-    /**
-     *method to get the option text,assessmnet pid nad id from Options table
-     * @param qid
-     * @param database
-     * @param restUrl
-     * @return
-     */
-    public static List<AnswersPage> getOptionsAnswersForSubquestionBased(int qid, SQLiteDatabase database, RestUrl restUrl) {
+    public static List<AnswersPage> getOptionsAnswersForSubquestionBased(int qid, SQLiteDatabase database) {
         List<AnswersPage> list = new ArrayList<>();
-        try {
-            String selectQuery = "select * from Options where question_pid ="+qid;
-            Cursor cursor = database.rawQuery(selectQuery, null);
-            list.clear();
-            if (cursor.moveToFirst()) {
-                do {
-                    int id = cursor.getInt(cursor.getColumnIndex("id"));
-                    String optionText = cursor.getString(cursor.getColumnIndex(optionTextStra));
-                    String assessmentID = cursor.getString(cursor.getColumnIndex(assessmentPidStr));
-                    AnswersPage answer= new AnswersPage(String.valueOf(id),optionText,0,"",id,0,0,"",assessmentID);
-                    list.add(answer);
-                } while (cursor.moveToNext());
-            }
-            cursor.close();
-        }catch (Exception e){
-            Logger.logE(TAG,"Exception on option details based on subquestion",e);
-            restUrl.writeToTextFile("Exception on option details based on subquestion","","getOptionsBasedOnSubQuestion");
+        String selectQuery = "select * from Options where question_pid ="+qid;
+        Cursor cursor = database.rawQuery(selectQuery, null);
+        list.clear();
+        if (cursor.moveToFirst()) {
+            do {
+                int id = cursor.getInt(cursor.getColumnIndex("id"));
+                String optionText = cursor.getString(cursor.getColumnIndex("option_text"));
+                String assessmentID = cursor.getString(cursor.getColumnIndex("assessment_pid"));
+                AnswersPage answer= new AnswersPage(String.valueOf(id),optionText,0,"",id,0,0,"",assessmentID);
+                list.add(answer);
+            } while (cursor.moveToNext());
         }
+        if (cursor != null)
+            cursor.close();
         return list;
     }
 
@@ -1042,48 +1025,34 @@ public class DataBaseMapperClass {
         return allAnswersList;
     }
 
-    /**
-     * method to get the option answers from Option table based on langauge id
-     * @param qid
-     * @param database
-     * @param ansTxt
-     * @param languageid
-     * @param restUrl
-     * @return
-     */
-    public static List<AnswersPage> getOptionsAnswersForGrid(int qid, SQLiteDatabase database, String ansTxt, int languageid, RestUrl restUrl) {
+    public static List<AnswersPage> getOptionsAnswersForGrid(int qid, SQLiteDatabase database, String ansTxt, int languageid) {
         List<AnswersPage> list = new ArrayList<>();
         String selectQuery="";
-        try {
-            if (languageid==1) {
-                selectQuery = selectOptionTextQuery + ansTxt + assessmentPidCondition + qid;
-            } else if (languageid==2){
-                selectQuery = "select Options.id,Options.question_pid,Options.option_code,Options.assessment_pid, LanguageOptions.option_text  from Options , LanguageOptions where LanguageOptions.option_text= '"+ansTxt+"' and LanguageOptions.option_pid= Options.id and Options.assessment_pid="+qid+" and LanguageOptions.language_id="+languageid;
-            }else{
-                selectQuery = selectOptionTextQuery+ansTxt+assessmentPidCondition+qid;
-            }
-            Cursor cursor = database.rawQuery(selectQuery, null);
-            if (cursor.getCount()<=0){
-                selectQuery = selectOptionTextQuery + ansTxt + assessmentPidCondition + qid;
-                cursor = database.rawQuery(selectQuery, null);
-            }
-            list.clear();
-            if (cursor.moveToFirst()) {
-                do {
-                    int id = cursor.getInt(cursor.getColumnIndex("id"));
-                    String optionText = cursor.getString(cursor.getColumnIndex(optionTextStra));
-                    String assessmentID = cursor.getString(cursor.getColumnIndex(assessmentPidStr));
-                    AnswersPage answer= new AnswersPage(String.valueOf(id),optionText,0,"",id,0,0,"",assessmentID);
-
-                    list.add(answer);
-                } while (cursor.moveToNext());
-            }
-            cursor.close();
-        }catch (Exception e){
-            Logger.logE(TAG,"Exception on getting option Answers for Grid",e);
-            restUrl.writeToTextFile("Exception on getting option Answers for Grid","","getOptionAnswersForGrid");
+        if (languageid==1) {
+            selectQuery = "select * from Options where option_text= '" + ansTxt + "'and assessment_pid=" + qid;
+        } else if (languageid==2){
+            selectQuery = "select Options.id,Options.question_pid,Options.option_code,Options.assessment_pid, LanguageOptions.option_text  from Options , LanguageOptions where LanguageOptions.option_text= '"+ansTxt+"' and LanguageOptions.option_pid= Options.id and Options.assessment_pid="+qid+" and LanguageOptions.language_id="+languageid;
+        }else{
+            selectQuery = "select * from Options where option_text= '"+ansTxt+"'and assessment_pid="+qid;
         }
+        Cursor cursor = database.rawQuery(selectQuery, null);
+        if (cursor.getCount()<=0){
+            selectQuery = "select * from Options where option_text= '" + ansTxt + "'and assessment_pid=" + qid;
+            cursor = database.rawQuery(selectQuery, null);
+        }
+        list.clear();
+        if (cursor.moveToFirst()) {
+            do {
+                int id = cursor.getInt(cursor.getColumnIndex("id"));
+                String optionText = cursor.getString(cursor.getColumnIndex("option_text"));
+                String assessmentID = cursor.getString(cursor.getColumnIndex("assessment_pid"));
+                AnswersPage answer= new AnswersPage(String.valueOf(id),optionText,0,"",id,0,0,"",assessmentID);
 
+                list.add(answer);
+            } while (cursor.moveToNext());
+        }
+        if (cursor != null)
+            cursor.close();
         return list;
     }
 
@@ -1093,10 +1062,9 @@ public class DataBaseMapperClass {
      * @param database
      * @param ansTxt
      * @param isRadioText
-     * @param restUrl
      * @return
      */
-    public static List<AnswersPage> getOptionsAnswersForGridSubQBased(int qid, SQLiteDatabase database, String ansTxt, boolean isRadioText, RestUrl restUrl) {
+    public static List<AnswersPage> getOptionsAnswersForGridSubQBased(int qid, SQLiteDatabase database, String ansTxt, boolean isRadioText) {
         List<AnswersPage> list = new ArrayList<>();
         String selectQuery;
         try {
@@ -1119,7 +1087,7 @@ public class DataBaseMapperClass {
             cursor.close();
         }catch (Exception e){
             Logger.logE(TAG,"Exception on getting option answers for grid sub question based",e);
-            restUrl.writeToTextFile("Exception on getting option answers for grid sub question based","","getOptionGridSubQuestionBased");
+         //   restUrl.writeToTextFile("Exception on getting option answers for grid sub question based","","getOptionGridSubQuestionBased");
         }
         return list;
     }
@@ -1159,7 +1127,7 @@ public class DataBaseMapperClass {
      */
     public static int getPrimaryID(net.sqlcipher.database.SQLiteDatabase db, String surveyPrimaryKeyId, String q_id) {
 
-        String selectQuery = "SELECT _id FROM  ResponseDump where  survey_id="+surveyPrimaryKeyId+" and q_id="+q_id;
+        String selectQuery = "SELECT _id FROM  ResponseDump where  survey_id='"+surveyPrimaryKeyId+"' and q_id="+q_id;
         Cursor cursor = db.rawQuery(selectQuery, null);
         int primarykey=0;
         if (cursor.moveToFirst()) {
@@ -1181,7 +1149,7 @@ public class DataBaseMapperClass {
      * @param surveyPrimaryKeyId
      */
     public static void deletePreviousSetOfResponseJsonDump(String q_id, net.sqlcipher.database.SQLiteDatabase db, String surveyPrimaryKeyId) {
-        String ResponseQuery="Delete from ResponseDump where survey_id="+surveyPrimaryKeyId+" and  q_id="+q_id;
+        String ResponseQuery="Delete from ResponseDump where survey_id='"+surveyPrimaryKeyId+"' and  q_id="+q_id;
         db.execSQL(ResponseQuery);
     }
 
@@ -1195,7 +1163,7 @@ public class DataBaseMapperClass {
      */
     public static JSONArray getJsonObject(int qid, net.sqlcipher.database.SQLiteDatabase autoSyncDatabase, String autoSyncSurveyID, JSONArray qidValueArray) {
 
-        String selectQuery = "SELECT * FROM Response where q_id = "+qid+" and  survey_id="+autoSyncSurveyID;
+        String selectQuery = "SELECT * FROM Response where q_id = "+qid+" and  survey_id='"+autoSyncSurveyID+"'";
         Cursor cursor = autoSyncDatabase.rawQuery(selectQuery, null);
         if (cursor.moveToFirst()) {
             do {
@@ -1219,6 +1187,20 @@ public class DataBaseMapperClass {
         }
         cursor.close();
         return qidValueArray;
+    }
+
+    private static List<String> getSubQuestionList(int qid, String autoSyncSurveyID, net.sqlcipher.database.SQLiteDatabase autoSyncDatabase) {
+        List<String> getTempList= new ArrayList<>();
+        String selectQuery = "SELECT primarykey FROM Response where q_id = "+qid+"  and  survey_id='"+autoSyncSurveyID+"' group by  primarykey";
+        Cursor cursor = autoSyncDatabase.rawQuery(selectQuery, null);
+        if (cursor.moveToFirst()) {
+            do {
+                String subQuestionId = cursor.getString(cursor.getColumnIndex(primaryKeyStr));
+                getTempList.add(subQuestionId);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return getTempList;
     }
 
     /**
@@ -1398,5 +1380,77 @@ public class DataBaseMapperClass {
     }
 
 
+    /**
+     * @param q_code
+     * @param database
+     * @param language_id
+     * @return
+     */
+    public static List<AssesmentBean> getAssesements(int q_code, SQLiteDatabase database, int language_id) {
+        AssesmentBean bean=null;
+        List<AssesmentBean> pages = new ArrayList<>();
+        String query;
+        if (language_id==1)
+            query = "select * from Assessment where active=2 and  question_pid = "+q_code;
+        else if (language_id!=1)
+            query = "select Assessment.id,LanguageAssessment.assessment,Assessment.qtype,Assessment.mandatory,Assessment.question_pid,Assessment.group_validation from LanguageAssessment, Assessment where Assessment.active=2 and question_pid= "+q_code+" and  LanguageAssessment.language_id="+language_id+" and  Assessment.id =LanguageAssessment.assessment_pid";
+        else
+            query = "select * from Assessment where active=2 and  question_pid = "+q_code;
 
+        Cursor questionCursor = database.rawQuery(query, null);
+        try {
+            if (questionCursor.moveToFirst()) {
+                do {
+                    int   qid = questionCursor.getInt(questionCursor
+                            .getColumnIndex("id"));
+                    String assesment = questionCursor.getString(questionCursor
+                            .getColumnIndex("assessment"));
+                    String assessmentType = questionCursor.getString(questionCursor
+                            .getColumnIndex("qtype"));
+                    int assesmentId = questionCursor.getInt(questionCursor
+                            .getColumnIndex("question_pid"));
+                    int mandatoryCode = questionCursor.getInt(questionCursor
+                            .getColumnIndex("mandatory"));
+                    String groupValidation=questionCursor.getString(questionCursor.getColumnIndex("group_validation"));
+                    bean=new AssesmentBean();
+                    bean.setQid(qid);
+                    bean.setAssessmentId(assesmentId);
+                    bean.setAssessment(assesment);
+                    bean.setMandatory(mandatoryCode);
+                    bean.setQtype(assessmentType);
+                    bean.setGroupValidation(groupValidation);
+                    pages.add(bean);
+                } while (questionCursor.moveToNext());
+            }
+            return pages;
+        } finally {
+            if (questionCursor != null) {
+                questionCursor.close();
+            }
+        }
+    }
+
+    public static List<AnswersPage> getOptionsAnswersTEXTBOX(int qid, SQLiteDatabase database) {
+        List<AnswersPage> list = new ArrayList<>();
+        String selectQuery="";
+        try{
+            selectQuery = "select * from Options where assessment_pid="+qid;
+            Cursor cursor = database.rawQuery(selectQuery, null);
+            list.clear();
+            if (cursor.moveToFirst()) {
+                do {
+                    int id = cursor.getInt(cursor.getColumnIndex("id"));
+                    String optionText = cursor.getString(cursor.getColumnIndex("option_text"));
+                    String assessmentID = cursor.getString(cursor.getColumnIndex("assessment_pid"));
+                    AnswersPage answer= new AnswersPage(String.valueOf(id),optionText,0,"",id,0,0,"",assessmentID);
+                    list.add(answer);
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+
+        }catch (Exception e){
+            Logger.logE("","" ,e );
+        }
+        return list;
+    }
 }

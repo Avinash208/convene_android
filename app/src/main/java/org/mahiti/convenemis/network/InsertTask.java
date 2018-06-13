@@ -47,6 +47,9 @@ public class InsertTask {
                 checkboxInsert.put("group_id", String.valueOf(responseObj.getGroup_id()));
                 checkboxInsert.put("primaryID", String.valueOf(responseObj.getPrimaryID()));
                 checkboxInsert.put("qtype", String.valueOf(responseObj.getQ_type()));
+                if(responseObj.getGroup_id()!=0 || "0".equalsIgnoreCase(responseObj.getSubquestionId()))
+                    checkboxInsert.put("response_dump_pid", String.valueOf(pageNumber));
+
                 responseId = handler.insertResponseDataToDB(checkboxInsert);
                 responseData.add(responseId);
                 Logger.logV("Saving", "Saved Response Successfully-->" + responseId);

@@ -470,7 +470,7 @@ public class DBHandler extends SQLiteOpenHelper {
      * @param getDumpPrimaryID
      */
     public void updatePrimaryidToResponse(String q_id, String surveyPrimaryKeyId, int getDumpPrimaryID) {
-        String updateStmnt = "UPDATE  Response SET response_dump_pid = " + getDumpPrimaryID + " where survey_id=" + surveyPrimaryKeyId + " and q_id= " + q_id;
+        String updateStmnt = "UPDATE  Response SET response_dump_pid = " + getDumpPrimaryID + " where survey_id='" + surveyPrimaryKeyId + "' and q_id= " + q_id;
         database.execSQL(updateStmnt);
     }
 

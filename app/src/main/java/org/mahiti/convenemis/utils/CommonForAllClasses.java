@@ -85,4 +85,12 @@ public class CommonForAllClasses {
     }
 
 
+    public static String getINTODateformate(String minValue) {
+        Logger.logV("getINTODateformate----> ",minValue);
+        String day=Character.toString(minValue.charAt(0))+Character.toString(minValue.charAt(1));
+        String month=Character.toString(minValue.charAt(2))+Character.toString(minValue.charAt(3));
+        String year=Character.toString(minValue.charAt(4))+Character.toString(minValue.charAt(5))+Character.toString(minValue.charAt(6))+Character.toString(minValue.charAt(7));
+        Logger.logD("Dateforamt","date in validation" + day+"-"+month+"-"+year);
+        return day+"-"+month+"-"+year;
+    }
 }
