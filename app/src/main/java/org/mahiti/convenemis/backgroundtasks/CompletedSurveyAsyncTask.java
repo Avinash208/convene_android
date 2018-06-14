@@ -47,9 +47,8 @@ public class CompletedSurveyAsyncTask extends AsyncTask<String, Integer, List<Su
 
     protected List<SurveysBean> doInBackground(String... strings) {
         for(int i=0;i<sourceList.size();i++) {
-            SurveysBean getCompletedList = getCompletedSurveyViewStatus(sourceList.get(i),surveyPrimaryKeyId);
-           if (getCompletedList.getSurveyName()!=null)
-                resultList.add(getCompletedList);
+            if (handler.isSurveyCompleted(sourceList.get(i),surveyPrimaryKeyId,externalDbOpenHelper))
+                resultList.add(sourceList.get(i));
         }
         return resultList;
     }
@@ -63,15 +62,7 @@ public class CompletedSurveyAsyncTask extends AsyncTask<String, Integer, List<Su
 
     protected void onPostExecute(List<SurveysBean> result) {
         // Executed in UIThread
-       List<SurveysBean> tempUuiidList= new ArrayList<>();
-
-      /*  for (int k=0;k<result.size();k++){
-            if (!handler.isSurveyCompeted(result.get(k).getUuid())){
-                tempUuiidList.add(result.get(k));
-            }
-        }*/
-
-        pendingCompletedSurveyAsyncResultListener.completedSurveys(tempUuiidList);
+        pendingCompletedSurveyAsyncResultListener.completedSurveys(result);
     }
 
 

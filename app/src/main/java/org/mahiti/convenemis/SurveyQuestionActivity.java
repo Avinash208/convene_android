@@ -1,5 +1,6 @@
 package org.mahiti.convenemis;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
@@ -131,6 +132,7 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
     public static final List<String> getAllspinnerQuestionCode = new ArrayList<>();
     public static final List<String> getAlldateQuestionCode = new ArrayList<>();
     public static final List<String> getAllImageuploadQuestionCode = new ArrayList<>();
+    private static final int POP_UP_ACTIVITY = 200;
 
     private HashMap<String, LinearLayout> gridViewLinearLayoutHolder = new HashMap<>();
 
@@ -1478,12 +1480,12 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
                             } else {
                                 list.add(String.valueOf(false));
                             }
-                            if (list.contains("true")) {
+                            /*if (list.contains("true")) {
                                 GridCount++;
                                // jsonArray.put(obj4);
                             }else{
                                 GridCount=0;
-                            }
+                            }*/
 
                         }
                         break;
@@ -2184,8 +2186,10 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
                 SharedPreferences.Editor editorSaveDraft = surveyPreferences.edit();
                 editorSaveDraft.putString("recentPreviewRecord", "");
                 editorSaveDraft.apply();
-                PreviewPopUp pre = new PreviewPopUp();
+              /** PreviewPopUp pre = new PreviewPopUp();
                 pre.showPreviewPopUp(SurveyQuestionActivity.this, surveyPrimaryKeyId, dbOpenHelper, nextB, previousButton, surveysId);
+                Modified by Guru */
+                callPopUpActivity();
                 return;
             }
             Logger.logV(TAG, "last Answered Qid id from Mainlist" + lastIndexUsedToFetchQID);
@@ -2446,10 +2450,12 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
                             deletedCodes.add(String.valueOf(allBlocksQList.get(deleteId)));
                             Logger.logD(TAG, "deleteId " + deleteId);
                         }
-                 //       deleteQidsFromResponse(deletedCodes);
+                        //       deleteQidsFromResponse(deletedCodes);
                         Toast.makeText(SurveyQuestionActivity.this, "Validating...", Toast.LENGTH_SHORT).show();
-                        PreviewPopUp pre = new PreviewPopUp();
-                        pre.showPreviewPopUp(SurveyQuestionActivity.this, surveyPrimaryKeyId, dbOpenHelper, nextB, previousButton, surveysId);
+//                        PreviewPopUp pre = new PreviewPopUp();
+//                        pre.showPreviewPopUp(SurveyQuestionActivity.this, surveyPrimaryKeyId, dbOpenHelper, nextB, previousButton, surveysId);
+                        //Modified by Guru
+                        callPopUpActivity();
                     }
                 });
 
@@ -2504,8 +2510,9 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
             else {
                 intent.putExtra("surveyIdDCF","1");
                 nextIntent = new Intent(SurveyQuestionActivity.this, ListingActivity.class);
-            }
-            closeLaunchNextPage(nextIntent);
+                finish();
+                            }
+            //closeLaunchNextPage(nextIntent);
         } catch (Exception e) {
             Logger.logE("", "Submit functionality", e);
         }
@@ -2671,11 +2678,26 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
                 case REQUEST_CODE_TAKE_PICTURE:
                     performUpload();
                     break;
+                case POP_UP_ACTIVITY:
+                    checkResult(resultCode);
+                    break;
                 default:
                     break;
             }
         } catch (Exception e) {
             Logger.logE(SurveyQuestionActivity.this.getClass().getSimpleName(), "Exception on Activity Result", e);
+        }
+    }
+
+    /**
+     * @param resultCode
+     */
+    private void checkResult(int resultCode) {
+        if (resultCode == Activity.RESULT_OK)
+            submitCloseActivity();
+        else{
+            nextB.setVisibility(View.VISIBLE);
+            previousButton.setVisibility(View.VISIBLE);
         }
     }
 
@@ -3036,5 +3058,12 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
             }
             return null;
         }
+    }
+    private void callPopUpActivity() {
+        Intent startIntert = new Intent(SurveyQuestionActivity.this, ShowSurveyPreview.class);
+        startIntert.putExtra("surveyPrimaryKey",surveyPrimaryKeyId);
+        startIntert.putExtra("survey_id",prefs.getInt("survey_id",-1));
+        startIntert.putExtra("visibility",true);
+        startActivityForResult(startIntert,POP_UP_ACTIVITY);
     }
 }

@@ -16,6 +16,7 @@ import com.google.gson.Gson;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.mahiti.convenemis.BeenClass.PreviewQuestionAnswerSet;
 import org.mahiti.convenemis.BeenClass.beneficiaryList.Jsondata;
 import org.mahiti.convenemis.BeenClass.regionallanguage.GetLanguageAssessment;
 import org.mahiti.convenemis.BeenClass.regionallanguage.GetLanguageBlock;
@@ -41,7 +42,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 public class ConveneDatabaseHelper extends SQLiteOpenHelper {
@@ -1043,5 +1046,75 @@ public class ConveneDatabaseHelper extends SQLiteOpenHelper {
         }
 
         return questionType;
+    }
+
+    public Map<Integer, String> getAllOptions() {
+        Map<Integer, String> result = new HashMap<>();
+        String query= "Select id, option_text from options where option_text != ''";
+        Cursor cursor = null;
+        try {
+            database = openDataBase();
+            cursor = database.rawQuery(query, null);
+            Logger.logD("Query", "Query Options" + query + "-->" + cursor.getCount());
+            if (cursor.moveToFirst()) {
+                do {
+                    int optionId = cursor.getInt(cursor.getColumnIndex("id"));
+                    String optionText = cursor.getString(cursor.getColumnIndex("option_text"));
+
+                    result.put(optionId,optionText);
+
+                }
+                while (cursor.moveToNext());
+
+
+            }
+        }catch (Exception e)
+        {
+            Logger.logE("getAllOptions",e.getMessage(),e);
+        }
+        finally {
+            if (cursor != null)
+                cursor.close();
+        }
+
+
+        return result;
+    }
+
+    public List<PreviewQuestionAnswerSet> getAllQuestions(int surveysId) {
+        List<PreviewQuestionAnswerSet> previewQuestionAnswerSets = new ArrayList<>();
+        String query = "Select * from Question where active = 2 and  survey_id="+surveysId;
+        Cursor cursor = null;
+        try {
+            database = openDataBase();
+            cursor = database.rawQuery(query, null);
+            Logger.logD("Query", "Query Options" + query + "-->" + cursor.getCount());
+            if (cursor.moveToFirst()) {
+                do {
+                    PreviewQuestionAnswerSet previewQuestionAnswerSet = new PreviewQuestionAnswerSet();
+
+                    String questionText = cursor.getString(cursor.getColumnIndex("question_text"));
+                    String answerType = String.valueOf(cursor.getInt(cursor.getColumnIndex("answer_type")));
+                    int questionCode = cursor.getInt(cursor.getColumnIndex("id"));
+
+                    previewQuestionAnswerSet.setQuestion(questionText);
+                    previewQuestionAnswerSet.setQuestionType(answerType);
+                    previewQuestionAnswerSet.setQuestionID(questionCode);
+                    Logger.logD("", "selected option" + questionText);
+                    previewQuestionAnswerSets.add(previewQuestionAnswerSet);
+                }
+                while (cursor.moveToNext());
+
+
+            }
+        }catch (Exception e)
+        {
+            Logger.logE("getAllQuestions",e.getMessage(),e);
+        }
+        finally {
+            if (cursor != null)
+                cursor.close();
+        }
+        return previewQuestionAnswerSets;
     }
 }

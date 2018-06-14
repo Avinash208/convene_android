@@ -1337,4 +1337,63 @@ public class DBHandler extends SQLiteOpenHelper {
         }
         return isCompleted;
     }
+
+    public Map<String, String> getAttendedGridQuestion(String surveyPId, ConveneDatabaseHelper dbOpenHelper, boolean b) {
+        Map<String, String> result = new HashMap<>();
+        String query = "";
+        Cursor cursor = null;
+        try {
+
+            query = "select * from Response where survey_id='" + surveyPId + "' ORDER BY q_id ASC";
+            SQLiteDatabase db = getdatabaseinstance_read();
+
+            cursor = db.rawQuery(query, null);
+            Logger.logD(TAG, "Query Options" + query + "-->" + cursor.getCount());
+
+            if (cursor.getCount() != 0 && cursor.moveToFirst()) {
+                do {
+                    String answer = "";
+                    int questionID = cursor.getInt(cursor.getColumnIndex("q_id"));
+                    int groupId ;
+                    groupId = cursor.getInt(cursor.getColumnIndex("group_id"));
+                    int prime_key = cursor.getInt(cursor.getColumnIndex("primarykey"));
+
+                    String questionType = cursor.getString(cursor.getColumnIndex(QTYPE));
+                    String subQuestionId = cursor.getString(cursor.getColumnIndex("sub_questionId"));
+
+                    if (("T").equalsIgnoreCase(questionType) || ("D").equalsIgnoreCase(questionType) || ("AW").equalsIgnoreCase(questionType) || ("I").equalsIgnoreCase(questionType)) {
+                        answer = cursor.getString(cursor.getColumnIndex(ANSTEXT));
+                    }
+                    else if(("AI").equalsIgnoreCase(questionType)){
+                        answer = cursor.getString(cursor.getColumnIndex("sub_questionId"));
+                    }
+                    else if (("R").equalsIgnoreCase(questionType) || ("S").equalsIgnoreCase(questionType)) {
+                        String answerCode = cursor.getString(cursor.getColumnIndex(ANSCODE));
+                        answer = dbOpenHelper.getOptionText(answerCode, 1, questionID);
+                    }
+                    else
+                    {
+                        answer = cursor.getString(cursor.getColumnIndex(ANSTEXT));
+                    }
+
+                    if (groupId != 0 && subQuestionId != null && !subQuestionId.isEmpty() && !"0".equalsIgnoreCase(subQuestionId) )
+                        result.put(subQuestionId+"@"+groupId,answer);
+                    else if (groupId != 0   && "0".equalsIgnoreCase(subQuestionId))
+                        result.put(prime_key+"@"+groupId,answer);
+                    else
+                        result.put(String.valueOf(questionID),answer);
+
+                }
+                while (cursor.moveToNext());
+
+            }
+        } catch (Exception e) {
+            Logger.logE(TAG, "Exception in  the getAttendedQuestion ", e);
+        }
+        finally {
+            if (cursor != null)
+                cursor.close();
+        }
+        return result;
+    }
 }

@@ -272,8 +272,6 @@ public class DataFormFragment extends Fragment implements PeriodicTypeInterface,
         dynamicDataCollectionForm.removeAllViews();
         for (int surveyPosition =0 ; surveyPosition<pendingSurvey.size();surveyPosition++) {
             String benAndFaci ="";
-           /* if(!pendingSurvey.get(surveyPosition).getBeneficiaryIds().isEmpty() && !pendingSurvey.get(surveyPosition).getFacilityIds().isEmpty())
-                benAndFaci ="BenAndFaci";*/
             callPendingView(pendingSurvey.get(surveyPosition), benAndFaci);
 
         }

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_show_survey_preview"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#fff9e4"
+    android:background="#eeeeee"
     tools:context="org.mahiti.convenemis.ShowSurveyPreview">
     <include
         android:id="@+id/toolbar1"
@@ -20,6 +20,8 @@
         android:background="@drawable/ovalshape"
         android:gravity="center"
         android:padding="6dp"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@id/toolbar1"
         android:layout_marginRight="5dp"
         android:layout_marginTop="5dp"
         android:text="@string/Edit"/>
@@ -27,6 +29,8 @@
         android:layout_width="match_parent"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
+        android:layout_below="@id/edit"
+        android:layout_above="@id/bottomLayout"
         android:layout_height="wrap_content">
         <LinearLayout
             android:id="@+id/dynamic_question_set"
@@ -38,4 +42,38 @@
 
         </LinearLayout>
     </ScrollView>
-</LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:id="@+id/bottomLayout"
+        android:background="#eeeeee"
+        android:layout_margin="5dp"
+        >
+
+        <Button
+            android:id="@+id/btnSubmit"
+            android:layout_width="@dimen/buttonWidth"
+            android:layout_height="@dimen/buttonHeight"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:text="@string/submit"
+            android:layout_marginRight="24dp"
+            android:background="@drawable/button_click"
+            android:textColor="@color/textColor" />
+
+        <Button
+            android:id="@+id/btnCancel"
+            android:layout_width="@dimen/buttonWidth"
+            android:layout_height="@dimen/buttonHeight"
+            android:text="@string/cancel"
+            android:layout_marginLeft="22dp"
+            android:background="@drawable/button_click"
+            android:textColor="@color/textColor"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+    </RelativeLayout>
+</RelativeLayout>

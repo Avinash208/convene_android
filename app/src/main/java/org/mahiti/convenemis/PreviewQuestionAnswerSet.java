@@ -1,4 +1,4 @@
-package org.mahiti.convenemis.BeenClass;
+package org.mahiti.convenemis;
 
 /**
  * Created by Aviansh raj on 29/8/17.
@@ -9,7 +9,7 @@ public class PreviewQuestionAnswerSet {
     String question;
     String answer;
     int answerid;
-   String QuestionType;
+    private String questionType;
 
 
     public int getQuestionID() {
@@ -45,10 +45,10 @@ public class PreviewQuestionAnswerSet {
     }
 
     public String getQuestionType() {
-        return QuestionType;
+        return questionType;
     }
 
     public void setQuestionType(String questionType) {
-        QuestionType = questionType;
+        this.questionType = questionType;
     }
 }

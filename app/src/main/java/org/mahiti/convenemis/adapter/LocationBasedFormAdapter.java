@@ -261,7 +261,7 @@ public class LocationBasedFormAdapter extends BaseAdapter {
                     boolean flag = false;
                     if (surveyBeen.getIsEditable() == 1)
                         flag = true;
-                    editor11.putBoolean(ShowSurveyPreview.isEditableKey,flag);
+                  //  editor11.putBoolean(ShowSurveyPreview.isEditableKey,flag);
                     editor11.apply();
                     intent = new Intent(mcontext, ShowSurveyPreview.class);
                     intent.putExtra("surveyPrimaryKey", String.valueOf(surveyBeen.getResponseId()));
