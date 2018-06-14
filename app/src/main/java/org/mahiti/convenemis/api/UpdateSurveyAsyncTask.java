@@ -9,6 +9,7 @@ import android.preference.PreferenceManager;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.mahiti.convenemis.BeenClass.Response;
 import org.mahiti.convenemis.beansClassSetQuestion.FillSurveyResponseInterface;
@@ -137,9 +138,10 @@ public class UpdateSurveyAsyncTask extends AsyncTask<Context, Integer, String> {
             int length = ja_data.length();
             for(int i=0; i<length; i++) {
                 JSONObject jsonObj = ja_data.getJSONObject(i);
-                insertIntoSurveyTable(jsonObj.getString("response_id"),jsonObj.getString("response_dump"),jsonObj.getString("server_date_time"),
+                       insertIntoSurveyTable(jsonObj.getString("response_id"),jsonObj.getString("response_dump"),jsonObj.getString("server_date_time"),
                         jsonObj.getString("survey_id"),jsonObj.getString("cluster_name"),jsonObj.getInt("cluster_id"),jsonObj.getString("bene_uuid"),
-                        jsonObj.getString("location"));
+                        jsonObj.getString("location"),jsonObj.getString("cluster_beneficiary"),
+                               jsonObj.getString("grid_inline_questions") );
             }
         } catch (Exception e) {
             Logger.logE("the status", "the questionsArray lenth is " ,e);
@@ -148,7 +150,8 @@ public class UpdateSurveyAsyncTask extends AsyncTask<Context, Integer, String> {
     }
 
     private void insertIntoSurveyTable(String response_UUID, String response_DUMP, String server_modified_date,
-                                       String survey_id, String cluster_name, int cluserid,String uuid, String location) {
+                                       String survey_id, String cluster_name, int cluserid,String uuid, String location,
+                                       String cluster_beneficiary, String gridResponse) {
          Map<String, String> values = new HashMap<>();
         values.put("start_survey_status", "0");
         values.put("inv_id", preferences.getString("uId",""));
@@ -200,6 +203,7 @@ public class UpdateSurveyAsyncTask extends AsyncTask<Context, Integer, String> {
         values.put("ben_uuid",response_UUID);
         values.put("uuid",uuid);
         values.put("beneficiary_details", "");
+        values.put("beneficiary_ids", cluster_beneficiary);
         values.put("beneficiary_details_status", "1");
         if (true) {
             values.put("extra_column", "1");
@@ -210,7 +214,7 @@ public class UpdateSurveyAsyncTask extends AsyncTask<Context, Integer, String> {
         Logger.logV("SyncClass", "the response is" + String.valueOf(values));
         String response = syncSurveyHandler.insertSurveyDataToDB(values);
         Logger.logV("response", "the response is" + response);
-        updateToResponseTable(response,response_DUMP,location);
+        updateToResponseTable(response,response_DUMP,location,gridResponse);
     }
 
     /**
@@ -218,11 +222,23 @@ public class UpdateSurveyAsyncTask extends AsyncTask<Context, Integer, String> {
      * @param response_DUMP response_DUMP
      * @param location
      */
-    private void updateToResponseTable(String response, String response_DUMP, String location) {
-        UpdateServerResponsetoDatabase(response_DUMP,response,location);
+    private void updateToResponseTable(String response, String response_DUMP, String location,String gridResponseIds) {
+        UpdateServerResponsetoDatabase(response_DUMP,response,location,gridResponseIds);
     }
 
-    private void UpdateServerResponsetoDatabase(String getResponseResult, String surveyPrimaryKey, String location) {
+    private void UpdateServerResponsetoDatabase(String getResponseResult, String surveyPrimaryKey, String location, String gridResponseids) {
+       List<String> getGridResponseIds= new ArrayList<>();
+        if (!gridResponseids.equals("")){
+            try {
+                JSONArray jsonArray =new JSONArray(gridResponseids);
+                for (int i=0;i<jsonArray.length();i++){
+                    getGridResponseIds.add(String.valueOf(jsonArray.getInt(i)));
+                }
+
+            } catch (JSONException e) {
+               Logger.logD(TAG,"Grid Response Json"+e);
+            }
+        }
         final String surveyResponseID= surveyPrimaryKey;
        try{
            List<Response> collectResponse= new ArrayList<>();
@@ -232,6 +248,29 @@ public class UpdateSurveyAsyncTask extends AsyncTask<Context, Integer, String> {
            while (iter.hasNext()) {
                String key = iter.next();
                Logger.logD(TAG,"-->"+key);
+               if (getGridResponseIds.contains(key)){
+                  JSONObject innerJsonObject= new JSONObject(jsonObjectGetQuestion.get(key).toString());
+                   Iterator<String> innerSubQuestioniter = innerJsonObject.keys();
+                   while (innerSubQuestioniter.hasNext()) {
+                       String innerKey = innerSubQuestioniter.next();
+                       Logger.logD(TAG,"Grid Response inner Key-->"+innerKey);
+                       JSONObject inInnerObject= new JSONObject(innerJsonObject.get(innerKey).toString());
+                       Iterator<String> iniInnerSubQuestioniter = inInnerObject.keys();
+                       while (iniInnerSubQuestioniter.hasNext()) {
+                           String inInnerKey = iniInnerSubQuestioniter.next();
+                           String getQuestionType=dbOpenHelper.getAssessmentType(inInnerKey);
+                           Object value = inInnerObject.get(inInnerKey);
+                           Logger.logD(TAG,"-->"+value);
+                           if (("R").equalsIgnoreCase(getQuestionType) || ("S").equalsIgnoreCase(getQuestionType) ) {
+                               Response responseTemp = new Response(inInnerKey, "", String.valueOf(value), "", Integer.parseInt(inInnerKey), 0, "", 0, 0, getQuestionType);
+                               collectResponse.add(responseTemp);
+                           } else if (("T").equalsIgnoreCase(getQuestionType) || ("D").equalsIgnoreCase(getQuestionType)){
+                               Response responseTemp = new Response(inInnerKey, String.valueOf(value), "", "", Integer.parseInt(inInnerKey), 0, "", 0, 0, getQuestionType);
+                               collectResponse.add(responseTemp);
+                           }
+                       }
+                   }
+               }
                if (!key.equals("address")) {
                    String getQuestionType=dbOpenHelper.getQuestionType(key);
                    Object value = jsonObjectGetQuestion.get(key);
@@ -244,10 +283,10 @@ public class UpdateSurveyAsyncTask extends AsyncTask<Context, Integer, String> {
                        collectResponse.add(responseTemp);
                    }
                }else{
-                 /* if (location!=null) {
+                  if (location!=null) {
                       JSONObject jsonObject = new JSONObject(location);
                       syncSurveyHandler.updateAddressRecordFromServer(jsonObject, surveyPrimaryKey);
-                  }*/
+                  }
 
 
                }

@@ -1027,4 +1027,21 @@ public class ConveneDatabaseHelper extends SQLiteOpenHelper {
         return question;
 
     }
+
+    public String getAssessmentType(String inInnerKey) {
+        String questionType="";
+        try {
+            SQLiteDatabase sqldb = openDataBase();
+            String query = "SELECT id,qtype FROM Assessment where id="+inInnerKey;
+            Cursor cursor = sqldb.rawQuery(query, null);
+            if (cursor != null && cursor.moveToFirst()) {
+                 questionType = cursor.getString(cursor.getColumnIndex("qtype"));
+            }
+            cursor.close();
+        } catch (SQLException e) {
+            Logger.logE("Exception","in",e);
+        }
+
+        return questionType;
+    }
 }

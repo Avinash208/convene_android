@@ -576,6 +576,7 @@ public class DataBaseMapperClass {
      */
     public static void deletePreviousSetOfQuestion(String q_id, net.sqlcipher.database.SQLiteDatabase db, String surveyID) {
         String ResponseQuery="Delete from Response where survey_id='"+surveyID+"' and  q_id="+q_id;
+        Logger.logV(TAG, "Response Deleted Query" + ResponseQuery);
         db.execSQL(ResponseQuery);
     }
 
