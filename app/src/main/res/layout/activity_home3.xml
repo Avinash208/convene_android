@@ -12,7 +12,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:gravity="center"
-        android:background="@color/pink"
         android:orientation="vertical">
         <include
             android:id="@+id/toolbar1"
@@ -24,8 +23,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="10dp"
-            android:textColor="@color/white"
-            android:textSize="18sp" />
+            android:gravity="center_vertical"
+            android:textColor="#6c6c6c"
+            android:textSize="18sp"
+            android:fontFamily="fonts/Roboto-Medium.ttf"
+            />
     </LinearLayout>
     <LinearLayout
         android:id="@+id/dueContainer"
@@ -33,7 +35,6 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/linearheader"
         android:layout_marginBottom="10dp"
-        android:layout_marginTop="10dp"
         android:gravity="right"
         android:visibility="gone"
         android:orientation="horizontal">
@@ -55,7 +56,6 @@
         android:layout_height="match_parent"
         android:layout_above="@+id/footer"
         android:layout_below="@+id/dueContainer"
-        android:layout_marginTop="10dp"
         android:layout_centerInParent="true"
         android:orientation="vertical">
 
@@ -103,6 +103,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:choiceMode="singleChoice"
+                android:layout_marginBottom="20dp"
                 android:listSelector = "@drawable/selector_list_item"
                 android:groupIndicator="@drawable/group_indicator">
             </ExpandableListView>

@@ -61,7 +61,7 @@
             android:layout_centerVertical="true"
             android:text="@string/submit"
             android:layout_marginRight="24dp"
-            android:background="@drawable/button_click"
+            android:background="@drawable/my_button_pink"
             android:textColor="@color/textColor" />
 
         <Button
@@ -70,7 +70,7 @@
             android:layout_height="@dimen/buttonHeight"
             android:text="@string/cancel"
             android:layout_marginLeft="22dp"
-            android:background="@drawable/button_click"
+            android:background="@drawable/my_button_yellow"
             android:textColor="@color/textColor"
             android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"

@@ -3,16 +3,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="8dp"
+    android:padding="3dp"
+    android:layout_marginTop="3dp"
     tools:context=".SurveyQuestionActivity"
-    android:background="@color/convenebg">
+    android:background="@drawable/form_row"
+    >
     <android.support.v7.widget.CardView
         xmlns:card_view="http://schemas.android.com/apk/res-auto"
         android:id="@+id/card_view"
         android:layout_gravity="center"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        card_view:cardBackgroundColor="@color/convenebg">
+        card_view:cardBackgroundColor="@color/formRowColor">
         <LinearLayout
             android:id="@+id/relativeLayout"
             android:layout_width="fill_parent"
@@ -22,23 +24,21 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="5dp"
                 android:orientation="horizontal">
                 <ImageView
                     android:id="@+id/tooltip"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
                     android:visibility="gone"
-                    android:layout_gravity="center"
-                    android:padding="10dp"
-                    android:background="@drawable/info" />
+                    android:background="@drawable/done" />
                 <TextView
                     android:id="@+id/mainQuestionspinner"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Question"
-                    android:textSize="15sp"
-                    android:layout_gravity="center"/>
+                    android:textSize="15dp"
+                    android:layout_marginBottom="5dp" />
 
             </LinearLayout>
             <TextView
@@ -53,16 +53,35 @@
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:orientation="vertical"
-                android:background="@drawable/textfieldbg">
+
+
+                >
                 <Spinner
                     android:id="@+id/spinner"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="38dp"
+                    android:backgroundTint="@color/pink"
                     >
                 </Spinner>
+                <View
+                    android:id="@+id/viewLine"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:paddingStart="3dp"
+                    android:background="@color/pale_orange" />
             </LinearLayout>
 
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginTop="@dimen/ten"
+                android:background="@drawable/divider"
+                />
+
+
         </LinearLayout>
-        </android.support.v7.widget.CardView>
+    </android.support.v7.widget.CardView>
+
+
 
 </RelativeLayout>

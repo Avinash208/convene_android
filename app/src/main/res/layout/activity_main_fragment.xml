@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#eeeeee"
+    android:background="@color/formRowColor"
     tools:context="org.mahiti.convenemis.SurveyQuestionActivity">
     <include
         android:id="@+id/toolbar1"
@@ -21,7 +21,7 @@
             android:layout_height="wrap_content"
             android:textSize="20dp"
             android:gravity="center"
-            android:textColor="@color/colorPrimary"
+            android:textColor="@color/black"
             android:fontFamily="fonts/Roboto-Regular.ttf"
             android:textStyle="bold"
             />
@@ -35,8 +35,7 @@
             android:textColor="@color/black"
             android:fontFamily="fonts/Roboto-Regular.ttf"
             android:layout_marginTop="10dp"
-            android:text="BlockName"
-            android:layout_marginBottom="8dp"
+            android:layout_marginBottom="10dp"
             android:visibility="visible"
             android:textStyle="bold"
             />
@@ -58,7 +57,7 @@
             android:id="@+id/relativeLayout"
             android:layout_width="fill_parent"
             android:layout_height="match_parent"
-            android:background="#fff"
+            android:background="@color/formRowColor"
             android:orientation="vertical">
             <LinearLayout
                 android:id="@+id/dynamicQuestionSet"
@@ -73,32 +72,32 @@
         android:layout_width="fill_parent"
         android:layout_height="@dimen/buttonHeight"
         android:layout_alignParentBottom="true"
+        android:layout_marginLeft="23dp"
+        android:layout_marginRight="23dp"
         android:layout_marginBottom="6dp"
-        >
-
+        android:background="@color/formRowColor">
         <Button
             android:id="@+id/next"
-            android:layout_width="@dimen/buttonWidth"
+            android:layout_width="100dp"
             android:layout_height="@dimen/buttonHeight"
-            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:text="@string/next"
-            android:layout_marginRight="24dp"
-            android:background="@drawable/button_click"
+            android:textSize="16sp"
+            android:background="@drawable/my_button_pink"
             android:textColor="@color/textColor" />
-
         <Button
             android:id="@+id/button1"
-            android:layout_width="@dimen/buttonWidth"
+            android:layout_width="100dp"
             android:layout_height="@dimen/buttonHeight"
             android:text="@string/previous"
-            android:layout_marginLeft="22dp"
-            android:background="@drawable/button_click"
+            android:textSize="16sp"
+            android:background="@drawable/my_button_yellow"
             android:textColor="@color/textColor"
             android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true" />
     </RelativeLayout>
+
 
 
 </RelativeLayout>

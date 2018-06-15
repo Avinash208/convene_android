@@ -20,15 +20,20 @@
             android:visibility="visible"
             android:background="@drawable/toolback" />
     </LinearLayout>
+
+
     <TextView
         android:id="@+id/toolbarTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
+        android:gravity="center"
         android:textColor="@color/white"
         android:text=""
-        android:textSize="20sp"
-        android:fontFamily="fonts/Roboto-Light.ttf"
+        android:layout_gravity="center"
+        android:layout_centerHorizontal="true"
+        android:textSize="@dimen/toolbar_font"
+        android:fontFamily="fonts/Roboto-Medium.ttf"
+
         />
     <ImageView
         android:id="@+id/imageMenu"

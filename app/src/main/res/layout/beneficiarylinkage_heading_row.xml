@@ -2,14 +2,14 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-
-    android:layout_marginLeft="10dp"
-    android:layout_marginRight="10dp"
-    android:layout_marginTop="10dp"
     android:orientation="vertical">
   <LinearLayout
       android:layout_width="match_parent"
-      android:layout_height="50dp"
+      android:layout_height="wrap_content"
+      android:paddingTop="5dp"
+      android:paddingStart="@dimen/ten"
+      android:paddingEnd="@dimen/ten"
+      android:paddingBottom="5dp"
       android:background="@drawable/headingcove"
       android:orientation="horizontal"
       android:weightSum="4">
@@ -17,17 +17,20 @@
         android:id="@+id/holdername"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="2.5"
+        android:layout_weight="2.4"
         android:gravity="center_vertical"
         android:paddingLeft="10dp"
         android:textColor="@color/white"
-        android:textSize="16dp"
+        android:textSize="18sp"
+        android:fontFamily="@font/roboto_medium_new"
         android:text="Heading here " />
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="50dp"
         android:layout_weight="0.5"
         android:gravity="center"
+        android:layout_marginEnd="@dimen/ten"
+        android:layout_gravity="center_vertical"
         android:orientation="vertical">
       <TextView
           android:layout_width="30dp"
@@ -35,6 +38,7 @@
           android:gravity="center"
           android:textSize="16dp"
           android:text="0"
+          android:textAllCaps="true"
           android:background="@drawable/rounded_tv"
           android:textColor="@color/black"
           android:id="@+id/addlink"/>
@@ -44,6 +48,9 @@
         android:layout_height="50dp"
         android:layout_weight="0.5"
         android:gravity="center"
+        android:layout_marginEnd="@dimen/ten"
+        android:layout_gravity="center_vertical"
+
         android:orientation="vertical">
       <ImageView
           android:layout_width="40dp"
@@ -59,16 +66,19 @@
         android:layout_height="35dp"
         android:layout_weight="0.5"
         android:gravity="center"
-        android:layout_margin="5dp"
+
+        android:layout_gravity="center_vertical"
+
         android:orientation="vertical">
       <TextView
           android:id="@+id/linklabel"
           android:layout_width="40dp"
           android:layout_height="50dp"
           android:layout_weight="1"
-          android:textStyle="bold"
+          android:textSize="16sp"
+          android:fontFamily="@font/roboto_bold"
           android:gravity="center"
-          android:background="@color/pink"
+          android:background="#252525"
           android:textColor="@color/white"
           android:text="Link"
           />

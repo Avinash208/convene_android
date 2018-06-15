@@ -3,20 +3,21 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="8dp"
-    android:background="@color/convenebg">
+    android:background="@drawable/form_row"
+    >
     <android.support.v7.widget.CardView
         xmlns:card_view="http://schemas.android.com/apk/res-auto"
         android:id="@+id/card_view"
         android:layout_gravity="center"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        card_view:cardBackgroundColor="#eeeeee">
+        card_view:cardBackgroundColor="@color/formRowColor">
         <LinearLayout
             android:id="@+id/linearLayout"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_above="@+id/footer"
-            android:background="#eeeeee"
+            android:background="@color/formRowColor"
             android:orientation="vertical">
             <LinearLayout
                 android:layout_width="match_parent"
@@ -48,7 +49,27 @@
                 android:padding="2dp"
                 android:visibility="gone"
                 android:textColor="@android:color/holo_red_light"/>
-        </LinearLayout>
-        </android.support.v7.widget.CardView>
 
+            <Button
+                android:id="@+id/buttonDate"
+                android:layout_width="@dimen/buttonWidth"
+                android:layout_height="@dimen/buttonHeight"
+                android:text="@string/previous"
+                android:textSize="16sp"
+                android:layout_margin="10dp"
+                android:background="@drawable/my_button_yellow"
+                android:textColor="@color/textColor"
+                android:layout_gravity="center"
+                />
+        </LinearLayout>
+
+
+        </android.support.v7.widget.CardView>
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_marginTop="@dimen/ten"
+        android:background="@drawable/divider"
+        android:layout_below="@id/card_view"
+        />
 </RelativeLayout>

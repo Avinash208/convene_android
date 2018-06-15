@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <!--&lt;!&ndash; Base application theme. &ndash;&gt;
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
@@ -153,21 +153,18 @@
         <item name="colorControlActivated">#db2064</item>
         <item name="colorControlHighlight">#db2064</item>-->
 
+        <item name="android:textSize">16sp</item>
+
     </style>
 
     <dimen name="_13sdp">13dp</dimen>
 
-    <style name="TextLabel" parent="TextAppearance.AppCompat">
-
-        <!-- Hint color and label color in FALSE state -->
-        <item name="android:textColorHint">@color/black</item>
+    <style name="TextLabel" parent="@android:style/TextAppearance">
         <item name="android:textSize">20sp</item>
-
-        <!-- Label color in TRUE state and bar color FALSE and TRUE State -->
-
-        <item name="colorAccent">#db2064</item>
-        <item name="colorControlNormal">#bcbcbc</item>
-        <item name="colorControlActivated">#9c27b0</item>
+        <item name="android:colorAccent" tools:targetApi="lollipop">@color/black</item>
+        <item name="android:textColorHint">@color/black</item>
+        <item name="android:textColorHighlight">@color/black</item>
+        <item name="android:textColor">@color/colorAccent</item>
     </style>
 
     <style name="MyTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
@@ -194,6 +191,13 @@
         <item name="android:textSize">16sp</item>
         <item name="android:textColor">@color/white</item>
         <item name="textAllCaps">false</item>
+    </style>
+
+    <style name="hintstyle" parent="@android:style/TextAppearance">
+        <item name="android:textColor">@color/black</item>
+
+        <item name="android:textSize">16sp</item>
+
     </style>
 
 </resources>

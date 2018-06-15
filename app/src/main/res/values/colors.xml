@@ -48,6 +48,7 @@
     <color name="cream">#fdf6de</color>
     <color name="listcolor">#c5cae9</color>
     <color name="transparent">#99000000</color>
+    <color name="transparent_new">#00000000</color>
     <!---charan added below 5 colors for progress bar-->
     <color name="sa_green">#1E9618</color>
     <color name="sa_accent">#4EE147</color>
@@ -60,6 +61,16 @@
     <color name="convenebg">#eeeeee</color>
     <color name="purple">#fa7747</color>
     <color name="Backroundblack">#424242</color>
+    <color name="BackroundblackDark">#252525</color>
+    <color name="inActiveText">#868585</color>
     <color name="divider">#4d4d4d</color>
+    <color name="textcolor">#db2064</color>
+
+    <color name="formRowColor">#ffffff</color>
+    <color name="formBorderColor">#41403d</color>
+    <color name="formTextcolor">#424242</color>
+    <color name="formButtonTintColor">#e4531e</color>
+    <color name="pale_orange">#abaaaa</color>
+
 
 </resources>

@@ -37,53 +37,57 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="10dp"
             android:gravity="center"
-            android:orientation="vertical"
             android:paddingLeft="10dp"
-            android:paddingRight="10dp">
-
+            android:paddingRight="10dp"
+            android:layout_margin="10dp"
+            android:orientation="vertical">
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/input_layout_username"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:layout_marginTop="13dp"
-                android:theme="@style/TextLabel"
-                app:hintTextAppearance="@style/TextAppearence.App.TextInputLayout">
+                android:layout_height="wrap_content"
+                app:hintTextAppearance="@style/TextAppearence.App.TextInputLayout"
+                android:theme="@style/TextLabel">
 
                 <EditText
                     android:id="@+id/edtUserName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
-                    android:drawableLeft="@drawable/ic_face_black_24dp"
                     android:drawablePadding="5dp"
+                    android:drawableStart="@drawable/ic_face_black_24dp"
+                    android:fontFamily="sans-serif"
                     android:hint="@string/nameHint"
                     android:imeOptions="actionNext"
                     android:maxLines="1"
+                    android:text="akrspi"
                     android:paddingBottom="20dp"
                     android:paddingLeft="10dp"
                     android:singleLine="true"
-                    android:text=""
                     android:textColor="#000"
-                    android:textColorHint="#000" />
+                    android:textColorHint="#000"
+                    android:textSize="20sp" />
             </android.support.design.widget.TextInputLayout>
+
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/input_layout_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/ten"
                 android:theme="@style/TextLabel"
-                app:hintTextAppearance="@style/TextAppearence.App.TextInputLayout">
+                app:hintTextAppearance="@style/TextAppearence.App.TextInputLayout"
+                app:passwordToggleDrawable="@null">
 
                 <EditText
                     android:id="@+id/edtPassword"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
-                    android:drawableLeft="@drawable/ic_lock_outline_black_24dp"
                     android:drawablePadding="5dp"
+                    android:drawableStart="@drawable/ic_lock_outline_black_24dp"
+                    android:fontFamily="sans-serif"
                     android:hint="@string/passHint"
-                    android:imeOptions="actionDone"
                     android:inputType="textPassword"
                     android:maxLength="10"
                     android:maxLines="1"
@@ -91,27 +95,29 @@
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
                     android:singleLine="true"
-                    android:text=""
                     android:textColor="#000"
-                    android:textColorHint="#000" />
+                    android:textColorHint="#000"
+                    android:textSize="20sp"
+                    android:text="admin@2018"/>
 
 
             </android.support.design.widget.TextInputLayout>
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
+                android:orientation="vertical"
                 android:gravity="center"
-                android:orientation="vertical">
+                android:layout_marginTop="30dp">
 
                 <TextView
                     android:id="@+id/btnLogin"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+
                     android:gravity="center"
+                    android:textStyle="bold"
                     android:text="@string/let_s_go"
-                    android:textColor="#db2064"
+                    android:textColor="@color/textcolor"
                     android:textSize="18sp" />
             </LinearLayout>
         </LinearLayout>

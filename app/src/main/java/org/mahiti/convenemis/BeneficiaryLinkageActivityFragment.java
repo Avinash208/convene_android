@@ -206,6 +206,8 @@ public class BeneficiaryLinkageActivityFragment extends Fragment implements Push
                             int getSyncStatus= dbHandler.getSyncStatus(String.valueOf(getChildUUids.get(j).getChild_form_id()),surveyPrimaryKeyId);
                             if (getSyncStatus==0)
                                 syncLabel.setText("Offline");
+                            else
+                                syncLabel.setVisibility(View.GONE);
                             TextView childaddress = (TextView) childView.findViewById(R.id.childaddress);
 
                             TextView childname = (TextView) childView.findViewById(R.id.childname);

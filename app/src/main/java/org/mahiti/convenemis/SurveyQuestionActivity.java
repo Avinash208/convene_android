@@ -22,6 +22,7 @@ import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.annotation.RequiresApi;
+import android.support.design.widget.TextInputLayout;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -610,7 +611,7 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
     }
 
     private void normalGirdDisplay(Page page, int questionCode) {
-     View   child = getLayoutInflater().inflate(R.layout.dialog_grid, dynamicQuestionSet, false);//child.xml
+        View   child = getLayoutInflater().inflate(R.layout.dialog_grid, dynamicQuestionSet, false);//child.xml
         TextView   question = (TextView) child.findViewById(R.id.mainQuestion);
         if (page.getMandatory().contains("1")) {
             if (!page.getToolTip().equalsIgnoreCase("")) {
@@ -704,7 +705,6 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
                 for (int responseSet = 0; responseSet < GridlistHashMapKey.size(); responseSet++) {
                     String[] spiltKey = GridlistHashMapKey.get(responseSet).split("_");
                     if (String.valueOf(mSubQuestions.get(subRow).getQuestionId()).equals(spiltKey[1])) {
-                        addOrEdit.setBackgroundColor(getResources().getColor(R.color.meroon));
                         addOrEdit.setText("Edit");
                         addOrEdit.setTag(String.valueOf(String.valueOf(getCurrentGridQuestionID + "_" + mSubQuestions.get(subRow).getQuestionId()) + "@EDIT"));
 
@@ -713,7 +713,6 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
                 }
 
             } else {
-                addOrEdit.setBackgroundColor(getResources().getColor(R.color.colorGreen));
                 addOrEdit.setTag(String.valueOf(String.valueOf(getCurrentGridQuestionID + "_" + mSubQuestions.get(subRow).getQuestionId()) + "@ADD"));
 
             }
@@ -760,13 +759,13 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
         List<LevelBeen> list= DataBaseMapperClass.getBenificiaryParentDetails(db,page.getPartnerId());
         HashMap<String, AnswersPage> getDataAnswer = getUserAnsweredResponseFromDB(page.getQuestionNumber(), db, surveyPrimaryKeyId, restUrl);   // getting if already answered question
         int getIndex=0;
-       if (!getDataAnswer.isEmpty()){
-           for(int p=0;p<list.size();p++){
-               AnswersPage answersPage=getDataAnswer.get(String.valueOf(questionCode));
-               if (answersPage.getAnswer().equals(list.get(p).getUuid()))
-                   getIndex=p;
-           }
-       }
+        if (!getDataAnswer.isEmpty()){
+            for(int p=0;p<list.size();p++){
+                AnswersPage answersPage=getDataAnswer.get(String.valueOf(questionCode));
+                if (answersPage.getAnswer().equals(list.get(p).getUuid()))
+                    getIndex=p;
+            }
+        }
         spinnerSearch.setFilterItems(list, getIndex, new SpinnerListenerFilter() {
 
             @Override
@@ -791,8 +790,8 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
     private void addressWidgetDisplay(Page page, String questionFont, String answerFont, int questionCode) {
 
         View child = this.getLayoutInflater().inflate(R.layout.address_widget, dynamicQuestionSet, false);//child.xml
-      /*  TextView question = child.findViewById(R.id.mainQuestion);
-        question.setText(page.getQuestion());*/
+  /*  TextView question = child.findViewById(R.id.mainQuestion);
+    question.setText(page.getQuestion());*/
         LinearLayout relativeLayout = (LinearLayout) child.findViewById(R.id.relativeLayout);
         Spinner hamletspinner = (Spinner) child.findViewById(R.id.hamlet_spinner);
         Spinner villagespinner = (Spinner) child.findViewById(R.id.village_spinner);
@@ -986,33 +985,17 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
         HashMap<String, AnswersPage> answerMap1 = getUserAnsweredResponseFromDB(displayQuestionModel.getQuestionNumber(), db, surveyPrimaryKeyId, restUrl);   // getting if already answered question
         View child = this.getLayoutInflater().inflate(R.layout.edittext, dynamicQuestionSet, false);//child.xml
         TextView question = child.findViewById(R.id.mainQuestion);
+        question.setVisibility(View.GONE);
         question.setTextSize(Integer.valueOf(questionFontSize));
-        LinearLayout LL = child.findViewById(R.id.relativeLayoutedit);
-        LinearLayout linearHorizontal = new LinearLayout(this);
-        linearHorizontal.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT, Gravity.CENTER));
-        linearHorizontal.setGravity(Gravity.CENTER_HORIZONTAL);
-        linearHorizontal.setOrientation(LinearLayout.HORIZONTAL);
-        LinearLayout linearHorizontalButton = new LinearLayout(this);
-        int voiceIconHight = (int) getResources().getDimension(R.dimen.ninty_six);
-        linearHorizontalButton.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, voiceIconHight, 1.8f));
-        linearHorizontalButton.setGravity(Gravity.CENTER_VERTICAL);
-
-
-        final EditText edittext = new EditText(this);
-        edittext.setTextColor(Color.BLACK);
-        edittext.setTextSize(Integer.valueOf(answerFont));
-        edittext.setBackgroundResource(R.drawable.textfieldbg);
+        LinearLayout LL = (LinearLayout) child.findViewById(R.id.relativeLayoutedit);
+        TextInputLayout v = (TextInputLayout) child.findViewById(R.id.textInput);
+        v.setHint(displayQuestionModel.getQuestion());
+        v.setHintTextAppearance(R.style.hintstyle);
+        final EditText edittext = (EditText) child.findViewById(R.id.ans_text);
         edittext.setSingleLine(true);
-        edittext.setTag(displayQuestionModel.getQuestionNumber());
+        edittext.setHintTextColor(getResources().getColor(R.color.black));
         question.setFocusable(true);
 
-
-        int hight = (int) getResources().getDimension(R.dimen.eight_six);
-        edittext.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                hight, 0));
-        edittext.setPadding(20, 0, 0, 0);
-        edittext.setId(generateIncrementalInteger());
         if (answerMap1.size() > 0) {
             AnswersPage setAnswer = answerMap1.get(String.valueOf(questionCode));
             edittext.setText(setAnswer.getAnswer());
@@ -1027,9 +1010,6 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
         hashMapTextError.put(String.valueOf(displayQuestionModel.getQuestionNumber()), errorTextEdit);
         ValidationUtils.setInputType(edittext, displayQuestionModel.getValidation().split(":"), restUrl);
         LL.addView(errorTextEdit);
-        linearHorizontal.addView(edittext);
-        linearHorizontal.addView(linearHorizontalButton);
-        LL.addView(linearHorizontal);
         errorTextEdit.setVisibility(View.GONE);
         dynamicQuestionSet.addView(child);
     }
@@ -1079,14 +1059,10 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
         TextView question = child.findViewById(R.id.mainQuestion);
         question.setTextSize(Integer.valueOf(questionFont));
         LinearLayout LLayout = child.findViewById(R.id.linearLayout);
-        Button button = new Button(this);
-        button.setHintTextColor(Color.WHITE);
-        button.setHint("Pick Date");
-        button.setTextSize(Integer.valueOf(answerFont));
+        Button button = child.findViewById(R.id.buttonDate);
         button.setTextColor(Color.WHITE);
-        button.setTag(displayQuestionModel.getQuestionNumber());
-        button.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT));
+        button.setText("Pick Date");
+
         button.setId(generateIncrementalInteger());
         TextView errorTextDateView = child.findViewById(R.id.errorTextdateview);
         // set Question and tool tip
@@ -1139,8 +1115,6 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
 
         hashMapDate.put(String.valueOf(displayQuestionModel.getQuestionNumber()), button);
         getAlldateQuestionCode.add(String.valueOf(displayQuestionModel.getQuestionNumber()));
-
-        LLayout.addView(button);
         dynamicQuestionSet.addView(child);
 
     }
@@ -1153,12 +1127,12 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
      */
     public void radioGroupQuestionDisplay(Page displayQuestionModel, String questionFont, String answerFont, int questionCode) {
         HashMap<String, AnswersPage> getradioQuestionAnswer = getUserAnsweredResponseFromDB(displayQuestionModel.getQuestionNumber(), db, surveyPrimaryKeyId, restUrl);
-        View child = this.getLayoutInflater().inflate(R.layout.radio, dynamicQuestionSet, false);//child.xml
-        TextView question = child.findViewById(R.id.radiomainQuestion);
+        View child = this.getLayoutInflater().inflate(R.layout.radio, dynamicQuestionSet, false);
+        TextView question = (TextView) child.findViewById(R.id.radiomainQuestion);
         question.setTextSize(Integer.valueOf(questionFont));
         question.setFocusable(true);
-        LinearLayout LR = child.findViewById(R.id.relativeLayoutradio);
-        RadioGroup RG = new RadioGroup(this);
+        LinearLayout LR = (LinearLayout) child.findViewById(R.id.relativeLayoutradio);
+        RadioGroup RG =(RadioGroup) child.findViewById(R.id.myRadioGroup);
         RG.setTag(displayQuestionModel.getQuestionNumber());
         HashMap<String, List<AnswersPage>> answerValues = DataBaseMapperClass.getAnswerFromDBnew(displayQuestionModel.getQuestionNumber(), surveyDatabase, restUrl,/*defaultPreferences.getInt(Constants.SELECTEDLANGUAGE,0)*/1);
         List<AnswersPage> answerEditList = answerValues.get(String.valueOf(questionCode));
@@ -1188,7 +1162,6 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
         getAllradiobuttonQuestionCode.add(String.valueOf(displayQuestionModel.getQuestionNumber()));
         allRadioGroups.add(RG);
         LR.addView(errorTextRadio);
-        LR.addView(RG);
         errorTextRadio.setVisibility(View.GONE);
         dynamicQuestionSet.addView(child);
     }

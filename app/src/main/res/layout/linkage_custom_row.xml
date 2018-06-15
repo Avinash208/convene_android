@@ -5,16 +5,7 @@
     android:layout_height="wrap_content"
     xmlns:chipcloud="http://schemas.android.com/tools">
 
-    <android.support.v7.widget.CardView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        android:layout_marginTop="1dp"
-        app:cardBackgroundColor="@color/white"
-        app:cardCornerRadius="6dp"
-        app:cardElevation="3dp">
+
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -39,7 +30,8 @@
                     android:layout_marginTop="15dp"
                     android:orientation="vertical"
                     android:text=""
-                    android:textSize="16dp"
+                    android:textSize="18sp"
+                    android:fontFamily="@font/roboto_medium_new"
                     android:visibility="visible" />
 
                 <TextView
@@ -49,7 +41,8 @@
                     android:gravity="left"
                     android:orientation="vertical"
                     android:text=""
-                    android:textSize="16dp"/>
+                    android:fontFamily="@font/roboto"
+                    android:textSize="18sp"/>
             </LinearLayout>
             <LinearLayout
                 android:id="@+id/deletebeneficiary"
@@ -57,6 +50,7 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical"
                 android:gravity="center"
+                android:layout_gravity="center_horizontal"
                 android:layout_weight="0.3">
                <TextView
                    android:id="@+id/synclabel"
@@ -74,7 +68,7 @@
             </LinearLayout>
         </LinearLayout>
 
-    </android.support.v7.widget.CardView>
+
 
 
 

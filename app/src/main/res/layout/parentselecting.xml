@@ -2,7 +2,7 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/convenebg">
+    android:background="@color/formRowColor">
     <LinearLayout
         android:id="@+id/singlespinnercontainer"
         android:layout_width="match_parent"
@@ -10,7 +10,7 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:orientation="vertical"
-        android:background="@drawable/textfieldbg">
+        android:background="@color/formRowColor">
 
     </LinearLayout>
 </RelativeLayout>
