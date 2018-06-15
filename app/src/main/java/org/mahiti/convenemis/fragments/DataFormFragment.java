@@ -575,6 +575,8 @@ public class DataFormFragment extends Fragment implements PeriodicTypeInterface,
             periodicityTextview.setTypeface(customfont);
             surveyTextView.setText(completedSurveyList.get(i).getSurveyName());
             statusTextView.setText(R.string.completed);
+            Logger.logD("Selected","serverPrimaryIds"+completedSurveyList.get(i).getUuid());
+
       //      List<StatusBean> getCompletedSurveyList= externalDbOpenHelper.getCompletedRecords(uuid,completedSurveyList.get(i).getId(),completedSurveyList.get(i).getBeneficiaryIds(),completedSurveyList.get(i).getFacilityIds());
           //  List<StatusBean> getPausedCompletedSurveyList=responseCheckController.getPauseCompletedRecords(completedSurveyList.get(i).getId(), externalDbOpenHelper);
             dynamicClosedDataCollectionForm.addView(childView);

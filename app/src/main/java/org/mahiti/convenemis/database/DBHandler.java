@@ -971,22 +971,27 @@ public class DBHandler extends SQLiteOpenHelper {
     }
     public long insertLinkageDataToDB(Linkage linkage, String syncFlag) {
 
-
-        if (database == null || !database.isOpen())
-            database = this.getWritableDatabase(DATABASESECRETKEY);
         ContentValues values = new ContentValues();
-        values.put(CHILD_ID, linkage.getChildFormId());
-        values.put("child_form_primaryid", linkage.getChildFormPrimaryid());
-        values.put("active", linkage.getActive());
-        values.put("id", linkage.getId());
-        values.put("uuid", linkage.getUuid());
-        values.put("linked_on", linkage.getLinkedOn());
-        values.put("child_form_type", linkage.getChildFormType());
-        values.put("parent_form_type", linkage.getParentFormType());
-        values.put("parent_form_id", linkage.getParentFormId());
-        values.put("parent_form_primaryid", linkage.getParentFormPrimaryid());
-        values.put("relation_id", linkage.getRelationId());
-        values.put(SYNCSTATUS, syncFlag);
+        try {
+            if (database == null || !database.isOpen())
+                database = this.getWritableDatabase(DATABASESECRETKEY);
+
+            values.put(CHILD_ID, linkage.getChildFormId());
+            values.put("child_form_primaryid", linkage.getChildFormPrimaryid());
+            values.put("active", linkage.getActive());
+            values.put("id", linkage.getId());
+            values.put("uuid", linkage.getUuid());
+            values.put("linked_on", linkage.getLinkedOn());
+            values.put("child_form_type", linkage.getChildFormType());
+            values.put("parent_form_type", linkage.getParentFormType());
+            values.put("parent_form_id", linkage.getParentFormId());
+            values.put("parent_form_primaryid", linkage.getParentFormPrimaryid());
+            values.put("relation_id", linkage.getRelationId());
+            values.put(SYNCSTATUS, syncFlag);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return database.insertWithOnConflict("Linkages", null, values,SQLiteDatabase.CONFLICT_REPLACE);
     }
 

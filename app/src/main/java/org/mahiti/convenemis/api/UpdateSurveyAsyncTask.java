@@ -264,7 +264,7 @@ public class UpdateSurveyAsyncTask extends AsyncTask<Context, Integer, String> {
                            if (("R").equalsIgnoreCase(getQuestionType) || ("S").equalsIgnoreCase(getQuestionType) ) {
                                Response responseTemp = new Response(inInnerKey, "", String.valueOf(value), "", Integer.parseInt(inInnerKey), 0, "", 0, 0, getQuestionType);
                                collectResponse.add(responseTemp);
-                           } else if (("T").equalsIgnoreCase(getQuestionType) || ("D").equalsIgnoreCase(getQuestionType)){
+                           } else if (("T").equalsIgnoreCase(getQuestionType) || ("D").equalsIgnoreCase(getQuestionType) || ("C").equalsIgnoreCase(getQuestionType)){
                                Response responseTemp = new Response(inInnerKey, String.valueOf(value), "", "", Integer.parseInt(inInnerKey), 0, "", 0, 0, getQuestionType);
                                collectResponse.add(responseTemp);
                            }
@@ -278,7 +278,7 @@ public class UpdateSurveyAsyncTask extends AsyncTask<Context, Integer, String> {
                    if (("R").equalsIgnoreCase(getQuestionType) || ("S").equalsIgnoreCase(getQuestionType) ) {
                        Response responseTemp = new Response(key, "", String.valueOf(value), "", Integer.parseInt(key), 0, "", 0, 0, getQuestionType);
                        collectResponse.add(responseTemp);
-                   } else if (("T").equalsIgnoreCase(getQuestionType) || ("D").equalsIgnoreCase(getQuestionType)){
+                   } else if (("T").equalsIgnoreCase(getQuestionType) || ("D").equalsIgnoreCase(getQuestionType) ||("AI").equalsIgnoreCase(getQuestionType) || ("C").equalsIgnoreCase(getQuestionType)){
                        Response responseTemp = new Response(key, String.valueOf(value), "", "", Integer.parseInt(key), 0, "", 0, 0, getQuestionType);
                        collectResponse.add(responseTemp);
                    }

@@ -445,8 +445,7 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
     @Override
     public void onBackPressed() {
         //TODO need to change the above code .
-     // if (surveyPreferences.getString(Constants.SURVEYSTATUSTYPR,"").equals("new")){
-      if (true){
+      if (surveyPreferences.getString(Constants.SURVEYSTATUSTYPR,"").equals("new")){
           Logger.logD(TAG,"New Survey");
           SupportClass supportClass = new SupportClass();
           supportClass.backButtonFunction(SurveyQuestionActivity.this, db, surveyHandler, surveyPrimaryKeyId);

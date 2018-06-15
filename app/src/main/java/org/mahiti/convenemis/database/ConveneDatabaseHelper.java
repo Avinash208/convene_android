@@ -795,7 +795,7 @@ public class ConveneDatabaseHelper extends SQLiteOpenHelper {
         if (languageId!=1)
             query="SELECT o.id,l.option_text from Options o, Question q, LanguageOptions l  where o.question_pid=q.id and q.id=" + questionID+ " and l.option_pid=o.id and o.id = " + option_code + " and l.language_id= " + languageId+" ORDER BY o.option_order";
         else
-            query="SELECT a.id,option_text from Options a, Question q where a.question_pid=q.id and a.id="+option_code+" ORDER BY a.option_order";
+            query="SELECT option_text from Options a where a.id="+option_code+" ORDER BY a.option_order";
 
         Cursor cursor = sqldb.rawQuery(query, null);
         Logger.logD("Query","Query Options"+query+"-->"+cursor.getCount());

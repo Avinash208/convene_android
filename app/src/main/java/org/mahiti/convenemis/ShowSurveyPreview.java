@@ -165,7 +165,19 @@ public class ShowSurveyPreview extends AppCompatActivity implements View.OnClick
                 setInlineAnswers(previewQuestionAnswerSet, parentLayout);
                 break;*/
             case 4:
-                setAnswerToTv(options.get(Integer.parseInt(answer)), parentLayout, questionLabel);
+                  setAnswerToTv(answer, parentLayout, questionLabel);
+                break;
+            case 2:
+                if(answer != null)
+                {
+                    String[] ansSet = answer.replace("[", "").replace("]", "").split(",");
+                    answer = "";
+                    for (String option : ansSet) {
+                        answer = answer + "," + options.get(Integer.parseInt(option.trim()));
+                    }
+
+                }
+                setAnswerToTv(answer, parentLayout, questionLabel);
                 break;
             default:
                 setAnswerToTv(answer, parentLayout, questionLabel);
@@ -291,7 +303,7 @@ public class ShowSurveyPreview extends AppCompatActivity implements View.OnClick
                     int id2 = mSubQuestions.get(i).getQuestionId();
                     String id = id2 + "@" + id3;
 
-                    if (mSubQuestions.get(i).getAnswerType() == 2 & responses.get(id) != null) {
+                    if ("C".equalsIgnoreCase(mAssesmant.get(j).getQtype())  && responses.get(id) != null) {
                         String[] ansSet = responses.get(id).replace("[", "").replace("]", "").split(",");
                         String answer = "";
                         for (String option : ansSet) {
