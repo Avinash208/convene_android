@@ -674,7 +674,7 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
          */
         final List<String> GridlistHashMapKey = new ArrayList<>();
         final int getCurrentGridQuestionID = questionNumber;
-        final List<Response> setAnswers_listInline = DataBaseMapperClass.setAnswersForGrid(getCurrentGridQuestionID, db, String.valueOf(surveyPrimaryKeyId));
+        final List<Response> setAnswers_listInline = surveyHandler.setAnswersForGrid(getCurrentGridQuestionID, String.valueOf(surveyPrimaryKeyId));
         final List<AssesmentBean> MAssesmant = DataBaseMapperClass.getAssesements(getCurrentGridQuestionID, surveyDatabase, defaultPreferences.getInt("selectedLangauge", 0));
         final List<Page> mSubQuestions = DataBaseMapperClass.getSubquestionNew(getCurrentGridQuestionID, surveyDatabase, defaultPreferences.getInt("selectedLangauge", 0));
         gridSubQuestionMapDialog.put(getCurrentGridQuestionID + "_SUBQ", mSubQuestions);
@@ -684,7 +684,7 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
             for (int preSubQue = 0; preSubQue < mSubQuestions.size(); preSubQue++) {
                 List<Response> getAnswer = new ArrayList<>();
                 for (int preAnswer = 0; preAnswer < setAnswers_listInline.size(); preAnswer++) {
-                    if (mSubQuestions.get(preSubQue).getQuestionId() == setAnswers_listInline.get(preAnswer).getPrimarykey()) {
+                    if (mSubQuestions.get(preSubQue).getQuestionId() == setAnswers_listInline.get(preAnswer).getPrimarykey()  ) {
                         Response response = setAnswers_listInline.get(preAnswer);
                         getAnswer.add(response);
                     }
@@ -740,7 +740,7 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
                 }
             });
             setSubquestionText.setText(mSubQuestions.get(subRow).getSubQuestion());
-            setAssessmentText.setText(MAssesmant.get(0).getAssessment());
+            setAssessmentText.setText("");
             gridListLinearLayout.addView(adapterView);
             gridViewLinearLayoutHolder.put(String.valueOf(getCurrentGridQuestionID), gridListLinearLayout);
 
@@ -753,6 +753,9 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
         getBenificiaryQids= new ArrayList<>();
         View child = this.getLayoutInflater().inflate(R.layout.parentselecting, dynamicQuestionSet, false);//child.xml
         LinearLayout singleSpinnerContainer = (LinearLayout) child.findViewById(R.id.singlespinnercontainer);
+        TextView parentHeading = (TextView) child.findViewById(R.id.parent_heading);
+        if (page.getQuestion()!=null && !page.getQuestion().equals(""))
+            parentHeading.setText(page.getQuestion());
         spinnerSearch=new SingleSpinnerSearchFilter(this);
         singleSpinnerContainer.addView(spinnerSearch);
         dynamicQuestionSet.addView(child);

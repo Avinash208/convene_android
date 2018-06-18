@@ -21,6 +21,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.mahiti.convenemis.BeenClass.StatusBean;
@@ -116,6 +117,7 @@ public class DataFormFragment extends Fragment implements PeriodicTypeInterface,
     private static final String PARENT_FORM_ID = "parent_form_primaryid";
     private int parentID;
     private int parent_form_primaryid;
+
 
 
     @Override
@@ -574,8 +576,9 @@ public class DataFormFragment extends Fragment implements PeriodicTypeInterface,
             surveyTextView.setTypeface(customfont);
             periodicityTextview.setTypeface(customfont);
             surveyTextView.setText(completedSurveyList.get(i).getSurveyName());
-            statusTextView.setText(R.string.completed);
-            Logger.logD("Selected","serverPrimaryIds"+completedSurveyList.get(i).getUuid());
+            statusTextView.setText(R.string.edit_or_view);
+            Logger.logD("Selected","serverPrimaryIds"+surveyPrimaryKeyId);
+            onClickFunctionality(statusTextView,surveyPrimaryKeyId,completedSurveyList.get(i).getId());
 
       //      List<StatusBean> getCompletedSurveyList= externalDbOpenHelper.getCompletedRecords(uuid,completedSurveyList.get(i).getId(),completedSurveyList.get(i).getBeneficiaryIds(),completedSurveyList.get(i).getFacilityIds());
           //  List<StatusBean> getPausedCompletedSurveyList=responseCheckController.getPauseCompletedRecords(completedSurveyList.get(i).getId(), externalDbOpenHelper);
@@ -584,6 +587,30 @@ public class DataFormFragment extends Fragment implements PeriodicTypeInterface,
     //        setCompletedPeriodicityRecords(getCompletedSurveyList,surveyTextView,statusTextView,capturedTextView,periodicityTextview,uuid,completedSurveyList.get(i));
         }
 
+    }
+
+    private void onClickFunctionality(TextView statusTextView, String beneficiaryUuid, int surveysId) {
+        statusTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String parentUUIDExist= handler.getActivityUUID(beneficiaryUuid);
+                if (!parentUUIDExist.equals("")) {
+                    Logger.logD(TAG, "completed Response->" + parentUUIDExist);
+                    SharedPreferences.Editor editorSaveDraft= defaultPreferences.edit();
+                    editorSaveDraft.putBoolean(SAVE_TO_DRAFT_FLAG_KEY,true);
+                    editorSaveDraft.putBoolean("isLocationBased",false);
+                    editorSaveDraft.putBoolean("isNotLocationBased", false);
+                    editorSaveDraft.apply();
+                    Intent intent = new Intent(getActivity(), SurveyQuestionActivity.class);
+                    intent.putExtra("SurveyId", parentUUIDExist);
+                    intent.putExtra(SURVEY_ID_KEY,String.valueOf(surveysId));
+                    startActivity(intent);
+                }
+                else{
+                    Toast.makeText(getActivity(),"Sorry Activity Response not found.!",Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
 

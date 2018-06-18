@@ -16,6 +16,7 @@ import org.json.JSONObject;
 import org.mahiti.convenemis.BeenClass.Linkage;
 import org.mahiti.convenemis.BeenClass.PreviewQuestionAnswerSet;
 import org.mahiti.convenemis.BeenClass.QuestionAnswer;
+import org.mahiti.convenemis.BeenClass.Response;
 import org.mahiti.convenemis.BeenClass.StatusBean;
 import org.mahiti.convenemis.BeenClass.SurveysBean;
 import org.mahiti.convenemis.BeenClass.childLink;
@@ -1400,5 +1401,67 @@ public class DBHandler extends SQLiteOpenHelper {
                 cursor.close();
         }
         return result;
+    }
+
+    public String getActivityUUID(String beneficiaryUuid) {
+        String getSelectedUUids = "";
+        try {
+            String pendingSurveyQuery = "select uuid from Survey where beneficiary_ids='"+beneficiaryUuid+"'";
+            SQLiteDatabase db = getdatabaseinstance_read();
+            Cursor cursor = db.rawQuery(pendingSurveyQuery, null);
+            if (cursor.getCount() != 0 && cursor.moveToFirst()) {
+                do {
+                    String uuid = cursor.getString(cursor.getColumnIndex("uuid"));
+                    if (!uuid.equals(""))
+                        getSelectedUUids = uuid;
+                } while (cursor.moveToNext());
+                cursor.close();
+            }
+
+        } catch (Exception e) {
+            Logger.logV("", "getActivityUUID" + e);
+
+        }
+        return getSelectedUUids;
+    }
+
+    /**
+     *
+     * @param questionNumber
+
+     * @param survey_id
+     * @return
+     */
+    public List<Response> setAnswersForGrid(int questionNumber, String survey_id) {
+        List<Response> list = new ArrayList<>();
+     //   String gridQuery = "SELECT * FROM Response where group_id IN(select group_id from Response where survey_id='"+survey_id+"' and q_id = '" + questionNumber + "' order by group_id desc  ) and survey_id='"+survey_id+"' and q_id = '" + questionNumber + "'";
+        String gridQuery = "SELECT * FROM Response where group_id IN(select group_id from Response where survey_id='"+survey_id+"' and q_id = '"+questionNumber+"' order by group_id ASC  ) and survey_id='"+survey_id+"' and q_id = '"+questionNumber+"'  order by group_id ASC";
+        SQLiteDatabase db = getdatabaseinstance_read();
+        Cursor cursor = db.rawQuery(gridQuery, null);
+        list.clear();
+        try{
+            if (cursor.getCount() != 0 && cursor.moveToFirst()) {
+                do {
+                    String Qid = cursor.getString(cursor.getColumnIndex("q_id"));
+                    String answer_ans_code = cursor.getString(cursor.getColumnIndex("ans_code"));
+                    String answer = cursor.getString(cursor.getColumnIndex(PreferenceConstants.ANS_TEXT));
+                    Response answersObject = new Response(Qid, answer, answer_ans_code,
+                            cursor.getString(cursor.getColumnIndex("sub_questionId")),
+                            cursor.getInt(cursor.getColumnIndex("q_code")),
+                            cursor.getInt(cursor.getColumnIndex("primarykey")),
+                            cursor.getString(cursor.getColumnIndex("typology_code")),
+                            cursor.getInt(cursor.getColumnIndex("group_id")),
+                            cursor.getInt(cursor.getColumnIndex("primary_id")),
+                            cursor.getString(cursor.getColumnIndex("qtype")));
+                    list.add(answersObject);
+                    Logger.logD("assessment","answer - "+answer +" - qid "+Qid +" gId - "+cursor.getInt(cursor.getColumnIndex("group_id")));
+                } while (cursor.moveToNext());
+            }
+        } catch (Exception e) {
+            Logger.logE(TAG, "Exception on getting all assessment", e);
+        }
+        if (cursor != null)
+            cursor.close();
+        return list;
     }
 }

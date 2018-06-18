@@ -776,39 +776,7 @@ public class DataBaseMapperClass {
     }
 
 
-    /**
-     * @param questionNumber
-     * @param db
-     * @param survey_id
-     * @return
-     */
-    public static List<Response> setAnswersForGrid(int questionNumber, net.sqlcipher.database.SQLiteDatabase db, String survey_id) {
-        List<Response> list = new ArrayList<>();
-        String selectQuery = "SELECT * FROM Response where group_id IN(select group_id from Response where survey_id='"+survey_id+"' and q_id = '" + questionNumber + "' ) and survey_id='"+survey_id+"' and q_id = '" + questionNumber + "'";
 
-        Cursor cursor = db.rawQuery(selectQuery, null);
-        list.clear();
-        if (cursor != null && cursor.moveToFirst()) {
-            do {
-                String Qid = cursor.getString(cursor.getColumnIndex("q_id"));
-                String answer_ans_code = cursor.getString(cursor.getColumnIndex("ans_code"));
-                String answer = cursor.getString(cursor.getColumnIndex(PreferenceConstants.ANS_TEXT));
-                Response answersObject = new Response(Qid, answer, answer_ans_code,
-                        cursor.getString(cursor.getColumnIndex("sub_questionId")),
-                        cursor.getInt(cursor.getColumnIndex("q_code")),
-                        cursor.getInt(cursor.getColumnIndex("primarykey")),
-                        cursor.getString(cursor.getColumnIndex("typology_code")),
-                        cursor.getInt(cursor.getColumnIndex("group_id")),
-                        cursor.getInt(cursor.getColumnIndex("primary_id")),
-                        cursor.getString(cursor.getColumnIndex("qtype")));
-                list.add(answersObject);
-                Logger.logD("assessment","answer - "+answer +" - qid "+Qid +" gId - "+cursor.getInt(cursor.getColumnIndex("group_id")));
-            } while (cursor.moveToNext());
-        }
-        if (cursor != null)
-            cursor.close();
-        return list;
-    }
 
 
     /**
