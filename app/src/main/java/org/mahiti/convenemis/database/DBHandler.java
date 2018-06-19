@@ -38,6 +38,8 @@ public class DBHandler extends SQLiteOpenHelper {
     private static final int VERSION = 12;
     private static final String CHILD_ID = "child_form_id";
     private static final String SYNCSTATUS = "sync_status";
+    private static final String TYPOLOGYCODE = "typology_code";
+    private static final String QCODE = "q_code";
     public static SQLiteDatabase database;
     private final static String mName = "ENCRYPTED.db";
     private final static String TAG = "DbHndler";
@@ -179,7 +181,7 @@ public class DBHandler extends SQLiteOpenHelper {
             values.put("paper_entry_reason", queryValues.get("paper_entry_reason"));
             values.put("last_qcode", queryValues.get("last_qcode"));
             values.put("gps_tracker", queryValues.get("gps_tracker"));
-            values.put("survey_ids", queryValues.get("typology_code"));
+            values.put("survey_ids", queryValues.get(TYPOLOGYCODE));
             values.put("cluster_id", queryValues.get("cluster_id"));
             values.put("cluster_name", queryValues.get("clustername"));
             values.put("cluster_key", queryValues.get("clusterkey"));
@@ -232,9 +234,9 @@ public class DBHandler extends SQLiteOpenHelper {
         values.put("next_question", queryValues.get("next_question"));
         values.put("answered_on", queryValues.get("answered_on"));
         values.put("sub_questionId", queryValues.get("sub_questionId"));
-        values.put("q_code", queryValues.get("q_code"));
+        values.put(QCODE, queryValues.get(QCODE));
         values.put("primarykey", queryValues.get("primarykey"));
-        values.put("typology_code", queryValues.get("typologyId"));
+        values.put(TYPOLOGYCODE, queryValues.get("typologyId"));
         values.put(GROUP_ID_KEY, queryValues.get(GROUP_ID_KEY));
         values.put("primary_id", queryValues.get("primaryID"));
         values.put(QTYPE, queryValues.get(QTYPE));
@@ -1429,39 +1431,38 @@ public class DBHandler extends SQLiteOpenHelper {
      *
      * @param questionNumber
 
-     * @param survey_id
+     * @param surveyid
      * @return
      */
-    public List<Response> setAnswersForGrid(int questionNumber, String survey_id) {
+    public List<Response> setAnswersForGrid(int questionNumber, String surveyid) {
         List<Response> list = new ArrayList<>();
      //   String gridQuery = "SELECT * FROM Response where group_id IN(select group_id from Response where survey_id='"+survey_id+"' and q_id = '" + questionNumber + "' order by group_id desc  ) and survey_id='"+survey_id+"' and q_id = '" + questionNumber + "'";
-        String gridQuery = "SELECT * FROM Response where group_id IN(select group_id from Response where survey_id='"+survey_id+"' and q_id = '"+questionNumber+"' order by group_id ASC  ) and survey_id='"+survey_id+"' and q_id = '"+questionNumber+"'  order by group_id ASC";
+        String gridQuery = "SELECT * FROM Response where group_id IN(select group_id from Response where survey_id='"+surveyid+"' and q_id = '"+questionNumber+"' order by group_id ASC  ) and survey_id='"+surveyid+"' and q_id = '"+questionNumber+"'  order by group_id ASC";
         SQLiteDatabase db = getdatabaseinstance_read();
         Cursor cursor = db.rawQuery(gridQuery, null);
         list.clear();
         try{
             if (cursor.getCount() != 0 && cursor.moveToFirst()) {
                 do {
-                    String Qid = cursor.getString(cursor.getColumnIndex("q_id"));
-                    String answer_ans_code = cursor.getString(cursor.getColumnIndex("ans_code"));
+                    String qId = cursor.getString(cursor.getColumnIndex("q_id"));
+                    String ansCode = cursor.getString(cursor.getColumnIndex("ans_code"));
                     String answer = cursor.getString(cursor.getColumnIndex(PreferenceConstants.ANS_TEXT));
-                    Response answersObject = new Response(Qid, answer, answer_ans_code,
+                    Response answersObject = new Response(qId, answer, ansCode,
                             cursor.getString(cursor.getColumnIndex("sub_questionId")),
-                            cursor.getInt(cursor.getColumnIndex("q_code")),
+                            cursor.getInt(cursor.getColumnIndex(QCODE)),
                             cursor.getInt(cursor.getColumnIndex("primarykey")),
-                            cursor.getString(cursor.getColumnIndex("typology_code")),
+                            cursor.getString(cursor.getColumnIndex(TYPOLOGYCODE)),
                             cursor.getInt(cursor.getColumnIndex("group_id")),
                             cursor.getInt(cursor.getColumnIndex("primary_id")),
                             cursor.getString(cursor.getColumnIndex("qtype")));
                     list.add(answersObject);
-                    Logger.logD("assessment","answer - "+answer +" - qid "+Qid +" gId - "+cursor.getInt(cursor.getColumnIndex("group_id")));
+                    Logger.logD("assessment","answer - "+answer +" - qid "+qId +" gId - "+cursor.getInt(cursor.getColumnIndex("group_id")));
                 } while (cursor.moveToNext());
             }
+            cursor.close();
         } catch (Exception e) {
             Logger.logE(TAG, "Exception on getting all assessment", e);
         }
-        if (cursor != null)
-            cursor.close();
         return list;
     }
 }

@@ -106,6 +106,7 @@ import java.util.Map;
 import io.github.douglasjunior.androidSimpleTooltip.SimpleTooltip;
 
 import static org.mahiti.convenemis.database.DataBaseMapperClass.getUserAnsweredResponseFromDB;
+import static org.mahiti.convenemis.database.DataBaseMapperClass.setAnswersForGrid;
 import static org.mahiti.convenemis.utils.Constants.GridResponseHashMap;
 import static org.mahiti.convenemis.utils.Constants.GridResponseHashMapKeys;
 import static org.mahiti.convenemis.utils.Constants.buttonDynamicDateGrid;
@@ -148,6 +149,8 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
     public AnswersPage answerspage = null;
     protected List<Integer> blockIds;
     HashMap<String, List<Response>> hashMapAnswersEditText = new HashMap<>();
+    private HashMap<String, LinearLayout> gridViewLinearLayoutHolderInline = new HashMap<>();
+
     int editcount = 0;
     int radiocount = 0;
     int checkCount = 0;
@@ -156,6 +159,8 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
     int dateCount = 0;
     float charge = 0;
     static int GridCount = 0;
+    static int GridCountInline = 0;
+
     LinearLayout dynamicQuestionSet;
     boolean skipBlockLevelFlag = false;
     boolean showPopUpFlag = false;
@@ -237,6 +242,8 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
     String getParentsBeneficiary="";
     String getParentsBeneficiaryName="";
     List<String> getAllGridQuestionCode = new ArrayList<>();
+    List<String> getAllGridQuestionCodeInline = new ArrayList<>();
+    surveyQuestionGridInlineInterface surveyQuestionGridInlineInterface;
 
     /**
      * Date picker dialogue showing
@@ -273,6 +280,7 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
         animShake = AnimationUtils.loadAnimation(this, R.anim.shake);
         surveyPreferences = PreferenceManager.getDefaultSharedPreferences(SurveyQuestionActivity.this);
         chckNework = new CheckNetwork(this);
+        surveyQuestionGridInlineInterface = SurveyQuestionActivity.this;
         SupportClass supportClass = new SupportClass();
         restUrl = new RestUrl(this);
         Intent surveyPrimaryKeyIntent = getIntent();
@@ -603,11 +611,95 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
                 case 14:
                     normalGirdDisplay(listOfPage.get(k), questionCode);
                     break;
+                case 16:
+                    inLineGridDisplay(listOfPage.get(k));
+                    break;
                 default:
                     break;
             }
         }
 
+    }
+
+    private void inLineGridDisplay(Page page) {
+        final View childInline = getLayoutInflater().inflate(R.layout.dialoginline, dynamicQuestionSet, false);
+       TextView question = (TextView) childInline.findViewById(R.id.mainQuestion);
+        Button dynamicInlineAdd = (Button) childInline.findViewById(R.id.addorcreateinline);
+        if (page.getMandatory().contains("1")) {
+            if (!page.getToolTip().equalsIgnoreCase("")) {
+                final String getHelpText = page.getToolTip();
+                ImageView tooltip = (ImageView) childInline.findViewById(R.id.tooltip);
+                tooltip.setVisibility(View.VISIBLE);
+                SupportClass.setWhiteStar(question, page.getQuestion());
+                tooltip.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        new SimpleTooltip.Builder(SurveyQuestionActivity.this)
+                                .anchorView(v)
+                                .text(getHelpText)
+                                .gravity(Gravity.END)
+                                .animated(true)
+                                .transparentOverlay(false)
+                                .build()
+                                .show();
+                    }
+                });
+            } else {
+                SupportClass.setWhiteStar(question, page.getQuestion());
+            }
+        } else {
+            if (!page.getToolTip().equalsIgnoreCase("")) {
+                ImageView tooltip = (ImageView) childInline.findViewById(R.id.tooltip);
+                tooltip.setVisibility(View.VISIBLE);
+                question.setText(page.getQuestion());
+            } else {
+                question.setText(page.getQuestion());
+            }
+
+        }
+
+        final Page QuestionID = page;
+        final int getCurrentQuestionID = page.getQuestionNumber();
+        dynamicInlineAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SupportClass.ModuleToCreateInlineDialogForm(QuestionID, surveyDatabase, SurveyQuestionActivity.this, childInline, defaultPreferences);
+            }
+        });
+        gridQuestionMapDialog.put(getCurrentQuestionID+"_QUESTION",QuestionID);
+        try {
+            final List<Response> setAnswers_listInline = setAnswersForGrid(page.getQuestionNumber(), db, String.valueOf(surveyPrimaryKeyId));
+            if (setAnswers_listInline.size() > 0) {
+                Logger.logD(TAG, " the list size of the answeredResponse hashMap" + setAnswers_listInline.size());
+                List<Integer> getinlineRowCount = DataBaseMapperClass.getRowCount(page.getQuestionNumber(), db, String.valueOf(surveyPrimaryKeyId));
+                Logger.logD("getinlineRowCount", "the inline row Count size->" + getinlineRowCount.size());
+                for (int i = 0; i < getinlineRowCount.size(); i++) {
+                    List<Response> sortedList = new ArrayList<>();
+                    listHashMapKey.add(getCurrentQuestionID + "_" + String.valueOf(getinlineRowCount.get(i)));
+                    for (int j = 0; j < setAnswers_listInline.size(); j++) {
+                        if (setAnswers_listInline.get(j).getPrimarykey() == getinlineRowCount.get(i)) {
+                            Logger.logD("Add sorted list", "add only fo Primary key exist");
+                            Response responsefill = setAnswers_listInline.get(j);
+                            sortedList.add(responsefill);
+                            Logger.logD("Add sorted list", "the size of the sorted list");
+                        }
+                    }
+                    fillInlineRow.put(String.valueOf(page.getQuestionNumber()) + "_" + String.valueOf(getinlineRowCount.get(i)), sortedList);
+                    Logger.logD(TAG, "the list of the hashMap" + fillInlineRow.size());
+                    Logger.logD("listHashMapKey--<<>>>", listHashMapKey.toString() + "");
+
+                    fillInlineHashMapKey.put(String.valueOf(getCurrentQuestionID), listHashMapKey);
+                }
+
+                rowInflater = fillInlineRow.size() + 1;
+                surveyQuestionGridInlineInterface.OnSuccessfullGridInline(fillInlineRow, childInline, getCurrentQuestionID, fillInlineHashMapKey, 16);
+            }
+        } catch (Exception e) {
+            Logger.logE(TAG, "Exception", e);
+        }
+        dynamicQuestionSet.addView(childInline);
+        gridViewLinearLayoutHolderInline.put(String.valueOf(page.getQuestionNumber()), dynamicQuestionSet);
+        getAllGridQuestionCodeInline.add(String.valueOf(page.getQuestionNumber()));
     }
 
     private void normalGirdDisplay(Page page, int questionCode) {
@@ -1455,13 +1547,22 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
                             } else {
                                 list.add(String.valueOf(false));
                             }
-                            /*if (list.contains("true")) {
-                                GridCount++;
-                               // jsonArray.put(obj4);
-                            }else{
-                                GridCount=0;
-                            }*/
-
+                        }
+                        break;
+                    /**
+                     * represent Inline Grid
+                     */
+                    case 16:
+                        mChild = layoutCont.getChildAt(0);
+                        if (mChild instanceof ViewGroup) {
+                            JSONObject obj4 = new JSONObject();
+                            int GridviewQuestionCOde = Integer.parseInt(getAllGridQuestionCodeInline.get(GridCountInline));
+                            Logger.logD("gridinlineQuestionCode", GridviewQuestionCOde + "");
+                            boolean fileBoolean = gridNewInlineFunctionality(GridviewQuestionCOde);
+                            list.add(String.valueOf(fileBoolean));
+                            if (list.contains("true")) {
+                                GridCountInline++;
+                            }
                         }
                         break;
                     default:
@@ -1481,6 +1582,49 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
             restUrl.writeToTextFile("Exception In Getting View ", "", "dynamicallySettingView");
         }
         return list;
+    }
+
+    private boolean gridNewInlineFunctionality(int gridviewQuestionCOde) {
+
+        final List<String> getResponseKeys = new ArrayList<>();
+        Logger.logD(TAG, "the grid QuestionID" + gridviewQuestionCOde);
+        if (fillInlineRow.size() > 0) {
+            try {
+                List<String> getAllKeys = fillInlineHashMapKey.get(String.valueOf(gridviewQuestionCOde));
+                Logger.logD(TAG, "the  all key count" + getAllKeys.size());
+                for (int i = 0; i < getAllKeys.size(); i++) {
+                    String[] s = getAllKeys.get(i).split("_");
+                    if (Integer.valueOf(s[0]) == gridviewQuestionCOde) {
+                        getResponseKeys.add(getAllKeys.get(i));
+                        Logger.logD(TAG, "the only key for this QuestioID " + getResponseKeys.toString());
+                    }
+                }
+
+                List<Response> answersEditTextTemp = new ArrayList<>();
+                for (int j = 0; j < getResponseKeys.size(); j++) {
+                    List<Response> getResponseListFrmHashmap = fillInlineRow.get(getResponseKeys.get(j));
+
+                    for (int k = 0; k < getResponseListFrmHashmap.size(); k++) {
+                        answersEditTextTemp.add(getResponseListFrmHashmap.get(k));
+                    }
+
+                }
+                hashMapAnswersEditText.put(String.valueOf(gridviewQuestionCOde + "_" + String.valueOf(16)), answersEditTextTemp);
+                Logger.logD(TAG, "Responsed filled to Response Table-> " + answersEditTextTemp.toString());
+                return true;
+            } catch (Exception e) {
+                Logger.logE(TAG, "Exception", e);
+                return false;
+            }
+        } else {
+            boolean checkMandatory = DBHandler.getMandatoryQuestion(String.valueOf(gridviewQuestionCOde), surveyDatabase);
+            if (checkMandatory) {
+                return false;
+            } else {
+                return true;
+            }
+
+        }
     }
 
     private boolean FunctionalityCodeStoreGRid(int gridviewQuestionCOde) {
@@ -1556,6 +1700,8 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
         GridResponseHashMap.clear();
         rowInflater = 0;
         GridCount=0;
+        GridCountInline = 0;
+        getAllGridQuestionCodeInline.clear();
     }
 
     private DatePickerDialog.OnDateSetListener mDateSetListenerGrid = new DatePickerDialog.OnDateSetListener() {
@@ -2881,7 +3027,6 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
         return uniqueId;
     }
 
-    @Override
     public void OnSuccessfullGridInline(final HashMap<String, List<Response>> hashMapGridResponse, View v, final int currentQuestionNumber, HashMap<String, List<String>> fillInlineHashMapKey, int gridType) {
         if (gridType == 16) {
             LinearLayout gridListLinearLayoutOnSuccessfullGridInline = (LinearLayout) v.findViewById(R.id.gridansweredListinline);
@@ -2909,7 +3054,11 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
                         Button editResponseButton = (Button) childInlineGrid.findViewById(R.id.edit);
                         Button deleteResponseButton = (Button) childInlineGrid.findViewById(R.id.delete);
                         List<Response> getResponseListFrmHashmap = hashMapGridResponse.get(getResponseKeys.get(j));
-                        List<AssesmentBean> MAssesmant = gridAssessmentMapDialog.get(String.valueOf(currentQuestionNumber) + "_ASS");
+                        List<AssesmentBean> MAssesmant = DataBaseMapperClass.getAssesements(currentQuestionNumber,surveyDatabase,1);
+                        gridAssessmentMapDialog.put(String.valueOf(currentQuestionNumber)+ "_ASS",MAssesmant);
+
+
+
                         editResponseButton.setTag(String.valueOf(getResponseKeys.get(j) + "@EDIT"));
                         deleteResponseButton.setTag(String.valueOf(getResponseKeys.get(j) + "@DELETE"));
                         Logger.logD("If edited new Value Print", "-->" + getResponseListFrmHashmap.get(0).getAnswer() + "ANS-->" + setMandatoryText.getText().toString());
@@ -2943,7 +3092,10 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
                                 Logger.logD(TAG, "splitTag " + spiltTag[1]);
                                 Logger.logD(TAG, "rowInflater value " + rowInflater);
                                 Logger.logD(TAG, "Key value value " + Integer.getInteger(splitKeypare[1]));
-                                  SupportClass.showDialogEdit(getResponseForEdit, MAssessment, SurveyQuestionActivity.this, SurveyQuestionActivity.this, questionPagebean, surveyDatabase, spiltTag[0], childTemp, 16, questionPagebean);
+                                if (MAssessment!=null && questionPagebean!=null)
+                                    SupportClass.showDialogEdit(getResponseForEdit, MAssessment, SurveyQuestionActivity.this, SurveyQuestionActivity.this, questionPagebean, surveyDatabase, spiltTag[0], childTemp, 16, questionPagebean);
+                                else
+                                    ToastUtils.displayToast("Some thing  went wrong",SurveyQuestionActivity.this);
                             }
                         });
 
@@ -3037,7 +3189,7 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
     private void callPopUpActivity() {
         Intent startIntert = new Intent(SurveyQuestionActivity.this, ShowSurveyPreview.class);
         startIntert.putExtra("surveyPrimaryKey",surveyPrimaryKeyId);
-        startIntert.putExtra("survey_id",prefs.getInt("survey_id",-1));
+        startIntert.putExtra("survey_id",surveysId);
         startIntert.putExtra("visibility",true);
         startActivityForResult(startIntert,POP_UP_ACTIVITY);
     }

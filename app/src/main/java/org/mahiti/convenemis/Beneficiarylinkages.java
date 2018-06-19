@@ -17,7 +17,6 @@ import android.view.MenuItem;
 import org.mahiti.convenemis.database.ExternalDbOpenHelper;
 import org.mahiti.convenemis.fragments.DataFormFragment;
 import org.mahiti.convenemis.utils.Constants;
-import org.mahiti.convenemis.utils.Logger;
 
 public class Beneficiarylinkages extends AppCompatActivity {
 
@@ -38,19 +37,14 @@ public class Beneficiarylinkages extends AppCompatActivity {
     private ViewPager mViewPager;
     private TabItem Tabthree;
     ExternalDbOpenHelper dbOpenHelper;
-    private SharedPreferences sharedPreferences;
     private String isBeneficiaryTypeLinkage="";
     private static final String MY_PREFS_NAME = "MyPrefs";
     private SharedPreferences prefs;
-    private String BeneficiaryUUID="";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_beneficiarylinkages);
-        getIntentParameters();
-
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
@@ -72,18 +66,10 @@ public class Beneficiarylinkages extends AppCompatActivity {
 
     }
 
-    private void getIntentParameters() {
-        try {
-            Bundle bundle= getIntent().getExtras();
-            if (bundle!=null)
-                BeneficiaryUUID=bundle.getString("SurveyId");
-        } catch (Exception e) {
-           Logger.logE(TAG,"Exception in the getIntentParameters",e);
-        }
-    }
+
 
     private String isBeneficiaryTypeLinkage() {
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         dbOpenHelper = ExternalDbOpenHelper.getInstance(this, sharedPreferences.getString(Constants.DBNAME, ""), sharedPreferences.getString("uId", ""));
         isBeneficiaryTypeLinkage= dbOpenHelper.getGroupIds(prefs.getInt("survey_id", 0), dbOpenHelper);
         return isBeneficiaryTypeLinkage;

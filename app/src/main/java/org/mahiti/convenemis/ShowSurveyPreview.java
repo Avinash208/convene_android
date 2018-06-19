@@ -161,9 +161,9 @@ public class ShowSurveyPreview extends AppCompatActivity implements View.OnClick
             case 14:
                 setGridAnswers(previewQuestionAnswerSet, parentLayout);
                 break;
-            /*case 16:
+            case 16:
                 setInlineAnswers(previewQuestionAnswerSet, parentLayout);
-                break;*/
+                break;
             case 4:
                   setAnswerToTv(answer, parentLayout, questionLabel);
                 break;

@@ -736,7 +736,91 @@ public class SupportClass {
         }
     }
 
+    public static void setWhiteStar(TextView labelObj, String text) {
+        Spannable word = new SpannableString(text);
+        labelObj.setText(word);
+        Spannable wordTwo = new SpannableString(" *");
+        wordTwo.setSpan(new ForegroundColorSpan(Color.WHITE), 0, wordTwo.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        labelObj.append(wordTwo);
+    }
 
+    public static void ModuleToCreateInlineDialogForm(Page currentQuestionPage, SQLiteDatabase database, SurveyQuestionActivity surveyQuestionActivity, View child, SharedPreferences preferences) {
+        // listHashMapKey.clear();
+        Context context=surveyQuestionActivity;
+        SurveyQuestionActivity activity=surveyQuestionActivity;
+        final List<AssesmentBean> MAssesmant = DataBaseMapperClass.getAssesements(currentQuestionPage.getQuestionNumber(),database,preferences.getInt("selectedLangauge",1));
+        gridAssessmentMapDialog.put(currentQuestionPage.getQuestionNumber()+"_ASS",MAssesmant);
+        mainGridAssessmentMapDialog.put(currentQuestionPage.getQuestionNumber()+"_ASS",MAssesmant);
+        for (int i=0;i<MAssesmant.size();i++){
+            AssesmentBean assessmentbean=mainGridAssessmentMapDialog.get(currentQuestionPage.getQuestionNumber()+"_ASS").get(i);
+            mainAcessmentList.add(String.valueOf(assessmentbean.getQid()));
+        }
+        gridQuestionMapDialog.put(currentQuestionPage.getQuestionNumber()+"_QUESTION",currentQuestionPage);
+        // check skip in the inner grid
+        List<AssesmentBean>  mAssesmantmain=  modifiedAssessementListOnSKIP(MAssesmant,database);
+        Logger.logD("mAssesmantmain", "mAssesmantmain sorted list "+mAssesmantmain);
+        if (mAssesmantmain.size()!=MAssesmant.size()){
+            //  gridAssessmentMapDialog.put(currentQuestionPage.getQuestionNumber()+"_ASS",mAssesmantmain);
+            SupportClass.showChangeLangDialog(null,MAssesmant,context,activity,currentQuestionPage,database, child, 16, null,"");
+            // SupportClass.showChangeLangDialog(null,mAssesmantmain,context,activity,currentQuestionPage,database, child, 16, null,"24");
+        }else{
+            SupportClass.showChangeLangDialog(null,MAssesmant,context,activity,currentQuestionPage,database, child, 16, null,"");
+        }
+    }
+
+    private static List<AssesmentBean>   modifiedAssessementListOnSKIP(List<AssesmentBean>  mAssesmant,SQLiteDatabase database) {
+        List<AssesmentBean> sortedAssessementBean = new ArrayList<>();
+        for (int i=0;i<mAssesmant.size();i++){
+            String skipStatus= checkSkipCodeAndSplitList(mAssesmant.get(i),database);
+            Logger.logD("skipStatus","skipStatus--> " + skipStatus);
+            if (!"".equals(skipStatus)){
+                sortedAssessementBean.add(mAssesmant.get(i));
+                break ;
+
+            }else{
+                Logger.logD("skipStatus","skipcode is true skip code exist added to list"+mAssesmant.get(i).getQid());
+                sortedAssessementBean.add(mAssesmant.get(i));
+            }
+        }
+        return sortedAssessementBean;
+    }
+
+    private static String checkSkipCodeAndSplitList(AssesmentBean mAssesmant, SQLiteDatabase database) {
+
+        String skipStatus="";
+        String QuestionQuery="SELECT skip_code FROM Options where assessment_pid="+mAssesmant.getQid();
+        Cursor cursor=null;
+        try {
+            cursor=database.rawQuery(QuestionQuery,null);
+            Logger.logD("blockquery","SpinnerQuestionQuery" + QuestionQuery);
+            if(cursor.getCount()>0 && cursor.moveToFirst()){
+                do{
+                    String skipcode = "";
+                    if (mAssesmant.getQid()==22){
+                        skipcode = "";
+                    }else{
+                        skipcode = cursor.getString(cursor.getColumnIndex("skip_code"));
+                    }
+
+                    if (!"".equals(skipcode)){
+                        skipStatus=skipcode;
+                        break;
+                    }else{
+                        skipStatus="";
+                    }
+
+                }while (cursor.moveToNext());
+            }
+        }catch (Exception e){
+            Logger.logE("Exception","getting questions based on blocks" , e);
+        }finally {
+            if(cursor!=null)
+                cursor.close();
+        }
+        return skipStatus;
+
+
+    }
 
 
     private static class RemoveTask extends AsyncTask<Context, Integer, String> {
@@ -1099,7 +1183,12 @@ public class SupportClass {
                     editView.setBackgroundResource(R.drawable.textfieldbg);
 
                     if (mResponse!=null ){
-                        editView.setText(mResponse.get(i-1).getAnswer());
+                        for (int k=0;k<mResponse.size();k++){
+                            if (mResponse.get(k).getGroup_id()==mAssesmant.get(i - 1).getQid()){
+                                editView.setText(mResponse.get(k).getAnswer());
+                            }
+                        }
+
 
                     }
                     if(!"".equals(mAssesmant.get(i - 1).getGroupValidation())){
@@ -1185,9 +1274,12 @@ public class SupportClass {
                         rbn.setText(mOptions.get(r-1).getAnswer());
 
                         if (mResponse!=null){
-                            if (mResponse.get(i-1).getAns_code().equals(mOptions.get(r - 1).getAnswerCode())) {
-                                rbn.setChecked(true);
-                            }
+                           for (int k=0;k<mResponse.size();k++){
+                               if (mResponse.get(k).getAns_code().equals(mOptions.get(r - 1).getAnswerCode())) {
+                                   rbn.setChecked(true);
+                               }
+                           }
+
                         }
 
                         radioGroup.addView(rbn);
@@ -1213,7 +1305,16 @@ public class SupportClass {
                     spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item); // The drop down view
                     spinner.setAdapter(spinnerArrayAdapter);
                     if (mResponse!=null){
-                        spinner.setSelection(optionText.indexOf(mResponse.get(i-1).getAnswer()));
+                       for (int k=0;k<mResponse.size();k++){
+                           for (int l=0; l<mOptionsDroupdown.size();l++){
+                               if (mResponse.get(k).getAns_code().equals(mOptionsDroupdown.get(l).getAnswerCode())){
+                                   spinner.setSelection(optionText.indexOf(mOptionsDroupdown.get(l).getAnswer()));
+                                   Logger.logD(LOGGER_TAG," previous Answer"+mOptionsDroupdown.get(l).getAnswer());
+                               }
+                           }
+
+                       }
+
                     }
 
                     optionwidgetLL.addView(spinner);

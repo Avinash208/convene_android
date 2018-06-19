@@ -62,6 +62,8 @@ import static android.content.Context.MODE_PRIVATE;
 
 public class DataFormFragment extends Fragment implements PeriodicTypeInterface, PendingCompletedSurveyAsyncResultListener {
     private static final String TAG = "DataFormFragment";
+    private static final String ISLOCATIONBASED = "isLocationBased";
+    private static final String NOTLOCATIONBASED = "isNotLocationBased";
     TextView emptytextview;
     LinearLayout dynamicDataCollectionForm;
     String btype;
@@ -424,8 +426,8 @@ public class DataFormFragment extends Fragment implements PeriodicTypeInterface,
                 addBeneficiaryUtils.setToPreferences(getActivity(),surveyNameTextView,0,0," static Village",beneficiaryArray,defaultPreferences,
                         surveysBean);
                 SharedPreferences.Editor editor11 = defaultPreferences.edit();
-                editor11.putBoolean("isLocationBased",false);
-                editor11.putBoolean("isNotLocationBased", false);
+                editor11.putBoolean(ISLOCATIONBASED,false);
+                editor11.putBoolean(NOTLOCATIONBASED, false);
                 editor11.putBoolean(SAVE_TO_DRAFT_FLAG_KEY,true);
                 editor11.putInt(SURVEY_ID_KEY,surveysBean.getId());
                 editor11.apply();
@@ -463,8 +465,8 @@ public class DataFormFragment extends Fragment implements PeriodicTypeInterface,
                     showPrevSurveyDailog(surveysBean, null, -2);
                 SharedPreferences.Editor editorSaveDraft= defaultPreferences.edit();
                 editorSaveDraft.putBoolean(SAVE_TO_DRAFT_FLAG_KEY,true);
-                editorSaveDraft.putBoolean("isLocationBased",false);
-                editorSaveDraft.putBoolean("isNotLocationBased", false);
+                editorSaveDraft.putBoolean(ISLOCATIONBASED,false);
+                editorSaveDraft.putBoolean(NOTLOCATIONBASED, false);
                 editorSaveDraft.apply();
                 Intent intent = new Intent(getActivity(), SurveyQuestionActivity.class);
                 intent.putExtra("SurveyId", String.valueOf(surveysBean.getSurveyPId()));
@@ -598,8 +600,8 @@ public class DataFormFragment extends Fragment implements PeriodicTypeInterface,
                     Logger.logD(TAG, "completed Response->" + parentUUIDExist);
                     SharedPreferences.Editor editorSaveDraft= defaultPreferences.edit();
                     editorSaveDraft.putBoolean(SAVE_TO_DRAFT_FLAG_KEY,true);
-                    editorSaveDraft.putBoolean("isLocationBased",false);
-                    editorSaveDraft.putBoolean("isNotLocationBased", false);
+                    editorSaveDraft.putBoolean(ISLOCATIONBASED,false);
+                    editorSaveDraft.putBoolean(NOTLOCATIONBASED, false);
                     editorSaveDraft.apply();
                     Intent intent = new Intent(getActivity(), SurveyQuestionActivity.class);
                     intent.putExtra("SurveyId", parentUUIDExist);
