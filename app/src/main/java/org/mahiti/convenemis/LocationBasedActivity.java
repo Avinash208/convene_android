@@ -55,7 +55,11 @@ public class LocationBasedActivity extends AppCompatActivity {
     List<String> locationlabelList = new ArrayList<>();
     private FloatingActionButton createNewButton;
     private String  updateListLocation="";
+    private int  clusterID=0;
     private LinearLayout activityContainer;
+    private String surveyName="";
+    private TextView toolbarTitle;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,7 +73,8 @@ public class LocationBasedActivity extends AppCompatActivity {
             public void onClick(View view) {
                if (!updateListLocation.equalsIgnoreCase("")){
                    Utilities.setSurveyStatus(sharedPreferences,"new");
-                   new StartSurvey(activity,activity,prefs.getInt(Constants.SURVEY_ID, 0), prefs.getInt(Constants.SURVEY_ID, 0), updateListLocation, "", "","", "").execute();
+                   Utilities.setLocationSurveyFlag(sharedPreferences,"new");
+                   new StartSurvey(activity,activity,prefs.getInt(Constants.SURVEY_ID, 0), clusterID, updateListLocation, "", "","", "").execute();
                }else{
                    ToastUtils.displayToast("Please select upto least level",activity);
                }
@@ -78,11 +83,19 @@ public class LocationBasedActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+    }
+
     private void getPreviousFromIntent() {
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             typeName = extras.getString("typeName");
             surveyId = String.valueOf(extras.getInt("survey_id"));
+            surveyName = String.valueOf(extras.getInt("survey_name"));
+            toolbarTitle.setText("Farm Bund");
             SharedPreferences.Editor locationEditor= prefs.edit();
             locationEditor.putInt(SURVEY_ID,Integer.parseInt(surveyId));
             locationEditor.apply();
@@ -95,8 +108,7 @@ public class LocationBasedActivity extends AppCompatActivity {
         dbhelper = ExternalDbOpenHelper.getInstance(activity, sharedPreferences.getString(Constants.DBNAME, ""), sharedPreferences.getString("inv_id", ""));
         levels = dbhelper.getOrderLevels(Integer.parseInt(surveyId));
         labels = dbhelper.getOrderlabels(Integer.parseInt(surveyId));
-      /*  levels="level1,level2,level3,level4,level5,level6,level7";
-        labels="Country,State,District,Taluk,GramaPanchayath,Village,Hamlet";*/
+
 
         orderLabels = labels.split(",");
         orderLeves = levels.split(",");
@@ -115,9 +127,10 @@ public class LocationBasedActivity extends AppCompatActivity {
         LevelBeen levelBeen= (LevelBeen) getLastSpinner.getSelectedItem();
         if (levelBeen!=null &&  !levelBeen.getName().equalsIgnoreCase(" Select ")){
                new LocationSurveyAsyncTask(levelBeen.getId(), levelBeen.getName()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-            setUpdateListLocation(levelBeen.getName());
+            setUpdateListLocation(levelBeen.getName(),levelBeen.getId());
         }else{
             updateListLocation="";
+            clusterID=0;
             activityContainer.removeAllViews();
         }
     }
@@ -128,6 +141,7 @@ public class LocationBasedActivity extends AppCompatActivity {
 
     private void createDynamicSpinnerAndLabel(String[] orderLabels, String[] orderLeves) {
         relativeLayout.removeAllViews();
+        storeAllDynamicSpinner.clear();
         try {
             for (int i = 0; i < orderLeves.length; i++) {
                 View child = this.getLayoutInflater().inflate(R.layout.dropdown, relativeLayout, false);//child.xml
@@ -226,12 +240,14 @@ public class LocationBasedActivity extends AppCompatActivity {
         relativeLayout = (LinearLayout) findViewById(R.id.relativeLayout);
         activityContainer = (LinearLayout) findViewById(R.id.dymaicactivitydisplay);
         createNewButton = findViewById(R.id.createNewButton);
+        toolbarTitle = (TextView)findViewById(R.id.toolbarTitle);
 
 
     }
 
-    public void setUpdateListLocation(String updateLocation) {
+    public void setUpdateListLocation(String updateLocation, int id) {
         updateListLocation = updateLocation;
+        clusterID=id;
 
     }
 
@@ -264,6 +280,7 @@ public class LocationBasedActivity extends AppCompatActivity {
     }
 
     private void setVillageAdapter() {
+        activityContainer.removeAllViews();
       for (int i=0;i<locationcaptureList.size();i++){
           View child = this.getLayoutInflater().inflate(R.layout.beneficiaryinstitution_detail_row, activityContainer, false);//child.xml
             LinearLayout cv = (LinearLayout) child.findViewById(R.id.cv);

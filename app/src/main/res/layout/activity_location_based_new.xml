@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     tools:context="org.mahiti.convenemis.LocationBasedActivity">
+
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
@@ -15,7 +16,6 @@
         android:minHeight="?attr/actionBarSize"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -27,57 +27,67 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:visibility="visible"
+                android:background="@drawable/toolback"
                 android:padding="6dp"
-                android:background="@drawable/toolback" />
+                android:visibility="visible" />
+
             <TextView
                 android:id="@+id/toolbarTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/white"
-                android:textSize="18sp"
-                android:layout_weight="1.6"
                 android:layout_gravity="center"
+                android:layout_weight="1.6"
+                android:fontFamily="fonts/Roboto-Light.ttf"
                 android:gravity="center"
                 android:text="Child"
-                android:fontFamily="fonts/Roboto-Light.ttf"/>
+                android:textColor="@color/white"
+                android:textSize="18sp" />
+
             <ImageView
                 android:id="@+id/imageMenu"
-                android:visibility="visible"
                 android:layout_width="30dp"
-                android:layout_marginRight="8dp"
                 android:layout_height="match_parent"
-                android:background="@drawable/menu"/>
+                android:layout_marginRight="8dp"
+                android:background="@drawable/menu"
+                android:visibility="visible" />
         </LinearLayout>
     </android.support.v7.widget.Toolbar>
+
     <ScrollView
         android:id="@+id/spinnerscroll"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/toolbar">
+
         <LinearLayout
-            android:id="@+id/relativeLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="20dp"
-            android:orientation="vertical"
-            android:background="@drawable/form_row"
-            android:padding="8dp">
+            android:orientation="vertical">
 
 
+            <LinearLayout
+                android:id="@+id/relativeLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:background="@drawable/form_row"
+                android:orientation="vertical"
+                android:padding="8dp">
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/dymaicactivitydisplay"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/spinnerscroll"
+                android:layout_margin="10dp"
+                android:orientation="vertical" />
         </LinearLayout>
 
-    </ScrollView>
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/spinnerscroll">
-        <LinearLayout
-            android:id="@+id/dymaicactivitydisplay"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:orientation="vertical"/>
     </ScrollView>
     <LinearLayout
         android:layout_width="match_parent"
@@ -91,13 +101,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
-            android:layout_marginRight="15dp"
-            android:layout_marginBottom="8dp"
             android:layout_margin="@dimen/fab_margin"
+            android:layout_marginBottom="8dp"
+            android:layout_marginRight="15dp"
             app:backgroundTint="@color/pink"
             app:srcCompat="@drawable/ic_add" />
     </LinearLayout>
-
 
 
 </RelativeLayout>

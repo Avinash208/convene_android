@@ -65,6 +65,7 @@ import org.mahiti.convenemis.database.ConveneDatabaseHelper;
 import org.mahiti.convenemis.database.DBHandler;
 import org.mahiti.convenemis.database.DataBaseMapperClass;
 import org.mahiti.convenemis.database.ExternalDbOpenHelper;
+import org.mahiti.convenemis.database.Utilities;
 import org.mahiti.convenemis.network.InsertResponseDump;
 import org.mahiti.convenemis.network.InsertTask;
 import org.mahiti.convenemis.network.SurveyGridInlineInterface.surveyQuestionGridInlineInterface;
@@ -109,6 +110,7 @@ import static org.mahiti.convenemis.database.DataBaseMapperClass.getUserAnswered
 import static org.mahiti.convenemis.database.DataBaseMapperClass.setAnswersForGrid;
 import static org.mahiti.convenemis.utils.Constants.GridResponseHashMap;
 import static org.mahiti.convenemis.utils.Constants.GridResponseHashMapKeys;
+import static org.mahiti.convenemis.utils.Constants.SURVEY_ID;
 import static org.mahiti.convenemis.utils.Constants.buttonDynamicDateGrid;
 import static org.mahiti.convenemis.utils.Constants.fillInlineHashMapKey;
 import static org.mahiti.convenemis.utils.Constants.fillInlineRow;
@@ -1708,6 +1710,7 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
         rowInflater = 0;
         GridCount=0;
         gridCountInline = 0;
+        editcount = 0;
         getAllGridQuestionCodeInline.clear();
     }
 
@@ -2259,6 +2262,7 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
         Logger.logD(TAG, booleanValue.toString());
         Intent intent = new Intent(this, MyIntentService.class);
         startService(intent);
+        Utilities.setLocationSurveyFlag(defaultPreferences,"clear");
         finish();
     }
 
@@ -2632,11 +2636,24 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
             // close current activity screen and relaunch previous page with updates if any changes in current screen
             Intent nextIntent;
             if (surveyPreferences.getBoolean("isLocationBased", false)) {
+                Utilities.setLocationSurveyFlag(surveyPreferences,"clear");
                 finish();
                 return;
             }
             else {
+
                 intent.putExtra("surveyIdDCF","1");
+             /*if (surveyPreferences.getString(Constants.SURVEYSTATUSTYPR,"").equalsIgnoreCase("new")){
+                 Utilities.setLocationSurveyFlag(surveyPreferences,"clear");
+                 Intent intent1=new Intent(this, LocationBasedActivity.class);
+                 intent1.putExtra(Constants.PERIODICITY,"");
+                 intent1.putExtra(Constants.P_LIMIT,1);
+                 intent1.putExtra("periodicity_count",0);
+                 intent1.putExtra(SURVEY_ID,94);
+                 intent1.putExtra("survey_name","Farm Bund");
+                 intent1.putExtra("benId","");
+                 startActivity(intent1);
+             }*/
                 nextIntent = new Intent(SurveyQuestionActivity.this, ListingActivity.class);
                 finish();
                             }
@@ -3194,6 +3211,8 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
         }
     }
     private void callPopUpActivity() {
+        editcount = 0;
+        gridCountInline=0;
         Intent startIntert = new Intent(SurveyQuestionActivity.this, ShowSurveyPreview.class);
         startIntert.putExtra("surveyPrimaryKey",surveyPrimaryKeyId);
         startIntert.putExtra("survey_id",surveysId);

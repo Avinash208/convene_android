@@ -188,6 +188,7 @@ public class Constants {
 
 
     public static int rowInflater=0;
+    public static final String LocationSurveyflag="LocationSurveyflag";
 
     private Constants(){
         // not using this constructor

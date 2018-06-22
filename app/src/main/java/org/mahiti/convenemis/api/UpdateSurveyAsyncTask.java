@@ -253,7 +253,6 @@ public class UpdateSurveyAsyncTask extends AsyncTask<Context, Integer, String> {
                    Iterator<String> innerSubQuestioniter = innerJsonObject.keys();
                    while (innerSubQuestioniter.hasNext()) {
                        String innerKey = innerSubQuestioniter.next();
-                       Logger.logD(TAG,"Grid Response inner Key-->"+innerKey);
                        JSONObject inInnerObject= new JSONObject(innerJsonObject.get(innerKey).toString());
                        Iterator<String> iniInnerSubQuestioniter = inInnerObject.keys();
                        while (iniInnerSubQuestioniter.hasNext()) {

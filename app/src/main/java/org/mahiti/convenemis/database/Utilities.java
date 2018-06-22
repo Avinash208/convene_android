@@ -57,6 +57,12 @@ public class Utilities
         editList.apply();
 
     }
+
+    public static void setLocationSurveyFlag(SharedPreferences sharedPreferences, String locationFlag) {
+        SharedPreferences.Editor editList= sharedPreferences.edit();
+        editList.putString(Constants.LocationSurveyflag,locationFlag);
+        editList.apply();
+    }
 }
 
 

@@ -13,7 +13,6 @@ import android.widget.TextView;
 
 import org.mahiti.convenemis.BeenClass.beneficiary.Datum;
 import org.mahiti.convenemis.BeenClass.parentChild.SurveyDetail;
-import org.mahiti.convenemis.LevelsActivityNew;
 import org.mahiti.convenemis.ListingActivity;
 import org.mahiti.convenemis.LocationBasedActivity;
 import org.mahiti.convenemis.R;
