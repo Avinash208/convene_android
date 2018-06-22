@@ -135,6 +135,7 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
     public static final List<String> getAlldateQuestionCode = new ArrayList<>();
     public static final List<String> getAllImageuploadQuestionCode = new ArrayList<>();
     private static final int POP_UP_ACTIVITY = 200;
+    private static final String QUESTION = "_QUESTION";
 
     private HashMap<String, LinearLayout> gridViewLinearLayoutHolder = new HashMap<>();
 
@@ -159,7 +160,7 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
     int dateCount = 0;
     float charge = 0;
     static int GridCount = 0;
-    static int GridCountInline = 0;
+    static int gridCountInline = 0;
 
     LinearLayout dynamicQuestionSet;
     boolean skipBlockLevelFlag = false;
@@ -625,6 +626,53 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
         final View childInline = getLayoutInflater().inflate(R.layout.dialoginline, dynamicQuestionSet, false);
        TextView question = (TextView) childInline.findViewById(R.id.mainQuestion);
         Button dynamicInlineAdd = (Button) childInline.findViewById(R.id.addorcreateinline);
+        validateMandatoryView(page,childInline,question);
+
+
+        final Page questionID = page;
+        final int getCurrentQuestionID = page.getQuestionNumber();
+        dynamicInlineAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SupportClass.moduleToCreateInlineDialogForm(questionID, surveyDatabase, SurveyQuestionActivity.this, childInline, defaultPreferences);
+            }
+        });
+        gridQuestionMapDialog.put(getCurrentQuestionID+QUESTION,questionID);
+        try {
+            final List<Response> setAnswersListInline = setAnswersForGrid(page.getQuestionNumber(), db, String.valueOf(surveyPrimaryKeyId));
+            if (setAnswersListInline.size() > 0) {
+                List<Integer> getinlineRowCount = DataBaseMapperClass.getRowCount(page.getQuestionNumber(), db, String.valueOf(surveyPrimaryKeyId));
+                Logger.logD("getinlineRowCount", "the inline row Count size->" + getinlineRowCount.size());
+                for (int i = 0; i < getinlineRowCount.size(); i++) {
+                    List<Response> sortedList = new ArrayList<>();
+                    listHashMapKey.add(getCurrentQuestionID + "_" + getinlineRowCount.get(i));
+                    for (int j = 0; j < setAnswersListInline.size(); j++) {
+                        if (setAnswersListInline.get(j).getPrimarykey() == getinlineRowCount.get(i)) {
+                            Logger.logD("Add sorted list", "add only fo Primary key exist");
+                            Response responsefill = setAnswersListInline.get(j);
+                            sortedList.add(responsefill);
+                            Logger.logD("Add sorted list", "the size of the sorted list");
+                        }
+                    }
+                    fillInlineRow.put(String.valueOf(page.getQuestionNumber()) + "_" + getinlineRowCount.get(i), sortedList);
+                    Logger.logD(TAG, "the list of the hashMap" + fillInlineRow.size());
+                    Logger.logD("listHashMapKey--<<>>>", listHashMapKey.toString() + "");
+
+                    fillInlineHashMapKey.put(String.valueOf(getCurrentQuestionID), listHashMapKey);
+                }
+
+                rowInflater = fillInlineRow.size() + 1;
+                surveyQuestionGridInlineInterface.OnSuccessfullGridInline(fillInlineRow, childInline, getCurrentQuestionID, fillInlineHashMapKey, 16);
+            }
+        } catch (Exception e) {
+            Logger.logE(TAG, "Exception", e);
+        }
+        dynamicQuestionSet.addView(childInline);
+        gridViewLinearLayoutHolderInline.put(String.valueOf(page.getQuestionNumber()), dynamicQuestionSet);
+        getAllGridQuestionCodeInline.add(String.valueOf(page.getQuestionNumber()));
+    }
+
+    private void validateMandatoryView(Page page, View childInline, TextView question) {
         if (page.getMandatory().contains("1")) {
             if (!page.getToolTip().equalsIgnoreCase("")) {
                 final String getHelpText = page.getToolTip();
@@ -657,49 +705,6 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
             }
 
         }
-
-        final Page QuestionID = page;
-        final int getCurrentQuestionID = page.getQuestionNumber();
-        dynamicInlineAdd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                SupportClass.ModuleToCreateInlineDialogForm(QuestionID, surveyDatabase, SurveyQuestionActivity.this, childInline, defaultPreferences);
-            }
-        });
-        gridQuestionMapDialog.put(getCurrentQuestionID+"_QUESTION",QuestionID);
-        try {
-            final List<Response> setAnswers_listInline = setAnswersForGrid(page.getQuestionNumber(), db, String.valueOf(surveyPrimaryKeyId));
-            if (setAnswers_listInline.size() > 0) {
-                Logger.logD(TAG, " the list size of the answeredResponse hashMap" + setAnswers_listInline.size());
-                List<Integer> getinlineRowCount = DataBaseMapperClass.getRowCount(page.getQuestionNumber(), db, String.valueOf(surveyPrimaryKeyId));
-                Logger.logD("getinlineRowCount", "the inline row Count size->" + getinlineRowCount.size());
-                for (int i = 0; i < getinlineRowCount.size(); i++) {
-                    List<Response> sortedList = new ArrayList<>();
-                    listHashMapKey.add(getCurrentQuestionID + "_" + String.valueOf(getinlineRowCount.get(i)));
-                    for (int j = 0; j < setAnswers_listInline.size(); j++) {
-                        if (setAnswers_listInline.get(j).getPrimarykey() == getinlineRowCount.get(i)) {
-                            Logger.logD("Add sorted list", "add only fo Primary key exist");
-                            Response responsefill = setAnswers_listInline.get(j);
-                            sortedList.add(responsefill);
-                            Logger.logD("Add sorted list", "the size of the sorted list");
-                        }
-                    }
-                    fillInlineRow.put(String.valueOf(page.getQuestionNumber()) + "_" + String.valueOf(getinlineRowCount.get(i)), sortedList);
-                    Logger.logD(TAG, "the list of the hashMap" + fillInlineRow.size());
-                    Logger.logD("listHashMapKey--<<>>>", listHashMapKey.toString() + "");
-
-                    fillInlineHashMapKey.put(String.valueOf(getCurrentQuestionID), listHashMapKey);
-                }
-
-                rowInflater = fillInlineRow.size() + 1;
-                surveyQuestionGridInlineInterface.OnSuccessfullGridInline(fillInlineRow, childInline, getCurrentQuestionID, fillInlineHashMapKey, 16);
-            }
-        } catch (Exception e) {
-            Logger.logE(TAG, "Exception", e);
-        }
-        dynamicQuestionSet.addView(childInline);
-        gridViewLinearLayoutHolderInline.put(String.valueOf(page.getQuestionNumber()), dynamicQuestionSet);
-        getAllGridQuestionCodeInline.add(String.valueOf(page.getQuestionNumber()));
     }
 
     private void normalGirdDisplay(Page page, int questionCode) {
@@ -771,8 +776,8 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
         final List<Page> mSubQuestions = DataBaseMapperClass.getSubquestionNew(getCurrentGridQuestionID, surveyDatabase, defaultPreferences.getInt("selectedLangauge", 0));
         gridSubQuestionMapDialog.put(getCurrentGridQuestionID + "_SUBQ", mSubQuestions);
         gridAssessmentMapDialog.put(String.valueOf(getCurrentGridQuestionID) + "_ASS", MAssesmant);
-        gridQuestionMapDialog.put(String.valueOf(getCurrentGridQuestionID) + "_QUESTION", page);
-        if (setAnswers_listInline.size() > 0) {
+        gridQuestionMapDialog.put(String.valueOf(getCurrentGridQuestionID) + QUESTION, page);
+        if (!setAnswers_listInline.isEmpty()) {
             for (int preSubQue = 0; preSubQue < mSubQuestions.size(); preSubQue++) {
                 List<Response> getAnswer = new ArrayList<>();
                 for (int preAnswer = 0; preAnswer < setAnswers_listInline.size(); preAnswer++) {
@@ -1425,7 +1430,7 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
                             int questionCode = Integer.parseInt(getAllEditTextQuestionCode.get(editcount));
                             boolean edit = edittextFunctionality(questionCode, surveyDatabase, 1);
                             list.add(String.valueOf(edit));
-                            if (list.get(i).contains("true")) {
+                            if (edit) {
                                 editcount++;
                             }
                         }
@@ -1521,10 +1526,9 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
                     case 14:
                         mChild = layoutCont.getChildAt(0);
                         if (mChild instanceof ViewGroup) {
-                            JSONObject obj4 = new JSONObject();
-                            int GridviewQuestionCOde = Integer.parseInt(getAllGridQuestionCode.get(GridCount));
+                            int gridviewQuestionCOde = Integer.parseInt(getAllGridQuestionCode.get(GridCount));
                             Logger.logD(TAG, " the Count is gridViewLinearLayoutHolder ->" + gridViewLinearLayoutHolder.size());
-                            LinearLayout ll = gridViewLinearLayoutHolder.get(String.valueOf(GridviewQuestionCOde));
+                            LinearLayout ll = gridViewLinearLayoutHolder.get(String.valueOf(gridviewQuestionCOde));
                             boolean tempFlag = false;
                             for (int gridViewCount = 0; gridViewCount < ll.getChildCount(); gridViewCount++) {
                                 View ViewContainer = (View) ll.getChildAt(gridViewCount);
@@ -1541,7 +1545,7 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
                             }
                             if (tempFlag){
                                 //       if (true){
-                                boolean fileBoolean = FunctionalityCodeStoreGRid(GridviewQuestionCOde);
+                                boolean fileBoolean = FunctionalityCodeStoreGRid(gridviewQuestionCOde);
                                 //     list.add(String.valueOf(true));
                                 list.add(String.valueOf(fileBoolean));
                             } else {
@@ -1556,12 +1560,12 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
                         mChild = layoutCont.getChildAt(0);
                         if (mChild instanceof ViewGroup) {
                             JSONObject obj4 = new JSONObject();
-                            int GridviewQuestionCOde = Integer.parseInt(getAllGridQuestionCodeInline.get(GridCountInline));
+                            int GridviewQuestionCOde = Integer.parseInt(getAllGridQuestionCodeInline.get(gridCountInline));
                             Logger.logD("gridinlineQuestionCode", GridviewQuestionCOde + "");
                             boolean fileBoolean = gridNewInlineFunctionality(GridviewQuestionCOde);
                             list.add(String.valueOf(fileBoolean));
-                            if (list.contains("true")) {
-                                GridCountInline++;
+                            if (fileBoolean) {
+                                gridCountInline++;
                             }
                         }
                         break;
@@ -1585,37 +1589,12 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
     }
 
     private boolean gridNewInlineFunctionality(int gridviewQuestionCOde) {
-
         final List<String> getResponseKeys = new ArrayList<>();
         Logger.logD(TAG, "the grid QuestionID" + gridviewQuestionCOde);
         if (fillInlineRow.size() > 0) {
-            try {
-                List<String> getAllKeys = fillInlineHashMapKey.get(String.valueOf(gridviewQuestionCOde));
-                Logger.logD(TAG, "the  all key count" + getAllKeys.size());
-                for (int i = 0; i < getAllKeys.size(); i++) {
-                    String[] s = getAllKeys.get(i).split("_");
-                    if (Integer.valueOf(s[0]) == gridviewQuestionCOde) {
-                        getResponseKeys.add(getAllKeys.get(i));
-                        Logger.logD(TAG, "the only key for this QuestioID " + getResponseKeys.toString());
-                    }
-                }
 
-                List<Response> answersEditTextTemp = new ArrayList<>();
-                for (int j = 0; j < getResponseKeys.size(); j++) {
-                    List<Response> getResponseListFrmHashmap = fillInlineRow.get(getResponseKeys.get(j));
+           return validateAndUpdateHashMap(getResponseKeys,gridviewQuestionCOde);
 
-                    for (int k = 0; k < getResponseListFrmHashmap.size(); k++) {
-                        answersEditTextTemp.add(getResponseListFrmHashmap.get(k));
-                    }
-
-                }
-                hashMapAnswersEditText.put(String.valueOf(gridviewQuestionCOde + "_" + String.valueOf(16)), answersEditTextTemp);
-                Logger.logD(TAG, "Responsed filled to Response Table-> " + answersEditTextTemp.toString());
-                return true;
-            } catch (Exception e) {
-                Logger.logE(TAG, "Exception", e);
-                return false;
-            }
         } else {
             boolean checkMandatory = DBHandler.getMandatoryQuestion(String.valueOf(gridviewQuestionCOde), surveyDatabase);
             if (checkMandatory) {
@@ -1624,6 +1603,34 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
                 return true;
             }
 
+        }
+    }
+
+    private boolean validateAndUpdateHashMap(List<String> getResponseKeys, int gridviewQuestionCOde) {
+        try {
+            List<String> getAllKeys = fillInlineHashMapKey.get(String.valueOf(gridviewQuestionCOde));
+            for (int i = 0; i < getAllKeys.size(); i++) {
+                String[] s = getAllKeys.get(i).split("_");
+                if (Integer.valueOf(s[0]) == gridviewQuestionCOde) {
+                    getResponseKeys.add(getAllKeys.get(i));
+                }
+            }
+
+            List<Response> answersEditTextTemp = new ArrayList<>();
+            for (int j = 0; j < getResponseKeys.size(); j++) {
+                List<Response> getResponseListFrmHashmap = fillInlineRow.get(getResponseKeys.get(j));
+
+                for (int k = 0; k < getResponseListFrmHashmap.size(); k++) {
+                    answersEditTextTemp.add(getResponseListFrmHashmap.get(k));
+                }
+
+            }
+            hashMapAnswersEditText.put(String.valueOf(gridviewQuestionCOde + "_" + 16), answersEditTextTemp);
+            Logger.logD(TAG, "Responsed filled to Response Table-> " + answersEditTextTemp.toString());
+            return true;
+        } catch (Exception e) {
+            Logger.logE(TAG, "Exception", e);
+            return false;
         }
     }
 
@@ -1700,7 +1707,7 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
         GridResponseHashMap.clear();
         rowInflater = 0;
         GridCount=0;
-        GridCountInline = 0;
+        gridCountInline = 0;
         getAllGridQuestionCodeInline.clear();
     }
 
@@ -3087,7 +3094,7 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
                                 List<Response> getResponseForEdit = hashMapGridResponse.get(spiltTag[0]);
                                 Logger.logD(TAG, " the size getResponseForEdit " + getResponseForEdit.size());
                                 List<AssesmentBean> MAssessment = gridAssessmentMapDialog.get(String.valueOf(currentQuestionNumber) + "_ASS");
-                                Page questionPagebean = gridQuestionMapDialog.get(String.valueOf(currentQuestionNumber) + "_QUESTION");
+                                Page questionPagebean = gridQuestionMapDialog.get(String.valueOf(currentQuestionNumber) + QUESTION);
                                 String[] splitKeypare = spiltTag[0].split("_");
                                 Logger.logD(TAG, "splitTag " + spiltTag[1]);
                                 Logger.logD(TAG, "rowInflater value " + rowInflater);

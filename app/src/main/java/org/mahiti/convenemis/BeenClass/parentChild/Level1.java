@@ -48,6 +48,8 @@ public class Level1 implements Parcelable
 
     }
 
+
+
     public String getLocationType() {
         return locationType;
     }

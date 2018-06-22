@@ -13,6 +13,7 @@ public class LocationSurveyBeen {
     private int isContinue;
     private int isOnline;
     private int isEditable;
+    private String uuid;
 
 
     public LocationSurveyBeen()
@@ -99,5 +100,13 @@ public class LocationSurveyBeen {
 
     public void setIsContinue(int isContinue) {
         this.isContinue = isContinue;
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 }

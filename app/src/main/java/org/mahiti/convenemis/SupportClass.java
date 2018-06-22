@@ -69,7 +69,7 @@ import static org.mahiti.convenemis.utils.Constants.rowInflater;
 public class SupportClass {
 
     private static final String LOGGER_TAG = "SupportClass";
-    private static List<String> GridlistHashMapKey= new ArrayList<>();
+    private static List<String> GridlistHashMapKey = new ArrayList<>();
     Activity activity;
     Context context;
 
@@ -103,14 +103,13 @@ public class SupportClass {
     }
 
     public static void createDialogFOrGrid(Page page, View child, SurveyQuestionActivity surveyQuestionActivity, SQLiteDatabase database, int getCurrentGridQuestionID) {
-        List<AssesmentBean> MAssesmant=gridAssessmentMapDialog.get(String.valueOf(getCurrentGridQuestionID)+"_ASS");
-        Page QuestionPageBean =  gridQuestionMapDialog.get(String.valueOf(getCurrentGridQuestionID)+"_QUESTION");
-        SupportClass.showChangeLangDialog(null,MAssesmant, surveyQuestionActivity, surveyQuestionActivity,QuestionPageBean,database, child,14,page,"");
+        List<AssesmentBean> MAssesmant = gridAssessmentMapDialog.get(String.valueOf(getCurrentGridQuestionID) + "_ASS");
+        Page QuestionPageBean = gridQuestionMapDialog.get(String.valueOf(getCurrentGridQuestionID) + "_QUESTION");
+        SupportClass.showChangeLangDialog(null, MAssesmant, surveyQuestionActivity, surveyQuestionActivity, QuestionPageBean, database, child, 14, page, "");
 
     }
 
     /**
-
      * @param context
      * @param activity
      * @param currentQuestionPage
@@ -119,40 +118,40 @@ public class SupportClass {
      * @param gridType
      * @param questionPageBean
      */
-    public static void showChangeLangDialog(final List<Response> mResponse, final List<AssesmentBean>  mAssesmant, final Context context, final SurveyQuestionActivity activity, final Page currentQuestionPage, final SQLiteDatabase database, final View child, final int gridType, final Page questionPageBean, final  String skipCode) {
+    public static void showChangeLangDialog(final List<Response> mResponse, final List<AssesmentBean> mAssesmant, final Context context, final SurveyQuestionActivity activity, final Page currentQuestionPage, final SQLiteDatabase database, final View child, final int gridType, final Page questionPageBean, final String skipCode) {
         final surveyQuestionGridInlineInterface surveyQuestionGridInlineInterface;
-        final SharedPreferences preferences=PreferenceManager.getDefaultSharedPreferences(context);
-        surveyQuestionGridInlineInterface=activity;
+        final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        surveyQuestionGridInlineInterface = activity;
         final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(context);
         LayoutInflater inflater = activity.getLayoutInflater();
         final View dialogView = inflater.inflate(R.layout.form_dialog, null);
         final LinearLayout layout = (LinearLayout) dialogView.findViewById(R.id.dynamic_mini_grid);
-        final LinearLayout optionwidgetLL =layout;
+        final LinearLayout optionwidgetLL = layout;
         optionwidgetLL.removeAllViews();
-        final  List<View> addView= new ArrayList<>();
+        final List<View> addView = new ArrayList<>();
         final ScrollView scrollView = (ScrollView) dialogView.findViewById(R.id.dialogScroll);
 
 
         int assessemntSize = mAssesmant.size();
-        Logger.logV("the size of the n","size"+assessemntSize);
+        Logger.logV("the size of the n", "size" + assessemntSize);
         for (int i = 1; i < assessemntSize + 1; i++) {
             int subCount = i;
             LinearLayout.LayoutParams paramassessmentQuestionText;
             paramassessmentQuestionText = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            TextView assessmentQuestionText= new TextView(context);
-            if (mAssesmant.get(i-1).getMandatory()==1){
-                setRedStar(assessmentQuestionText,mAssesmant.get(i - 1).getAssessment());
-            }else{
+            TextView assessmentQuestionText = new TextView(context);
+            if (mAssesmant.get(i - 1).getMandatory() == 1) {
+                setRedStar(assessmentQuestionText, mAssesmant.get(i - 1).getAssessment());
+            } else {
                 assessmentQuestionText.setText(mAssesmant.get(i - 1).getAssessment());
             }
 
 
             assessmentQuestionText.setLayoutParams(paramassessmentQuestionText);
-            paramassessmentQuestionText.setMargins(10,10,10,10);
+            paramassessmentQuestionText.setMargins(10, 10, 10, 10);
             layout.addView(assessmentQuestionText);
             String priorityQtype;
-            String getGroupVaidation="";
-            if (gridType!=16) {
+            String getGroupVaidation = "";
+            if (gridType != 16) {
                 if (!questionPageBean.getAnswer().equals("N")) {
                     priorityQtype = questionPageBean.getAnswer();
                     getGroupVaidation = questionPageBean.getValidation();
@@ -163,60 +162,59 @@ public class SupportClass {
                     getGroupVaidation = mAssesmant.get(i - 1).getGroupValidation();
                     Logger.logD("priorityQtype", "priorityQtype in Assessment" + priorityQtype);
                 }
-            }else{
+            } else {
                 if (!mAssesmant.get(i - 1).getQtype().equalsIgnoreCase("N")) {
                     priorityQtype = mAssesmant.get(i - 1).getQtype();
                     getGroupVaidation = mAssesmant.get(i - 1).getGroupValidation();
-                }
-                else {
+                } else {
                     priorityQtype = questionPageBean.getAnswer();
                     getGroupVaidation = mAssesmant.get(i - 1).getGroupValidation();
                 }
             }
-            switch ( priorityQtype) {
+            switch (priorityQtype) {
                 case "T":
                     LinearLayout.LayoutParams paramEdit;
                     paramEdit = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 80);
                     EditText editView = new EditText(context);
                     editView.setText("");
                     editView.setTextColor(Color.BLACK);
-                    subCount = subCount+20+2+i;
+                    subCount = subCount + 20 + 2 + i;
                     editView.setId(subCount);
                     editView.setLayoutParams(paramEdit);
-                    paramEdit.setMargins(4,4,4,4);
-                    editView.setPadding(10,0,0,10);
+                    paramEdit.setMargins(4, 4, 4, 4);
+                    editView.setPadding(10, 0, 0, 10);
                     editView.setBackgroundResource(R.drawable.textfieldbg);
 
-                    if (mResponse!=null && mResponse.size()>i-1 ){
-                        editView.setText(mResponse.get(i-1).getAnswer());
+                    if (mResponse != null && mResponse.size() > i - 1) {
+                        editView.setText(mResponse.get(i - 1).getAnswer());
                         editView.setEnabled(false);
 
                     }
-                    String validaiton="";
-                    if (gridType!=16) {
+                    String validaiton = "";
+                    if (gridType != 16) {
                         if (!questionPageBean.getAnswer().equals("N")) {
-                            validaiton = DataBaseMapperClass.getValidationExpressionFromQuestion(questionPageBean.getQuestionId(),database);
-                        }else{
-                            validaiton=mAssesmant.get(i - 1).getGroupValidation();
+                            validaiton = DataBaseMapperClass.getValidationExpressionFromQuestion(questionPageBean.getQuestionId(), database);
+                        } else {
+                            validaiton = mAssesmant.get(i - 1).getGroupValidation();
                         }
 
-                    }else{
-                        validaiton=mAssesmant.get(i - 1).getGroupValidation();
+                    } else {
+                        validaiton = mAssesmant.get(i - 1).getGroupValidation();
                     }
-                    if(!"".equals(validaiton)){
-                        Logger.logD("mathString","mathString" + validaiton);
+                    if (!"".equals(validaiton)) {
+                        Logger.logD("mathString", "mathString" + validaiton);
                         String[] array;
-                        if (validaiton.length() > 1)  {
+                        if (validaiton.length() > 1) {
                             array = validaiton.split(":");
-                            if("R".equalsIgnoreCase(array[0]) || "o".equalsIgnoreCase(array[0])){
+                            if ("R".equalsIgnoreCase(array[0]) || "o".equalsIgnoreCase(array[0])) {
                                 int maxLength;
                                 InputFilter[] FilterArray;
-                                switch (array[1]){
+                                switch (array[1]) {
                                     case "N":
                                         optionwidgetLL.addView(editView);
                                         addView.add(editView);
-                                        editView.setInputType(InputType.TYPE_CLASS_NUMBER  | InputType.TYPE_NUMBER_FLAG_SIGNED);
-                                        maxLength=  array[3].length();
+                                        editView.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_SIGNED);
+                                        maxLength = array[3].length();
                                         FilterArray = new InputFilter[1];
                                         FilterArray[0] = new InputFilter.LengthFilter(maxLength);
                                         editView.setFilters(FilterArray);
@@ -235,8 +233,8 @@ public class SupportClass {
 
                                         optionwidgetLL.addView(editView);
                                         addView.add(editView);
-                                        editView.setInputType(InputType.TYPE_CLASS_TEXT );
-                                        maxLength=  Integer.parseInt(array[3]);
+                                        editView.setInputType(InputType.TYPE_CLASS_TEXT);
+                                        maxLength = Integer.parseInt(array[3]);
                                         FilterArray = new InputFilter[1];
                                         FilterArray[0] = new InputFilter.LengthFilter(maxLength);
                                         editView.setFilters(FilterArray);
@@ -262,19 +260,19 @@ public class SupportClass {
                                 editView.setFilters(FilterArray);
                             }
                         }
-                    }else {
+                    } else {
                         optionwidgetLL.addView(editView);
                         addView.add(editView);
 
                     }
                     break;
-                case "R" :
-                    int s=1;
-                    List<AnswersPage>  mOptions ;
+                case "R":
+                    int s = 1;
+                    List<AnswersPage> mOptions;
                     if (!mAssesmant.get(i - 1).getQtype().equalsIgnoreCase("N"))
-                        mOptions = DataBaseMapperClass.getOptionsAnswers(mAssesmant.get(i-1).getQid(),database,preferences.getInt("selectedLangauge",1));
+                        mOptions = DataBaseMapperClass.getOptionsAnswers(mAssesmant.get(i - 1).getQid(), database, preferences.getInt("selectedLangauge", 1));
                     else
-                        mOptions = DataBaseMapperClass.getOptionsAnswersForSubquestionBased(questionPageBean.getQuestionId(),database);
+                        mOptions = DataBaseMapperClass.getOptionsAnswersForSubquestionBased(questionPageBean.getQuestionId(), database);
 
                     RadioGroup radioGroup = new RadioGroup(context);
                     radioGroup.setLayoutParams(new RadioGroup.LayoutParams(
@@ -282,19 +280,19 @@ public class SupportClass {
                             LinearLayout.LayoutParams.WRAP_CONTENT));
                     radioGroup.setOrientation(LinearLayout.VERTICAL);
                     radioGroup.setGravity(Gravity.LEFT);
-                    radioGroup.setId(i + 1000+i+i+s);
-                    Logger.logD("GroupId",radioGroup.getId()+"");
+                    radioGroup.setId(i + 1000 + i + i + s);
+                    Logger.logD("GroupId", radioGroup.getId() + "");
                     s++;
                     int buttons = mOptions.size();
                     //  List<Response> responseAnswer= DataBaseMapperClass.setAnswersForGridRadio(mAssesmant.get(i-1).getQid(),db,String.valueOf(surveyPrimaryKeyId));
-                    for (int r = 1; r <= buttons ; r++) {
-                        radioGroup.setId(i+10000+r);
+                    for (int r = 1; r <= buttons; r++) {
+                        radioGroup.setId(i + 10000 + r);
                         RadioButton rbn = new RadioButton(context);
-                        rbn.setId(i + 1000+i+r);
-                        rbn.setText(mOptions.get(r-1).getAnswer());
+                        rbn.setId(i + 1000 + i + r);
+                        rbn.setText(mOptions.get(r - 1).getAnswer());
 
-                        if (mResponse!=null && mResponse.size()>i-1){
-                            if (mResponse.get(i-1).getAns_code().equals(mOptions.get(r - 1).getAnswerCode())) {
+                        if (mResponse != null && mResponse.size() > i - 1) {
+                            if (mResponse.get(i - 1).getAns_code().equals(mOptions.get(r - 1).getAnswerCode())) {
                                 rbn.setChecked(true);
                                 radioGroup.setEnabled(false);
 
@@ -306,49 +304,49 @@ public class SupportClass {
                     optionwidgetLL.addView(radioGroup);
                     addView.add(radioGroup);
                     break;
-                case "S" :
+                case "S":
 
-                    List<AnswersPage>  mOptionsDroupdown;
-                    if (!mAssesmant.get(i - 1).getQtype().equalsIgnoreCase("N")){
-                        mOptionsDroupdown = DataBaseMapperClass.getOptionsAnswers(mAssesmant.get(i-1).getQid(),database, preferences.getInt("selectedLangauge", 1));
-                    }else{
-                        mOptionsDroupdown = DataBaseMapperClass.getOptionsAnswers(questionPageBean.getQuestionId(),database, preferences.getInt("selectedLangauge", 1));
+                    List<AnswersPage> mOptionsDroupdown;
+                    if (!mAssesmant.get(i - 1).getQtype().equalsIgnoreCase("N")) {
+                        mOptionsDroupdown = DataBaseMapperClass.getOptionsAnswers(mAssesmant.get(i - 1).getQid(), database, preferences.getInt("selectedLangauge", 1));
+                    } else {
+                        mOptionsDroupdown = DataBaseMapperClass.getOptionsAnswers(questionPageBean.getQuestionId(), database, preferences.getInt("selectedLangauge", 1));
                     }
 
 
-                    List<String> optionText= new ArrayList<>();
-                    Spinner spinner=new Spinner(context);
+                    List<String> optionText = new ArrayList<>();
+                    Spinner spinner = new Spinner(context);
 
                     spinner.setLayoutParams(new RadioGroup.LayoutParams(
                             ViewGroup.LayoutParams.MATCH_PARENT,
                             LinearLayout.LayoutParams.WRAP_CONTENT));
                     spinner.setBackgroundResource(R.drawable.textfieldbg);
 
-                    for(int d=0;d<mOptionsDroupdown.size();d++){
+                    for (int d = 0; d < mOptionsDroupdown.size(); d++) {
                         optionText.add(mOptionsDroupdown.get(d).getAnswer());
                     }
                     //    List<Response> responseAnswerSpinner= DataBaseMapperClass.setAnswersForGridRadio(mAssesmant.get(i-1).getQid(),db,String.valueOf(surveyPrimaryKeyId));
-                    ArrayAdapter<AnswersPage> spinnerArrayAdapter = new ArrayAdapter<>(context,   android.R.layout.simple_spinner_item, mOptionsDroupdown);
+                    ArrayAdapter<AnswersPage> spinnerArrayAdapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, mOptionsDroupdown);
                     spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item); // The drop down view
                     spinner.setAdapter(spinnerArrayAdapter);
-                    if (mResponse!=null && mResponse.size()>i-1){
-                        spinner.setSelection(optionText.indexOf(mResponse.get(i-1).getAnswer()));
+                    if (mResponse != null && mResponse.size() > i - 1) {
+                        spinner.setSelection(optionText.indexOf(mResponse.get(i - 1).getAnswer()));
                     }
                     optionwidgetLL.addView(spinner);
                     addView.add(spinner);
                     break;
-                case "C" :
-                    List<AnswersPage>  mOptionsCheckbox = DataBaseMapperClass.getOptionsAnswers(mAssesmant.get(i-1).getQid(),database, preferences.getInt("selectedLangauge", 1));
-                    LinearLayout checkboxContainer= new LinearLayout(context);
+                case "C":
+                    List<AnswersPage> mOptionsCheckbox = DataBaseMapperClass.getOptionsAnswers(mAssesmant.get(i - 1).getQid(), database, preferences.getInt("selectedLangauge", 1));
+                    LinearLayout checkboxContainer = new LinearLayout(context);
                     checkboxContainer.setLayoutParams(new LinearLayout.LayoutParams(
                             409,
                             LinearLayout.LayoutParams.WRAP_CONTENT));
                     checkboxContainer.setOrientation(LinearLayout.VERTICAL);
                     checkboxContainer.setGravity(Gravity.CENTER_VERTICAL);
                     //  List<Response> responseAnswerCheckbox= DataBaseMapperClass.setAnswersForGridRadio(mAssesmant.get(i-1).getQid(),db,String.valueOf(surveyPrimaryKeyId));
-                    if (mOptionsCheckbox.size()>0){
-                        for (int c=0;c<mOptionsCheckbox.size();c++){
-                            CheckBox checkbox= new CheckBox(context);
+                    if (mOptionsCheckbox.size() > 0) {
+                        for (int c = 0; c < mOptionsCheckbox.size(); c++) {
+                            CheckBox checkbox = new CheckBox(context);
                                     /*if (responseAnswerCheckbox.size()>0){
                                         for (int getCheck=0;getCheck<responseAnswerCheckbox.size();getCheck++){
                                             if (mOptionsCheckbox.get(c).getId()==responseAnswerCheckbox.get(getCheck).getPrimaryID()
@@ -369,6 +367,7 @@ public class SupportClass {
                 case "D":
                     final Button button = new Button(context);
                     button.setTextColor(Color.WHITE);
+                    button.setHintTextColor(Color.WHITE);
                     button.setHint("Pick Date");
                     button.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                             ViewGroup.LayoutParams.WRAP_CONTENT));
@@ -378,10 +377,10 @@ public class SupportClass {
                     button.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            for(Button btn : dateButton){
-                                if (btn.getId()== view.getId()){
+                            for (Button btn : dateButton) {
+                                if (btn.getId() == view.getId()) {
                                     buttonDynamicDateGrid.clear();
-                                    buttonDynamicDateGrid.put("1",btn);
+                                    buttonDynamicDateGrid.put("1", btn);
                                 }
 
                             }
@@ -398,32 +397,32 @@ public class SupportClass {
                     EditText dateEdit = new EditText(context);
                     dateEdit.setText("");
                     dateEdit.setTextColor(Color.BLACK);
-                    subCount = subCount+20+2+i;
+                    subCount = subCount + 20 + 2 + i;
                     dateEdit.setId(subCount);
                     dateEdit.setLayoutParams(paramEdit1);
-                    paramEdit1.setMargins(4,4,4,4);
-                    dateEdit.setPadding(10,0,0,10);
+                    paramEdit1.setMargins(4, 4, 4, 4);
+                    dateEdit.setPadding(10, 0, 0, 10);
                     dateEdit.setBackgroundResource(R.drawable.textfieldbg);
 
-                    if (mResponse!=null && mResponse.size()>i-1){
-                        dateEdit.setText(mResponse.get(i-1).getAnswer());
+                    if (mResponse != null && mResponse.size() > i - 1) {
+                        dateEdit.setText(mResponse.get(i - 1).getAnswer());
 
                     }
-                    if(!"".equals(mAssesmant.get(i - 1).getGroupValidation())){
+                    if (!"".equals(mAssesmant.get(i - 1).getGroupValidation())) {
                         String mathString = mAssesmant.get(i - 1).getGroupValidation();
-                        Logger.logD("mathString","mathString" + mathString);
+                        Logger.logD("mathString", "mathString" + mathString);
                         String[] array;
-                        if (mathString != null && mathString.length() > 1)  {
+                        if (mathString != null && mathString.length() > 1) {
                             array = mathString.split(":");
-                            if("R".equalsIgnoreCase(array[0]) || "o".equalsIgnoreCase(array[0])){
+                            if ("R".equalsIgnoreCase(array[0]) || "o".equalsIgnoreCase(array[0])) {
                                 int maxLength;
                                 InputFilter[] FilterArray;
-                                switch (array[1]){
+                                switch (array[1]) {
                                     case "N":
                                         optionwidgetLL.addView(dateEdit);
                                         addView.add(dateEdit);
-                                        dateEdit.setInputType(InputType.TYPE_CLASS_NUMBER  | InputType.TYPE_NUMBER_FLAG_SIGNED);
-                                        maxLength=  array[3].length();
+                                        dateEdit.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_SIGNED);
+                                        maxLength = array[3].length();
                                         FilterArray = new InputFilter[1];
                                         FilterArray[0] = new InputFilter.LengthFilter(maxLength);
                                         dateEdit.setFilters(FilterArray);
@@ -432,8 +431,8 @@ public class SupportClass {
 
                                         optionwidgetLL.addView(dateEdit);
                                         addView.add(dateEdit);
-                                        dateEdit.setInputType(InputType.TYPE_CLASS_TEXT );
-                                        maxLength=  Integer.parseInt(array[3]);
+                                        dateEdit.setInputType(InputType.TYPE_CLASS_TEXT);
+                                        maxLength = Integer.parseInt(array[3]);
                                         FilterArray = new InputFilter[1];
                                         FilterArray[0] = new InputFilter.LengthFilter(maxLength);
                                         dateEdit.setFilters(FilterArray);
@@ -459,7 +458,7 @@ public class SupportClass {
                                 dateEdit.setFilters(FilterArray);
                             }
                         }
-                    }else {
+                    } else {
                         optionwidgetLL.addView(dateEdit);
                         addView.add(dateEdit);
 
@@ -472,20 +471,20 @@ public class SupportClass {
         txt.setTypeface(null, Typeface.BOLD);
         final Button saveAndCreate = (Button) dialogView.findViewById(R.id.saveandcreate);
         final Button saveAndExit = (Button) dialogView.findViewById(R.id.saveandexit);
-        if (!"".equals(skipCode)){
+        if (!"".equals(skipCode)) {
             saveAndExit.setText("Next");
-        }else{
+        } else {
             saveAndExit.setText("Save");
         }
 
-        if (gridType==14){
+        if (gridType == 14) {
             saveAndCreate.setVisibility(View.GONE);
             txt.setVisibility(View.VISIBLE);
             txt.setText(questionPageBean.getSubQuestion());
-        }else{
+        } else {
             txt.setVisibility(View.GONE);
         }
-        final  int currentQuestionNumber=currentQuestionPage.getQuestionNumber();
+        final int currentQuestionNumber = currentQuestionPage.getQuestionNumber();
 
         //        txt.setText(questionPageBean.getSubQuestion());
         dialogBuilder.setTitle(currentQuestionPage.getQuestion());
@@ -493,42 +492,42 @@ public class SupportClass {
             @Override
             public void onClick(View v) {
                 rowInflater++;
-                final List<Page> mSubQuestions=new ArrayList<>();
-                Page page = new Page(rowInflater, 1998, 200, "N", "N", false, null, 0, String.valueOf(rowInflater+1), "", "", "","1","");
+                final List<Page> mSubQuestions = new ArrayList<>();
+                Page page = new Page(rowInflater, 1998, 200, "N", "N", false, null, 0, String.valueOf(rowInflater + 1), "", "", "", "1", "");
                 mSubQuestions.add(page);
                 /**
                  * module to validate the all the Field based on the layout filled . returing back the answerd list
                  */
-                List<String> answered=   methodToValidationField(currentQuestionNumber,context,addView, database,16,page);
-                if (answered!=null && mAssesmant.size()== answered.size() ){
-                    Logger.logD(LOGGER_TAG,"the all field validation pass");
+                List<String> answered = methodToValidationField(currentQuestionNumber, context, addView, database, 16, page);
+                if (answered != null && mAssesmant.size() == answered.size()) {
+                    Logger.logD(LOGGER_TAG, "the all field validation pass");
                     SharedPreferences prefs = context.getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
                     int survey_ID = prefs.getInt("survey_id", 0);
-                    List<AssesmentBean> MAssesmant = gridAssessmentMapDialog.get(currentQuestionNumber+"_ASS");
-                    List<Response> responselist= new ArrayList<>();
+                    List<AssesmentBean> MAssesmant = gridAssessmentMapDialog.get(currentQuestionNumber + "_ASS");
+                    List<Response> responselist = new ArrayList<>();
                     List<AnswersPage> mOptions;
                     for (int i = 0; i < MAssesmant.size(); i++) {
                         if (MAssesmant.get(i).getQtype().equals("R") || MAssesmant.get(i).getQtype().equalsIgnoreCase("S")) {
-                            mOptions = DataBaseMapperClass.getOptionsAnswersForGrid(mAssesmant.get(i).getQid(), database, answered.get(i),preferences.getInt("selectedLangauge", 1));
+                            mOptions = DataBaseMapperClass.getOptionsAnswersForGrid(mAssesmant.get(i).getQid(), database, answered.get(i), preferences.getInt("selectedLangauge", 1));
                         } else {
                             mOptions = DataBaseMapperClass.getOptionsAnswers(mAssesmant.get(i).getQid(), database, preferences.getInt("selectedLangauge", 1));
                         }
-                        Response response = new Response(String.valueOf(currentQuestionNumber), answered.get(i), mOptions.get(0).getAnswerCode(), "0", currentQuestionNumber, mSubQuestions.get(0).getQuestionId(), String.valueOf(survey_ID), mAssesmant.get(i).getQid(), mOptions.get(0).getId(),MAssesmant.get(i).getQtype());
+                        Response response = new Response(String.valueOf(currentQuestionNumber), answered.get(i), mOptions.get(0).getAnswerCode(), "0", currentQuestionNumber, mSubQuestions.get(0).getQuestionId(), String.valueOf(survey_ID), mAssesmant.get(i).getQid(), mOptions.get(0).getId(), MAssesmant.get(i).getQtype());
                         responselist.add(response);
                         Logger.logD("GridValues in Response", responselist.get(i).toString());
                     }
                     fillInlineRow.put(currentQuestionNumber + "_" + String.valueOf(mSubQuestions.get(0).getQuestionId()), responselist);
                     listHashMapKey.add(currentQuestionNumber + "_" + String.valueOf(mSubQuestions.get(0).getQuestionId()));
-                    fillInlineHashMapKey.put(String.valueOf(currentQuestionNumber),listHashMapKey);
-                    Logger.logD("Size if the filled Complet in Response in hashMap",listHashMapKey.size()+"");
-                    Logger.logD("Size if the filled Complet in Response in hashMap",listHashMapKey.size()+"");
-                    ClearALlViews(addView,scrollView,mAssesmant);
-                    ToastUtils.displayToast("Added one response",context);
-                    if (fillInlineRow.size()>0){
+                    fillInlineHashMapKey.put(String.valueOf(currentQuestionNumber), listHashMapKey);
+                    Logger.logD("Size if the filled Complet in Response in hashMap", listHashMapKey.size() + "");
+                    Logger.logD("Size if the filled Complet in Response in hashMap", listHashMapKey.size() + "");
+                    ClearALlViews(addView, scrollView, mAssesmant);
+                    ToastUtils.displayToast("Added one response", context);
+                    if (fillInlineRow.size() > 0) {
                         saveAndExit.setVisibility(View.VISIBLE);
                     }
-                }else{
-                    Logger.logD(LOGGER_TAG,"the field validation failed");
+                } else {
+                    Logger.logD(LOGGER_TAG, "the field validation failed");
                 }
 
             }
@@ -555,18 +554,18 @@ public class SupportClass {
                                 Logger.logD(LOGGER_TAG, "the all field validation pass");
                                 SharedPreferences prefs = context.getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
                                 int survey_ID = prefs.getInt("survey_id", 0);
-                                List<AssesmentBean> MAssesmant = gridAssessmentMapDialog.get(currentQuestionNumber + "_ASS");
+                                List<AssesmentBean> mAssesmant = gridAssessmentMapDialog.get(currentQuestionNumber + "_ASS");
                                 List<Response> responselist = new ArrayList<>();
                                 List<AnswersPage> mOptions;
-                                for (int i = 0; i < MAssesmant.size(); i++) {
-                                    if (MAssesmant.get(i).getQtype().equals("R") || MAssesmant.get(i).getQtype().equalsIgnoreCase("S")) {
+                                for (int i = 0; i < mAssesmant.size(); i++) {
+                                    if (mAssesmant.get(i).getQtype().equals("R") || mAssesmant.get(i).getQtype().equalsIgnoreCase("S")) {
                                         mOptions = DataBaseMapperClass.getOptionsAnswersForGrid(mAssesmant.get(i).getQid(), database, answered.get(i), preferences.getInt("selectedLangauge", 1));
-                                    } else if (MAssesmant.get(i).getQtype().equalsIgnoreCase("T")) {
+                                    } else if (mAssesmant.get(i).getQtype().equalsIgnoreCase("T")) {
                                         mOptions = DataBaseMapperClass.getOptionsAnswersTEXTBOX(mAssesmant.get(i).getQid(), database);
                                     } else {
                                         mOptions = DataBaseMapperClass.getOptionsAnswers(mAssesmant.get(i).getQid(), database, preferences.getInt("selectedLangauge", 1));
                                     }
-                                    Response response = new Response(String.valueOf(currentQuestionNumber), answered.get(i), mOptions.get(0).getAnswerCode(), "0", currentQuestionNumber, mSubQuestions.get(0).getQuestionId(), String.valueOf(survey_ID), mAssesmant.get(i).getQid(), mOptions.get(0).getId(), MAssesmant.get(i).getQtype());
+                                    Response response = new Response(String.valueOf(currentQuestionNumber), answered.get(i), mOptions.get(0).getAnswerCode(), "0", currentQuestionNumber, mSubQuestions.get(0).getQuestionId(), String.valueOf(survey_ID), mAssesmant.get(i).getQid(), mOptions.get(0).getId(), mAssesmant.get(i).getQtype());
                                     responselist.add(response);
                                     Logger.logD("GridValues in Response", responselist.get(i).toString());
                                 }
@@ -643,7 +642,7 @@ public class SupportClass {
                     } catch (Exception e) {
                         Logger.logE("Exception", "Exception ....", e);
                     }
-                }else {
+                } else {
                     try {
 
                         /**
@@ -652,9 +651,9 @@ public class SupportClass {
                         List<String> answeredtemp = methodToValidationField(currentQuestionNumber, context, addView, database, 16, null);
                         SharedPreferences prefs = context.getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
                         int survey_ID = prefs.getInt("survey_id", 0);
-                        if (answeredtemp!=null){
+                        if (answeredtemp != null) {
                             String getSkipCode = answeredtemp.get(answeredtemp.size() - 1);
-                            AssesmentBean getQuestionCode=mAssesmant.get(mAssesmant.size()-1);
+                            AssesmentBean getQuestionCode = mAssesmant.get(mAssesmant.size() - 1);
                             List<AnswersPage> mOptions = DataBaseMapperClass.getOptionsAnswersForGridSubQBased(getQuestionCode.getQid(), database, getSkipCode, true);
                             //  String skipcode = QuestionActivityUtils.checkSkipCode(String.valueOf(getQuestionCode.getQid()), database, String.valueOf(mOptions.get(0).getId()));
                             String skipcode = "";
@@ -663,7 +662,7 @@ public class SupportClass {
 
                             if (!"".equals(skipcode)) {
                                 List<Response> responselist = new ArrayList<>();
-                                if (mOptions.size()>0) {
+                                if (mOptions.size() > 0) {
                                     for (int j = 0; j < mAssesmant.size(); j++) {
                                         Response response = new Response(String.valueOf(currentQuestionNumber), answeredtemp.get(j), mOptions.get(0).getAnswerCode(), "0", currentQuestionNumber, 0, String.valueOf(survey_ID), mAssesmant.get(j).getQid(), mOptions.get(0).getId(), answeredtemp.get(j));
                                         responselist.add(response);
@@ -679,7 +678,7 @@ public class SupportClass {
                             } else {
                                 b.dismiss();
                                 List<Response> responselist = new ArrayList<>();
-                                if (mOptions.size()>0) {
+                                if (mOptions.size() > 0) {
                                     for (int j = 0; j < mAssesmant.size(); j++) {
                                         Response response = new Response(String.valueOf(currentQuestionNumber), answeredtemp.get(j), mOptions.get(0).getAnswerCode(), "0", currentQuestionNumber, 0, String.valueOf(survey_ID), mAssesmant.get(j).getQid(), mOptions.get(0).getId(), answeredtemp.get(j));
                                         responselist.add(response);
@@ -691,7 +690,7 @@ public class SupportClass {
                         }
 
                     } catch (Exception e) {
-                        Logger.logE("Exception","in",e);
+                        Logger.logE("Exception", "in", e);
 
                     }
                 }
@@ -704,34 +703,32 @@ public class SupportClass {
     }
 
     private static void ClearALlViews(List<View> layout, final ScrollView scrollView, List<AssesmentBean> mAssesmant) {
-        for (int clearview=0;clearview<mAssesmant.size();clearview++){
-            switch (mAssesmant.get(clearview).getQtype()){
+        for (int clearview = 0; clearview < mAssesmant.size(); clearview++) {
+            switch (mAssesmant.get(clearview).getQtype()) {
                 case "T":
-                    EditText ed= (EditText) layout.get(clearview);
+                    EditText ed = (EditText) layout.get(clearview);
                     ed.setText("");
                     break;
                 case "R":
-                    RadioGroup rg= (RadioGroup) layout.get(clearview);
+                    RadioGroup rg = (RadioGroup) layout.get(clearview);
                     rg.clearCheck();
                     break;
                 case "C":
-                    LinearLayout checkBoxLinearLayout= (LinearLayout) layout.get(clearview);
-                    for (int i=0;i<checkBoxLinearLayout.getChildCount();i++){
-                        CheckBox ch= (CheckBox) checkBoxLinearLayout.getChildAt(i);
+                    LinearLayout checkBoxLinearLayout = (LinearLayout) layout.get(clearview);
+                    for (int i = 0; i < checkBoxLinearLayout.getChildCount(); i++) {
+                        CheckBox ch = (CheckBox) checkBoxLinearLayout.getChildAt(i);
                         ch.setChecked(false);
                     }
                     break;
                 case "S":
                     break;
+                case "D":
+                    Button dateButton = (Button) layout.get(clearview);
+                    dateButton.setText("");
+                    break;
             }
-            Logger.logD(LOGGER_TAG,"all the edittext view Clear");
-            /*runOnUiThread( new Runnable(){
-                @Override
-                public void run(){
+            Logger.logD(LOGGER_TAG, "all the edittext view Clear");
 
-                    scrollView.fullScroll(ScrollView.FOCUS_UP);
-                }
-            });*/
 
         }
     }
@@ -744,41 +741,33 @@ public class SupportClass {
         labelObj.append(wordTwo);
     }
 
-    public static void ModuleToCreateInlineDialogForm(Page currentQuestionPage, SQLiteDatabase database, SurveyQuestionActivity surveyQuestionActivity, View child, SharedPreferences preferences) {
-        // listHashMapKey.clear();
-        Context context=surveyQuestionActivity;
-        SurveyQuestionActivity activity=surveyQuestionActivity;
-        final List<AssesmentBean> MAssesmant = DataBaseMapperClass.getAssesements(currentQuestionPage.getQuestionNumber(),database,preferences.getInt("selectedLangauge",1));
-        gridAssessmentMapDialog.put(currentQuestionPage.getQuestionNumber()+"_ASS",MAssesmant);
-        mainGridAssessmentMapDialog.put(currentQuestionPage.getQuestionNumber()+"_ASS",MAssesmant);
-        for (int i=0;i<MAssesmant.size();i++){
-            AssesmentBean assessmentbean=mainGridAssessmentMapDialog.get(currentQuestionPage.getQuestionNumber()+"_ASS").get(i);
+    public static void moduleToCreateInlineDialogForm(Page currentQuestionPage, SQLiteDatabase database, SurveyQuestionActivity surveyQuestionActivity, View child, SharedPreferences preferences) {
+        Context context = surveyQuestionActivity;
+        SurveyQuestionActivity activity = surveyQuestionActivity;
+        final List<AssesmentBean> MAssesmant = DataBaseMapperClass.getAssesements(currentQuestionPage.getQuestionNumber(), database, preferences.getInt("selectedLangauge", 1));
+        gridAssessmentMapDialog.put(currentQuestionPage.getQuestionNumber() + "_ASS", MAssesmant);
+        mainGridAssessmentMapDialog.put(currentQuestionPage.getQuestionNumber() + "_ASS", MAssesmant);
+        for (int i = 0; i < MAssesmant.size(); i++) {
+            AssesmentBean assessmentbean = mainGridAssessmentMapDialog.get(currentQuestionPage.getQuestionNumber() + "_ASS").get(i);
             mainAcessmentList.add(String.valueOf(assessmentbean.getQid()));
         }
-        gridQuestionMapDialog.put(currentQuestionPage.getQuestionNumber()+"_QUESTION",currentQuestionPage);
-        // check skip in the inner grid
-        List<AssesmentBean>  mAssesmantmain=  modifiedAssessementListOnSKIP(MAssesmant,database);
-        Logger.logD("mAssesmantmain", "mAssesmantmain sorted list "+mAssesmantmain);
-        if (mAssesmantmain.size()!=MAssesmant.size()){
-            //  gridAssessmentMapDialog.put(currentQuestionPage.getQuestionNumber()+"_ASS",mAssesmantmain);
-            SupportClass.showChangeLangDialog(null,MAssesmant,context,activity,currentQuestionPage,database, child, 16, null,"");
-            // SupportClass.showChangeLangDialog(null,mAssesmantmain,context,activity,currentQuestionPage,database, child, 16, null,"24");
-        }else{
-            SupportClass.showChangeLangDialog(null,MAssesmant,context,activity,currentQuestionPage,database, child, 16, null,"");
-        }
+        gridQuestionMapDialog.put(currentQuestionPage.getQuestionNumber() + "_QUESTION", currentQuestionPage);
+        List<AssesmentBean> mAssesmantmain = modifiedAssessementListOnSKIP(MAssesmant, database);
+        Logger.logD("mAssesmantmain", "mAssesmantmain sorted list " + mAssesmantmain);
+        SupportClass.showChangeLangDialog(null, MAssesmant, context, activity, currentQuestionPage, database, child, 16, null, "");
     }
 
-    private static List<AssesmentBean>   modifiedAssessementListOnSKIP(List<AssesmentBean>  mAssesmant,SQLiteDatabase database) {
+    private static List<AssesmentBean> modifiedAssessementListOnSKIP(List<AssesmentBean> mAssesmant, SQLiteDatabase database) {
         List<AssesmentBean> sortedAssessementBean = new ArrayList<>();
-        for (int i=0;i<mAssesmant.size();i++){
-            String skipStatus= checkSkipCodeAndSplitList(mAssesmant.get(i),database);
-            Logger.logD("skipStatus","skipStatus--> " + skipStatus);
-            if (!"".equals(skipStatus)){
+        for (int i = 0; i < mAssesmant.size(); i++) {
+            String skipStatus = checkSkipCodeAndSplitList(mAssesmant.get(i), database);
+            Logger.logD("skipStatus", "skipStatus--> " + skipStatus);
+            if (!"".equals(skipStatus)) {
                 sortedAssessementBean.add(mAssesmant.get(i));
-                break ;
+                break;
 
-            }else{
-                Logger.logD("skipStatus","skipcode is true skip code exist added to list"+mAssesmant.get(i).getQid());
+            } else {
+                Logger.logD("skipStatus", "skipcode is true skip code exist added to list" + mAssesmant.get(i).getQid());
                 sortedAssessementBean.add(mAssesmant.get(i));
             }
         }
@@ -787,34 +776,34 @@ public class SupportClass {
 
     private static String checkSkipCodeAndSplitList(AssesmentBean mAssesmant, SQLiteDatabase database) {
 
-        String skipStatus="";
-        String QuestionQuery="SELECT skip_code FROM Options where assessment_pid="+mAssesmant.getQid();
-        Cursor cursor=null;
+        String skipStatus = "";
+        String questionQuery = "SELECT skip_code FROM Options where assessment_pid=" + mAssesmant.getQid();
+        Cursor cursor = null;
         try {
-            cursor=database.rawQuery(QuestionQuery,null);
-            Logger.logD("blockquery","SpinnerQuestionQuery" + QuestionQuery);
-            if(cursor.getCount()>0 && cursor.moveToFirst()){
-                do{
+            cursor = database.rawQuery(questionQuery, null);
+            Logger.logD("blockquery", "SpinnerQuestionQuery" + questionQuery);
+            if (cursor.getCount() > 0 && cursor.moveToFirst()) {
+                do {
                     String skipcode = "";
-                    if (mAssesmant.getQid()==22){
+                    if (mAssesmant.getQid() == 22) {
                         skipcode = "";
-                    }else{
+                    } else {
                         skipcode = cursor.getString(cursor.getColumnIndex("skip_code"));
                     }
 
-                    if (!"".equals(skipcode)){
-                        skipStatus=skipcode;
+                    if (!"".equals(skipcode)) {
+                        skipStatus = skipcode;
                         break;
-                    }else{
-                        skipStatus="";
+                    } else {
+                        skipStatus = "";
                     }
 
-                }while (cursor.moveToNext());
+                } while (cursor.moveToNext());
             }
-        }catch (Exception e){
-            Logger.logE("Exception","getting questions based on blocks" , e);
-        }finally {
-            if(cursor!=null)
+        } catch (Exception e) {
+            Logger.logE("Exception", "getting questions based on blocks", e);
+        } finally {
+            if (cursor != null)
                 cursor.close();
         }
         return skipStatus;
@@ -842,7 +831,7 @@ public class SupportClass {
         @Override
         protected String doInBackground(Context... arg0) {
             String data = "";
-            String selectQuery = "SELECT * FROM Response where survey_id='" + surveyID+"'";
+            String selectQuery = "SELECT * FROM Response where survey_id='" + surveyID + "'";
             database = dbhandler.getdatabaseinstance_read();
             try {
                 Cursor cursor = database.rawQuery(selectQuery, null);
@@ -894,9 +883,9 @@ public class SupportClass {
 
                 public void actualData() {
                     try {
-                        String removeData = "DELETE FROM Survey WHERE uuid = '" + surveyID+"'";
+                        String removeData = "DELETE FROM Survey WHERE uuid = '" + surveyID + "'";
                         database.execSQL(removeData);
-                        removeData = "DELETE FROM Response WHERE survey_id = '" + surveyID+"'";
+                        removeData = "DELETE FROM Response WHERE survey_id = '" + surveyID + "'";
                         database.execSQL(removeData);
                     } catch (Exception e) {
                         Logger.logE(SurveyQuestionActivity.class.getSimpleName(), "Exception in SurveyQuestionsActivity  actualData method ", e);
@@ -909,6 +898,7 @@ public class SupportClass {
             });
         }
     }
+
     /**
      * @param labelObj
      * @param text
@@ -945,16 +935,15 @@ public class SupportClass {
         edit.apply();
     }
 
-    private static  List<String> methodToValidationField(int currentQuestionNumber, Context context, List<View> addView, SQLiteDatabase database,int QType,Page page) {
-        final SharedPreferences preferences=PreferenceManager.getDefaultSharedPreferences(context);
-        List<String> answerList= new ArrayList<>();
-        try{
-            Logger.logD(LOGGER_TAG,"the dialog LinearLayout child count"+addView.size());
-            List<AssesmentBean> MAssesmant = gridAssessmentMapDialog.get(currentQuestionNumber+"_ASS");
-            //  List<Page> MsubQuestion=gridSubQuestionMapDialog.get(String.valueOf(currentQuestionNumber)+"_SUBQ",mSubQuestions);
-            for (int i=0;i<MAssesmant.size();i++){
-                String priorityQtype="";
-                if (QType==14 && page!=null){
+    private static List<String> methodToValidationField(int currentQuestionNumber, Context context, List<View> addView, SQLiteDatabase database, int QType, Page page) {
+        final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        List<String> answerList = new ArrayList<>();
+        try {
+            Logger.logD(LOGGER_TAG, "the dialog LinearLayout child count" + addView.size());
+            List<AssesmentBean> MAssesmant = gridAssessmentMapDialog.get(currentQuestionNumber + "_ASS");
+            for (int i = 0; i < MAssesmant.size(); i++) {
+                String priorityQtype = "";
+                if (QType == 14 && page != null) {
                     if (!page.getAnswer().equals("N")) {
                         priorityQtype = page.getAnswer();
 
@@ -963,50 +952,48 @@ public class SupportClass {
                         priorityQtype = MAssesmant.get(i).getQtype();
                         Logger.logD("priorityQtype", "priorityQtype in Assessment" + priorityQtype);
                     }
-                }else{
+                } else {
                     priorityQtype = MAssesmant.get(i).getQtype();
                 }
 
 
-                switch (priorityQtype){
+                switch (priorityQtype) {
                     case "T":
-                        EditText ed= (EditText) addView.get(i);
+                        EditText ed = (EditText) addView.get(i);
 
                         String validationExpression;
-                        if(QType==14 && page!=null && !page.getAnswer().equals("N"))
-                            //validationExpression =DataBaseMapperClass.getValidationExpression(page.getQuestionId(),database);
-                            validationExpression =DataBaseMapperClass.getValidationExpressionFromQuestion(page.getQuestionId(),database);
-                            // validationExpression=page.getValidation();
+                        if (QType == 14 && page != null && !page.getAnswer().equals("N"))
+                            validationExpression = DataBaseMapperClass.getValidationExpressionFromQuestion(page.getQuestionId(), database);
                         else
                             validationExpression = MAssesmant.get(i).getGroupValidation();
                         String[] arrayValidation = validationExpression.split(":");
-                        if (!"".equals(ed.getText().toString()) || MAssesmant.get(i).getMandatory()!=1){
+                        if (!"".equals(ed.getText().toString()) || MAssesmant.get(i).getMandatory() != 1) {
 
-                            Logger.logD("validationExpression","validation expression from the database"+ Arrays.toString(arrayValidation));
-                            boolean checkValidation=false;
+                            Logger.logD("validationExpression", "validation expression from the database" + Arrays.toString(arrayValidation));
+                            boolean checkValidation = false;
                             if (arrayValidation.length > 1)
-                                checkValidation =ValidationUtils.performNextValidation(arrayValidation,ed.getText().toString().trim());
+                                checkValidation = ValidationUtils.performNextValidation(arrayValidation, ed.getText().toString().trim());
                             else
-                                checkValidation=true;
+                                checkValidation = true;
 
-                            if(checkValidation){
-                                Logger.logD(LOGGER_TAG,"the answer values in dialog box"+ed.getText().toString());
+                            if (checkValidation) {
+                                Logger.logD(LOGGER_TAG, "the answer values in dialog box" + ed.getText().toString());
                                 if (answerList != null) {
                                     answerList.add(ed.getText().toString());
                                 }
-                            }else{
+                            } else {
                                 ed.setError(arrayValidation[4]);
                                 ed.setFocusable(true);
-                                answerList=null;
+                                answerList = null;
                             }
-                        }else{
+                        } else {
                             ed.setError("field is Mandatory");
                             ed.setFocusable(true);
-                            answerList=null;
+                            answerList = null;
                         }
                         break;
                     case "R":
-                        RadioGroup radiogroup= (RadioGroup) addView.get(i);
+                        RadioGroup radiogroup = (RadioGroup) addView.get(i);
                         for (int r = 0; r < radiogroup.getChildCount(); r++) {
                             RadioButton button = (RadioButton) radiogroup.getChildAt(r);
                             if (button.isChecked()) {
@@ -1017,23 +1004,23 @@ public class SupportClass {
                                 }
                                 break;
                             }
-                            if(radiogroup.getCheckedRadioButtonId() == -1) {
+                            if (radiogroup.getCheckedRadioButtonId() == -1) {
                                 button.setError("field is Mandatory");
                                 answerList = null;
                             }
                         }
                         break;
                     case "C":
-                        CheckBox checkbox=null;
-                        int checkBoxCount=0;
-                        List<String> OptionCode= new ArrayList<>();
-                        List<AnswersPage> mOptions = DataBaseMapperClass.getOptionsAnswers(MAssesmant.get(i).getQid(),database, preferences.getInt("selectedLangauge", 1));
-                        LinearLayout ll= (LinearLayout) addView.get(i);
-                        for(int c=0;c<ll.getChildCount();c++) {
+                        CheckBox checkbox = null;
+                        int checkBoxCount = 0;
+                        List<String> OptionCode = new ArrayList<>();
+                        List<AnswersPage> mOptions = DataBaseMapperClass.getOptionsAnswers(MAssesmant.get(i).getQid(), database, preferences.getInt("selectedLangauge", 1));
+                        LinearLayout ll = (LinearLayout) addView.get(i);
+                        for (int c = 0; c < ll.getChildCount(); c++) {
                             checkbox = (CheckBox) ll.getChildAt(c);
                             if (checkbox.isChecked()) {
                                 checkbox.setError(null);
-                                checkBoxCount=checkBoxCount+1;
+                                checkBoxCount = checkBoxCount + 1;
                                 OptionCode.add(String.valueOf(mOptions.get(c).getAnswerCode()));
 
                             }
@@ -1042,7 +1029,7 @@ public class SupportClass {
                             answerList.add(OptionCode.toString());
 
                         }
-                        if(checkBoxCount==0) {
+                        if (checkBoxCount == 0) {
                             if (checkbox != null) {
                                 checkbox.setError("Mandatory Question");
                             }
@@ -1051,108 +1038,108 @@ public class SupportClass {
                         break;
                     case "S":
                         Spinner typeInSpinner;
-                        typeInSpinner= (Spinner) addView.get(i);
-                        Logger.logD("spinner_selected_answer",typeInSpinner.getSelectedItem().toString());
+                        typeInSpinner = (Spinner) addView.get(i);
+                        Logger.logD("spinner_selected_answer", typeInSpinner.getSelectedItem().toString());
                         if (answerList != null) {
                             answerList.add(typeInSpinner.getSelectedItem().toString());
                         }
                         break;
                     case "D":
-                        Button edDatePicker= (Button) addView.get(i);
-                        if (!"".equals(edDatePicker.getText().toString())){
-                            if(true){
-                                Logger.logD(LOGGER_TAG,"the answer values in dialog box"+edDatePicker.getText().toString());
+                        Button edDatePicker = (Button) addView.get(i);
+                        edDatePicker.setHintTextColor(Color.WHITE);
+                        if (!"".equals(edDatePicker.getText().toString())) {
+                            if (true) {
+                                Logger.logD(LOGGER_TAG, "the answer values in dialog box" + edDatePicker.getText().toString());
                                 if (answerList != null) {
                                     answerList.add(edDatePicker.getText().toString());
                                 }
-                            }else{
+                            } else {
                                 edDatePicker.setError("Invalid date formate");
                                 edDatePicker.setFocusable(true);
-                                answerList=null;
+                                answerList = null;
                             }
-                        }else{
+                        } else {
                             edDatePicker.setError("field is Mandatory");
                             edDatePicker.setFocusable(true);
-                            answerList=null;
+                            answerList = null;
                         }
 
                         break;
 
                     default:
-                        EditText edDate= (EditText) addView.get(i);
+                        EditText edDate = (EditText) addView.get(i);
 
                         String validationExpression1;
-                        if(QType==14 && page!=null && !page.getAnswer().equals("N"))
-                            validationExpression1 =DataBaseMapperClass.getValidationExpression(currentQuestionNumber,database);
+                        if (QType == 14 && page != null && !page.getAnswer().equals("N"))
+                            validationExpression1 = DataBaseMapperClass.getValidationExpression(currentQuestionNumber, database);
 
                         else
                             validationExpression1 = MAssesmant.get(i).getGroupValidation();
 
-                        if (!"".equals(edDate.getText().toString())){
-                            String[] arrayValidation1=validationExpression1.split(":");
-                            boolean checkValidation=false;
+                        if (!"".equals(edDate.getText().toString())) {
+                            String[] arrayValidation1 = validationExpression1.split(":");
+                            boolean checkValidation = false;
                             if (arrayValidation1.length > 1)
-                                checkValidation = ValidationUtils.performNextValidation(arrayValidation1,edDate.getText().toString().trim());
+                                checkValidation = ValidationUtils.performNextValidation(arrayValidation1, edDate.getText().toString().trim());
                             else
-                                checkValidation=true;
+                                checkValidation = true;
 
-                            if(checkValidation){
-                                Logger.logD(LOGGER_TAG,"the answer values in dialog box"+edDate.getText().toString());
+                            if (checkValidation) {
+                                Logger.logD(LOGGER_TAG, "the answer values in dialog box" + edDate.getText().toString());
                                 if (answerList != null) {
                                     answerList.add(edDate.getText().toString());
                                 }
-                            }else{
+                            } else {
                                 edDate.setError(arrayValidation1[4]);
                                 edDate.setFocusable(true);
-                                answerList=null;
+                                answerList = null;
                             }
-                        }else{
+                        } else {
                             edDate.setError("field is Mandatory");
                             edDate.setFocusable(true);
-                            answerList=null;
+                            answerList = null;
                         }
                         break;
                 }
 
             }
-        }catch (Exception e){
-            Logger.logE("Exception","in",e);
+        } catch (Exception e) {
+            Logger.logE("Exception", "in", e);
         }
         return answerList;
     }
 
     public static void showDialogEdit(final List<Response> mResponse, final List<AssesmentBean> mAssesmant, final Context context, final SurveyQuestionActivity activity, Page currentQuestionPage, final SQLiteDatabase database, final String hashMapKey, final View child, final int gridType, final Page subQuestionpage) {
-        final SharedPreferences preferences=PreferenceManager.getDefaultSharedPreferences(context);
+        final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         final surveyQuestionGridInlineInterface surveyQuestionGridInlineInterface;
-        surveyQuestionGridInlineInterface=activity;
+        surveyQuestionGridInlineInterface = activity;
         final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(context);
         LayoutInflater inflater = activity.getLayoutInflater();
         final View dialogView = inflater.inflate(R.layout.form_dialog, null);
         final LinearLayout layout = (LinearLayout) dialogView.findViewById(R.id.dynamic_mini_grid);
-        final LinearLayout optionwidgetLL =layout;
+        final LinearLayout optionwidgetLL = layout;
         optionwidgetLL.removeAllViews();
-        final  List<View> addView= new ArrayList<>();
+        final List<View> addView = new ArrayList<>();
         int assessemntSize = mAssesmant.size();
-        Logger.logV("the size of the n","size"+assessemntSize);
+        Logger.logV("the size of the n", "size" + assessemntSize);
         for (int i = 1; i < assessemntSize + 1; i++) {
             int subCount = i;
             LinearLayout.LayoutParams paramassessmentQuestionText;
             paramassessmentQuestionText = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            TextView assessmentQuestionText= new TextView(context);
+            TextView assessmentQuestionText = new TextView(context);
 
-            if (mAssesmant.get(i-1).getMandatory()==1){
-                setRedStar(assessmentQuestionText,mAssesmant.get(i - 1).getAssessment());
-            }else{
+            if (mAssesmant.get(i - 1).getMandatory() == 1) {
+                setRedStar(assessmentQuestionText, mAssesmant.get(i - 1).getAssessment());
+            } else {
                 assessmentQuestionText.setText(mAssesmant.get(i - 1).getAssessment());
             }
 
-            //assessmentQuestionText.setText(mAssesmant.get(i - 1).getAssessment());
             assessmentQuestionText.setLayoutParams(paramassessmentQuestionText);
-            paramassessmentQuestionText.setMargins(4,10,4,10);
+            paramassessmentQuestionText.setMargins(4, 10, 4, 10);
             layout.addView(assessmentQuestionText);
-            String priorityQtype="";
-            String getGroupVaidation="";
-            if (gridType==14 && subQuestionpage!=null){
+            String priorityQtype = "";
+            String getGroupVaidation = "";
+            if (gridType == 14 && subQuestionpage != null) {
                 if (!subQuestionpage.getAnswer().equals("N")) {
                     priorityQtype = subQuestionpage.getAnswer();
                     getGroupVaidation = subQuestionpage.getValidation();
@@ -1160,12 +1147,12 @@ public class SupportClass {
                     Logger.logD("priorityQtype", "priorityQtype in SubQuestion" + priorityQtype);
                     Logger.logD("priorityQtype", "getGroupVaidation in SubQuestion" + getGroupVaidation);
                 } else {
-                    priorityQtype = mAssesmant.get(i-1).getQtype();
+                    priorityQtype = mAssesmant.get(i - 1).getQtype();
                     Logger.logD("priorityQtype", "priorityQtype in Assessment" + priorityQtype);
                     getGroupVaidation = mAssesmant.get(i - 1).getGroupValidation();
                 }
-            }else{
-                priorityQtype = mAssesmant.get(i-1).getQtype();
+            } else {
+                priorityQtype = mAssesmant.get(i - 1).getQtype();
                 getGroupVaidation = mAssesmant.get(i - 1).getGroupValidation();
             }
             switch (priorityQtype) {
@@ -1175,38 +1162,38 @@ public class SupportClass {
                     EditText editView = new EditText(context);
                     editView.setText("");
                     editView.setTextColor(Color.BLACK);
-                    subCount = subCount+20+2+i;
+                    subCount = subCount + 20 + 2 + i;
                     editView.setId(subCount);
                     editView.setLayoutParams(paramEdit);
-                    paramEdit.setMargins(4,4,4,4);
-                    editView.setPadding(10,0,0,10);
+                    paramEdit.setMargins(4, 4, 4, 4);
+                    editView.setPadding(10, 0, 0, 10);
                     editView.setBackgroundResource(R.drawable.textfieldbg);
 
-                    if (mResponse!=null ){
-                        for (int k=0;k<mResponse.size();k++){
-                            if (mResponse.get(k).getGroup_id()==mAssesmant.get(i - 1).getQid()){
+                    if (mResponse != null) {
+                        for (int k = 0; k < mResponse.size(); k++) {
+                            if (mResponse.get(k).getGroup_id() == mAssesmant.get(i - 1).getQid()) {
                                 editView.setText(mResponse.get(k).getAnswer());
                             }
                         }
 
 
                     }
-                    if(!"".equals(mAssesmant.get(i - 1).getGroupValidation())){
+                    if (!"".equals(mAssesmant.get(i - 1).getGroupValidation())) {
                         String mathString = mAssesmant.get(i - 1).getGroupValidation();
-                        Logger.logD("mathString","mathString" + mathString);
+                        Logger.logD("mathString", "mathString" + mathString);
                         String[] array;
-                        if (mathString != null && mathString.length() > 1)  {
+                        if (mathString != null && mathString.length() > 1) {
                             array = mathString.split(":");
-                            if("R".equalsIgnoreCase(array[0]) || "o".equalsIgnoreCase(array[0])){
+                            if ("R".equalsIgnoreCase(array[0]) || "o".equalsIgnoreCase(array[0])) {
                                 int maxLength;
                                 InputFilter[] FilterArray;
-                                switch (array[1]){
+                                switch (array[1]) {
                                     case "N":
 
                                         optionwidgetLL.addView(editView);
                                         addView.add(editView);
-                                        editView.setInputType(InputType.TYPE_CLASS_NUMBER  | InputType.TYPE_NUMBER_FLAG_SIGNED);
-                                        maxLength=  array[3].length();
+                                        editView.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_SIGNED);
+                                        maxLength = array[3].length();
                                         FilterArray = new InputFilter[1];
                                         FilterArray[0] = new InputFilter.LengthFilter(maxLength);
                                         editView.setFilters(FilterArray);
@@ -1215,8 +1202,8 @@ public class SupportClass {
 
                                         optionwidgetLL.addView(editView);
                                         addView.add(editView);
-                                        editView.setInputType(InputType.TYPE_CLASS_TEXT );
-                                        maxLength=  Integer.parseInt(array[3]);
+                                        editView.setInputType(InputType.TYPE_CLASS_TEXT);
+                                        maxLength = Integer.parseInt(array[3]);
                                         FilterArray = new InputFilter[1];
                                         FilterArray[0] = new InputFilter.LengthFilter(maxLength);
                                         editView.setFilters(FilterArray);
@@ -1232,7 +1219,6 @@ public class SupportClass {
                                         break;
                                 }
                             } else {
-                                //  layout.addView(editView);
                                 optionwidgetLL.addView(editView);
                                 addView.add(editView);
                                 editView.setInputType(InputType.TYPE_CLASS_TEXT);
@@ -1242,19 +1228,19 @@ public class SupportClass {
                                 editView.setFilters(FilterArray);
                             }
                         }
-                    }else {
+                    } else {
                         optionwidgetLL.addView(editView);
                         addView.add(editView);
 
                     }
                     break;
-                case "R" :
-                    int s=1;
-                    List<AnswersPage>  mOptions ;
+                case "R":
+                    int s = 1;
+                    List<AnswersPage> mOptions;
                     if (!mAssesmant.get(i - 1).getQtype().equalsIgnoreCase("N"))
-                        mOptions = DataBaseMapperClass.getOptionsAnswers(mAssesmant.get(i-1).getQid(),database, preferences.getInt("selectedLangauge", 1));
+                        mOptions = DataBaseMapperClass.getOptionsAnswers(mAssesmant.get(i - 1).getQid(), database, preferences.getInt("selectedLangauge", 1));
                     else
-                        mOptions = DataBaseMapperClass.getOptionsAnswersForSubquestionBased(subQuestionpage.getQuestionId(),database);
+                        mOptions = DataBaseMapperClass.getOptionsAnswersForSubquestionBased(subQuestionpage.getQuestionId(), database);
 
                     RadioGroup radioGroup = new RadioGroup(context);
                     radioGroup.setLayoutParams(new RadioGroup.LayoutParams(
@@ -1262,23 +1248,22 @@ public class SupportClass {
                             LinearLayout.LayoutParams.WRAP_CONTENT));
                     radioGroup.setOrientation(LinearLayout.VERTICAL);
                     radioGroup.setGravity(Gravity.LEFT);
-                    radioGroup.setId(i + 1000+i+i+s);
-                    Logger.logD("GroupId",radioGroup.getId()+"");
+                    radioGroup.setId(i + 1000 + i + i + s);
+                    Logger.logD("GroupId", radioGroup.getId() + "");
                     s++;
                     int buttons = mOptions.size();
-                    //  List<Response> responseAnswer= DataBaseMapperClass.setAnswersForGridRadio(mAssesmant.get(i-1).getQid(),db,String.valueOf(surveyPrimaryKeyId));
-                    for (int r = 1; r <= buttons ; r++) {
-                        radioGroup.setId(i+10000+r);
+                    for (int r = 1; r <= buttons; r++) {
+                        radioGroup.setId(i + 10000 + r);
                         RadioButton rbn = new RadioButton(context);
-                        rbn.setId(i + 1000+i+r);
-                        rbn.setText(mOptions.get(r-1).getAnswer());
+                        rbn.setId(i + 1000 + i + r);
+                        rbn.setText(mOptions.get(r - 1).getAnswer());
 
-                        if (mResponse!=null){
-                           for (int k=0;k<mResponse.size();k++){
-                               if (mResponse.get(k).getAns_code().equals(mOptions.get(r - 1).getAnswerCode())) {
-                                   rbn.setChecked(true);
-                               }
-                           }
+                        if (mResponse != null) {
+                            for (int k = 0; k < mResponse.size(); k++) {
+                                if (mResponse.get(k).getAns_code().equals(mOptions.get(r - 1).getAnswerCode())) {
+                                    rbn.setChecked(true);
+                                }
+                            }
 
                         }
 
@@ -1288,32 +1273,31 @@ public class SupportClass {
                     addView.add(radioGroup);
 
                     break;
-                case "S" :
-                    List<AnswersPage>  mOptionsDroupdown = DataBaseMapperClass.getOptionsAnswers(mAssesmant.get(i-1).getQid(),database, preferences.getInt("selectedLangauge", 1));
-                    List<String> optionText= new ArrayList<>();
-                    Spinner spinner=new Spinner(context);
+                case "S":
+                    List<AnswersPage> mOptionsDroupdown = DataBaseMapperClass.getOptionsAnswers(mAssesmant.get(i - 1).getQid(), database, preferences.getInt("selectedLangauge", 1));
+                    List<String> optionText = new ArrayList<>();
+                    Spinner spinner = new Spinner(context);
 
                     spinner.setLayoutParams(new RadioGroup.LayoutParams(
                             ViewGroup.LayoutParams.MATCH_PARENT,
                             LinearLayout.LayoutParams.WRAP_CONTENT));
 
-                    for(int d=0;d<mOptionsDroupdown.size();d++){
+                    for (int d = 0; d < mOptionsDroupdown.size(); d++) {
                         optionText.add(mOptionsDroupdown.get(d).getAnswer());
                     }
-                    //    List<Response> responseAnswerSpinner= DataBaseMapperClass.setAnswersForGridRadio(mAssesmant.get(i-1).getQid(),db,String.valueOf(surveyPrimaryKeyId));
-                    ArrayAdapter<AnswersPage> spinnerArrayAdapter = new ArrayAdapter<>(context,   android.R.layout.simple_spinner_item, mOptionsDroupdown);
+                    ArrayAdapter<AnswersPage> spinnerArrayAdapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, mOptionsDroupdown);
                     spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item); // The drop down view
                     spinner.setAdapter(spinnerArrayAdapter);
-                    if (mResponse!=null){
-                       for (int k=0;k<mResponse.size();k++){
-                           for (int l=0; l<mOptionsDroupdown.size();l++){
-                               if (mResponse.get(k).getAns_code().equals(mOptionsDroupdown.get(l).getAnswerCode())){
-                                   spinner.setSelection(optionText.indexOf(mOptionsDroupdown.get(l).getAnswer()));
-                                   Logger.logD(LOGGER_TAG," previous Answer"+mOptionsDroupdown.get(l).getAnswer());
-                               }
-                           }
+                    if (mResponse != null) {
+                        for (int k = 0; k < mResponse.size(); k++) {
+                            for (int l = 0; l < mOptionsDroupdown.size(); l++) {
+                                if (mResponse.get(k).getAns_code().equals(mOptionsDroupdown.get(l).getAnswerCode())) {
+                                    spinner.setSelection(optionText.indexOf(mOptionsDroupdown.get(l).getAnswer()));
+                                    Logger.logD(LOGGER_TAG, " previous Answer" + mOptionsDroupdown.get(l).getAnswer());
+                                }
+                            }
 
-                       }
+                        }
 
                     }
 
@@ -1322,37 +1306,46 @@ public class SupportClass {
 
 
                     break;
-                case "C" :
-                    List<AnswersPage>  mOptionsCheckbox = DataBaseMapperClass.getOptionsAnswers(mAssesmant.get(i-1).getQid(),database, preferences.getInt("selectedLangauge", 1));
-                    LinearLayout checkboxContainer= new LinearLayout(context);
+                case "C":
+                    List<AnswersPage> mOptionsCheckbox = DataBaseMapperClass.getOptionsAnswers(mAssesmant.get(i - 1).getQid(), database, preferences.getInt("selectedLangauge", 1));
+                    LinearLayout checkboxContainer = new LinearLayout(context);
                     checkboxContainer.setLayoutParams(new LinearLayout.LayoutParams(
                             409,
                             LinearLayout.LayoutParams.WRAP_CONTENT));
                     checkboxContainer.setOrientation(LinearLayout.VERTICAL);
                     checkboxContainer.setGravity(Gravity.CENTER_VERTICAL);
-                    //  List<Response> responseAnswerCheckbox= DataBaseMapperClass.setAnswersForGridRadio(mAssesmant.get(i-1).getQid(),db,String.valueOf(surveyPrimaryKeyId));
-                    if (mOptionsCheckbox.size()>0){
-                        for (int c=0;c<mOptionsCheckbox.size();c++){
-                            CheckBox checkbox= new CheckBox(context);
-                            String getansweredOptionCode= mResponse.get(i-1).getAnswer();
-                            String  string = getansweredOptionCode.replaceAll("[\\p{Z}\\s]+", "");
-                            String[] array = string.substring(1, string.length() - 1).split(",");
-                            Logger.logD(LOGGER_TAG," the answered check option ids"+array.length);
+                    if (mOptionsCheckbox.size() > 0) {
+                        for (int c = 0; c < mOptionsCheckbox.size(); c++) {
+                            CheckBox checkbox = new CheckBox(context);
+                            String getansweredOptionCode = "";
+                            for (int u = 0; u < mAssesmant.size(); u++) {
+                                boolean istrue = false;
+                                for (int y = 0; y < mResponse.size(); y++) {
 
-                            for (int k=0;k<array.length;k++){
-                                if (mOptionsCheckbox.get(c).getAnswerCode().equals(array[k])){
+                                    if (mAssesmant.get(u).getQid() == mResponse.get(y).getGroup_id() && mResponse.get(y).getQ_type().equalsIgnoreCase("C")) {
+                                        getansweredOptionCode = mResponse.get(y).getAnswer();
+                                        istrue = true;
+                                        break;
+                                    }
+                                    if (istrue)
+                                        break;
+
+                                }
+                                if (istrue)
+                                    break;
+                            }
+                            String string = getansweredOptionCode.replace("[", "").replace("]","").replace("\"","");
+                            String[] array = string.split(",");
+
+
+//
+//                            if (!string.isEmpty())
+//                                array = string.substring(1, string.length() - 1).split(",");
+                            for (int k = 0; k < array.length; k++) {
+                                if (mOptionsCheckbox.get(c).getAnswerCode().equals(array[k])) {
                                     checkbox.setChecked(true);
                                 }
                             }
-
-                                    /*if (responseAnswerCheckbox.size()>0){
-                                        for (int getCheck=0;getCheck<responseAnswerCheckbox.size();getCheck++){
-                                            if (mOptionsCheckbox.get(c).getId()==responseAnswerCheckbox.get(getCheck).getPrimaryID()
-                                                    && String.valueOf(mSubQuestions.get(j-1).getQuestionId()).equals(responseAnswerCheckbox.get(getCheck).getSubquestionId())){
-                                                checkbox.setChecked(true);
-                                            }
-                                        }
-                                    }*/
                             checkbox.setText(mOptionsCheckbox.get(c).getAnswer());
                             checkboxContainer.addView(checkbox);
 
@@ -1363,7 +1356,7 @@ public class SupportClass {
 
                     break;
                 case "D":
-                    final  Button button = new Button(context);
+                    final Button button = new Button(context);
                     button.setTextColor(Color.WHITE);
                     button.setHint("Pick Date");
                     button.setHintTextColor(Color.WHITE);
@@ -1376,18 +1369,30 @@ public class SupportClass {
                     button.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            for(Button btn : dateButton){
-                                if (btn.getId()== view.getId()){
+                            for (Button btn : dateButton) {
+                                if (btn.getId() == view.getId()) {
                                     buttonDynamicDateGrid.clear();
-                                    buttonDynamicDateGrid.put("1",btn);
+                                    buttonDynamicDateGrid.put("1", btn);
                                 }
 
                             }
                             activity.showDateDialog(2, finalGetGroupVaidationEdit, button);
                         }
                     });
-                    if (mResponse!=null){
-                        button.setText(mResponse.get(i-1).getAnswer());
+                    if (mResponse != null) {
+
+                        for (int k = 0; k < mResponse.size(); k++) {
+                            for (int l = 0; l < mAssesmant.size(); l++) {
+                                if (mResponse.get(k).getGroup_id()==(mAssesmant.get(l).getQid()) && mResponse.get(k).getQ_type().equalsIgnoreCase("D")) {
+                                    button.setText(mResponse.get(k).getAnswer());
+                                    Logger.logD(LOGGER_TAG, " date Answer" +mResponse.get(k).getAnswer());
+
+                                }
+                            }
+
+                        }
+
+
                     }
                     optionwidgetLL.addView(button);
                     addView.add(button);
@@ -1398,32 +1403,32 @@ public class SupportClass {
                     EditText editViewdate = new EditText(context);
                     editViewdate.setText("");
                     editViewdate.setTextColor(Color.BLACK);
-                    subCount = subCount+20+2+i;
+                    subCount = subCount + 20 + 2 + i;
                     editViewdate.setId(subCount);
                     editViewdate.setLayoutParams(paramEdit1);
-                    paramEdit1.setMargins(4,4,4,4);
-                    editViewdate.setPadding(10,0,0,10);
+                    paramEdit1.setMargins(4, 4, 4, 4);
+                    editViewdate.setPadding(10, 0, 0, 10);
                     editViewdate.setBackgroundResource(R.drawable.textfieldbg);
-                    if (mResponse!=null ){
-                        editViewdate.setText(mResponse.get(i-1).getAnswer());
+                    if (mResponse != null) {
+                        editViewdate.setText(mResponse.get(i - 1).getAnswer());
 
                     }
-                    if(!"".equals(mAssesmant.get(i - 1).getGroupValidation())){
+                    if (!"".equals(mAssesmant.get(i - 1).getGroupValidation())) {
                         String mathString = mAssesmant.get(i - 1).getGroupValidation();
-                        Logger.logD("mathString","mathString" + mathString);
+                        Logger.logD("mathString", "mathString" + mathString);
                         String[] array;
-                        if (mathString != null && mathString.length() > 1)  {
+                        if (mathString != null && mathString.length() > 1) {
                             array = mathString.split(":");
-                            if("R".equalsIgnoreCase(array[0]) || "o".equalsIgnoreCase(array[0])){
+                            if ("R".equalsIgnoreCase(array[0]) || "o".equalsIgnoreCase(array[0])) {
                                 int maxLength;
                                 InputFilter[] FilterArray;
-                                switch (array[1]){
+                                switch (array[1]) {
                                     case "N":
 
                                         optionwidgetLL.addView(editViewdate);
                                         addView.add(editViewdate);
-                                        editViewdate.setInputType(InputType.TYPE_CLASS_NUMBER  | InputType.TYPE_NUMBER_FLAG_SIGNED);
-                                        maxLength=  array[3].length();
+                                        editViewdate.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_SIGNED);
+                                        maxLength = array[3].length();
                                         FilterArray = new InputFilter[1];
                                         FilterArray[0] = new InputFilter.LengthFilter(maxLength);
                                         editViewdate.setFilters(FilterArray);
@@ -1432,8 +1437,8 @@ public class SupportClass {
 
                                         optionwidgetLL.addView(editViewdate);
                                         addView.add(editViewdate);
-                                        editViewdate.setInputType(InputType.TYPE_CLASS_TEXT );
-                                        maxLength=  Integer.parseInt(array[3]);
+                                        editViewdate.setInputType(InputType.TYPE_CLASS_TEXT);
+                                        maxLength = Integer.parseInt(array[3]);
                                         FilterArray = new InputFilter[1];
                                         FilterArray[0] = new InputFilter.LengthFilter(maxLength);
                                         editViewdate.setFilters(FilterArray);
@@ -1449,7 +1454,6 @@ public class SupportClass {
                                         break;
                                 }
                             } else {
-                                //  layout.addView(editView);
                                 optionwidgetLL.addView(editViewdate);
                                 addView.add(editViewdate);
                                 editViewdate.setInputType(InputType.TYPE_CLASS_TEXT);
@@ -1459,7 +1463,7 @@ public class SupportClass {
                                 editViewdate.setFilters(FilterArray);
                             }
                         }
-                    }else {
+                    } else {
                         optionwidgetLL.addView(editViewdate);
                         addView.add(editViewdate);
 
@@ -1472,18 +1476,17 @@ public class SupportClass {
         final Button saveAndCreate = (Button) dialogView.findViewById(R.id.saveandcreate);
         saveAndCreate.setVisibility(View.GONE);
         final Button saveAndExit = (Button) dialogView.findViewById(R.id.saveandexit);
-        // txt.setText(mSubQuestions.get(0).getQuestion());
 
-        if (gridType==14){
+        if (gridType == 14) {
             saveAndCreate.setVisibility(View.GONE);
             txt.setVisibility(View.VISIBLE);
             txt.setText(subQuestionpage.getSubQuestion());
-        }else{
+        } else {
             txt.setVisibility(View.GONE);
         }
         dialogBuilder.setTitle(currentQuestionPage.getQuestion());
 
-        final  int currentQuestionNumber=  currentQuestionPage.getQuestionNumber();
+        final int currentQuestionNumber = currentQuestionPage.getQuestionNumber();
         final AlertDialog b = dialogBuilder.create();
         b.setCanceledOnTouchOutside(false);
         b.show();
@@ -1493,8 +1496,8 @@ public class SupportClass {
                 /**
                  * module to validate the all the Field based on the layout filled . returing back the answerd list
                  */
-                List<String> answered=   methodToValidationField(currentQuestionNumber,context,addView, database,gridType,subQuestionpage);
-                if (answered!=null && answered.size()==mAssesmant.size()) {
+                List<String> answered = methodToValidationField(currentQuestionNumber, context, addView, database, gridType, subQuestionpage);
+                if (answered != null && answered.size() == mAssesmant.size()) {
                     Logger.logD(LOGGER_TAG, "the all field validation pass");
                     SharedPreferences prefs = context.getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
                     int survey_ID = prefs.getInt("survey_id", 0);
@@ -1503,11 +1506,11 @@ public class SupportClass {
                     List<AnswersPage> mOptions;
                     for (int i = 0; i < MAssesmant.size(); i++) {
 
-                        if (gridType==14) {
+                        if (gridType == 14) {
                             if (subQuestionpage.getAnswer().equalsIgnoreCase("N")) {
                                 // bellow if block code is for sub question based answers fetching
                                 if (MAssesmant.get(i).getQtype().equalsIgnoreCase("R") || MAssesmant.get(i).getQtype().equalsIgnoreCase("S")) {
-                                    mOptions = DataBaseMapperClass.getOptionsAnswersForGrid(mAssesmant.get(i).getQid(), database, answered.get(i),preferences.getInt("selectedLangauge", 1));
+                                    mOptions = DataBaseMapperClass.getOptionsAnswersForGrid(mAssesmant.get(i).getQid(), database, answered.get(i), preferences.getInt("selectedLangauge", 1));
                                 } else {
                                     mOptions = DataBaseMapperClass.getOptionsAnswers(mAssesmant.get(i).getQid(), database, preferences.getInt("selectedLangauge", 1));
                                 }
@@ -1537,9 +1540,9 @@ public class SupportClass {
                                     ToastUtils.displayToast("Option code not found", context);
                                 }
                             }
-                        }else{
+                        } else {
                             if (MAssesmant.get(i).getQtype().equalsIgnoreCase("R") || MAssesmant.get(i).getQtype().equalsIgnoreCase("S")) {
-                                mOptions = DataBaseMapperClass.getOptionsAnswersForGrid(mAssesmant.get(i).getQid(), database, answered.get(i),preferences.getInt("selectedLangauge", 1));
+                                mOptions = DataBaseMapperClass.getOptionsAnswersForGrid(mAssesmant.get(i).getQid(), database, answered.get(i), preferences.getInt("selectedLangauge", 1));
                             } else {
                                 mOptions = DataBaseMapperClass.getOptionsAnswers(mAssesmant.get(i).getQid(), database, preferences.getInt("selectedLangauge", 1));
                             }
@@ -1554,25 +1557,25 @@ public class SupportClass {
                         }
 
                     }
-                    String[] splitHashmapkey= hashMapKey.split("_");
-                    if (gridType==16) {
+                    String[] splitHashmapkey = hashMapKey.split("_");
+                    if (gridType == 16) {
                         fillInlineRow.put(currentQuestionNumber + "_" + splitHashmapkey[1], responselist);
                         Logger.logD("Size if the filled Complet in Response in hashMap", fillInlineRow.size() + "");
                         b.dismiss();
-                        ToastUtils.displayToast("Response updated",context);
-                        surveyQuestionGridInlineInterface.OnSuccessfullGridInline(fillInlineRow,child,currentQuestionNumber,fillInlineHashMapKey, 16);
+                        ToastUtils.displayToast("Response updated", context);
+                        surveyQuestionGridInlineInterface.OnSuccessfullGridInline(fillInlineRow, child, currentQuestionNumber, fillInlineHashMapKey, 16);
 
-                    }else if (gridType==14){
+                    } else if (gridType == 14) {
                         GridResponseHashMap.put(currentQuestionNumber + "_" + splitHashmapkey[1], responselist);
                         Logger.logD("Size if the filled Complet in Response in hashMap", fillInlineRow.size() + "");
                         b.dismiss();
-                        ToastUtils.displayToast("Response updated",context);
-                        surveyQuestionGridInlineInterface.OnSuccessfullGridInline(GridResponseHashMap,child,currentQuestionNumber,GridResponseHashMapKeys, 14);
+                        ToastUtils.displayToast("Response updated", context);
+                        surveyQuestionGridInlineInterface.OnSuccessfullGridInline(GridResponseHashMap, child, currentQuestionNumber, GridResponseHashMapKeys, 14);
 
                     }
 
-                }else{
-                    ToastUtils.displayToast("please fill Mandatory field",context);
+                } else {
+                    ToastUtils.displayToast("please fill Mandatory field", context);
                 }
 
             }

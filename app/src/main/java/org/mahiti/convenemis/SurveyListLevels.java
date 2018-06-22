@@ -19,7 +19,7 @@ import org.mahiti.convenemis.utils.Logger;
 import java.util.List;
 
 
-public class SurveyListLevels extends Activity implements ClusterToTypo {
+public class  SurveyListLevels extends Activity implements ClusterToTypo {
     SurveyListLevels activity;
     Context context;
     String mainUrl;

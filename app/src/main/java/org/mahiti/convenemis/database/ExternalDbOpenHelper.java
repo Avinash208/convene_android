@@ -4003,12 +4003,12 @@ public class ExternalDbOpenHelper extends SQLiteOpenHelper {
         return getLevelTemp;
     }
 
-    public List<Level1> setSpinnerByID(String previous, String orderLevel, int countryList) {
+    public List<Level1> setSpinnerByID(String previous, String tablename, int countryList) {
         List<Level1> getLevelTemp = new ArrayList<>();
         Logger.logV(TAG, "the level is............" + level);
         SQLiteDatabase db = openDataBase();
-        String query = SELECT_FROM + orderLevel + " where " + previous + "=" + countryList + " and active=2";
-        Cursor cursor = db.rawQuery(query, null);
+        String query = SELECT_FROM + tablename + " where " + previous + "=" + countryList + " and active=2";
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             Cursor cursor = db.rawQuery(query, null);
         Logger.logV(TAG, "the value is" + query);
         if (cursor != null && cursor.getCount() != 0 && cursor.moveToFirst()) {
             do {
@@ -4016,6 +4016,32 @@ public class ExternalDbOpenHelper extends SQLiteOpenHelper {
                 String name = cursor.getString(cursor.getColumnIndex("name"));
                 Logger.logV(TAG, "the names are" + name);
                 Level1 level1 = new Level1(0, id, "", 0, name);
+                getLevelTemp.add(level1);
+            } while (cursor.moveToNext());
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        return getLevelTemp;
+    }
+    public List<LevelBeen> setSpinnerD(String previous, String tablename, int countryList) {
+        List<LevelBeen> getLevelTemp = new ArrayList<>();
+        LevelBeen levelBeendefault= new LevelBeen();
+        levelBeendefault.setId(0);
+        levelBeendefault.setName(" Select ");
+        levelBeendefault.setLocationLevel(2);
+        getLevelTemp.add(levelBeendefault);
+        Logger.logV(TAG, "the level is............" + level);
+        SQLiteDatabase db = openDataBase();
+        String query = SELECT_FROM + tablename + " where " + previous + "=" + countryList + " and active=2";
+        Cursor cursor = db.rawQuery(query, null);
+        Logger.logV(TAG, "the value is" + query);
+        if (cursor != null && cursor.getCount() != 0 && cursor.moveToFirst()) {
+            do {
+                int id = cursor.getInt(cursor.getColumnIndex("id"));
+                String name = cursor.getString(cursor.getColumnIndex("name"));
+                Logger.logV(TAG, "the names are" + name);
+                LevelBeen level1 = new LevelBeen(id, name);
                 getLevelTemp.add(level1);
             } while (cursor.moveToNext());
             if (cursor != null) {
@@ -4119,6 +4145,41 @@ public class ExternalDbOpenHelper extends SQLiteOpenHelper {
         }
 
         return getSelectedUUids;
+    }
+
+
+    public List<LevelBeen> getLevelsrecords(String orderLeve, ExternalDbOpenHelper dbOpenHelper) {
+        List<LevelBeen> tempList= new ArrayList<>();
+        LevelBeen levelBeendefault= new LevelBeen();
+        levelBeendefault.setId(0);
+        levelBeendefault.setName(" Select ");
+        levelBeendefault.setLocationLevel(2);
+        tempList.add(levelBeendefault);
+        try {
+            String pendingSurveyQuery = "select * from "+orderLeve+"";
+            SQLiteDatabase db = dbOpenHelper.getWritableDatabase();
+            Cursor cursor = db.rawQuery(pendingSurveyQuery, null);
+            if (cursor.getCount() != 0 && cursor.moveToFirst()) {
+                do {
+                    String name = cursor.getString(cursor.getColumnIndex("name"));
+                    String modified_date = cursor.getString(cursor.getColumnIndex("modified_date"));
+                    int active = cursor.getInt(cursor.getColumnIndex("active"));
+                    int previoudLevelIds = cursor.getInt(cursor.getColumnIndex(orderLeve+"_id"));
+                    int id = cursor.getInt(cursor.getColumnIndex("id"));
+                    LevelBeen levelBeen= new LevelBeen();
+                    levelBeen.setId(id);
+                    levelBeen.setName(name);
+                    levelBeen.setLocationLevel(previoudLevelIds);
+                    tempList.add(levelBeen);
+                } while (cursor.moveToNext());
+                cursor.close();
+            }
+        } catch (Exception e) {
+            Logger.logV("", "checkPrymarySaveDraftExist from Survey table" + e);
+
+        }
+
+        return tempList;
     }
 
 

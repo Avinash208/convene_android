@@ -145,8 +145,10 @@ public class LevelsActivityNew extends BaseActivity implements AdapterView.OnIte
 
         Logger.logV("LevelActivity", "Survey id of selected survey" + surveyId);
         dbhelper = ExternalDbOpenHelper.getInstance(LevelsActivityNew.this, sharedPreferences.getString(Constants.DBNAME, ""), sharedPreferences.getString("inv_id", ""));
-        levels = dbhelper.getOrderLevels(Integer.parseInt(surveyId));
-        labels = dbhelper.getOrderlabels(Integer.parseInt(surveyId));
+      //  levels = dbhelper.getOrderLevels(Integer.parseInt(surveyId));
+        levels = "level5,level6";
+     //   labels = dbhelper.getOrderlabels(Integer.parseInt(surveyId));
+        labels = "gramapanchayath,village";
         villageList = new ArrayList<>();
         orderLabels = labels.split(",");
         orderLeves = levels.split(",");

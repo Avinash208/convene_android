@@ -42,6 +42,7 @@ import org.mahiti.convenemis.database.DBHandler;
 import org.mahiti.convenemis.database.ExternalDbOpenHelper;
 import org.mahiti.convenemis.database.ResponseCheckController;
 import org.mahiti.convenemis.database.SurveyControllerDbHelper;
+import org.mahiti.convenemis.database.Utilities;
 import org.mahiti.convenemis.location.GPSTracker;
 import org.mahiti.convenemis.utils.AddBeneficiaryUtils;
 import org.mahiti.convenemis.utils.AnimationUtils;
@@ -598,6 +599,7 @@ public class DataFormFragment extends Fragment implements PeriodicTypeInterface,
                 String parentUUIDExist= handler.getActivityUUID(beneficiaryUuid);
                 if (!parentUUIDExist.equals("")) {
                     Logger.logD(TAG, "completed Response->" + parentUUIDExist);
+                    Utilities.setSurveyStatus(defaultPreferences,"edit");
                     SharedPreferences.Editor editorSaveDraft= defaultPreferences.edit();
                     editorSaveDraft.putBoolean(SAVE_TO_DRAFT_FLAG_KEY,true);
                     editorSaveDraft.putBoolean(ISLOCATIONBASED,false);

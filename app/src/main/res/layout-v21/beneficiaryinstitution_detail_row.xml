@@ -16,7 +16,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
-        app:cardBackgroundColor="#fff9e4"
+        app:cardBackgroundColor="#eeeeee"
         app:cardElevation="4dp">
 
         <LinearLayout
@@ -87,6 +87,7 @@
                 android:layout_weight="0.4"
                 android:background="@drawable/ovalshape"
                 android:gravity="center"
+                android:text="Completed"
                 android:layout_marginRight="5dp"
                 android:textColor="@color/black"
                 android:textSize="12sp" />

@@ -27,6 +27,7 @@ public class DataBaseMapperClass {
     private static final String ORDER_BY_OPTION_ORDER=" ORDER BY a.option_order";
     private static final String ANSWERFORRADIO="answerForRadio";
     private static final String SELECT_FROM="SELECT * from ";
+    private static final String ASSESSMENTS = "assessment";
     private static String cursorCountStr = "CursoreCount : ";
     private static String qBlockRefStr = "getting questions based on blocks";
     private static String andSurveyIdStr = " and survey_id=";
@@ -174,15 +175,15 @@ public class DataBaseMapperClass {
      * method to get answeress of checkbox question from response table based on survey primary id and qid
      * @param questionNumber
      * @param db
-     * @param survey_id
+     * @param surveyid
      * @param restUrl
      * @return
      */
-    public static HashMap<String,List<AnswersPage>> getUserCheckBOxAnsweredResponseFromDB(int questionNumber, net.sqlcipher.database.SQLiteDatabase db, String survey_id, RestUrl restUrl) {
+    public static HashMap<String,List<AnswersPage>> getUserCheckBOxAnsweredResponseFromDB(int questionNumber, net.sqlcipher.database.SQLiteDatabase db, String surveyid, RestUrl restUrl) {
         Cursor questionCursor=null;
         HashMap<String,List<AnswersPage>> getStoredAnswer= new HashMap<>();
         List<AnswersPage> allAnswersList = new ArrayList<>();
-        String ResponseQuery=SELECT_FROM +Constants.RESPONSE  + " where  q_code ="+questionNumber +  " and survey_id = '" + survey_id + "'";
+        String ResponseQuery=SELECT_FROM +Constants.RESPONSE  + " where  q_code ="+questionNumber +  " and survey_id = '" + surveyid + "'";
         Logger.logD("Response Fetch","query"+ResponseQuery);
         try {
             questionCursor = db.rawQuery(ResponseQuery, null);
@@ -805,7 +806,7 @@ public class DataBaseMapperClass {
                     int   qid = questionCursor.getInt(questionCursor
                             .getColumnIndex("id"));
                     String assesment = questionCursor.getString(questionCursor
-                            .getColumnIndex("assessment"));
+                            .getColumnIndex(ASSESSMENTS));
                     String assessmentType = questionCursor.getString(questionCursor
                             .getColumnIndex(qTypeStr));
                     int assesmentId = questionCursor.getInt(questionCursor
@@ -947,10 +948,10 @@ public class DataBaseMapperClass {
         list.clear();
         if (cursor.moveToFirst()) {
             do {
-                String Qid = cursor.getString(cursor.getColumnIndex("q_id"));
+                String qId = cursor.getString(cursor.getColumnIndex("q_id"));
                 String answer_ans_code = cursor.getString(cursor.getColumnIndex(ansCodeStr));
                 String answer = cursor.getString(cursor.getColumnIndex(PreferenceConstants.ANS_TEXT));
-                Response answersObject = new Response(Qid, answer, answer_ans_code,
+                Response answersObject = new Response(qId, answer, answer_ans_code,
                         cursor.getString(cursor.getColumnIndex("sub_questionId")),
                         cursor.getInt(cursor.getColumnIndex("q_code")),
                         cursor.getInt(cursor.getColumnIndex(primaryKeyStr)),
@@ -959,7 +960,6 @@ public class DataBaseMapperClass {
                         cursor.getInt(cursor.getColumnIndex(primaryIdStr)),
                         cursor.getString(cursor.getColumnIndex(qTypeStr)));
                 list.add(answersObject);
-                Logger.logD(TAG,"answer - "+answer +" - qid "+Qid +" gId - "+cursor.getInt(cursor.getColumnIndex(gourpIdStr)));
             } while (cursor.moveToNext());
         }
         cursor.close();
@@ -1373,7 +1373,7 @@ public class DataBaseMapperClass {
                     int   qid = questionCursor.getInt(questionCursor
                             .getColumnIndex("id"));
                     String assesment = questionCursor.getString(questionCursor
-                            .getColumnIndex("assessment"));
+                            .getColumnIndex(ASSESSMENTS));
                     String assessmentType = questionCursor.getString(questionCursor
                             .getColumnIndex("qtype"));
                     int assesmentId = questionCursor.getInt(questionCursor
@@ -1432,9 +1432,9 @@ public class DataBaseMapperClass {
         if (cursor != null && cursor.moveToFirst()) {
             do {
                 String Qid = cursor.getString(cursor.getColumnIndex("q_id"));
-                String answer_ans_code = cursor.getString(cursor.getColumnIndex("ans_code"));
+                String answerAnsCode = cursor.getString(cursor.getColumnIndex("ans_code"));
                 String answer = cursor.getString(cursor.getColumnIndex(PreferenceConstants.ANS_TEXT));
-                Response answersObject = new Response(Qid, answer, answer_ans_code,
+                Response answersObject = new Response(Qid, answer, answerAnsCode,
                         cursor.getString(cursor.getColumnIndex("sub_questionId")),
                         cursor.getInt(cursor.getColumnIndex("q_code")),
                         cursor.getInt(cursor.getColumnIndex("primarykey")),
@@ -1443,7 +1443,7 @@ public class DataBaseMapperClass {
                         cursor.getInt(cursor.getColumnIndex("primary_id")),
                         cursor.getString(cursor.getColumnIndex("qtype")));
                 list.add(answersObject);
-                Logger.logD("assessment","answer - "+answer +" - qid "+Qid +" gId - "+cursor.getInt(cursor.getColumnIndex("group_id")));
+                Logger.logD(ASSESSMENTS,"answer - "+answer +" - qid "+Qid +" gId - "+cursor.getInt(cursor.getColumnIndex("group_id")));
             } while (cursor.moveToNext());
         }
         if (cursor != null)

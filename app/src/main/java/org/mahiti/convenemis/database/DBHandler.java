@@ -21,6 +21,7 @@ import org.mahiti.convenemis.BeenClass.StatusBean;
 import org.mahiti.convenemis.BeenClass.SurveysBean;
 import org.mahiti.convenemis.BeenClass.childLink;
 import org.mahiti.convenemis.BeenClass.parentChild.Level1;
+import org.mahiti.convenemis.BeenClass.parentChild.LocationSurveyBeen;
 import org.mahiti.convenemis.utils.Constants;
 import org.mahiti.convenemis.utils.Logger;
 import org.mahiti.convenemis.utils.PreferenceConstants;
@@ -1363,7 +1364,7 @@ public class DBHandler extends SQLiteOpenHelper {
                     String answer = "";
                     int questionID = cursor.getInt(cursor.getColumnIndex("q_id"));
                     int groupId ;
-                    groupId = cursor.getInt(cursor.getColumnIndex("group_id"));
+                    groupId = cursor.getInt(cursor.getColumnIndex(GROUP_ID_KEY));
                     int prime_key = cursor.getInt(cursor.getColumnIndex("primarykey"));
 
                     String questionType = cursor.getString(cursor.getColumnIndex(QTYPE));
@@ -1436,7 +1437,6 @@ public class DBHandler extends SQLiteOpenHelper {
      */
     public List<Response> setAnswersForGrid(int questionNumber, String surveyid) {
         List<Response> list = new ArrayList<>();
-     //   String gridQuery = "SELECT * FROM Response where group_id IN(select group_id from Response where survey_id='"+survey_id+"' and q_id = '" + questionNumber + "' order by group_id desc  ) and survey_id='"+survey_id+"' and q_id = '" + questionNumber + "'";
         String gridQuery = "SELECT * FROM Response where group_id IN(select group_id from Response where survey_id='"+surveyid+"' and q_id = '"+questionNumber+"' order by group_id ASC  ) and survey_id='"+surveyid+"' and q_id = '"+questionNumber+"'  order by group_id ASC";
         SQLiteDatabase db = getdatabaseinstance_read();
         Cursor cursor = db.rawQuery(gridQuery, null);
@@ -1452,11 +1452,11 @@ public class DBHandler extends SQLiteOpenHelper {
                             cursor.getInt(cursor.getColumnIndex(QCODE)),
                             cursor.getInt(cursor.getColumnIndex("primarykey")),
                             cursor.getString(cursor.getColumnIndex(TYPOLOGYCODE)),
-                            cursor.getInt(cursor.getColumnIndex("group_id")),
+                            cursor.getInt(cursor.getColumnIndex(GROUP_ID_KEY)),
                             cursor.getInt(cursor.getColumnIndex("primary_id")),
-                            cursor.getString(cursor.getColumnIndex("qtype")));
+                            cursor.getString(cursor.getColumnIndex(QTYPE)));
                     list.add(answersObject);
-                    Logger.logD("assessment","answer - "+answer +" - qid "+qId +" gId - "+cursor.getInt(cursor.getColumnIndex("group_id")));
+                    Logger.logD("assessment","answer - "+answer +" - qid "+qId +" gId - "+cursor.getInt(cursor.getColumnIndex(GROUP_ID_KEY)));
                 } while (cursor.moveToNext());
             }
             cursor.close();
@@ -1464,5 +1464,31 @@ public class DBHandler extends SQLiteOpenHelper {
             Logger.logE(TAG, "Exception on getting all assessment", e);
         }
         return list;
+    }
+
+    public List<LocationSurveyBeen> getLeastLocationRecords(String leaseLevel) {
+        List<LocationSurveyBeen> listTemp = new ArrayList<>();
+        String gridQuery = "select * from Survey where cluster_name='"+leaseLevel+"'";
+        SQLiteDatabase db = getdatabaseinstance_read();
+        Cursor cursor = db.rawQuery(gridQuery, null);
+        try{
+            if (cursor.getCount() != 0 && cursor.moveToFirst()) {
+                do {
+                    String clusterName= cursor.getString(cursor.getColumnIndex("cluster_name"));
+                    String uuid= cursor.getString(cursor.getColumnIndex("uuid"));
+                    int serverPrimaryKey= cursor.getInt(cursor.getColumnIndex("server_primary_key"));
+                    LocationSurveyBeen locationSurveyBeen= new LocationSurveyBeen();
+                            locationSurveyBeen.setUuid(uuid);
+                            locationSurveyBeen.setLocationName(clusterName);
+
+                    listTemp.add(locationSurveyBeen);
+
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+        } catch (Exception e) {
+            Logger.logE(TAG, "Exception on getting all assessment", e);
+        }
+        return listTemp;
     }
 }

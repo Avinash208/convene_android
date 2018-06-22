@@ -13,7 +13,9 @@ import android.widget.TextView;
 
 import org.mahiti.convenemis.BeenClass.beneficiary.Datum;
 import org.mahiti.convenemis.BeenClass.parentChild.SurveyDetail;
+import org.mahiti.convenemis.LevelsActivityNew;
 import org.mahiti.convenemis.ListingActivity;
+import org.mahiti.convenemis.LocationBasedActivity;
 import org.mahiti.convenemis.R;
 import org.mahiti.convenemis.SurveyListLevels;
 import org.mahiti.convenemis.utils.AnimationUtils;
@@ -23,6 +25,8 @@ import org.mahiti.convenemis.utils.ToastUtils;
 
 import java.util.HashMap;
 import java.util.List;
+
+import static org.mahiti.convenemis.utils.Constants.SURVEY_ID;
 
 
 public class ExpandableListAdapterDataCollection extends BaseExpandableListAdapter {
@@ -113,7 +117,7 @@ public class ExpandableListAdapterDataCollection extends BaseExpandableListAdapt
                 }
             }
         }else {
-            if (preferences.getInt(Constants.SURVEY_ID,0)!=0) {
+            if (preferences.getInt(SURVEY_ID,0)!=0) {
                 Logger.logD("-->start time","checking time line");
                 Intent intent = new Intent(_context, ListingActivity.class);
                 intent.putExtra(Constants.HEADER_NAME,headerList.get(groupPosition));
@@ -122,6 +126,7 @@ public class ExpandableListAdapterDataCollection extends BaseExpandableListAdapt
                 _context.startActivity(intent);
             }else {
                 ToastUtils.displayToast("Sorry no beneficiary records",_context);
+
             }
 
 
@@ -146,9 +151,9 @@ public class ExpandableListAdapterDataCollection extends BaseExpandableListAdapt
         editor.putString(Constants.O_LEAVEL, orderLevels[orderLevels.length-1]);
         editor.putString(Constants.CODE, surveyDetailBean.getPcode());
         if (datum.getActive()==0)
-            editor.putInt(Constants.SURVEY_ID, datum.getBeneficiaryTypeId());
+            editor.putInt(SURVEY_ID, datum.getBeneficiaryTypeId());
         else
-            editor.putInt(Constants.SURVEY_ID, surveyDetailBean.getSurveyId());
+            editor.putInt(SURVEY_ID, surveyDetailBean.getSurveyId());
 
         editor.putString(Constants.BENEFICIARY_TYPE,surveyDetailBean.getBeneficiaryType());
         editor.putString(Constants.BENEFICIARY_IDS,surveyDetailBean.getBeneficiaryIds());
@@ -158,12 +163,19 @@ public class ExpandableListAdapterDataCollection extends BaseExpandableListAdapt
         editor.putInt(Constants.Q_CONFIGS, surveyDetailBean.getQConfig());
         editor.apply();
         Logger.logD("-->start time","checking time line");
-        if (sharedpreferences.getInt(Constants.SURVEY_ID,0)!=0) {
+        if (sharedpreferences.getInt(SURVEY_ID,0)!=0) {
             Intent survrySummaryReport = new Intent(_context, ListingActivity.class);
             survrySummaryReport.putExtra(Constants.HEADER_NAME, surveyDetailBean.getBeneficiaryType());
             _context.startActivity(survrySummaryReport);
         }else{
-            ToastUtils.displayToast("Sorry no beneficiary records",_context);
+            Intent intent1=new Intent(_context, LocationBasedActivity.class);
+            intent1.putExtra(Constants.PERIODICITY,"");
+            intent1.putExtra(Constants.P_LIMIT,1);
+            intent1.putExtra("periodicity_count",0);
+            intent1.putExtra(SURVEY_ID,94);
+            intent1.putExtra("survey_name","Farm Bund");
+            intent1.putExtra("benId","");
+            _context.startActivity(intent1);
         }
     }
 
