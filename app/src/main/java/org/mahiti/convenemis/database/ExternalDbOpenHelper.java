@@ -80,6 +80,7 @@ public class ExternalDbOpenHelper extends SQLiteOpenHelper {
     private static final String HALF_YEARLY = "Half Yearly";
     private static final String WEEKLY = "Weekly";
     private static final String MONTHLY = "Monthly";
+    private static final String DAILY = "Daily";
     private static final String QUARTERLY = "Quarterly";
     private static final String FACILITYNAME = "facility_name";
     private static final String FACILITYTYPE = "facility_type";
@@ -2736,23 +2737,20 @@ public class ExternalDbOpenHelper extends SQLiteOpenHelper {
     }
 
 
-    /**
-     * @param uid
-     * @param periodicityFlag
-     * @param beneficiaryIDS
-     * @param facilityIDS
-     * @param uuid
-     * @return
-     */
-    public int getPeriodicityPreviousCountOnline(int uid, String periodicityFlag, String beneficiaryIDS, String facilityIDS, String uuid, Date date) {
+
+    public int getPeriodicityPreviousCountOnline(int surveyId,String periodicityFlag,Date date) {
         int getPeriodicityCount = 0;
-        boolean isBen = !("").equalsIgnoreCase(beneficiaryIDS);
         try {
             String query = "";
             String getCurrentDate = new SimpleDateFormat(dateYy_Mm_Dd, Locale.ENGLISH).format(date);
             SQLiteDatabase db = openDataBase();
             String[] splitMonth = getCurrentDate.split("-");
-            if ((MONTHLY).equalsIgnoreCase(periodicityFlag) && (!("").equals(beneficiaryIDS) || !("").equals(facilityIDS))) {
+            if ((DAILY).equalsIgnoreCase(periodicityFlag)){
+                query="select * from survey where date(sync_date)='"+getCurrentDate+"' and survey_ids="+surveyId;
+                Logger.logV(TAG, "" + query + query);
+
+            }
+            /*if ((MONTHLY).equalsIgnoreCase(periodicityFlag) && (!("").equals(beneficiaryIDS) || !("").equals(facilityIDS))) {
 
                 if (isBen)
                     query = "SELECT * FROM Periodicity WHERE  strftime('%Y %m', date(date_capture))='" + (splitMonth[0] + " " + splitMonth[1]) + "'  and survey_id=" + uid + BEN_UUID + uuid + "'";
@@ -2780,9 +2778,8 @@ public class ExternalDbOpenHelper extends SQLiteOpenHelper {
                     query = "SELECT * FROM Periodicity WHERE  (" + logic + ") and survey_id=" + uid + BEN_UUID + uuid + "'";
                 else
                     query = "SELECT * FROM Periodicity WHERE  (" + logic + ") and survey_id=" + uid + "  and  faci_uuid='" + uuid + "'";
-            }
+            }*/
             Cursor cursor = db.rawQuery(query, null);
-            Logger.logV(TAG, "the query getPeriodicityPreviousCount is in  list is getPeriodicityPreviousCountOnline" + query + CURSOR_COUNT_VALUE + cursor.getCount());
             if (cursor.getCount() != 0 && cursor.moveToFirst()) {
                 getPeriodicityCount = cursor.getCount();
             } else {
@@ -4183,4 +4180,10 @@ public class ExternalDbOpenHelper extends SQLiteOpenHelper {
     }
 
 
+    public void deleteLevels(String tableName) {
+        String query;
+        database = this.getWritableDatabase();
+        query = "DELETE FROM "+tableName;
+        database.execSQL(query);
+    }
 }

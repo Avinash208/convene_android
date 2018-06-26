@@ -26,12 +26,11 @@ import org.mahiti.convenemis.utils.StartSurvey;
 import org.mahiti.convenemis.utils.ToastUtils;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static org.mahiti.convenemis.utils.Constants.SURVEY_ID;
 
-public class LocationBasedActivity extends AppCompatActivity {
+public class LocationBasedActivity extends AppCompatActivity{
 
     private static final String TAG = "LocationBasedActivity";
     private static final String MY_PREFS_NAME = "MyPrefs";
@@ -52,7 +51,6 @@ public class LocationBasedActivity extends AppCompatActivity {
 
 
     private LinearLayout relativeLayout;
-    List<String> locationlabelList = new ArrayList<>();
     private FloatingActionButton createNewButton;
     private String  updateListLocation="";
     private int  clusterID=0;
@@ -68,6 +66,7 @@ public class LocationBasedActivity extends AppCompatActivity {
         initVariables();
         getPreviousFromIntent();
         getDynamicLabelsandTypes();
+
         createNewButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -112,8 +111,8 @@ public class LocationBasedActivity extends AppCompatActivity {
 
         orderLabels = labels.split(",");
         orderLeves = levels.split(",");
-        updateList(orderLabels);
         if (orderLabels.length > 0 && orderLeves.length > 0) {
+
             createDynamicSpinnerAndLabel(orderLabels, orderLeves);
         } else {
             Toast.makeText(activity, "Sorry! Levels are empty", Toast.LENGTH_SHORT).show();
@@ -135,9 +134,6 @@ public class LocationBasedActivity extends AppCompatActivity {
         }
     }
 
-    private void updateList(String[] orderLabels) {
-        locationlabelList.addAll(Arrays.asList(orderLabels));
-    }
 
     private void createDynamicSpinnerAndLabel(String[] orderLabels, String[] orderLeves) {
         relativeLayout.removeAllViews();
@@ -182,11 +178,11 @@ public class LocationBasedActivity extends AppCompatActivity {
 
     private void updateValuesDynamic(int selectedLevel, String orderLeve) {
 
-        String getStringLevel=orderLeve.substring(5,6);
-        int getLevel= Integer.valueOf(getStringLevel);
-        try {
 
-                for (int i = selectedLevel; i < storeAllDynamicSpinner.size()-1; i++) {
+        try {
+            String getStringLevel=orderLeve.substring(5,6);
+            int getLevel= Integer.valueOf(getStringLevel);
+            for (int i = selectedLevel; i < storeAllDynamicSpinner.size()-1; i++) {
 
                     Logger.logD(TAG, "clicked spinner" + selectedLevel);
                     Spinner getStoredSpinner = storeAllDynamicSpinner.get(selectedLevel);
@@ -250,6 +246,8 @@ public class LocationBasedActivity extends AppCompatActivity {
         clusterID=id;
 
     }
+
+
 
     public class LocationSurveyAsyncTask extends AsyncTask<String, Integer, String> {
 

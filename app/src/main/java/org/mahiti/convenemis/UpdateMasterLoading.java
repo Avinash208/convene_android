@@ -227,8 +227,6 @@ public class UpdateMasterLoading extends BaseActivity implements ClusterToTypo, 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             progressBarBeneficiary.setProgressTintList(ColorStateList.valueOf(Color.parseColor(LOADING_COLOR)));
         }
-        //   beneficaryimagestatus.setVisibility(View.VISIBLE);
-        //   beneficaryimagestatus.setBackgroundResource(R.drawable.done);
         beneficiaryStatus.setTextColor(Color.parseColor(LOADING_COLOR));
         beneficiaryStatus.setText(getString(R.string.completed));
         progressBarBeneficiary.setProgress(100);

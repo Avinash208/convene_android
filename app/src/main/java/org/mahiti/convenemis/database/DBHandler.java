@@ -1280,10 +1280,10 @@ public class DBHandler extends SQLiteOpenHelper {
 
                     if (!uuid.equals(""))
                         isCompleted=getUUIDStatus(uuid);
-                    String getEndDate = cursor.getString(cursor.getColumnIndex("end_date"));
+                    String getEndDate = cursor.getString(cursor.getColumnIndex("sync_date"));
                     int survey_ids = cursor.getInt(cursor.getColumnIndex("survey_ids"));
                     statusBeanTemp = dbOpenHelper.getDetails(getEndDate, survey_ids);
-
+                    surveysBean.setSurveyEndDate(getEndDate);
                     surveysBean.setSurveyName(statusBeanTemp.getName());
                     surveysBean.setUuid(uuid);
                     surveysBean.setId(survey_ids);
@@ -1490,5 +1490,11 @@ public class DBHandler extends SQLiteOpenHelper {
             Logger.logE(TAG, "Exception on getting all assessment", e);
         }
         return listTemp;
+    }
+
+    public void AllPreviousResponse() {
+        SQLiteDatabase db = getdatabaseinstance_read();
+        String ResponseQuery="Delete from Survey";
+        db.execSQL(ResponseQuery);
     }
 }

@@ -66,6 +66,7 @@ public class UpdateSurveyAsyncTask extends AsyncTask<Context, Integer, String> {
         preferences = PreferenceManager.getDefaultSharedPreferences(context);
         syncSurveyHandler = new DBHandler(context);
         dbOpenHelper = ConveneDatabaseHelper.getInstance(context, preferences.getString("CONVENEDB",""),preferences.getString("UID",""));
+        syncSurveyHandler.AllPreviousResponse();
     }
     @Override
     protected String doInBackground(Context... params) {
@@ -100,7 +101,9 @@ public class UpdateSurveyAsyncTask extends AsyncTask<Context, Integer, String> {
             JSONObject jsonObject = new JSONObject(result);
 
             int status = jsonObject.getInt("status");
+
             if (status == 2) {
+
                 methodToStoreDatabase(jsonObject,result);
                 methodToCallPagination(jsonObject);
             }
@@ -133,6 +136,7 @@ public class UpdateSurveyAsyncTask extends AsyncTask<Context, Integer, String> {
      */
     private void methodToStoreDatabase(JSONObject jsonObject, String result) {
         try {
+
             JSONArray jsonArray= new JSONArray();
             JSONArray ja_data = jsonObject.getJSONArray("ResponsesData");
             int length = ja_data.length();
@@ -194,12 +198,7 @@ public class UpdateSurveyAsyncTask extends AsyncTask<Context, Integer, String> {
         values.put("level6", "");
         values.put("level7", "");
         values.put("response_dump", response_DUMP);
-       /* if((0)==prefs.getInt(Constants.PARENT_ID,0)){
-            values.put("response_parent_uuid","");
-        }else{
-            String parentResponseId=syncSurveyHandler.getParentResponseUidFromSurvey(String.valueOf(prefs.getInt(Constants.SURVEY_ID, 0)));*/
-            values.put("response_parent_uuid",response_UUID);
-       // }
+        values.put("response_parent_uuid",response_UUID);
         values.put("ben_uuid",response_UUID);
         values.put("uuid",uuid);
         values.put("beneficiary_details", "");
@@ -212,6 +211,7 @@ public class UpdateSurveyAsyncTask extends AsyncTask<Context, Integer, String> {
         }
         Logger.logV("SyncClass", "the response is" + String.valueOf(values));
         Logger.logV("SyncClass", "the response is" + String.valueOf(values));
+
         String response = syncSurveyHandler.insertSurveyDataToDB(values);
         Logger.logV("response", "the response is" + response);
         updateToResponseTable(response,response_DUMP,location,gridResponse);

@@ -61,7 +61,7 @@
                     android:hint="@string/nameHint"
                     android:imeOptions="actionNext"
                     android:maxLines="1"
-                    android:text="akrspi"
+                    android:text=""
                     android:paddingBottom="20dp"
                     android:paddingLeft="10dp"
                     android:singleLine="true"
@@ -89,7 +89,7 @@
                     android:fontFamily="sans-serif"
                     android:hint="@string/passHint"
                     android:inputType="textPassword"
-                    android:maxLength="10"
+                    android:maxLength="15"
                     android:maxLines="1"
                     android:paddingBottom="20dp"
                     android:paddingLeft="10dp"
@@ -98,7 +98,7 @@
                     android:textColor="#000"
                     android:textColorHint="#000"
                     android:textSize="20sp"
-                    android:text="admin@2018"/>
+                    android:text=""/>
 
 
             </android.support.design.widget.TextInputLayout>

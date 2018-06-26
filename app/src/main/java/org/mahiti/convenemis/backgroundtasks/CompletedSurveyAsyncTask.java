@@ -52,10 +52,6 @@ public class CompletedSurveyAsyncTask extends AsyncTask<String, Integer, List<Su
         }
         return resultList;
     }
-
-    private SurveysBean getCompletedSurveyViewStatus(SurveysBean surveysBean, String surveyPrimaryKeyId) {
-        return handler.getPauseCompletedRecords(surveysBean.getId(),externalDbOpenHelper,surveyPrimaryKeyId);
-    }
     protected void onProgressUpdate(Integer... values) {
         // Used to update progress indicator
     }

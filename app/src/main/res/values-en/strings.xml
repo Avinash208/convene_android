@@ -23,11 +23,11 @@
 
 
     <!--Demo url-->
-    <string name="main_url">http://akrspiui.mahiti.org/api/</string>
-    <string name="answer_upload_url">http://akrspiui.mahiti.org/api/add-survey-answers/</string>
-    <string name="main_Url">http://akrspiui.mahiti.org/</string>
-    <string name="main_url_Beneficiary">http://akrspiui.mahiti.org/</string>
-    <string name="regionalLanguageURLS">http://akrspiui.mahiti.org/api/language-list/</string>
+    <string name="main_url">http://convenedemobackend.mahiti.org/api/</string>
+    <string name="answer_upload_url">http://convenedemobackend.mahiti.org/api/add-survey-answers/</string>
+    <string name="main_Url">http://convenedemobackend.mahiti.org/</string>
+    <string name="main_url_Beneficiary">http://convenedemobackend.mahiti.org/</string>
+    <string name="regionalLanguageURLS">http://convenedemobackend.mahiti.org/api/language-list/</string>
 
 
     <string name="loadmore_facility">Loading more Facility please wait&#8230;</string>
@@ -157,7 +157,7 @@
     <string name="beneficiary">Beneficiary</string>
     <string name="institution">Institution</string>
     <string name="survey_form">Survey Form</string>
-    <string name="data_collection_form">Pending data</string>
+    <string name="data_collection_form">Pending Activity</string>
     <string name="issues_management">Issues Management</string>
     <string name="meeting">Meetings</string>
     <string name="addinstitution">Add Institution</string>
@@ -350,7 +350,7 @@
     <string name="closed">CLOSED</string>
     <string name="all_data_collected">All data has been collected</string>
     <string name="Home">Home</string>
-    <string name="recently_completed_data_collection_forms">Recently Completed data</string>
+    <string name="recently_completed_data_collection_forms">Recently Completed Activity</string>
     <string name="no_records_has_been_collected">No responses are available</string>
     <string name="Edit">Edit</string>
     <string name="data_collection_not_availabe">Data collection form not available</string>

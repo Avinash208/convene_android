@@ -51,17 +51,16 @@ public class PendingSurveyAsyncTask extends AsyncTask<String, Integer, List<Surv
 
     protected List<SurveysBean> doInBackground(String... strings) {
         for(int i=0;i<sourceList.size();i++) {
-           /* int getCount = externalDbOpenHelper.getPeriodicityPreviousCountOnline(sourceList.get(i).getId(), sourceList.get(i).getPeriodicityFlag(), sourceList.get(i).getBeneficiaryIds(), sourceList.get(i).getFacilityIds(), defaultPreferences.getString(Constants.UUID,""), new Date());
-            int getSurveyCount = periodicityCheckControllerDbHelper.getPeriodicityPreviousCountOffline(String.valueOf(sourceList.get(i).getId()), sourceList.get(i).getPeriodicityFlag(), defaultPreferences.getString(Constants.UUID,""), new Date());*/
-            int getCount =0;
+
             int getSurveyCount = 0;
-            int addCount = getCount + getSurveyCount;
+            int addCount =0;
             if(sourceList.get(i).getPeriodicity()>addCount)
             {
-              //  SurveysBean been = getSurveyPendingStuatus(sourceList.get(i),surveyPrimaryKeyId);
-
-                if (!handler.isSurveyCompleted(sourceList.get(i),surveyPrimaryKeyId,externalDbOpenHelper))
+                if (!handler.isSurveyCompleted(sourceList.get(i),surveyPrimaryKeyId,externalDbOpenHelper)){
+                    int getCount =externalDbOpenHelper.getPeriodicityPreviousCountOnline(sourceList.get(i).getId(), sourceList.get(i).getPeriodicityFlag(), new Date());
                     resultList.add(sourceList.get(i));
+                }
+
             }
         }
         return resultList;
@@ -72,48 +71,7 @@ public class PendingSurveyAsyncTask extends AsyncTask<String, Integer, List<Surv
         }
 
         protected void onPostExecute(List<SurveysBean> result) {
-            // Executed in UIThread
-           // List<SurveysBean> resultPendingTemp =handler.isSurveyCompleted(surveyPrimaryKeyId,externalDbOpenHelper);
-
-
-
-           /* for (int i=0;i<result.size();i++){
-               if (handler.isSurveyCompleted(result.get(i).getId(),surveyPrimaryKeyId)){
-                   resultPendingTemp.add(result.get(i));
-               }
-           }
-*/
             pendingCompletedSurveyAsyncResultListener.pendingSurveys(result);
         }
-
-    private SurveysBean getSurveyPendingStuatus(SurveysBean surveysBean, String surveyPrimaryKeyId) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ssaa", Locale.US);
-        String startPeriod = periodicityCheckControllerDbHelper.getPeriodicityPeriod(surveysBean.getPeriodicityFlag(), defaultPreferences.getString(Constants.CREATED_DATE,""));
-        String currentPeriod = periodicityCheckControllerDbHelper.getPeriodicityPeriod(surveysBean.getPeriodicityFlag(), dateFormat.format(new Date()));
-//      surveyStatus 1: Pending* 2:Pending 3:Continue
-        if (!startPeriod.equals(currentPeriod) && PeriodicityUtils.isEligibleForExtension(surveysBean.getPLimit(), surveysBean.getPeriodicityFlag())) {
-            Date date = PeriodicityUtils.getPreviousPeriodicityTime(surveysBean.getPeriodicityFlag());
-            int getCountPrev = externalDbOpenHelper.getPeriodicityPreviousCountOnline(surveysBean.getId(), surveysBean.getPeriodicityFlag(), surveysBean.getBeneficiaryIds(), surveysBean.getFacilityIds(), defaultPreferences.getString("uuid", ""), date);
-            int getSurveyCountPrev = periodicityCheckControllerDbHelper.getPeriodicityPreviousCountOffline(String.valueOf(surveysBean.getId()), surveysBean.getPeriodicityFlag(), defaultPreferences.getString("uuid", ""), date);
-            if (surveysBean.getPeriodicity() > (getCountPrev + getSurveyCountPrev))
-                surveysBean.setSurveyStatus(1);
-            else
-                surveysBean.setSurveyStatus(2);
-
-        }
-        else
-        {
-            surveysBean.setSurveyStatus(2);
-        }
-         int pId=responseCheckController.getPauseSurvey(String.valueOf(surveysBean.getId()), defaultPreferences.getString("uuid",""));
-        if (pId>=0 ) {
-            surveysBean.setContinue(1);
-            surveysBean.setSurveyPId(pId);
-        }
-        else
-            surveysBean.setContinue(2);
-
-        return surveysBean;
-    }
     }
                                 

@@ -21,7 +21,15 @@ public class SurveysBean {
     private int surveyStatusBeenFlag;
     private int periodicitySurveyBeen;
     private int isViewOrEdit;
+    private  String surveyEndDate;
 
+    public String getSurveyEndDate() {
+        return surveyEndDate;
+    }
+
+    public void setSurveyEndDate(String surveyEndDate) {
+        this.surveyEndDate = surveyEndDate;
+    }
 
     public int getPeriodicity() {
         return this.periodicitySurveyBeen;

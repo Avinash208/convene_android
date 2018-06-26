@@ -121,7 +121,7 @@ public class LevelsAsyncTask extends AsyncTask<Context, Integer, String> {
                 globleDate = dbhelper.getLastUpDate(levels[i], MODIFIED_DATE,dbhelper);
                 List<NameValuePair> paramsL = new ArrayList<>();
                 paramsL.add(new BasicNameValuePair("uid", String.valueOf(userId)));
-                paramsL.add(new BasicNameValuePair(MODIFIED_DATE,globleDate));
+                paramsL.add(new BasicNameValuePair(MODIFIED_DATE,""));
                 Logger.logV("", "URL-->" + levels[i]);
                 char splitLevel= levels[i].charAt(levels[i].length()-1);
                 result = resturl.restUrlServerCall(activity, LEVEL+splitLevel+ "/", "post", paramsL, "");
@@ -218,36 +218,43 @@ public class LevelsAsyncTask extends AsyncTask<Context, Integer, String> {
                 if("Level1".equalsIgnoreCase(levels))
                 {
                     LevelOne level1List = gson.fromJson(result, LevelOne.class);
+                    dbhelper.deleteLevels("Level1");
                     dbhelper.updateLevel1List(level1List);
                 }
                 if("Level2".equalsIgnoreCase(levels))
                 {
                     LevelTwo level1List = gson.fromJson(result, LevelTwo.class);
+                    dbhelper.deleteLevels("Level2");
                     dbhelper.updateLevel2List(level1List);
                 }
                 if("Level3".equalsIgnoreCase(levels))
                 {
                     LevelThree level1List = gson.fromJson(result, LevelThree.class);
+                    dbhelper.deleteLevels("Level3");
                     dbhelper.updateLevel3List(level1List);
                 }
                 if("Level4".equalsIgnoreCase(levels))
                 {
                     LevelFour level1List = gson.fromJson(result, LevelFour.class);
+                    dbhelper.deleteLevels("Level4");
                     dbhelper.updateLevel4List(level1List);
                 }
                 if("Level5".equalsIgnoreCase(levels))
                 {
                     LevelFive level1List = gson.fromJson(result, LevelFive.class);
+                    dbhelper.deleteLevels("Level5");
                     dbhelper.updateLevel5List(level1List);
                 }
                 if("Level6".equalsIgnoreCase(levels))
                 {
                     LevelSix level1List = gson.fromJson(result, LevelSix.class);
+                    dbhelper.deleteLevels("Level6");
                     dbhelper.updateLevel6List(level1List);
                 }
                 if("Level7".equalsIgnoreCase(levels))
                 {
                     LevelSeven level1List = gson.fromJson(result, LevelSeven.class);
+                    dbhelper.deleteLevels("Level7");
                     dbhelper.updateLevel7List(level1List);
 
                 }
@@ -277,7 +284,7 @@ public class LevelsAsyncTask extends AsyncTask<Context, Integer, String> {
                         Logger.logV("", "the page count number is" + pageCount);
                         List<NameValuePair> paramsL = new ArrayList<>();
                         paramsL.add(new BasicNameValuePair("uid", String.valueOf(userId)));
-                        paramsL.add(new BasicNameValuePair(MODIFIED_DATE, modifyTempDate));
+                        paramsL.add(new BasicNameValuePair(MODIFIED_DATE, ""));
                         Logger.logV("", "URL-->" + levels);
                         char splitLevel = levels.charAt(levels.length() - 1);
                         result = resturl.restUrlServerCall(activity, LEVEL + splitLevel + "/", "post", paramsL, "");
