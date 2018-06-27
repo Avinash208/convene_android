@@ -145,7 +145,7 @@ public class UpdateSurveyAsyncTask extends AsyncTask<Context, Integer, String> {
                        insertIntoSurveyTable(jsonObj.getString("response_id"),jsonObj.getString("response_dump"),jsonObj.getString("server_date_time"),
                         jsonObj.getString("survey_id"),jsonObj.getString("cluster_name"),jsonObj.getInt("cluster_id"),jsonObj.getString("bene_uuid"),
                         jsonObj.getString("location"),jsonObj.getString("cluster_beneficiary"),
-                               jsonObj.getString("grid_inline_questions") );
+                               jsonObj.getString("grid_inline_questions"), jsonObj.getString("app_answer_on") );
             }
         } catch (Exception e) {
             Logger.logE("the status", "the questionsArray lenth is " ,e);
@@ -155,12 +155,12 @@ public class UpdateSurveyAsyncTask extends AsyncTask<Context, Integer, String> {
 
     private void insertIntoSurveyTable(String response_UUID, String response_DUMP, String server_modified_date,
                                        String survey_id, String cluster_name, int cluserid,String uuid, String location,
-                                       String cluster_beneficiary, String gridResponse) {
+                                       String cluster_beneficiary, String gridResponse, String surveyCaptureDate) {
          Map<String, String> values = new HashMap<>();
         values.put("start_survey_status", "0");
         values.put("inv_id", preferences.getString("uId",""));
         values.put("start_date", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH).format(new Date()));
-        values.put("end_date", "0");
+        values.put("end_date", surveyCaptureDate);
         values.put("version_num", "");
         values.put("app_version", "");
         values.put("language", String.valueOf(preferences.getInt("selectedLangauge",1)));

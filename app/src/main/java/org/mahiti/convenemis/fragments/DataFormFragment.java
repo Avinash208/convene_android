@@ -33,7 +33,6 @@ import org.mahiti.convenemis.R;
 import org.mahiti.convenemis.SurveyQuestionActivity;
 import org.mahiti.convenemis.api.BeneficiaryApis.PeriodicTypeInterface;
 import org.mahiti.convenemis.api.BeneficiaryApis.ResponseUpdateAPI;
-import org.mahiti.convenemis.api.PeriodicityNewAsyncTask;
 import org.mahiti.convenemis.backgroundcallbacks.PendingCompletedSurveyAsyncResultListener;
 import org.mahiti.convenemis.backgroundtasks.CompletedSurveyAsyncTask;
 import org.mahiti.convenemis.backgroundtasks.PendingSurveyAsyncTask;
@@ -285,6 +284,9 @@ public class DataFormFragment extends Fragment implements PeriodicTypeInterface,
 
     }
 
+    /**
+     * @param pendingSurvey pending survey parms
+     */
     @Override
     public void pendingSurveys(List<SurveysBean> pendingSurvey) {
         Logger.logD(TAG,"pendingSurvey size"+pendingSurvey.size());
@@ -552,10 +554,13 @@ public class DataFormFragment extends Fragment implements PeriodicTypeInterface,
             periodicityTextview.setText(completedSurveyList.get(i).getPeriodicityFlag());
             surveyTextView.setText(completedSurveyList.get(i).getSurveyName());
             capturedTextView.setText(completedSurveyList.get(i).getSurveyEndDate());
-            statusTextView.setText(R.string.edit_or_view);
-            Logger.logD("Selected","serverPrimaryIds"+surveyPrimaryKeyId);
-          //  setCompletedPeriodicityRecords(getCompletedSurveyList,surveyTextView,statusTextView,capturedTextView,periodicityTextview,uuid,completedSurveyList.get(i));
-            onClickFunctionality(statusTextView,surveyPrimaryKeyId,completedSurveyList.get(i).getId());
+           if (completedSurveyList.get(i).isSurveyDone()==1){
+               statusTextView.setText("VIEW");
+           }else{
+               statusTextView.setText(R.string.edit_or_view);
+               onClickFunctionality(statusTextView,surveyPrimaryKeyId,completedSurveyList.get(i).getId());
+           }
+
             dynamicClosedDataCollectionForm.addView(childView);
         }
 

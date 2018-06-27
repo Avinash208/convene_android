@@ -10,14 +10,10 @@ import org.mahiti.convenemis.database.DBHandler;
 import org.mahiti.convenemis.database.ExternalDbOpenHelper;
 import org.mahiti.convenemis.database.ResponseCheckController;
 import org.mahiti.convenemis.database.SurveyControllerDbHelper;
-import org.mahiti.convenemis.utils.Constants;
-import org.mahiti.convenemis.utils.PeriodicityUtils;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 // The types specify: 1. input data type (String)
 // 2. progress type (Integer)
@@ -56,10 +52,11 @@ public class PendingSurveyAsyncTask extends AsyncTask<String, Integer, List<Surv
             int addCount =0;
             if(sourceList.get(i).getPeriodicity()>addCount)
             {
-                if (!handler.isSurveyCompleted(sourceList.get(i),surveyPrimaryKeyId,externalDbOpenHelper)){
-                    int getCount =externalDbOpenHelper.getPeriodicityPreviousCountOnline(sourceList.get(i).getId(), sourceList.get(i).getPeriodicityFlag(), new Date());
-                    resultList.add(sourceList.get(i));
-                }
+               // if (handler.isSurveyCompleted(sourceList.get(i),surveyPrimaryKeyId,externalDbOpenHelper)){
+                    int getCount =handler.getPeriodicityPreviousCountOnline(sourceList.get(i).getId(), sourceList.get(i).getPeriodicityFlag(), new Date(),surveyPrimaryKeyId);
+                    if (getCount==0)
+                        resultList.add(sourceList.get(i));
+               // }
 
             }
         }

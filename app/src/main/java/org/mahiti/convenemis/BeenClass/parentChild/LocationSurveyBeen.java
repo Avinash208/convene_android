@@ -14,6 +14,7 @@ public class LocationSurveyBeen {
     private int isOnline;
     private int isEditable;
     private String uuid;
+    private int surveyid;
 
 
     public LocationSurveyBeen()
@@ -108,5 +109,13 @@ public class LocationSurveyBeen {
 
     public void setUuid(String uuid) {
         this.uuid = uuid;
+    }
+
+    public int getSurveyid() {
+        return surveyid;
+    }
+
+    public void setSurveyid(int surveyid) {
+        this.surveyid = surveyid;
     }
 }

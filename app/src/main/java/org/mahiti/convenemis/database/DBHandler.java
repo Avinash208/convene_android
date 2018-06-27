@@ -35,6 +35,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+
 public class DBHandler extends SQLiteOpenHelper {
     private static final int VERSION = 12;
     private static final String CHILD_ID = "child_form_id";
@@ -57,6 +58,9 @@ public class DBHandler extends SQLiteOpenHelper {
     private String andUuidStr = " and uuid='";
     private String getServerPrimaryKeyStr = " getServerPrimaryKey";
     private String pendingSurveyQueryStr = "pendingSurveyQuery";
+    private static final String DAILY = "Daily";
+    private String dateYy_Mm_Dd = "yyyy-MM-dd";
+    private static final String WEEKLY = "Weekly";
 
 
     /**
@@ -129,7 +133,7 @@ public class DBHandler extends SQLiteOpenHelper {
                 + "LAST_CHARGE_TIME DATETIME," + "sectionId INTEGER)";
         database.execSQL(tabDetails);
 
-        String linkage="CREATE TABLE Linkages ( child_form_id TEXT , child_form_primaryid INTEGER," +
+        String linkage = "CREATE TABLE Linkages ( child_form_id TEXT , child_form_primaryid INTEGER," +
                 " active INTEGER, id INTEGER , uuid TEXT PRIMARY KEY, linked_on TEXT, child_form_type INTEGER, parent_form_type INTEGER, parent_form_id TEXT,sync_status TEXT, parent_form_primaryid INTEGER, relation_id INTEGER )";
         database.execSQL(linkage);
     }
@@ -206,7 +210,7 @@ public class DBHandler extends SQLiteOpenHelper {
                 database = this.getWritableDatabase(DATABASESECRETKEY);
             Logger.logD(TAG, "SurveyTable" + values.toString());
 
-            insertedRecord = database.insertWithOnConflict(SURVEY_TABLE, null, values,SQLiteDatabase.CONFLICT_REPLACE);
+            insertedRecord = database.insertWithOnConflict(SURVEY_TABLE, null, values, SQLiteDatabase.CONFLICT_REPLACE);
             Logger.logD(TAG, "content values inserting into survey table " + values.toString());
             Logger.logD(TAG, "created primaryKey " + String.valueOf(insertedRecord));
             if (insertedRecord != -1)
@@ -562,13 +566,11 @@ public class DBHandler extends SQLiteOpenHelper {
                     Logger.logD(TAG, " attened question id" + getQuestion);
                     String questionType = cursor.getString(cursor.getColumnIndex(QTYPE));
                     Logger.logD(TAG, " Question TYPE" + questionType);
-                    if (("T").equalsIgnoreCase(questionType) || ("D").equalsIgnoreCase(questionType) || ("AW").equalsIgnoreCase(questionType)) {
-                        answer = cursor.getString(cursor.getColumnIndex(ANSTEXT));
-                    }
-                    else if(("AI").equalsIgnoreCase(questionType)){
+                    if (("T").equalsIgnoreCase(questionType) || ("D").equalsIgnoreCase(questionType) || ("C").equalsIgnoreCase(questionType) || ("AW").equalsIgnoreCase(questionType)) {
+                        answer= checkCheckBoxFunctionality(questionType, answer,cursor,dbOpenHelper,questionID);
+                    } else if (("AI").equalsIgnoreCase(questionType)) {
                         answer = cursor.getString(cursor.getColumnIndex("sub_questionId"));
-                    }
-                    else if (("R").equalsIgnoreCase(questionType) || ("S").equalsIgnoreCase(questionType)) {
+                    } else if (("R").equalsIgnoreCase(questionType) || ("S").equalsIgnoreCase(questionType)) {
                         String answerCode = cursor.getString(cursor.getColumnIndex(ANSCODE));
                         answer = dbOpenHelper.getOptionText(answerCode, 1, questionID);
                     }
@@ -586,6 +588,24 @@ public class DBHandler extends SQLiteOpenHelper {
         return questionBean;
     }
 
+    private String checkCheckBoxFunctionality(String questionType, String answer, Cursor cursor, ConveneDatabaseHelper dbOpenHelper, int questionID) {
+        if (("C").equalsIgnoreCase(questionType)){
+            answer = cursor.getString(cursor.getColumnIndex(ANSTEXT));
+            String[] ansSet = answer.replace("[", "").replace("]", "").split(",");
+            answer="";
+            StringBuilder answerBuilder = new StringBuilder(answer);
+            for (String option : ansSet) {
+                option= option.trim();
+                answerBuilder.append(",").append(dbOpenHelper.getOptionText(option, 1, questionID));
+            }
+            answer = answerBuilder.toString();
+
+        }else{
+            answer = cursor.getString(cursor.getColumnIndex(ANSTEXT));
+        }
+        return answer;
+    }
+
 
     /**
      * @param id
@@ -594,11 +614,11 @@ public class DBHandler extends SQLiteOpenHelper {
      * @return
      */
     public SurveysBean getPauseCompletedRecords(int id, ExternalDbOpenHelper dbOpenHelper, String surveyPrimaryKeyId) {
-        StatusBean statusBean= new StatusBean();
-        SurveysBean surveysBean= new SurveysBean();
+        StatusBean statusBean = new StatusBean();
+        SurveysBean surveysBean = new SurveysBean();
 
         try {
-            String pendingSurveyQuery = "SELECT uuid,end_date,survey_ids FROM Survey where  beneficiary_ids='" + surveyPrimaryKeyId +"'" ;
+            String pendingSurveyQuery = "SELECT uuid,end_date,survey_ids FROM Survey where  beneficiary_ids='" + surveyPrimaryKeyId + "'";
             SQLiteDatabase db = getdatabaseinstance_read();
             Cursor cursor = db.rawQuery(pendingSurveyQuery, null);
             Logger.logD(TAG, " getPauseCompletedRecords" + pendingSurveyQuery + "-->" + cursor.getCount());
@@ -858,7 +878,7 @@ public class DBHandler extends SQLiteOpenHelper {
     public String getSurveyLastUpDate(String survey, String updateTime) {
 
         String lastModifiedDate = null;
-        Cursor cursor=null;
+        Cursor cursor = null;
         try {
             lastModifiedDate = "";
             String query = "SELECT sync_date FROM survey WHERE sync_date In (SELECT MAX(sync_date) FROM Survey)";
@@ -872,7 +892,7 @@ public class DBHandler extends SQLiteOpenHelper {
             }
             if (cursor != null) {
                 cursor.close();
-            }else {
+            } else {
                 cursor.close();
             }
 
@@ -884,7 +904,7 @@ public class DBHandler extends SQLiteOpenHelper {
     }
 
     public int updateAddressRecordToSurveyTable(String surveyPrimaryKeyId, Map<String, Spinner> dynamicSpinnerHashMap) {
-        int getInsertedresult=0;
+        int getInsertedresult = 0;
         Spinner getLevel1Spinner = dynamicSpinnerHashMap.get("level1");
         Level1 getLevel1Id = (Level1) getLevel1Spinner.getSelectedItem();
 
@@ -915,8 +935,8 @@ public class DBHandler extends SQLiteOpenHelper {
             values.put("level5", getLevel5Id.getId());
             values.put("level6", getLevel6Id.getId());
             values.put("level7", getLevel7Id.getId());
-            getInsertedresult= sqLiteDatabase.update(SURVEY_TABLE, values, "uuid" + " = ?", new String[]{surveyPrimaryKeyId});
-            Logger.logD("exception", "->"+getInsertedresult);
+            getInsertedresult = sqLiteDatabase.update(SURVEY_TABLE, values, "uuid" + " = ?", new String[]{surveyPrimaryKeyId});
+            Logger.logD("exception", "->" + getInsertedresult);
         } catch (Exception e) {
             Logger.logE("exception", "exception in date fragment", e);
         }
@@ -926,8 +946,8 @@ public class DBHandler extends SQLiteOpenHelper {
 
     public void updateAddressRecordFromServer(JSONObject jsonObject, String surveyPrimaryKey) {
         try {
-            String level1= jsonObject.getString("level1");
-            Logger.logD("Level1", level1+"");
+            String level1 = jsonObject.getString("level1");
+            Logger.logD("Level1", level1 + "");
             try {
                 SQLiteDatabase sqLiteDatabase = this.getWritableDatabase(DATABASESECRETKEY);
                 ContentValues values = new ContentValues();
@@ -938,8 +958,8 @@ public class DBHandler extends SQLiteOpenHelper {
                 values.put("level5", jsonObject.getString("level5"));
                 values.put("level6", jsonObject.getString("level6"));
                 values.put("level7", jsonObject.getString("level7"));
-              int  getInsertedresult= sqLiteDatabase.update(SURVEY_TABLE, values, "uuid" + " = ?", new String[]{surveyPrimaryKey});
-                Logger.logD("exception", "->"+getInsertedresult);
+                int getInsertedresult = sqLiteDatabase.update(SURVEY_TABLE, values, "uuid" + " = ?", new String[]{surveyPrimaryKey});
+                Logger.logD("exception", "->" + getInsertedresult);
             } catch (Exception e) {
                 Logger.logE("exception", "exception in date fragment", e);
             }
@@ -949,21 +969,21 @@ public class DBHandler extends SQLiteOpenHelper {
     }
 
     public Map<String, String> getAddressResponse(String surveyPrimaryKey) {
-       Map<String,String> fillMapTemp= new ArrayMap<>();
+        Map<String, String> fillMapTemp = new ArrayMap<>();
         try {
-            String pendingSurveyQuery = "select level1, level2 , level3 , level4 , level5 , level6 , level7 from Survey where uuid='"+surveyPrimaryKey+"'";
+            String pendingSurveyQuery = "select level1, level2 , level3 , level4 , level5 , level6 , level7 from Survey where uuid='" + surveyPrimaryKey + "'";
             SQLiteDatabase db = getdatabaseinstance_read();
             Cursor cursor = db.rawQuery(pendingSurveyQuery, null);
             Logger.logD(pendingSurveyQueryStr, " checkPrymarySaveDraftExist" + pendingSurveyQuery + "-->" + cursor.getCount());
             if (cursor.getCount() != 0 && cursor.moveToFirst()) {
                 do {
-                    fillMapTemp.put("1",cursor.getString(cursor.getColumnIndex("level1")));
-                    fillMapTemp.put("2",cursor.getString(cursor.getColumnIndex("level2")));
-                    fillMapTemp.put("3",cursor.getString(cursor.getColumnIndex("level3")));
-                    fillMapTemp.put("4",cursor.getString(cursor.getColumnIndex("level4")));
-                    fillMapTemp.put("5",cursor.getString(cursor.getColumnIndex("level5")));
-                    fillMapTemp.put("6",cursor.getString(cursor.getColumnIndex("level6")));
-                    fillMapTemp.put("7",cursor.getString(cursor.getColumnIndex("level7")));
+                    fillMapTemp.put("1", cursor.getString(cursor.getColumnIndex("level1")));
+                    fillMapTemp.put("2", cursor.getString(cursor.getColumnIndex("level2")));
+                    fillMapTemp.put("3", cursor.getString(cursor.getColumnIndex("level3")));
+                    fillMapTemp.put("4", cursor.getString(cursor.getColumnIndex("level4")));
+                    fillMapTemp.put("5", cursor.getString(cursor.getColumnIndex("level5")));
+                    fillMapTemp.put("6", cursor.getString(cursor.getColumnIndex("level6")));
+                    fillMapTemp.put("7", cursor.getString(cursor.getColumnIndex("level7")));
                 } while (cursor.moveToNext());
                 cursor.close();
             }
@@ -973,6 +993,7 @@ public class DBHandler extends SQLiteOpenHelper {
         }
         return fillMapTemp;
     }
+
     public long insertLinkageDataToDB(Linkage linkage, String syncFlag) {
 
         ContentValues values = new ContentValues();
@@ -996,22 +1017,22 @@ public class DBHandler extends SQLiteOpenHelper {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return database.insertWithOnConflict("Linkages", null, values,SQLiteDatabase.CONFLICT_REPLACE);
+        return database.insertWithOnConflict("Linkages", null, values, SQLiteDatabase.CONFLICT_REPLACE);
     }
 
     public ArrayList<childLink> getChildDetailsFromBeneficiaryLinkage(int surveysId, String surveyPrimaryKeyId, DBHandler dbHandler) {
-        ArrayList<childLink> getSelectedUUids= new ArrayList<>();
+        ArrayList<childLink> getSelectedUUids = new ArrayList<>();
         try {
-            String pendingSurveyQuery = "Select Linkages.active,Linkages.child_form_id, Linkages.child_form_type  from Linkages where active=2 and  Linkages.parent_form_type="+surveysId+" and Linkages.parent_form_id='"+surveyPrimaryKeyId+"'";
+            String pendingSurveyQuery = "Select Linkages.active,Linkages.child_form_id, Linkages.child_form_type  from Linkages where active=2 and  Linkages.parent_form_type=" + surveysId + " and Linkages.parent_form_id='" + surveyPrimaryKeyId + "'";
             SQLiteDatabase db = getdatabaseinstance_read();
             Cursor cursor = db.rawQuery(pendingSurveyQuery, null);
             Logger.logD(pendingSurveyQueryStr, " checkPrymarySaveDraftExist" + pendingSurveyQuery + "-->" + cursor.getCount());
             if (cursor.getCount() != 0 && cursor.moveToFirst()) {
                 do {
-                   String getChildUUId= cursor.getString(cursor.getColumnIndex(CHILD_ID));
-                   int child_form_type= cursor.getInt(cursor.getColumnIndex("child_form_type"));
-                   int activeStatus= cursor.getInt(cursor.getColumnIndex("active"));
-                    childLink childLink= new childLink();
+                    String getChildUUId = cursor.getString(cursor.getColumnIndex(CHILD_ID));
+                    int child_form_type = cursor.getInt(cursor.getColumnIndex("child_form_type"));
+                    int activeStatus = cursor.getInt(cursor.getColumnIndex("active"));
+                    childLink childLink = new childLink();
                     childLink.setChild_form_id(getChildUUId);
                     childLink.setChild_form_type(child_form_type);
                     childLink.setActive(activeStatus);
@@ -1031,24 +1052,24 @@ public class DBHandler extends SQLiteOpenHelper {
     }
 
     public List<QuestionAnswer> getAllChildRecord(List<childLink> getChildUUids, DBHandler dbHandler, String getConfiguredQuestion) {
-        List<QuestionAnswer> getSelectedUUids= new ArrayList<>();
-        for (int i=0;i<getChildUUids.size();i++){
+        List<QuestionAnswer> getSelectedUUids = new ArrayList<>();
+        for (int i = 0; i < getChildUUids.size(); i++) {
             try {
                 String pendingSurveyQuery = "select Survey.cluster_name,Survey.survey_ids,Response.ans_text, Survey.uuid , Survey.server_primary_key\n" +
                         "from Response\n" +
                         "INNER JOIN Survey ON Response.survey_id = Survey.uuid\n" +
-                        "where Survey.survey_ids="+getChildUUids.get(0).getChild_form_type()+" and Survey.uuid IN ('"+getChildUUids.get(i).getChild_form_id()+"') and Response.q_code="+getConfiguredQuestion;
+                        "where Survey.survey_ids=" + getChildUUids.get(0).getChild_form_type() + " and Survey.uuid IN ('" + getChildUUids.get(i).getChild_form_id() + "') and Response.q_code=" + getConfiguredQuestion;
                 SQLiteDatabase db = getdatabaseinstance_read();
                 Cursor cursor = db.rawQuery(pendingSurveyQuery, null);
                 Logger.logD(pendingSurveyQueryStr, " checkPrymarySaveDraftExist" + pendingSurveyQuery + "-->" + cursor.getCount());
                 if (cursor.getCount() != 0 && cursor.moveToFirst()) {
                     do {
-                        String childName= cursor.getString(cursor.getColumnIndex("ans_text"));
-                        String childVillage= cursor.getString(cursor.getColumnIndex("cluster_name"));
-                        QuestionAnswer questionAnswer= new QuestionAnswer();
+                        String childName = cursor.getString(cursor.getColumnIndex("ans_text"));
+                        String childVillage = cursor.getString(cursor.getColumnIndex("cluster_name"));
+                        QuestionAnswer questionAnswer = new QuestionAnswer();
                         questionAnswer.setAnswerText(childName);
                         questionAnswer.setQuestionText(childVillage);
-                        int childformprimaryid= cursor.getInt(cursor.getColumnIndex("server_primary_key"));
+                        int childformprimaryid = cursor.getInt(cursor.getColumnIndex("server_primary_key"));
                         questionAnswer.setChild_form_primaryid(childformprimaryid);
                         getSelectedUUids.add(questionAnswer);
 
@@ -1063,52 +1084,53 @@ public class DBHandler extends SQLiteOpenHelper {
         }
         return getSelectedUUids;
     }
-    public List<QuestionAnswer> getSortedChildRecord(String getGroupId,List<childLink> getChildUUids, String getConfiguredQuestion) {
-        List<QuestionAnswer> getSelectedUUids= new ArrayList<>();
-        String getCommaSeparate="";
-        for (int i=0;i<getChildUUids.size() && getChildUUids.get(i).getActive()==2;i++) {
-            if (i!=0)
-                getCommaSeparate=getCommaSeparate+",";
-            getCommaSeparate=getCommaSeparate+"'"+getChildUUids.get(i).getChild_form_id()+"'";
+
+    public List<QuestionAnswer> getSortedChildRecord(String getGroupId, List<childLink> getChildUUids, String getConfiguredQuestion) {
+        List<QuestionAnswer> getSelectedUUids = new ArrayList<>();
+        String getCommaSeparate = "";
+        for (int i = 0; i < getChildUUids.size() && getChildUUids.get(i).getActive() == 2; i++) {
+            if (i != 0)
+                getCommaSeparate = getCommaSeparate + ",";
+            getCommaSeparate = getCommaSeparate + "'" + getChildUUids.get(i).getChild_form_id() + "'";
 
         }
-        String pendingSurveyQuery="";
-            try {
-                if (!getChildUUids.isEmpty()) {
-                    pendingSurveyQuery = "select Survey.cluster_name,Survey.survey_ids,Response.ans_text, Survey.uuid,Survey.server_primary_key\n" +
-                            "from Response\n" +
-                            "INNER JOIN Survey ON Response.survey_id = Survey.uuid\n" +
-                            "where Survey.survey_ids=" + getGroupId + " and Survey.uuid NOT IN (" + getCommaSeparate + ") and Response.q_code="+getConfiguredQuestion+"";
-                }else{
-                    pendingSurveyQuery = "select Survey.cluster_name,Survey.survey_ids,Response.ans_text, Survey.uuid,Survey.server_primary_key\n" +
-                            "from Response\n" +
-                            "INNER JOIN Survey ON Response.survey_id = Survey.uuid\n" +
-                            "where Survey.survey_ids="+getGroupId+" and Survey.uuid NOT IN (" + getCommaSeparate + ") and Response.q_code="+getConfiguredQuestion+"";
-                }
-                SQLiteDatabase db = getdatabaseinstance_read();
-                Cursor cursor = db.rawQuery(pendingSurveyQuery, null);
-                Logger.logD(pendingSurveyQueryStr, " checkPrymarySaveDraftExist" + pendingSurveyQuery + "-->" + cursor.getCount());
-                if (cursor.getCount() != 0 && cursor.moveToFirst()) {
-                    do {
-                        String childName= cursor.getString(cursor.getColumnIndex("ans_text"));
-                        String childVillage= cursor.getString(cursor.getColumnIndex("cluster_name"));
-                        String childUUID= cursor.getString(cursor.getColumnIndex("uuid"));
-                        int child_form_primaryid= cursor.getInt(cursor.getColumnIndex("server_primary_key"));
-                        QuestionAnswer questionAnswer= new QuestionAnswer();
-                        questionAnswer.setAnswerText(childName);
-                        questionAnswer.setQuestionText(childVillage);
-                        questionAnswer.setSelectedChildUUID(childUUID);
-                        questionAnswer.setChild_form_primaryid(child_form_primaryid);
-                        getSelectedUUids.add(questionAnswer);
-
-
-                    } while (cursor.moveToNext());
-                    cursor.close();
-                }
-            } catch (Exception e) {
-                Logger.logV("", "checkPrymarySaveDraftExist from Survey table" + e);
-
+        String pendingSurveyQuery = "";
+        try {
+            if (!getChildUUids.isEmpty()) {
+                pendingSurveyQuery = "select Survey.cluster_name,Survey.survey_ids,Response.ans_text, Survey.uuid,Survey.server_primary_key\n" +
+                        "from Response\n" +
+                        "INNER JOIN Survey ON Response.survey_id = Survey.uuid\n" +
+                        "where Survey.survey_ids=" + getGroupId + " and Survey.uuid NOT IN (" + getCommaSeparate + ") and Response.q_code=" + getConfiguredQuestion + "";
+            } else {
+                pendingSurveyQuery = "select Survey.cluster_name,Survey.survey_ids,Response.ans_text, Survey.uuid,Survey.server_primary_key\n" +
+                        "from Response\n" +
+                        "INNER JOIN Survey ON Response.survey_id = Survey.uuid\n" +
+                        "where Survey.survey_ids=" + getGroupId + " and Survey.uuid NOT IN (" + getCommaSeparate + ") and Response.q_code=" + getConfiguredQuestion + "";
             }
+            SQLiteDatabase db = getdatabaseinstance_read();
+            Cursor cursor = db.rawQuery(pendingSurveyQuery, null);
+            Logger.logD(pendingSurveyQueryStr, " checkPrymarySaveDraftExist" + pendingSurveyQuery + "-->" + cursor.getCount());
+            if (cursor.getCount() != 0 && cursor.moveToFirst()) {
+                do {
+                    String childName = cursor.getString(cursor.getColumnIndex("ans_text"));
+                    String childVillage = cursor.getString(cursor.getColumnIndex("cluster_name"));
+                    String childUUID = cursor.getString(cursor.getColumnIndex("uuid"));
+                    int child_form_primaryid = cursor.getInt(cursor.getColumnIndex("server_primary_key"));
+                    QuestionAnswer questionAnswer = new QuestionAnswer();
+                    questionAnswer.setAnswerText(childName);
+                    questionAnswer.setQuestionText(childVillage);
+                    questionAnswer.setSelectedChildUUID(childUUID);
+                    questionAnswer.setChild_form_primaryid(child_form_primaryid);
+                    getSelectedUUids.add(questionAnswer);
+
+
+                } while (cursor.moveToNext());
+                cursor.close();
+            }
+        } catch (Exception e) {
+            Logger.logV("", "checkPrymarySaveDraftExist from Survey table" + e);
+
+        }
         return getSelectedUUids;
     }
 
@@ -1122,7 +1144,7 @@ public class DBHandler extends SQLiteOpenHelper {
     }
 
     public JSONArray getOfflineRecord(DBHandler dbHandlershowMember) {
-        JSONArray jsonArrayCreateTemp=new JSONArray();
+        JSONArray jsonArrayCreateTemp = new JSONArray();
         try {
             String pendingSurveyQuery = "select * from Linkages where Linkages.sync_status=0";
             SQLiteDatabase db = getdatabaseinstance_read();
@@ -1130,23 +1152,23 @@ public class DBHandler extends SQLiteOpenHelper {
             Logger.logD(pendingSurveyQueryStr, " checkPrymarySaveDraftExist" + pendingSurveyQuery + "-->" + cursor.getCount());
             if (cursor.getCount() != 0 && cursor.moveToFirst()) {
                 do {
-                    JSONObject jsonObject= new JSONObject();
-                    String getChildUUId= cursor.getString(cursor.getColumnIndex(CHILD_ID));
-                    String child_form_primaryid= cursor.getString(cursor.getColumnIndex("child_form_primaryid"));
-                    String parent_form_id= cursor.getString(cursor.getColumnIndex("parent_form_id"));
-                    String uuid= cursor.getString(cursor.getColumnIndex("uuid"));
-                    int child_form_type= cursor.getInt(cursor.getColumnIndex("child_form_type"));
-                    int relation_id= cursor.getInt(cursor.getColumnIndex("relation_id"));
-                    int activeStatus= cursor.getInt(cursor.getColumnIndex("active"));
-                    jsonObject.put(CHILD_ID,getChildUUId);
-                    jsonObject.put("uuid",uuid);
-                    jsonObject.put("linked_on","31-05-2018_193959");
-                    jsonObject.put("active",String.valueOf(activeStatus));
-                    jsonObject.put("modified_on","31-05-2018_193959");
-                    jsonObject.put("parent_form_type","");
-                    jsonObject.put("parent_form_id",parent_form_id);
-                    jsonObject.put("child_form_type",0);
-                    jsonObject.put("relation_id",relation_id);
+                    JSONObject jsonObject = new JSONObject();
+                    String getChildUUId = cursor.getString(cursor.getColumnIndex(CHILD_ID));
+                    String child_form_primaryid = cursor.getString(cursor.getColumnIndex("child_form_primaryid"));
+                    String parent_form_id = cursor.getString(cursor.getColumnIndex("parent_form_id"));
+                    String uuid = cursor.getString(cursor.getColumnIndex("uuid"));
+                    int child_form_type = cursor.getInt(cursor.getColumnIndex("child_form_type"));
+                    int relation_id = cursor.getInt(cursor.getColumnIndex("relation_id"));
+                    int activeStatus = cursor.getInt(cursor.getColumnIndex("active"));
+                    jsonObject.put(CHILD_ID, getChildUUId);
+                    jsonObject.put("uuid", uuid);
+                    jsonObject.put("linked_on", "31-05-2018_193959");
+                    jsonObject.put("active", String.valueOf(activeStatus));
+                    jsonObject.put("modified_on", "31-05-2018_193959");
+                    jsonObject.put("parent_form_type", "");
+                    jsonObject.put("parent_form_id", parent_form_id);
+                    jsonObject.put("child_form_type", 0);
+                    jsonObject.put("relation_id", relation_id);
                     jsonArrayCreateTemp.put(jsonObject);
 
 
@@ -1161,20 +1183,20 @@ public class DBHandler extends SQLiteOpenHelper {
         return jsonArrayCreateTemp;
     }
 
-    public String isRecordExist(String getChildFormType,String parentFormId) {
+    public String isRecordExist(String getChildFormType, String parentFormId) {
 
-        String getUUIDIfExist="";
+        String getUUIDIfExist = "";
         try {
-            String pendingSurveyQuery = "select uuid from Linkages where Linkages.child_form_id='"+getChildFormType+"' and Linkages.parent_form_id='"+parentFormId+"'";
+            String pendingSurveyQuery = "select uuid from Linkages where Linkages.child_form_id='" + getChildFormType + "' and Linkages.parent_form_id='" + parentFormId + "'";
             SQLiteDatabase db = getdatabaseinstance_read();
             Cursor cursor = db.rawQuery(pendingSurveyQuery, null);
             Logger.logD(pendingSurveyQueryStr, " checkPrymarySaveDraftExist" + pendingSurveyQuery + "-->" + cursor.getCount());
             if (cursor.getCount() != 0 && cursor.moveToFirst()) {
                 do {
-                    String uuid= cursor.getString(cursor.getColumnIndex("uuid"));
-                   if (!uuid.equals("")){
-                       getUUIDIfExist=uuid;
-                   }
+                    String uuid = cursor.getString(cursor.getColumnIndex("uuid"));
+                    if (!uuid.equals("")) {
+                        getUUIDIfExist = uuid;
+                    }
                 } while (cursor.moveToNext());
                 cursor.close();
             }
@@ -1185,45 +1207,46 @@ public class DBHandler extends SQLiteOpenHelper {
 
         return getUUIDIfExist;
     }
+
     public void deleteExistingResponse(String surveyID) {
         SQLiteDatabase db = getdatabaseinstance_read();
-        String ResponseQuery="Delete from Response where survey_id='"+surveyID+"'";
+        String ResponseQuery = "Delete from Response where survey_id='" + surveyID + "'";
         db.execSQL(ResponseQuery);
     }
 
-    public List<QuestionAnswer> getSearchChildRecord(String getGroupId,List<childLink> getChildUUids, String getConfiguredQuestion,
+    public List<QuestionAnswer> getSearchChildRecord(String getGroupId, List<childLink> getChildUUids, String getConfiguredQuestion,
                                                      String userEnteredText) {
-        List<QuestionAnswer> getSelectedUUids= new ArrayList<>();
-        StringBuilder getCommaSeparate= new StringBuilder();
-        for (int i=0;i<getChildUUids.size() && getChildUUids.get(i).getActive()==2;i++) {
-            if (i!=0)
+        List<QuestionAnswer> getSelectedUUids = new ArrayList<>();
+        StringBuilder getCommaSeparate = new StringBuilder();
+        for (int i = 0; i < getChildUUids.size() && getChildUUids.get(i).getActive() == 2; i++) {
+            if (i != 0)
                 getCommaSeparate.append(",");
             getCommaSeparate.append("'").append(getChildUUids.get(i).getChild_form_id()).append("'");
 
         }
-        String pendingSurveyQuery="";
+        String pendingSurveyQuery = "";
         try {
             if (!getChildUUids.isEmpty()) {
                 pendingSurveyQuery = "select Survey.cluster_name,Survey.survey_ids,Response.ans_text, Survey.uuid,Survey.server_primary_key\n" +
                         "from Response\n" +
                         "INNER JOIN Survey ON Response.survey_id = Survey.uuid\n" +
-                        "where Survey.survey_ids=" + getGroupId + " and Response.ans_text  LIKE '%"+userEnteredText+"%' and Survey.uuid NOT IN (" + getCommaSeparate + ") and Response.q_code="+getConfiguredQuestion+"";
-            }else{
+                        "where Survey.survey_ids=" + getGroupId + " and Response.ans_text  LIKE '%" + userEnteredText + "%' and Survey.uuid NOT IN (" + getCommaSeparate + ") and Response.q_code=" + getConfiguredQuestion + "";
+            } else {
                 pendingSurveyQuery = "select Survey.cluster_name,Survey.survey_ids,Response.ans_text, Survey.uuid,Survey.server_primary_key\n" +
                         "from Response\n" +
                         "INNER JOIN Survey ON Response.survey_id = Survey.uuid\n" +
-                        "where Survey.survey_ids="+getGroupId+" and Response.ans_text  LIKE '%"+userEnteredText+"%' and Survey.uuid NOT IN (" + getCommaSeparate + ") and Response.q_code="+getConfiguredQuestion+"";
+                        "where Survey.survey_ids=" + getGroupId + " and Response.ans_text  LIKE '%" + userEnteredText + "%' and Survey.uuid NOT IN (" + getCommaSeparate + ") and Response.q_code=" + getConfiguredQuestion + "";
             }
             SQLiteDatabase db = getdatabaseinstance_read();
             Cursor cursor = db.rawQuery(pendingSurveyQuery, null);
             Logger.logD(pendingSurveyQueryStr, " checkPrymarySaveDraftExist" + pendingSurveyQuery + "-->" + cursor.getCount());
             if (cursor.getCount() != 0 && cursor.moveToFirst()) {
                 do {
-                    String childName= cursor.getString(cursor.getColumnIndex("ans_text"));
-                    String childVillage= cursor.getString(cursor.getColumnIndex("cluster_name"));
-                    String childUUID= cursor.getString(cursor.getColumnIndex("uuid"));
-                    int childFormPrimaryid= cursor.getInt(cursor.getColumnIndex("server_primary_key"));
-                    QuestionAnswer questionAnswer= new QuestionAnswer();
+                    String childName = cursor.getString(cursor.getColumnIndex("ans_text"));
+                    String childVillage = cursor.getString(cursor.getColumnIndex("cluster_name"));
+                    String childUUID = cursor.getString(cursor.getColumnIndex("uuid"));
+                    int childFormPrimaryid = cursor.getInt(cursor.getColumnIndex("server_primary_key"));
+                    QuestionAnswer questionAnswer = new QuestionAnswer();
                     questionAnswer.setAnswerText(childName);
                     questionAnswer.setQuestionText(childVillage);
                     questionAnswer.setSelectedChildUUID(childUUID);
@@ -1241,17 +1264,17 @@ public class DBHandler extends SQLiteOpenHelper {
         return getSelectedUUids;
     }
 
-    public int getSyncStatus(String getChildformType,String parentformid) {
+    public int getSyncStatus(String getChildformType, String parentformid) {
 
-        int getUUIDIfExist=2;
+        int getUUIDIfExist = 2;
         try {
-            String pendingSurveyQuery = "select sync_status from Linkages where Linkages.child_form_id='"+getChildformType+"' and Linkages.parent_form_id='"+parentformid+"'";
+            String pendingSurveyQuery = "select sync_status from Linkages where Linkages.child_form_id='" + getChildformType + "' and Linkages.parent_form_id='" + parentformid + "'";
             SQLiteDatabase db = getdatabaseinstance_read();
             Cursor cursor = db.rawQuery(pendingSurveyQuery, null);
             Logger.logD(pendingSurveyQueryStr, " checkPrymarySaveDraftExist" + pendingSurveyQuery + "-->" + cursor.getCount());
             if (cursor.getCount() != 0 && cursor.moveToFirst()) {
                 do {
-                    getUUIDIfExist= cursor.getInt(cursor.getColumnIndex(SYNCSTATUS));
+                    getUUIDIfExist = cursor.getInt(cursor.getColumnIndex(SYNCSTATUS));
 
                 } while (cursor.moveToNext());
                 cursor.close();
@@ -1264,11 +1287,11 @@ public class DBHandler extends SQLiteOpenHelper {
         return getUUIDIfExist;
     }
 
-    public Boolean  isSurveyCompleted(SurveysBean surveysBean,String surveyPrimaryKeyId, ExternalDbOpenHelper dbOpenHelper) {
-        StatusBean statusBeanTemp= new StatusBean();
-        boolean isCompleted=false;
+    public Boolean isSurveyCompleted(SurveysBean surveysBean, String surveyPrimaryKeyId, ExternalDbOpenHelper dbOpenHelper) {
+        StatusBean statusBeanTemp = new StatusBean();
+        boolean isCompleted = false;
         try {
-            String pendingSurveyQuery = "select * from survey where beneficiary_ids='"+surveyPrimaryKeyId+"' and  survey_ids="+surveysBean.getId();
+            String pendingSurveyQuery = "select * from survey where beneficiary_ids='" + surveyPrimaryKeyId + "' and  survey_ids=" + surveysBean.getId();
             SQLiteDatabase db = getdatabaseinstance_read();
             Cursor cursor = db.rawQuery(pendingSurveyQuery, null);
             Logger.logD(pendingSurveyQueryStr, " isSurveyCompleted" + pendingSurveyQuery + "-->" + cursor.getCount());
@@ -1279,8 +1302,8 @@ public class DBHandler extends SQLiteOpenHelper {
                     String uuid = cursor.getString(cursor.getColumnIndex("beneficiary_ids"));
 
                     if (!uuid.equals(""))
-                        isCompleted=getUUIDStatus(uuid);
-                    String getEndDate = cursor.getString(cursor.getColumnIndex("sync_date"));
+                        isCompleted = getUUIDStatus(uuid);
+                    String getEndDate = cursor.getString(cursor.getColumnIndex("end_date"));
                     int survey_ids = cursor.getInt(cursor.getColumnIndex("survey_ids"));
                     statusBeanTemp = dbOpenHelper.getDetails(getEndDate, survey_ids);
                     surveysBean.setSurveyEndDate(getEndDate);
@@ -1288,8 +1311,9 @@ public class DBHandler extends SQLiteOpenHelper {
                     surveysBean.setUuid(uuid);
                     surveysBean.setId(survey_ids);
                 } while (cursor.moveToNext());
-                cursor.close();
+
             }
+            cursor.close();
         } catch (Exception e) {
             Logger.logV("", "checkPrymarySaveDraftExist from Survey table" + e);
 
@@ -1298,9 +1322,9 @@ public class DBHandler extends SQLiteOpenHelper {
     }
 
     private boolean getUUIDStatus(String patentuuid) {
-        boolean isCompleted=false;
+        boolean isCompleted = false;
         try {
-            String pendingSurveyQuery = "select * from survey where beneficiary_ids='"+patentuuid+"'";
+            String pendingSurveyQuery = "select * from survey where beneficiary_ids='" + patentuuid + "'";
             SQLiteDatabase db = getdatabaseinstance_read();
             Cursor cursor = db.rawQuery(pendingSurveyQuery, null);
             Logger.logD(pendingSurveyQueryStr, " isSurveyCompleted" + pendingSurveyQuery + "-->" + cursor.getCount());
@@ -1311,7 +1335,7 @@ public class DBHandler extends SQLiteOpenHelper {
                     String uuid = cursor.getString(cursor.getColumnIndex("uuid"));
 
                     if (!uuid.equals(""))
-                        isCompleted=true;
+                        isCompleted = true;
                 } while (cursor.moveToNext());
                 cursor.close();
             }
@@ -1324,18 +1348,18 @@ public class DBHandler extends SQLiteOpenHelper {
     }
 
     public boolean isSurveyCompeted(String parentUUID) {
-        boolean isCompleted=false;
+        boolean isCompleted = false;
         try {
-            String pendingSurveyQuery = "SELECT uuid FROM Survey where beneficiary_ids='"+parentUUID+"'";
+            String pendingSurveyQuery = "SELECT uuid FROM Survey where beneficiary_ids='" + parentUUID + "'";
             SQLiteDatabase db = getdatabaseinstance_read();
             Cursor cursor = db.rawQuery(pendingSurveyQuery, null);
             if (cursor.getCount() != 0 && cursor.moveToFirst()) {
                 do {
                     String uuid = cursor.getString(cursor.getColumnIndex("uuid"));
                     if (uuid.equals(""))
-                        isCompleted=false;
+                        isCompleted = false;
                     else
-                        isCompleted=true;
+                        isCompleted = true;
 
                 } while (cursor.moveToNext());
                 cursor.close();
@@ -1363,7 +1387,7 @@ public class DBHandler extends SQLiteOpenHelper {
                 do {
                     String answer = "";
                     int questionID = cursor.getInt(cursor.getColumnIndex("q_id"));
-                    int groupId ;
+                    int groupId;
                     groupId = cursor.getInt(cursor.getColumnIndex(GROUP_ID_KEY));
                     int prime_key = cursor.getInt(cursor.getColumnIndex("primarykey"));
 
@@ -1372,25 +1396,21 @@ public class DBHandler extends SQLiteOpenHelper {
 
                     if (("T").equalsIgnoreCase(questionType) || ("D").equalsIgnoreCase(questionType) || ("AW").equalsIgnoreCase(questionType) || ("I").equalsIgnoreCase(questionType)) {
                         answer = cursor.getString(cursor.getColumnIndex(ANSTEXT));
-                    }
-                    else if(("AI").equalsIgnoreCase(questionType)){
+                    } else if (("AI").equalsIgnoreCase(questionType)) {
                         answer = cursor.getString(cursor.getColumnIndex("sub_questionId"));
-                    }
-                    else if (("R").equalsIgnoreCase(questionType) || ("S").equalsIgnoreCase(questionType)) {
+                    } else if (("R").equalsIgnoreCase(questionType) || ("S").equalsIgnoreCase(questionType)) {
                         String answerCode = cursor.getString(cursor.getColumnIndex(ANSCODE));
                         answer = dbOpenHelper.getOptionText(answerCode, 1, questionID);
-                    }
-                    else
-                    {
+                    } else {
                         answer = cursor.getString(cursor.getColumnIndex(ANSTEXT));
                     }
 
-                    if (groupId != 0 && subQuestionId != null && !subQuestionId.isEmpty() && !"0".equalsIgnoreCase(subQuestionId) )
-                        result.put(subQuestionId+"@"+groupId,answer);
-                    else if (groupId != 0   && "0".equalsIgnoreCase(subQuestionId))
-                        result.put(prime_key+"@"+groupId,answer);
+                    if (groupId != 0 && subQuestionId != null && !subQuestionId.isEmpty() && !"0".equalsIgnoreCase(subQuestionId))
+                        result.put(subQuestionId + "@" + groupId, answer);
+                    else if (groupId != 0 && "0".equalsIgnoreCase(subQuestionId))
+                        result.put(prime_key + "@" + groupId, answer);
                     else
-                        result.put(String.valueOf(questionID),answer);
+                        result.put(String.valueOf(questionID), answer);
 
                 }
                 while (cursor.moveToNext());
@@ -1398,8 +1418,7 @@ public class DBHandler extends SQLiteOpenHelper {
             }
         } catch (Exception e) {
             Logger.logE(TAG, "Exception in  the getAttendedQuestion ", e);
-        }
-        finally {
+        } finally {
             if (cursor != null)
                 cursor.close();
         }
@@ -1409,7 +1428,7 @@ public class DBHandler extends SQLiteOpenHelper {
     public String getActivityUUID(String beneficiaryUuid) {
         String getSelectedUUids = "";
         try {
-            String pendingSurveyQuery = "select uuid from Survey where beneficiary_ids='"+beneficiaryUuid+"'";
+            String pendingSurveyQuery = "select uuid from Survey where beneficiary_ids='" + beneficiaryUuid + "'";
             SQLiteDatabase db = getdatabaseinstance_read();
             Cursor cursor = db.rawQuery(pendingSurveyQuery, null);
             if (cursor.getCount() != 0 && cursor.moveToFirst()) {
@@ -1429,19 +1448,17 @@ public class DBHandler extends SQLiteOpenHelper {
     }
 
     /**
-     *
      * @param questionNumber
-
      * @param surveyid
      * @return
      */
     public List<Response> setAnswersForGrid(int questionNumber, String surveyid) {
         List<Response> list = new ArrayList<>();
-        String gridQuery = "SELECT * FROM Response where group_id IN(select group_id from Response where survey_id='"+surveyid+"' and q_id = '"+questionNumber+"' order by group_id ASC  ) and survey_id='"+surveyid+"' and q_id = '"+questionNumber+"'  order by group_id ASC";
+        String gridQuery = "SELECT * FROM Response where group_id IN(select group_id from Response where survey_id='" + surveyid + "' and q_id = '" + questionNumber + "' order by group_id ASC  ) and survey_id='" + surveyid + "' and q_id = '" + questionNumber + "'  order by group_id ASC";
         SQLiteDatabase db = getdatabaseinstance_read();
         Cursor cursor = db.rawQuery(gridQuery, null);
         list.clear();
-        try{
+        try {
             if (cursor.getCount() != 0 && cursor.moveToFirst()) {
                 do {
                     String qId = cursor.getString(cursor.getColumnIndex("q_id"));
@@ -1456,7 +1473,7 @@ public class DBHandler extends SQLiteOpenHelper {
                             cursor.getInt(cursor.getColumnIndex("primary_id")),
                             cursor.getString(cursor.getColumnIndex(QTYPE)));
                     list.add(answersObject);
-                    Logger.logD("assessment","answer - "+answer +" - qid "+qId +" gId - "+cursor.getInt(cursor.getColumnIndex(GROUP_ID_KEY)));
+                    Logger.logD("assessment", "answer - " + answer + " - qid " + qId + " gId - " + cursor.getInt(cursor.getColumnIndex(GROUP_ID_KEY)));
                 } while (cursor.moveToNext());
             }
             cursor.close();
@@ -1468,19 +1485,20 @@ public class DBHandler extends SQLiteOpenHelper {
 
     public List<LocationSurveyBeen> getLeastLocationRecords(String leaseLevel) {
         List<LocationSurveyBeen> listTemp = new ArrayList<>();
-        String gridQuery = "select * from Survey where cluster_name='"+leaseLevel+"'";
+        String gridQuery = "select * from Survey where cluster_name='" + leaseLevel + "'";
         SQLiteDatabase db = getdatabaseinstance_read();
         Cursor cursor = db.rawQuery(gridQuery, null);
-        try{
+        try {
             if (cursor.getCount() != 0 && cursor.moveToFirst()) {
                 do {
-                    String clusterName= cursor.getString(cursor.getColumnIndex("cluster_name"));
-                    String uuid= cursor.getString(cursor.getColumnIndex("uuid"));
-                    int serverPrimaryKey= cursor.getInt(cursor.getColumnIndex("server_primary_key"));
-                    LocationSurveyBeen locationSurveyBeen= new LocationSurveyBeen();
-                            locationSurveyBeen.setUuid(uuid);
-                            locationSurveyBeen.setLocationName(clusterName);
-
+                    String clusterName = cursor.getString(cursor.getColumnIndex("cluster_name"));
+                    String uuid = cursor.getString(cursor.getColumnIndex("uuid"));
+                    int surveyIds = cursor.getInt(cursor.getColumnIndex("survey_ids"));
+                    LocationSurveyBeen locationSurveyBeen = new LocationSurveyBeen();
+                    locationSurveyBeen.setUuid(uuid);
+                    locationSurveyBeen.setLocationName(clusterName);
+                    locationSurveyBeen.setSurveyid(surveyIds);
+                    listTemp.clear();
                     listTemp.add(locationSurveyBeen);
 
                 } while (cursor.moveToNext());
@@ -1494,7 +1512,36 @@ public class DBHandler extends SQLiteOpenHelper {
 
     public void AllPreviousResponse() {
         SQLiteDatabase db = getdatabaseinstance_read();
-        String ResponseQuery="Delete from Survey";
+        String ResponseQuery = "Delete from Survey";
         db.execSQL(ResponseQuery);
+    }
+
+    public int getPeriodicityPreviousCountOnline(int surveyId, String periodicityFlag, Date date, String parentUUId) {
+        int getPeriodicityCount = 0;
+        try {
+            String query = "";
+            String getCurrentDate = new SimpleDateFormat(dateYy_Mm_Dd, Locale.ENGLISH).format(date);
+            SQLiteDatabase db = getdatabaseinstance_read();
+            String[] splitMonth = getCurrentDate.split("-");
+            switch (periodicityFlag) {
+                case DAILY:
+                    query = "select * from survey where date(end_date)='" + getCurrentDate + "' and survey_ids=" + surveyId + " and beneficiary_ids='" + parentUUId + "'";
+                    Logger.logV(TAG, "" + query + query);
+                    break;
+                case WEEKLY:
+                    query = "SELECT * FROM Periodicity where ( strftime('%W', end_date) = strftime('%W', 'now') )  and survey_id='" + surveyId + " and beneficiary_ids='" + parentUUId + "'";
+                    break;
+                default:
+                    break;
+            }
+            Cursor cursor = db.rawQuery(query, null);
+            if (cursor.getCount() != 0 && cursor.moveToFirst()) {
+                getPeriodicityCount = cursor.getCount();
+            }
+            cursor.close();
+        } catch (Exception e) {
+            Logger.logE(TAG, "", e);
+        }
+        return getPeriodicityCount;
     }
 }

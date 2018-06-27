@@ -77,6 +77,7 @@ public class SurveyListAsyncTask extends AsyncTask<Context, Integer, String> {
         this.typo = typoObj;
         this.progressBar = progressBar;
         this.surveyStatus = locationStatus;
+        dbhelper.deleteCompleteSurveys();
     }
 
 

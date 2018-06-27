@@ -110,7 +110,6 @@ import static org.mahiti.convenemis.database.DataBaseMapperClass.getUserAnswered
 import static org.mahiti.convenemis.database.DataBaseMapperClass.setAnswersForGrid;
 import static org.mahiti.convenemis.utils.Constants.GridResponseHashMap;
 import static org.mahiti.convenemis.utils.Constants.GridResponseHashMapKeys;
-import static org.mahiti.convenemis.utils.Constants.SURVEY_ID;
 import static org.mahiti.convenemis.utils.Constants.buttonDynamicDateGrid;
 import static org.mahiti.convenemis.utils.Constants.fillInlineHashMapKey;
 import static org.mahiti.convenemis.utils.Constants.fillInlineRow;

@@ -12,6 +12,7 @@ import org.mahiti.convenemis.database.ResponseCheckController;
 import org.mahiti.convenemis.utils.Constants;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 // The types specify: 1. input data type (String)
@@ -47,8 +48,17 @@ public class CompletedSurveyAsyncTask extends AsyncTask<String, Integer, List<Su
 
     protected List<SurveysBean> doInBackground(String... strings) {
         for(int i=0;i<sourceList.size();i++) {
-            if (handler.isSurveyCompleted(sourceList.get(i),surveyPrimaryKeyId,externalDbOpenHelper))
-                resultList.add(sourceList.get(i));
+            if (handler.isSurveyCompleted(sourceList.get(i),surveyPrimaryKeyId,externalDbOpenHelper)) {
+                int getCount =handler.getPeriodicityPreviousCountOnline(sourceList.get(i).getId(), sourceList.get(i).getPeriodicityFlag(), new Date(),surveyPrimaryKeyId);
+                if (getCount==0) {
+                    sourceList.get(i).setSurveyEndDate("Previous record");
+                    sourceList.get(i).setSurveyDone(1);
+                    resultList.add(sourceList.get(i));
+                }else{
+                    sourceList.get(i).setSurveyDone(0);
+                    resultList.add(sourceList.get(i));
+                }
+            }
         }
         return resultList;
     }

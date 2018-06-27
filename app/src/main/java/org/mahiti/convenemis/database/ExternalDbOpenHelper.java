@@ -66,6 +66,7 @@ import java.util.Map;
 
 public class ExternalDbOpenHelper extends SQLiteOpenHelper {
     private static final String TAG = "ExternalDbOpenHelper";
+    private static final String DAILY = "Daily";
 
     // Path to the device folder with databases
     private static String dbPath;
@@ -80,7 +81,7 @@ public class ExternalDbOpenHelper extends SQLiteOpenHelper {
     private static final String HALF_YEARLY = "Half Yearly";
     private static final String WEEKLY = "Weekly";
     private static final String MONTHLY = "Monthly";
-    private static final String DAILY = "Daily";
+
     private static final String QUARTERLY = "Quarterly";
     private static final String FACILITYNAME = "facility_name";
     private static final String FACILITYTYPE = "facility_type";
@@ -4184,6 +4185,13 @@ public class ExternalDbOpenHelper extends SQLiteOpenHelper {
         String query;
         database = this.getWritableDatabase();
         query = "DELETE FROM "+tableName;
+        database.execSQL(query);
+    }
+
+    public void deleteCompleteSurveys() {
+        String query;
+        database = this.getWritableDatabase();
+        query = "DELETE FROM Surveys ";
         database.execSQL(query);
     }
 }
