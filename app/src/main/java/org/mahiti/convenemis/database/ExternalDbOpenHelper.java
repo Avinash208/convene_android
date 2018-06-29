@@ -1338,7 +1338,8 @@ public class ExternalDbOpenHelper extends SQLiteOpenHelper {
                             cursor.getInt(cursor.getColumnIndex(Constants.SURVEY_ID_COLUMN)),
                             cursor.getInt(cursor.getColumnIndex("qConfig")),
                             cursor.getString(cursor.getColumnIndex("summaryQid")), null, cursor.getString(cursor.getColumnIndex(FACILITYTYPE)), cursor.getString(cursor.getColumnIndex(FACILITIY_IDS_KEY)),
-                            cursor.getString(cursor.getColumnIndex(PERIODICITY_FLAG)));
+                            cursor.getString(cursor.getColumnIndex(PERIODICITY_FLAG)),
+                            cursor.getString(cursor.getColumnIndex("constraints")));
                     surveyDetailList.add(surveyDetail);
                 } catch (Exception e) {
                     Logger.logE(TAG, "", e);
@@ -1377,7 +1378,8 @@ public class ExternalDbOpenHelper extends SQLiteOpenHelper {
                             cursor.getInt(cursor.getColumnIndex(Constants.SURVEY_ID_COLUMN)),
                             cursor.getInt(cursor.getColumnIndex("qConfig")),
                             cursor.getString(cursor.getColumnIndex("summaryQid")), null, cursor.getString(cursor.getColumnIndex(FACILITYTYPE)), cursor.getString(cursor.getColumnIndex(FACILITIY_IDS_KEY)),
-                            cursor.getString(cursor.getColumnIndex(PERIODICITY_FLAG)));
+                            cursor.getString(cursor.getColumnIndex(PERIODICITY_FLAG)),
+                            cursor.getString(cursor.getColumnIndex("constraints")));
                     surveyDetailList.add(surveyDetail);
                 } catch (Exception e) {
                     Logger.logE(TAG, "", e);
@@ -1474,8 +1476,14 @@ public class ExternalDbOpenHelper extends SQLiteOpenHelper {
                 Log.v(TAG, "category_id   : " + surveyListDetails.getSurveyDetails().get(i).getCategoryId());
                 List<String> getPid = updateLinkageTable(surveyListDetails.getSurveyDetails().get(i).getLinkagesDetails(), database);
                 Log.v(TAG, "linkages: " + getPid);
+
                 cv.put("survey_type", getPid.toString());
                 Log.v(TAG, "survey_type: " + getPid.toString());
+
+                cv.put("constraints", surveyListDetails.getSurveyDetails().get(i).getConstraints());
+                Log.v(TAG, "constraints: " + surveyListDetails.getSurveyDetails().get(i).getConstraints());
+
+
                 database.insertWithOnConflict("Surveys", null, cv, SQLiteDatabase.CONFLICT_REPLACE);
             }
 

@@ -51,6 +51,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.mahiti.convenemis.utils.Constants.SURVEY_ID;
 
 
 public class ListingActivity extends BaseActivity implements View.OnClickListener,
@@ -77,8 +78,6 @@ public class ListingActivity extends BaseActivity implements View.OnClickListene
     private CharSequence autoSearchText="";
     TextView emptytextview;
     ImageView imageMenu;
-    private static final String BENEFICIARIES_TITLE = "Beneficiaries";
-    private static final String FACILITIES_TITLE = "Facilities";
     private static final String TAG = "ListingActivity";
     Myreceiver beneficiryReceiver;
     IntentFilter filter;
@@ -116,6 +115,7 @@ public class ListingActivity extends BaseActivity implements View.OnClickListene
     private String qid;
     private ConveneDatabaseHelper dbConveneHelper;
     private int surveyUUIDKEY=0;
+    private String  surveyId="0";
 
 
     @Override
@@ -139,6 +139,14 @@ public class ListingActivity extends BaseActivity implements View.OnClickListene
         Intent i = getIntent();
         typeValue = i.getStringExtra(Constants.TYPE_VALUE);
         headerName = i.getStringExtra(Constants.HEADER_NAME);
+
+        try {
+            surveyId = i.getStringExtra(Constants.SURVEY_ID);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
         methodToStoreSharedPreference(2);
         beneficiaryTypeId = i.getStringExtra(Constants.BENEFICIARY_TYPE_ID);
         partnerId = i.getStringExtra("partner_id");
@@ -189,13 +197,14 @@ public class ListingActivity extends BaseActivity implements View.OnClickListene
         setQuestionTOheading();
         backPress.setOnClickListener(this);
         filterPopUp.setOnClickListener(this);
-        createNewButton.setOnClickListener(new View.OnClickListener() {
+        createNewButton.setOnClickListener(this);
+       /* createNewButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Utilities.setSurveyStatus(sharedPreferences,"new");
-                new StartSurvey(ListingActivity.this,ListingActivity.this,prefs.getInt(Constants.SURVEY_ID, 0), prefs.getInt(Constants.SURVEY_ID, 0), "Village Name", "", "","", "").execute();
+                new StartSurvey(ListingActivity.this,ListingActivity.this,Integer.parseInt(surveyId), Integer.parseInt(surveyId), "Village Name", "", "","", "").execute();
             }
-        });
+        });*/
 
 
 
@@ -266,6 +275,7 @@ public class ListingActivity extends BaseActivity implements View.OnClickListene
     protected void onResume() {
         super.onResume();
         new  summaryReportSync().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        createNewButton.setOnClickListener(this);
     }
     @Override
     protected void onPause() {
@@ -354,6 +364,13 @@ public class ListingActivity extends BaseActivity implements View.OnClickListene
     public void onClick(View view) {
         if(view.getId()==R.id.backPress){
             onBackPressed();
+        }
+        if (view.getId()==R.id.createNewButton){
+            Utilities.setSurveyStatus(sharedPreferences,"new");
+            SharedPreferences.Editor editor= prefs.edit();
+            editor.putInt(SURVEY_ID, Integer.parseInt(surveyId));
+            editor.apply();
+            new StartSurvey(ListingActivity.this,ListingActivity.this,prefs.getInt(SURVEY_ID,0), prefs.getInt(SURVEY_ID,0), "Village Name", "", "","", "").execute();
         }
     }
 

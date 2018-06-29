@@ -25,6 +25,7 @@ import org.mahiti.convenemis.BeenClass.PreviewQuestionAnswerSet;
 import org.mahiti.convenemis.database.ConveneDatabaseHelper;
 import org.mahiti.convenemis.database.DBHandler;
 import org.mahiti.convenemis.database.DataBaseMapperClass;
+import org.mahiti.convenemis.database.Utilities;
 import org.mahiti.convenemis.utils.Constants;
 import org.mahiti.convenemis.utils.Logger;
 
@@ -48,6 +49,10 @@ public class ShowSurveyPreview extends AppCompatActivity implements View.OnClick
     Map<String, String> responses = null;
     Map<Integer, String> options = null;
     private Boolean isVisible;
+    private static final String SAVE_TO_DRAFT_FLAG_KEY = "SaveDraftButtonFlag";
+    private static final String SURVEY_ID_KEY = "survey_id";
+    private static final String ISLOCATIONBASED = "isLocationBased";
+    private static final String NOTLOCATIONBASED = "isNotLocationBased";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,15 +86,20 @@ public class ShowSurveyPreview extends AppCompatActivity implements View.OnClick
         SharedPreferences.Editor recentPreview = showSurveyPreviewPreferences.edit();
         recentPreview.putString("recentPreviewRecord", "");
         recentPreview.apply();
-
-        editTextView.setVisibility(View.INVISIBLE);
         editTextView.setOnClickListener(view -> {
-            Intent intent = new Intent(ShowSurveyPreview.this, SurveyQuestionActivity.class);
+            Utilities.setSurveyStatus(showSurveyPreviewPreferences, "edit");
+            SharedPreferences.Editor editorSaveDraft = showSurveyPreviewPreferences.edit();
+            editorSaveDraft.putBoolean(SAVE_TO_DRAFT_FLAG_KEY, true);
+            editorSaveDraft.putBoolean(ISLOCATIONBASED, false);
+            editorSaveDraft.putBoolean(NOTLOCATIONBASED, false);
+            editorSaveDraft.apply();
+            Intent intent = new Intent(this, SurveyQuestionActivity.class);
             intent.putExtra("SurveyId", getSurveyPrimaryID);
-            Logger.logD("survey_id survey_id-->", "-->" + surveyId);
-            intent.putExtra("survey_id", String.valueOf(surveyId));
+            intent.putExtra(SURVEY_ID_KEY, String.valueOf(surveyId));
             startActivity(intent);
             finish();
+
+
         });
     }
 
@@ -165,11 +175,10 @@ public class ShowSurveyPreview extends AppCompatActivity implements View.OnClick
                 setInlineAnswers(previewQuestionAnswerSet, parentLayout);
                 break;
             case 4:
-                  setAnswerToTv(answer, parentLayout, questionLabel);
+                setAnswerToTv(answer, parentLayout, questionLabel);
                 break;
             case 2:
-                if(answer != null)
-                {
+                if (answer != null) {
                     String[] ansSet = answer.replace("[", "").replace("]", "").split(",");
                     answer = "";
                     for (String option : ansSet) {
@@ -216,14 +225,14 @@ public class ShowSurveyPreview extends AppCompatActivity implements View.OnClick
                 assessment.setLayoutParams(layoutParams);
                 assessment.setText(responses.get(id));
                 assessment.setBackgroundResource(R.drawable.textfieldbg);
-                if ("C".equalsIgnoreCase(assesmentBean.getQtype())  && responses.get(id) != null) {
+                if ("C".equalsIgnoreCase(assesmentBean.getQtype()) && responses.get(id) != null) {
                     String[] ansSet = responses.get(id).replace("[", "").replace("]", "").split(",");
                     String answer = "";
                     for (String option : ansSet) {
-                        option= option.trim();
+                        option = option.trim();
                         answer = answer + "," + options.get(Integer.parseInt(option));
                     }
-                    answer = answer.substring(1,answer.length());
+                    answer = answer.substring(1, answer.length());
                     assessment.setText(answer);
 
                 }
@@ -254,7 +263,7 @@ public class ShowSurveyPreview extends AppCompatActivity implements View.OnClick
             assessment.setTextColor(Color.WHITE);
 
             assessment.setBackgroundColor(getResources().getColor(R.color.orange));
-            LinearLayout.LayoutParams  params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, 70);
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, 70);
 
             params.gravity = Gravity.CENTER;
             assessment.setLayoutParams(params);
@@ -327,16 +336,15 @@ public class ShowSurveyPreview extends AppCompatActivity implements View.OnClick
                     int id2 = mSubQuestions.get(i).getQuestionId();
                     String id = id2 + "@" + id3;
                     answerLabelGrid.setText(responses.get(id));
-                    if ("C".equalsIgnoreCase(mAssesmant.get(j).getQtype())  && responses.get(id) != null) {
+                    if ("C".equalsIgnoreCase(mAssesmant.get(j).getQtype()) && responses.get(id) != null) {
                         String[] ansSet = responses.get(id).replace("[", "").replace("]", "").split(",");
                         String answer = "";
                         for (String option : ansSet) {
                             answer = answer + "," + options.get(Integer.parseInt(option));
                         }
 
-                       answerLabelGrid.setText( answer.substring(1,answer.length()));
+                        answerLabelGrid.setText(answer.substring(1, answer.length()));
                     }
-
 
 
                 } catch (Exception e) {

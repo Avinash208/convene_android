@@ -25,6 +25,7 @@ import org.mahiti.convenemis.BeenClass.parentChild.LocationSurveyBeen;
 import org.mahiti.convenemis.utils.Constants;
 import org.mahiti.convenemis.utils.Logger;
 import org.mahiti.convenemis.utils.PreferenceConstants;
+import org.mahiti.convenemis.utils.Utils;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -61,6 +62,16 @@ public class DBHandler extends SQLiteOpenHelper {
     private static final String DAILY = "Daily";
     private String dateYy_Mm_Dd = "yyyy-MM-dd";
     private static final String WEEKLY = "Weekly";
+    private static final String QUARTERLY = "Quarterly";
+    private static final String HALF_YEARLY = "Half Yearly";
+    private static final String MONTHLY = "Monthly";
+
+
+    private static final String STRFTIME_YEAR_CAPTURE = "strftime('%Y', date(end_date))='";
+    private static final String STRFTIME_MONTH = "(strftime('%m', date(end_date))='";
+    private static final String STR_TO_CAPTURE_DATE = "' OR strftime('%Y %m', date(end_date))='";
+
+
 
 
     /**
@@ -1300,6 +1311,7 @@ public class DBHandler extends SQLiteOpenHelper {
                 do {
 
                     String uuid = cursor.getString(cursor.getColumnIndex("beneficiary_ids"));
+                    String puuid = cursor.getString(cursor.getColumnIndex("uuid"));
 
                     if (!uuid.equals(""))
                         isCompleted = getUUIDStatus(uuid);
@@ -1308,7 +1320,7 @@ public class DBHandler extends SQLiteOpenHelper {
                     statusBeanTemp = dbOpenHelper.getDetails(getEndDate, survey_ids);
                     surveysBean.setSurveyEndDate(getEndDate);
                     surveysBean.setSurveyName(statusBeanTemp.getName());
-                    surveysBean.setUuid(uuid);
+                    surveysBean.setUuid(puuid);
                     surveysBean.setId(survey_ids);
                 } while (cursor.moveToNext());
 
@@ -1516,26 +1528,47 @@ public class DBHandler extends SQLiteOpenHelper {
         db.execSQL(ResponseQuery);
     }
 
-    public int getPeriodicityPreviousCountOnline(int surveyId, String periodicityFlag, Date date, String parentUUId) {
+    public int getPeriodicityPreviousCountOnline(SurveysBean surveysBean, int surveyId, String periodicityFlag, Date date, String parentUUId) {
         int getPeriodicityCount = 0;
         try {
+            Logger.logD(TAG,"Date capture from"+date.toString());
             String query = "";
             String getCurrentDate = new SimpleDateFormat(dateYy_Mm_Dd, Locale.ENGLISH).format(date);
             SQLiteDatabase db = getdatabaseinstance_read();
             String[] splitMonth = getCurrentDate.split("-");
+            String startingQuery="select * from survey where ";
+            String upEndQuery=" and survey_ids=" + surveyId + " and beneficiary_ids='" + parentUUId + "'";
             switch (periodicityFlag) {
                 case DAILY:
-                    query = "select * from survey where date(end_date)='" + getCurrentDate + "' and survey_ids=" + surveyId + " and beneficiary_ids='" + parentUUId + "'";
+                    query = startingQuery+ " date(end_date)='" + getCurrentDate + "'" +upEndQuery;
                     Logger.logV(TAG, "" + query + query);
                     break;
                 case WEEKLY:
-                    query = "SELECT * FROM Periodicity where ( strftime('%W', end_date) = strftime('%W', 'now') )  and survey_id='" + surveyId + " and beneficiary_ids='" + parentUUId + "'";
+                    query = startingQuery +" ( strftime('%W', end_date) = strftime('%W', 'now') )  "+ upEndQuery;
+                    break;
+                case Constants.YEARLY:
+                    query = startingQuery +STRFTIME_YEAR_CAPTURE + splitMonth[0] + "'"+ upEndQuery;
+                    break;
+                case QUARTERLY:
+                    List<String> Quarterly = Utils.getQuarterlyMonth(splitMonth[1]);
+                    query = startingQuery +"(strftime('%Y %m', date(end_date))='"+ splitMonth[0]+" "+ Quarterly.get(0) + STR_TO_CAPTURE_DATE + splitMonth[0]+" " + Quarterly.get(1) + STR_TO_CAPTURE_DATE + splitMonth[0]+" " + Quarterly.get(2) + "')" + upEndQuery;
+                    break;
+                case HALF_YEARLY:
+                    List<String> halfYearly = Utils.getHalfYearly(splitMonth[1]);
+                    query =startingQuery +"(strftime('%Y %m', date(end_date))='"+ splitMonth[0]+" "+ halfYearly.get(0) + STR_TO_CAPTURE_DATE + splitMonth[0]+" "+ halfYearly.get(1) + STR_TO_CAPTURE_DATE + splitMonth[0]+" "+ halfYearly.get(2) + STR_TO_CAPTURE_DATE + splitMonth[0]+" "+ halfYearly.get(3) + STR_TO_CAPTURE_DATE + splitMonth[0]+" "+ halfYearly.get(4) + STR_TO_CAPTURE_DATE + splitMonth[0]+" "+ halfYearly.get(5) + "')"+ upEndQuery;
+                    break;
+                case MONTHLY:
+                    query = startingQuery+ " strftime('%m', date(end_date))='" + splitMonth[1] + "'";
                     break;
                 default:
                     break;
             }
             Cursor cursor = db.rawQuery(query, null);
+            Logger.logD(TAG,"getPeriodicityPreviousCountOnline"+query+"Cursur count->"+cursor.getCount());
+
             if (cursor.getCount() != 0 && cursor.moveToFirst()) {
+                String endDate = cursor.getString(cursor.getColumnIndex("end_date"));
+                surveysBean.setSurveyEndDate(endDate);
                 getPeriodicityCount = cursor.getCount();
             }
             cursor.close();
@@ -1543,5 +1576,25 @@ public class DBHandler extends SQLiteOpenHelper {
             Logger.logE(TAG, "", e);
         }
         return getPeriodicityCount;
+    }
+
+    public boolean isConstraintValueExist(String userEnteredText, int questionCode) {
+        boolean tempValue=false;
+        String gridQuery = "select * from Response where q_id="+questionCode+" and ans_text='"+userEnteredText+"' COLLATE NOCASE";
+        SQLiteDatabase db = getdatabaseinstance_read();
+        Cursor cursor = db.rawQuery(gridQuery, null);
+        try {
+            if (cursor.getCount() != 0 && cursor.moveToFirst()) {
+                do {
+                    tempValue=true;
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+        } catch (Exception e) {
+            cursor.close();
+            Logger.logE(TAG, "Exception on getting all assessment", e);
+        }
+
+        return tempValue;
     }
 }

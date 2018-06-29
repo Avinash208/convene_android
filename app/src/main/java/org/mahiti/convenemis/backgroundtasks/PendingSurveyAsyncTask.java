@@ -29,46 +29,42 @@ public class PendingSurveyAsyncTask extends AsyncTask<String, Integer, List<Surv
     private ResponseCheckController responseCheckController;
     private DBHandler handler;
     String surveyPrimaryKeyId;
+    int surveyid;
+
     protected void onPreExecute() {
         // Executed in UIThread
     }
 
     public PendingSurveyAsyncTask(Context con, List<SurveysBean> sourceList, ExternalDbOpenHelper externalDbOpenHelper, SharedPreferences defaultPreferences, SurveyControllerDbHelper periodicityCheckControllerDbHelper,
-                                  PendingCompletedSurveyAsyncResultListener pendingCompletedSurveyAsyncResultListener, DBHandler handler, String surveyPrimaryKeyId) {
+                                  PendingCompletedSurveyAsyncResultListener pendingCompletedSurveyAsyncResultListener, DBHandler handler, String surveyPrimaryKeyId, int surveyId) {
         this.sourceList = sourceList;
         this.responseCheckController = new ResponseCheckController(con);
         this.externalDbOpenHelper = externalDbOpenHelper;
         this.defaultPreferences = defaultPreferences;
         this.periodicityCheckControllerDbHelper = periodicityCheckControllerDbHelper;
         this.pendingCompletedSurveyAsyncResultListener = pendingCompletedSurveyAsyncResultListener;
-        this.handler=handler;
-        this.surveyPrimaryKeyId=surveyPrimaryKeyId;
+        this.handler = handler;
+        this.surveyPrimaryKeyId = surveyPrimaryKeyId;
+        this.surveyid = surveyId;
     }
 
     protected List<SurveysBean> doInBackground(String... strings) {
-        for(int i=0;i<sourceList.size();i++) {
+        for (int i = 0; i < sourceList.size(); i++) {
 
-            int getSurveyCount = 0;
-            int addCount =0;
-            if(sourceList.get(i).getPeriodicity()>addCount)
-            {
-               // if (handler.isSurveyCompleted(sourceList.get(i),surveyPrimaryKeyId,externalDbOpenHelper)){
-                    int getCount =handler.getPeriodicityPreviousCountOnline(sourceList.get(i).getId(), sourceList.get(i).getPeriodicityFlag(), new Date(),surveyPrimaryKeyId);
-                    if (getCount==0)
-                        resultList.add(sourceList.get(i));
-               // }
+            int addCount = 0;
+            if (sourceList.get(i).getPeriodicity() > addCount) {
+                int getCount = handler.getPeriodicityPreviousCountOnline(sourceList.get(i), sourceList.get(i).getId(), sourceList.get(i).getPeriodicityFlag(), new Date(), surveyPrimaryKeyId);
+                if (getCount == 0 && surveyid != sourceList.get(i).getId())
+                    resultList.add(sourceList.get(i));
 
             }
         }
         return resultList;
     }
-    
-        protected void onProgressUpdate(Integer... values) {
-            // Used to update progress indicator
-        }
 
-        protected void onPostExecute(List<SurveysBean> result) {
-            pendingCompletedSurveyAsyncResultListener.pendingSurveys(result);
-        }
+
+    protected void onPostExecute(List<SurveysBean> result) {
+        pendingCompletedSurveyAsyncResultListener.pendingSurveys(result);
     }
+}
                                 

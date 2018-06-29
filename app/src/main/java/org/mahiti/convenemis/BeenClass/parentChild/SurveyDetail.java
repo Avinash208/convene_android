@@ -79,6 +79,10 @@ public class SurveyDetail implements Parcelable{
     @Expose
     private String categoryId;
 
+    @SerializedName("constraints")
+    @Expose
+    private String constraints;
+
     @SerializedName("survey_id")
     @Expose
     private Integer surveyId;
@@ -179,7 +183,7 @@ public class SurveyDetail implements Parcelable{
         }
     };
 
-    public SurveyDetail(String surveyName, int pFuture, int pLimit, int periodicity, String labels, String vn, String beneficiaryType, String beneficiaryIds, int bConfig, int reasonDisagree, String orderLevels, int surveyId, int qConfig, String summaryQid, List<RuleEngine> ruleEngineValue, String facilityType, String facilityIds, String periodicityFlag) {
+    public SurveyDetail(String surveyName, int pFuture, int pLimit, int periodicity, String labels, String vn, String beneficiaryType, String beneficiaryIds, int bConfig, int reasonDisagree, String orderLevels, int surveyId, int qConfig, String summaryQid, List<RuleEngine> ruleEngineValue, String facilityType, String facilityIds, String periodicityFlag, String constraints) {
         this.surveyName=surveyName;
         this.pFeature=pFuture;
         this.pLimit=pLimit;
@@ -198,6 +202,7 @@ public class SurveyDetail implements Parcelable{
         this.facilityType=facilityType;
         this.facilityIds=facilityIds;
         this.piriodicityFlag=periodicityFlag;
+        this.constraints=constraints;
     }
 
     public String getSummaryQid() {
@@ -452,5 +457,13 @@ public class SurveyDetail implements Parcelable{
 
     public void setLinkagesDetails(List<LinkagesList> linkagesDetails) {
         this.linkagesDetails = linkagesDetails;
+    }
+
+    public String getConstraints() {
+        return constraints;
+    }
+
+    public void setConstraints(String constraints) {
+        this.constraints = constraints;
     }
 }

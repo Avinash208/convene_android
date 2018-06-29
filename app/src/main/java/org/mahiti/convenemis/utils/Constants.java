@@ -69,6 +69,7 @@ public class Constants {
     public static final String YYMMDD = "yyyy-MM-dd";
     public static final String NO_INTERNET = "Please check Internet Connection";
     public static final String SURVEYSTATUSTYPR = "SurveyResponseType";
+    public static final String YEARLY = "Yearly";
     public static List<Integer> blockQids=new ArrayList<>();
 
     //-------------------------*******************--------------------
@@ -189,6 +190,7 @@ public class Constants {
 
     public static int rowInflater=0;
     public static final String LocationSurveyflag="LocationSurveyflag";
+    public static final String constraints="constraints";
 
     private Constants(){
         // not using this constructor

@@ -49,9 +49,9 @@ public class CompletedSurveyAsyncTask extends AsyncTask<String, Integer, List<Su
     protected List<SurveysBean> doInBackground(String... strings) {
         for(int i=0;i<sourceList.size();i++) {
             if (handler.isSurveyCompleted(sourceList.get(i),surveyPrimaryKeyId,externalDbOpenHelper)) {
-                int getCount =handler.getPeriodicityPreviousCountOnline(sourceList.get(i).getId(), sourceList.get(i).getPeriodicityFlag(), new Date(),surveyPrimaryKeyId);
+                int getCount =handler.getPeriodicityPreviousCountOnline(sourceList.get(i),sourceList.get(i).getId(), sourceList.get(i).getPeriodicityFlag(), new Date(),surveyPrimaryKeyId);
                 if (getCount==0) {
-                    sourceList.get(i).setSurveyEndDate("Previous record");
+                    sourceList.get(i).setSurveyEndDate(sourceList.get(i).getSurveyEndDate());
                     sourceList.get(i).setSurveyDone(1);
                     resultList.add(sourceList.get(i));
                 }else{
