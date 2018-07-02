@@ -1092,7 +1092,8 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
         TextInputLayout v = (TextInputLayout) child.findViewById(R.id.textInput);
         v.setHint(displayQuestionModel.getQuestion());
         v.setHintTextAppearance(R.style.hintstyle);
-        final EditText edittext = (EditText) child.findViewById(R.id.ans_text);
+
+         EditText edittext = (EditText) child.findViewById(R.id.ans_text);
         edittext.setSingleLine(true);
         edittext.setHintTextColor(getResources().getColor(R.color.black));
         question.setFocusable(true);
@@ -3104,6 +3105,7 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
                         final View childInlineGrid = getLayoutInflater().inflate(R.layout.gridlist_adapter, null, false);
                         final View childTemp = getLayoutInflater().inflate(R.layout.dialoginline, null, false);
                         TextView setMandatoryText = (TextView) childInlineGrid.findViewById(R.id.mandatorytextnameEdit);
+                        TextView setGridAnswer = (TextView) childInlineGrid.findViewById(R.id.gridanswer);
                         Button editResponseButton = (Button) childInlineGrid.findViewById(R.id.edit);
                         Button deleteResponseButton = (Button) childInlineGrid.findViewById(R.id.delete);
                         List<Response> getResponseListFrmHashmap = hashMapGridResponse.get(getResponseKeys.get(j));
@@ -3115,7 +3117,8 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
                         editResponseButton.setTag(String.valueOf(getResponseKeys.get(j) + "@EDIT"));
                         deleteResponseButton.setTag(String.valueOf(getResponseKeys.get(j) + "@DELETE"));
                         Logger.logD("If edited new Value Print", "-->" + getResponseListFrmHashmap.get(0).getAnswer() + "ANS-->" + setMandatoryText.getText().toString());
-                        setMandatoryText.setText(String.valueOf(j) + ": " + MAssesmant.get(0).getAssessment() + " \n Ans  " + getResponseListFrmHashmap.get(0).getAnswer());
+                        setMandatoryText.setText(MAssesmant.get(0).getAssessment());
+                        setGridAnswer.setText(getResponseListFrmHashmap.get(0).getAnswer());
                         Logger.logD("If edited new Value Print After", "-->" + setMandatoryText.getText().toString());
                         deleteResponseButton.setOnClickListener(new View.OnClickListener() {
                             @Override

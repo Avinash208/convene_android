@@ -3,8 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:background="@drawable/form_row"
-    >
+    android:background="@drawable/form_row">
     <TextView
         android:id="@+id/assessmentquestion"
         android:layout_width="match_parent"
@@ -18,8 +17,7 @@
        android:layout_height="wrap_content"
        android:layout_margin="20dp"
        android:layout_below="@+id/assessmentquestion"
-       android:layout_above="@+id/dialogfooter"
-       >
+       android:layout_above="@+id/dialogfooter">
        <LinearLayout
            android:layout_width="match_parent"
            android:layout_height="wrap_content"

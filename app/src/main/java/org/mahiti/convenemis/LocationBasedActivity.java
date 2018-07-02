@@ -117,7 +117,7 @@ public class LocationBasedActivity extends AppCompatActivity {
     private void displayActivityIfexist() {
         Spinner getLastSpinner = storeAllDynamicSpinner.get(storeAllDynamicSpinner.size() - 1);
         LevelBeen levelBeen = (LevelBeen) getLastSpinner.getSelectedItem();
-        if (levelBeen != null && !levelBeen.getName().equalsIgnoreCase(" Select ")) {
+        if (levelBeen != null && !levelBeen.getName().equalsIgnoreCase("Select ")) {
             new LocationSurveyAsyncTask(levelBeen.getId(), levelBeen.getName()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             setUpdateListLocation(levelBeen.getName(), levelBeen.getId());
         } else {
@@ -193,7 +193,7 @@ public class LocationBasedActivity extends AppCompatActivity {
 
                 } else {
                     List<LevelBeen> emptyStateList = new ArrayList<>();
-                    LevelBeen level1 = new LevelBeen(0, " Select ");
+                    LevelBeen level1 = new LevelBeen(0, "Select");
                     emptyStateList.add(level1);
                     ArrayAdapter<LevelBeen> spinnerArrayAdapter = new ArrayAdapter(this, R.layout.spinner_multi_row_textview, emptyStateList);
                     spinnerArrayAdapter.setDropDownViewResource(R.layout.spinner_multi_row_textview);// The drop down view
@@ -287,7 +287,7 @@ public class LocationBasedActivity extends AppCompatActivity {
             TextView villageName = (TextView) child.findViewById(R.id.villageName);
             if (!locationcaptureList.get(i).getLocationName().isEmpty()) {
                 villageName.setText(locationcaptureList.get(i).getLocationName());
-                editTextLabel.setText(R.string.edit_or_view);
+                editTextLabel.setText("Completed");
                 setOnclickListner(editTextLabel,locationcaptureList.get(i));
             }
 

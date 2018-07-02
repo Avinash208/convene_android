@@ -9,9 +9,11 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
+import android.support.design.widget.TextInputLayout;
 import android.text.InputFilter;
 import android.text.InputType;
 import android.text.Spannable;
@@ -26,6 +28,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -148,7 +151,7 @@ public class SupportClass {
 
             assessmentQuestionText.setLayoutParams(paramassessmentQuestionText);
             paramassessmentQuestionText.setMargins(10, 10, 10, 10);
-            layout.addView(assessmentQuestionText);
+          //  layout.addView(assessmentQuestionText);
             String priorityQtype;
             String getGroupVaidation = "";
             if (gridType != 16) {
@@ -175,15 +178,24 @@ public class SupportClass {
                 case "T":
                     LinearLayout.LayoutParams paramEdit;
                     paramEdit = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 80);
-                    EditText editView = new EditText(context);
-                    editView.setText("");
+                    View editTextView = activity.getLayoutInflater().inflate(R.layout.edittext, optionwidgetLL, false);//child.xml
+                    TextView question = editTextView.findViewById(R.id.mainQuestion);
+                    question.setVisibility(View.GONE);
+                    TextInputLayout v = (TextInputLayout) editTextView.findViewById(R.id.textInput);
+                    v.setHint(mAssesmant.get(i - 1).getAssessment());
+                    v.setHintTextAppearance(R.style.hintstyle);
+                    EditText editView = (EditText) editTextView.findViewById(R.id.ans_text);
+                    editView.setSingleLine(true);
+                    editView.setHintTextColor(activity.getResources().getColor(R.color.black));
+                    question.setFocusable(true);
                     editView.setTextColor(Color.BLACK);
                     subCount = subCount + 20 + 2 + i;
                     editView.setId(subCount);
-                    editView.setLayoutParams(paramEdit);
+                  //  editView.setHint("yes");
+                 //   editView.setLayoutParams(paramEdit);
                     paramEdit.setMargins(4, 4, 4, 4);
-                    editView.setPadding(10, 0, 0, 10);
-                    editView.setBackgroundResource(R.drawable.textfieldbg);
+                   // editView.setPadding(10, 0, 0, 10);
+                   // editView.setBackgroundResource(R.drawable.textfieldbg);
 
                     if (mResponse != null && mResponse.size() > i - 1) {
                         editView.setText(mResponse.get(i - 1).getAnswer());
@@ -211,7 +223,7 @@ public class SupportClass {
                                 InputFilter[] FilterArray;
                                 switch (array[1]) {
                                     case "N":
-                                        optionwidgetLL.addView(editView);
+                                        optionwidgetLL.addView(editTextView);
                                         addView.add(editView);
                                         editView.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_SIGNED);
                                         maxLength = array[3].length();
@@ -220,7 +232,7 @@ public class SupportClass {
                                         editView.setFilters(FilterArray);
                                         break;
                                     case "D":
-                                        optionwidgetLL.addView(editView);
+                                        optionwidgetLL.addView(editTextView);
                                         addView.add(editView);
                                         editView.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL | InputType.TYPE_NUMBER_FLAG_SIGNED);
                                         //maxLengthMobile = arrayValidation[3].length();
@@ -231,7 +243,7 @@ public class SupportClass {
                                         break;
                                     case "NOV":
 
-                                        optionwidgetLL.addView(editView);
+                                        optionwidgetLL.addView(editTextView);
                                         addView.add(editView);
                                         editView.setInputType(InputType.TYPE_CLASS_TEXT);
                                         maxLength = Integer.parseInt(array[3]);
@@ -240,7 +252,7 @@ public class SupportClass {
                                         editView.setFilters(FilterArray);
                                         break;
                                     default:
-                                        optionwidgetLL.addView(editView);
+                                        optionwidgetLL.addView(editTextView);
                                         addView.add(editView);
                                         editView.setInputType(InputType.TYPE_CLASS_TEXT);
                                         maxLength = Integer.parseInt(array[3]);
@@ -251,7 +263,7 @@ public class SupportClass {
                                 }
                             } else {
                                 //  layout.addView(editView);
-                                optionwidgetLL.addView(editView);
+                                optionwidgetLL.addView(editTextView);
                                 addView.add(editView);
                                 editView.setInputType(InputType.TYPE_CLASS_TEXT);
                                 int maxLength = array[3].length();
@@ -261,12 +273,13 @@ public class SupportClass {
                             }
                         }
                     } else {
-                        optionwidgetLL.addView(editView);
+                        optionwidgetLL.addView(editTextView);
                         addView.add(editView);
 
                     }
                     break;
                 case "R":
+                    layout.addView(assessmentQuestionText);
                     int s = 1;
                     List<AnswersPage> mOptions;
                     if (!mAssesmant.get(i - 1).getQtype().equalsIgnoreCase("N"))
@@ -301,11 +314,14 @@ public class SupportClass {
 
                         radioGroup.addView(rbn);
                     }
+                    View dividerLine = activity.getLayoutInflater().inflate(R.layout.divider_line, optionwidgetLL, false);//child.xml
+
                     optionwidgetLL.addView(radioGroup);
+                    optionwidgetLL.addView(dividerLine);
                     addView.add(radioGroup);
                     break;
                 case "S":
-
+                    layout.addView(assessmentQuestionText);
                     List<AnswersPage> mOptionsDroupdown;
                     if (!mAssesmant.get(i - 1).getQtype().equalsIgnoreCase("N")) {
                         mOptionsDroupdown = DataBaseMapperClass.getOptionsAnswers(mAssesmant.get(i - 1).getQid(), database, preferences.getInt("selectedLangauge", 1));
@@ -320,22 +336,26 @@ public class SupportClass {
                     spinner.setLayoutParams(new RadioGroup.LayoutParams(
                             ViewGroup.LayoutParams.MATCH_PARENT,
                             LinearLayout.LayoutParams.WRAP_CONTENT));
-                    spinner.setBackgroundResource(R.drawable.textfieldbg);
-
+                    spinner.getBackground().setColorFilter(activity.getResources().getColor(R.color.pink), PorterDuff.Mode.SRC_ATOP);
                     for (int d = 0; d < mOptionsDroupdown.size(); d++) {
                         optionText.add(mOptionsDroupdown.get(d).getAnswer());
                     }
                     //    List<Response> responseAnswerSpinner= DataBaseMapperClass.setAnswersForGridRadio(mAssesmant.get(i-1).getQid(),db,String.valueOf(surveyPrimaryKeyId));
-                    ArrayAdapter<AnswersPage> spinnerArrayAdapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, mOptionsDroupdown);
-                    spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item); // The drop down view
+                    ArrayAdapter<AnswersPage> spinnerArrayAdapter = new ArrayAdapter<>(context, R.layout.spinner_multi_row_textview, mOptionsDroupdown);
+                    spinnerArrayAdapter.setDropDownViewResource(R.layout.spinner_multi_row_textview); // The drop down view
                     spinner.setAdapter(spinnerArrayAdapter);
                     if (mResponse != null && mResponse.size() > i - 1) {
                         spinner.setSelection(optionText.indexOf(mResponse.get(i - 1).getAnswer()));
                     }
+                    View dividerLineLine = activity.getLayoutInflater().inflate(R.layout.spinnerline, optionwidgetLL, false);//child.xml
+                    View dividerLineRadio = activity.getLayoutInflater().inflate(R.layout.divider_line, optionwidgetLL, false);//child.xml
                     optionwidgetLL.addView(spinner);
+                    optionwidgetLL.addView(dividerLineLine);
+                    optionwidgetLL.addView(dividerLineRadio);
                     addView.add(spinner);
                     break;
                 case "C":
+                    layout.addView(assessmentQuestionText);
                     List<AnswersPage> mOptionsCheckbox = DataBaseMapperClass.getOptionsAnswers(mAssesmant.get(i - 1).getQid(), database, preferences.getInt("selectedLangauge", 1));
                     LinearLayout checkboxContainer = new LinearLayout(context);
                     checkboxContainer.setLayoutParams(new LinearLayout.LayoutParams(
@@ -365,6 +385,7 @@ public class SupportClass {
 
                     break;
                 case "D":
+                    layout.addView(assessmentQuestionText);
                     final Button button = new Button(context);
                     button.setTextColor(Color.WHITE);
                     button.setHintTextColor(Color.WHITE);
@@ -392,6 +413,7 @@ public class SupportClass {
                     break;
 
                 default:
+                    layout.addView(assessmentQuestionText);
                     LinearLayout.LayoutParams paramEdit1;
                     paramEdit1 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 80);
                     EditText dateEdit = new EditText(context);
@@ -1136,7 +1158,7 @@ public class SupportClass {
 
             assessmentQuestionText.setLayoutParams(paramassessmentQuestionText);
             paramassessmentQuestionText.setMargins(4, 10, 4, 10);
-            layout.addView(assessmentQuestionText);
+
             String priorityQtype = "";
             String getGroupVaidation = "";
             if (gridType == 14 && subQuestionpage != null) {
@@ -1159,15 +1181,24 @@ public class SupportClass {
                 case "T":
                     LinearLayout.LayoutParams paramEdit;
                     paramEdit = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 80);
-                    EditText editView = new EditText(context);
-                    editView.setText("");
-                    editView.setTextColor(Color.BLACK);
+                    View editTextView = activity.getLayoutInflater().inflate(R.layout.edittext, optionwidgetLL, false);//child.xml
+                    TextView question = editTextView.findViewById(R.id.mainQuestion);
+                    question.setVisibility(View.GONE);
+                    TextInputLayout v = (TextInputLayout) editTextView.findViewById(R.id.textInput);
+                    v.setHint(mAssesmant.get(i - 1).getAssessment());
+                    v.setHintTextAppearance(R.style.hintstyle);
+                    EditText editView = (EditText) editTextView.findViewById(R.id.ans_text);
+                    editView.setSingleLine(true);
+                    editView.setHintTextColor(activity.getResources().getColor(R.color.black));
+                    question.setFocusable(true);
+
+
                     subCount = subCount + 20 + 2 + i;
                     editView.setId(subCount);
-                    editView.setLayoutParams(paramEdit);
-                    paramEdit.setMargins(4, 4, 4, 4);
-                    editView.setPadding(10, 0, 0, 10);
-                    editView.setBackgroundResource(R.drawable.textfieldbg);
+                  //  editView.setLayoutParams(paramEdit);
+                 //   paramEdit.setMargins(4, 4, 4, 4);
+               ////     editView.setPadding(10, 0, 0, 10);
+               //     editView.setBackgroundResource(R.drawable.textfieldbg);
 
                     if (mResponse != null) {
                         for (int k = 0; k < mResponse.size(); k++) {
@@ -1190,7 +1221,7 @@ public class SupportClass {
                                 switch (array[1]) {
                                     case "N":
 
-                                        optionwidgetLL.addView(editView);
+                                        optionwidgetLL.addView(editTextView);
                                         addView.add(editView);
                                         editView.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_SIGNED);
                                         maxLength = array[3].length();
@@ -1200,7 +1231,7 @@ public class SupportClass {
                                         break;
                                     case "NOV":
 
-                                        optionwidgetLL.addView(editView);
+                                        optionwidgetLL.addView(editTextView);
                                         addView.add(editView);
                                         editView.setInputType(InputType.TYPE_CLASS_TEXT);
                                         maxLength = Integer.parseInt(array[3]);
@@ -1209,7 +1240,7 @@ public class SupportClass {
                                         editView.setFilters(FilterArray);
                                         break;
                                     default:
-                                        optionwidgetLL.addView(editView);
+                                        optionwidgetLL.addView(editTextView);
                                         addView.add(editView);
                                         editView.setInputType(InputType.TYPE_CLASS_TEXT);
                                         maxLength = Integer.parseInt(array[3]);
@@ -1219,7 +1250,7 @@ public class SupportClass {
                                         break;
                                 }
                             } else {
-                                optionwidgetLL.addView(editView);
+                                optionwidgetLL.addView(editTextView);
                                 addView.add(editView);
                                 editView.setInputType(InputType.TYPE_CLASS_TEXT);
                                 int maxLength = array[3].length();
@@ -1229,12 +1260,13 @@ public class SupportClass {
                             }
                         }
                     } else {
-                        optionwidgetLL.addView(editView);
+                        optionwidgetLL.addView(editTextView);
                         addView.add(editView);
 
                     }
                     break;
                 case "R":
+                    layout.addView(assessmentQuestionText);
                     int s = 1;
                     List<AnswersPage> mOptions;
                     if (!mAssesmant.get(i - 1).getQtype().equalsIgnoreCase("N"))
@@ -1274,6 +1306,7 @@ public class SupportClass {
 
                     break;
                 case "S":
+                    layout.addView(assessmentQuestionText);
                     List<AnswersPage> mOptionsDroupdown = DataBaseMapperClass.getOptionsAnswers(mAssesmant.get(i - 1).getQid(), database, preferences.getInt("selectedLangauge", 1));
                     List<String> optionText = new ArrayList<>();
                     Spinner spinner = new Spinner(context);
@@ -1281,12 +1314,14 @@ public class SupportClass {
                     spinner.setLayoutParams(new RadioGroup.LayoutParams(
                             ViewGroup.LayoutParams.MATCH_PARENT,
                             LinearLayout.LayoutParams.WRAP_CONTENT));
+                    spinner.getBackground().setColorFilter(activity.getResources().getColor(R.color.pink), PorterDuff.Mode.SRC_ATOP);
+
 
                     for (int d = 0; d < mOptionsDroupdown.size(); d++) {
                         optionText.add(mOptionsDroupdown.get(d).getAnswer());
                     }
-                    ArrayAdapter<AnswersPage> spinnerArrayAdapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, mOptionsDroupdown);
-                    spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item); // The drop down view
+                    ArrayAdapter<AnswersPage> spinnerArrayAdapter = new ArrayAdapter<>(context, R.layout.spinner_multi_row_textview, mOptionsDroupdown);
+                    spinnerArrayAdapter.setDropDownViewResource(R.layout.spinner_multi_row_textview); // The drop down view
                     spinner.setAdapter(spinnerArrayAdapter);
                     if (mResponse != null) {
                         for (int k = 0; k < mResponse.size(); k++) {
@@ -1300,13 +1335,18 @@ public class SupportClass {
                         }
 
                     }
+                    View dividerLineLine = activity.getLayoutInflater().inflate(R.layout.spinnerline, optionwidgetLL, false);//child.xml
+                    View dividerLineRadio = activity.getLayoutInflater().inflate(R.layout.divider_line, optionwidgetLL, false);//child.xml
 
                     optionwidgetLL.addView(spinner);
+                    optionwidgetLL.addView(dividerLineLine);
+                    optionwidgetLL.addView(dividerLineRadio);
                     addView.add(spinner);
 
 
                     break;
                 case "C":
+                    layout.addView(assessmentQuestionText);
                     List<AnswersPage> mOptionsCheckbox = DataBaseMapperClass.getOptionsAnswers(mAssesmant.get(i - 1).getQid(), database, preferences.getInt("selectedLangauge", 1));
                     LinearLayout checkboxContainer = new LinearLayout(context);
                     checkboxContainer.setLayoutParams(new LinearLayout.LayoutParams(
@@ -1356,6 +1396,7 @@ public class SupportClass {
 
                     break;
                 case "D":
+                    layout.addView(assessmentQuestionText);
                     final Button button = new Button(context);
                     button.setTextColor(Color.WHITE);
                     button.setHint("Pick Date");
@@ -1398,6 +1439,7 @@ public class SupportClass {
                     addView.add(button);
                     break;
                 default:
+                    layout.addView(assessmentQuestionText);
                     LinearLayout.LayoutParams paramEdit1;
                     paramEdit1 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 80);
                     EditText editViewdate = new EditText(context);

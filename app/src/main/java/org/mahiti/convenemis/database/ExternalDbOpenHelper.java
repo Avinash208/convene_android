@@ -4034,7 +4034,7 @@ public class ExternalDbOpenHelper extends SQLiteOpenHelper {
         List<LevelBeen> getLevelTemp = new ArrayList<>();
         LevelBeen levelBeendefault= new LevelBeen();
         levelBeendefault.setId(0);
-        levelBeendefault.setName(" Select ");
+        levelBeendefault.setName("Select");
         levelBeendefault.setLocationLevel(2);
         getLevelTemp.add(levelBeendefault);
         Logger.logV(TAG, "the level is............" + level);

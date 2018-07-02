@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#fff9e4"
+    android:background="#fff"
     tools:context=".SurveyQuestionActivity">
     <android.support.v7.widget.CardView
         xmlns:card_view="http://schemas.android.com/apk/res-auto"
@@ -11,7 +11,7 @@
         android:layout_gravity="center"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/orange"
+        android:background="@color/white"
         android:layout_marginTop="10dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="25dp"
@@ -24,8 +24,7 @@
             android:layout_height="match_parent"
             android:layout_above="@+id/footer"
             android:background="@color/orange"
-            android:orientation="vertical"
-            >
+            android:orientation="vertical">
             <TextView
                 android:id="@+id/mainQuestion"
                 android:layout_width="match_parent"
@@ -33,7 +32,7 @@
                 android:text="Question"
                 android:gravity="center"
                 android:padding="10dp"
-                android:textSize="@dimen/rowitem_textsize"
+                android:textSize="18dp"
                 android:textColor="@color/white"
                 android:layout_marginBottom="5dp" />
             <Button
@@ -49,8 +48,7 @@
             <ScrollView
                 android:id="@+id/gridvaluesdisplay"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                >
+                android:layout_height="wrap_content">
                 <LinearLayout
                     android:id="@+id/gridansweredListinline"
                     android:layout_width="match_parent"
