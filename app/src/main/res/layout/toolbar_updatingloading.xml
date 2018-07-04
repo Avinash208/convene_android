@@ -46,14 +46,10 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:textColor="@color/white"
-            android:text="Content update"
-            android:textSize="@dimen/toolbar_font"
-            android:fontFamily="fonts/Roboto-Medium.ttf"
-
-            >
-
-        </TextView>
-
+            android:text="Master data"
+            android:textSize="@dimen/toolbar_font_loading"
+            android:paddingLeft="15dp"
+            android:fontFamily="fonts/Roboto-Medium.ttf"/>
     </LinearLayout>
 
 

@@ -219,9 +219,9 @@ public class ExpandableListAdapterDataCollection extends BaseExpandableListAdapt
         }
         ImageView img = (ImageView) convertView.findViewById(R.id.image);
         if (isExpanded) {
-            img.setImageResource(R.drawable.ic_keyboard_arrow_down_white_24dp);
-        } else {
             img.setImageResource(R.drawable.ic_keyboard_arrow_up_white_24dp);
+        } else {
+            img.setImageResource(R.drawable.ic_keyboard_arrow_down_white_24dp);
         }
 
         TextView lblListHeader = convertView

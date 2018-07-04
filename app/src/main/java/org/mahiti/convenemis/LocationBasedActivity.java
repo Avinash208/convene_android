@@ -69,7 +69,7 @@ public class LocationBasedActivity extends AppCompatActivity {
         createNewButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!updateListLocation.equalsIgnoreCase("")) {
+                if (!updateListLocation.equalsIgnoreCase("Select")) {
                     Utilities.setSurveyStatus(sharedPreferences, "new");
                     Utilities.setLocationSurveyFlag(sharedPreferences, "new");
                     new StartSurvey(activity, activity, prefs.getInt(Constants.SURVEY_ID, 0), clusterID, updateListLocation, "", "", "", "").execute();
@@ -79,6 +79,11 @@ public class LocationBasedActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
     }
 
     private void getPreviousFromIntent() {

@@ -54,8 +54,9 @@ public class PendingSurveyAsyncTask extends AsyncTask<String, Integer, List<Surv
             int addCount = 0;
             if (sourceList.get(i).getPeriodicity() > addCount) {
                 int getCount = handler.getPeriodicityPreviousCountOnline(sourceList.get(i), sourceList.get(i).getId(), sourceList.get(i).getPeriodicityFlag(), new Date(), surveyPrimaryKeyId);
-                if (getCount == 0 && surveyid != sourceList.get(i).getId())
+                if (getCount == 0 && surveyid != sourceList.get(i).getId()) {
                     resultList.add(sourceList.get(i));
+                }
 
             }
         }

@@ -130,7 +130,6 @@ public class UpdateMasterLoading extends BaseActivity implements ClusterToTypo, 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.update_loading);
         initializeVariables();
-
         progressBarLocation = findViewById(R.id.location_progressbar);
         progressBarLocation.setMax(100);
         locationStatus = findViewById(R.id.location_status);

@@ -117,7 +117,7 @@ public class HomeActivityNew extends BaseActivity implements View.OnClickListene
         userNameLabel =  findViewById(R.id.userNameLabel);
         dueCountLable =  findViewById(R.id.duecountLable);
         String userName = defaultPreferences.getString("user_name", "");
-        userNameLabel.setText(String.format("Logged in as: %s", userName));
+        userNameLabel.setText(String.format(userName));
         userNameLabel.setTypeface(customFont);
         helpTexts = findViewById(R.id.helptext);
         logOut =  findViewById(R.id.logout);
@@ -139,15 +139,11 @@ public class HomeActivityNew extends BaseActivity implements View.OnClickListene
         Logger.logD("MVP WORKING", listDataHeader.size() + "");
         listAdapter = new ExpandableListAdapterDataCollection(this, listDataHeader, listDataChild);
         expListView.setAdapter(listAdapter);
-        expListView.expandGroup(0);
+       // expListView.expandGroup(0);
     }
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-
-            case R.id.helptext:
-              //  PopUpShow.showingErrorPopUp(activity, syncSurveyPreferences.getString("UID", ""));
-                break;
             case R.id.logout:
                 Utils.callDialogConformation(this,this);
                 break;

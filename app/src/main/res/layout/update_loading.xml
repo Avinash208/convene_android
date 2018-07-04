@@ -27,7 +27,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
             android:textSize="16dp"
-            android:text="Loading..."/>
+            android:text="Syncing data... "/>
 
     </LinearLayout>
     <org.mahiti.convenemis.utils.MaterialProgressBar
@@ -49,7 +49,7 @@
         android:layout_marginTop="20dp">
 
         <LinearLayout
-            android:layout_width="250dp"
+            android:layout_width="270dp"
             android:layout_height="50dp"
             android:layout_marginLeft="40dp"
             android:background="@drawable/assign_decorate"
@@ -69,7 +69,7 @@
                 android:minWidth="0dp"
                 android:text="ASSIGNED LOCATION"
                 android:textColor="#ffffff"
-                android:textSize="18sp" />
+                android:textSize="16sp" />
         </LinearLayout>
 
         <android.support.v7.widget.CardView
@@ -144,7 +144,7 @@
         android:layout_marginTop="20dp">
 
         <LinearLayout
-            android:layout_width="250dp"
+            android:layout_width="270dp"
             android:layout_height="50dp"
             android:layout_marginLeft="40dp"
             android:background="@drawable/datacollection_decorate"
@@ -163,7 +163,7 @@
                 android:fontFamily="@font/roboto"
                 android:text="DATA COLLECTION FORMS"
                 android:textColor="#ffffff"
-                android:textSize="18sp" />
+                android:textSize="16sp" />
         </LinearLayout>
 
         <android.support.v7.widget.CardView
@@ -239,7 +239,7 @@
         android:layout_marginTop="20dp">
 
         <LinearLayout
-            android:layout_width="250dp"
+            android:layout_width="270dp"
             android:layout_height="50dp"
             android:layout_marginLeft="40dp"
             android:background="@drawable/other_decorate"
@@ -258,7 +258,7 @@
                 android:fontFamily="@font/roboto"
                 android:text="OTHER INFORMATION"
                 android:textColor="#ffffff"
-                android:textSize="18sp" />
+                android:textSize="16sp" />
         </LinearLayout>
 
         <android.support.v7.widget.CardView

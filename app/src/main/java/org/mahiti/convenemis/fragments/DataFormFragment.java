@@ -42,7 +42,6 @@ import org.mahiti.convenemis.database.DBHandler;
 import org.mahiti.convenemis.database.ExternalDbOpenHelper;
 import org.mahiti.convenemis.database.ResponseCheckController;
 import org.mahiti.convenemis.database.SurveyControllerDbHelper;
-import org.mahiti.convenemis.database.Utilities;
 import org.mahiti.convenemis.location.GPSTracker;
 import org.mahiti.convenemis.utils.AddBeneficiaryUtils;
 import org.mahiti.convenemis.utils.AnimationUtils;
@@ -586,17 +585,6 @@ public class DataFormFragment extends Fragment implements PeriodicTypeInterface,
             public void onClick(View view) {
                 String parentUUIDExist= handler.getActivityUUID(beneficiaryUuid);
                 if (!parentUUIDExist.equals("")) {
-                    /*Logger.logD(TAG, "completed Response->" + parentUUIDExist);
-                    Utilities.setSurveyStatus(defaultPreferences,"edit");
-                    SharedPreferences.Editor editorSaveDraft= defaultPreferences.edit();
-                    editorSaveDraft.putBoolean(SAVE_TO_DRAFT_FLAG_KEY,true);
-                    editorSaveDraft.putBoolean(ISLOCATIONBASED,false);
-                    editorSaveDraft.putBoolean(NOTLOCATIONBASED, false);
-                    editorSaveDraft.apply();
-                    Intent intent = new Intent(getActivity(), SurveyQuestionActivity.class);
-                    intent.putExtra("SurveyId", parentUUIDExist);
-                    intent.putExtra(SURVEY_ID_KEY,String.valueOf(surveysId));
-                    startActivity(intent);*/
                     SharedPreferences.Editor recentPreview = defaultPreferences.edit();
                     recentPreview.putString("recentPreviewRecord", "edit");
                     recentPreview.apply();
@@ -606,9 +594,6 @@ public class DataFormFragment extends Fragment implements PeriodicTypeInterface,
                     startShowSurveyPreview.putExtra("survey_id",surveysId);
                     startShowSurveyPreview.putExtra("visibility",false);
                     startActivityForResult(startShowSurveyPreview,200);
-
-
-
                 }
                 else{
                     Toast.makeText(getActivity(),"Sorry Activity Response not found.!",Toast.LENGTH_SHORT).show();

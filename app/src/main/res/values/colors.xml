@@ -71,6 +71,7 @@
     <color name="formTextcolor">#424242</color>
     <color name="formButtonTintColor">#e4531e</color>
     <color name="pale_orange">#abaaaa</color>
+    <color name="grid_heading">#f44336</color>
 
 
 </resources>

@@ -1090,12 +1090,19 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
         question.setTextSize(Integer.valueOf(questionFontSize));
         LinearLayout LL = (LinearLayout) child.findViewById(R.id.relativeLayoutedit);
         TextInputLayout v = (TextInputLayout) child.findViewById(R.id.textInput);
-        v.setHint(displayQuestionModel.getQuestion());
+
+        if (displayQuestionModel.getMandatory().contains("1"))
+            v.setHint(displayQuestionModel.getQuestion() + " *");
+        else
+            v.setHint(displayQuestionModel.getQuestion());
+
+
+
         v.setHintTextAppearance(R.style.hintstyle);
 
          EditText edittext = (EditText) child.findViewById(R.id.ans_text);
         edittext.setSingleLine(true);
-        edittext.setHintTextColor(getResources().getColor(R.color.black));
+        edittext.setHintTextColor(getResources().getColor(R.color.pink));
         question.setFocusable(true);
 
         if (answerMap1.size() > 0) {

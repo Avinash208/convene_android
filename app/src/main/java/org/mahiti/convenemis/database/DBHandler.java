@@ -604,13 +604,12 @@ public class DBHandler extends SQLiteOpenHelper {
             answer = cursor.getString(cursor.getColumnIndex(ANSTEXT));
             String[] ansSet = answer.replace("[", "").replace("]", "").split(",");
             answer="";
-            StringBuilder answerBuilder = new StringBuilder(answer);
-            for (String option : ansSet) {
-                option= option.trim();
-                answerBuilder.append(",").append(dbOpenHelper.getOptionText(option, 1, questionID));
-            }
-            answer = answerBuilder.toString();
-
+            for(int i=0;i<ansSet.length;i++){
+               if (i==0)
+                   answer =dbOpenHelper.getOptionText(ansSet[i], 1, questionID);
+               else
+                   answer = ", "+ dbOpenHelper.getOptionText(ansSet[i], 1, questionID);
+           }
         }else{
             answer = cursor.getString(cursor.getColumnIndex(ANSTEXT));
         }
@@ -1558,7 +1557,7 @@ public class DBHandler extends SQLiteOpenHelper {
                     query =startingQuery +"(strftime('%Y %m', date(end_date))='"+ splitMonth[0]+" "+ halfYearly.get(0) + STR_TO_CAPTURE_DATE + splitMonth[0]+" "+ halfYearly.get(1) + STR_TO_CAPTURE_DATE + splitMonth[0]+" "+ halfYearly.get(2) + STR_TO_CAPTURE_DATE + splitMonth[0]+" "+ halfYearly.get(3) + STR_TO_CAPTURE_DATE + splitMonth[0]+" "+ halfYearly.get(4) + STR_TO_CAPTURE_DATE + splitMonth[0]+" "+ halfYearly.get(5) + "')"+ upEndQuery;
                     break;
                 case MONTHLY:
-                    query = startingQuery+ " strftime('%m', date(end_date))='" + splitMonth[1] + "'";
+                    query = startingQuery+ " strftime('%m', date(end_date))='" + splitMonth[1] + "'"+ upEndQuery;
                     break;
                 default:
                     break;

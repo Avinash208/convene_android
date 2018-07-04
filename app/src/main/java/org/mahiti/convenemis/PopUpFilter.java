@@ -75,7 +75,7 @@ class PopUpFilter {
         final Dialog dialog = new Dialog(activity);
         dialog.setContentView(R.layout.popup_filter);
         final UpdateFilterInterface updatefilterinterface;
-        updatefilterinterface=activity;
+        //updatefilterinterface=activity;
         int width = (int)(activity.getResources().getDisplayMetrics().widthPixels*0.90);
         int height = (int)(activity.getResources().getDisplayMetrics().heightPixels*0.80);
         preferences = PreferenceManager.getDefaultSharedPreferences(activity);
@@ -168,12 +168,12 @@ class PopUpFilter {
         });
 
 
-        sortFilter.setOnClickListener(new View.OnClickListener() {
+      /*  sortFilter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 checkSurveyStatus(activity,updatefilterinterface,dialog,typeValue);
             }
-        });
+        });*/
         resetFilter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

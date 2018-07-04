@@ -73,6 +73,7 @@
         android:id="@+id/linearheader"
         android:layout_width="match_parent"
         android:layout_height="40dp"
+        android:visibility="gone"
         android:layout_below="@+id/filter_sort_container"
         android:orientation="horizontal"
         android:layout_marginRight="20dp"
@@ -90,7 +91,7 @@
             android:layout_weight="1.7"
             />
     </LinearLayout>
-    <ListView
+    <android.support.v7.widget.RecyclerView
         android:id="@+id/typelistview"
         android:layout_below="@+id/linearheader"
         android:layout_width="match_parent"
@@ -98,9 +99,10 @@
         android:layout_marginLeft="15dp"
         android:visibility="visible"
         android:divider="@null"
+        android:layout_marginTop="10dp"
         android:fadeScrollbars="false"
         android:layout_marginRight="15dp">
-    </ListView>
+    </android.support.v7.widget.RecyclerView>
 
 
     <TextView

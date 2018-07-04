@@ -143,12 +143,14 @@ public class ShowSurveyPreview extends AppCompatActivity implements View.OnClick
                 LinearLayout.LayoutParams questionParamLayout = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                 TextView questionLabel = new TextView(context);
                 questionLabel.setLayoutParams(questionParamLayout);
-                questionParamLayout.setMargins(4, 4, 4, 0);
-                questionLabel.setPadding(10, 0, 0, 10);
-                questionLabel.setTextSize(15);
+                questionParamLayout.setMargins(0, 4, 4, 0);
+                questionLabel.setPadding(8, 0, 0, 10);
+                questionLabel.setTextSize(18);
                 questionLabel.setTypeface(Typeface.DEFAULT_BOLD);
                 questionLabel.setText(getAttendedQuestion.get(i).getQuestion());
+                final View viewLine = getLayoutInflater().inflate(R.layout.spinnerline, parentLayout, false);
                 parentLayout.addView(questionLabel);
+                parentLayout.addView(viewLine);
 
                 setAnswers(getAttendedQuestion.get(i), parentLayout, questionLabel, responses.get(String.valueOf(getAttendedQuestion.get(i).getQuestionID())));
             }
@@ -158,8 +160,6 @@ public class ShowSurveyPreview extends AppCompatActivity implements View.OnClick
 
 
     private void setAnswers(PreviewQuestionAnswerSet previewQuestionAnswerSet, LinearLayout parentLayout, TextView questionLabel, String answer) {
-
-
         switch (Integer.parseInt(previewQuestionAnswerSet.getQuestionType())) {
             /*
              * 8 represent Image
@@ -181,8 +181,11 @@ public class ShowSurveyPreview extends AppCompatActivity implements View.OnClick
                 if (answer != null) {
                     String[] ansSet = answer.replace("[", "").replace("]", "").split(",");
                     answer = "";
-                    for (String option : ansSet) {
-                        answer = answer + "," + options.get(Integer.parseInt(option.trim()));
+                    for (int i=0;i<ansSet.length;i++){
+                        if (i==0)
+                            answer = answer + options.get(Integer.parseInt(ansSet[i].trim()));
+                        else
+                            answer = answer + "," + options.get(Integer.parseInt(ansSet[i].trim()));
                     }
 
                 }
@@ -201,11 +204,9 @@ public class ShowSurveyPreview extends AppCompatActivity implements View.OnClick
         final View childCustomGrid = getLayoutInflater().inflate(R.layout.grid_custom, parentLayout, false);
         LinearLayout tableLayout = childCustomGrid.findViewById(R.id.custom_grid_table_layout);
         LinearLayout tableLayoutAnswerCard = childCustomGrid.findViewById(R.id.custom_grid_table_answer_layout);
-      //  tableLayout.setOrientation(LinearLayout.HORIZONTAL);
-        // createQuestionsForInline(tableLayout, mAssesmant);
+
         createInlineGridHeading(tableLayout, mAssesmant);
         createINlineAnswerList(tableLayoutAnswerCard,previewQuestionAnswerSet,mAssesmant);
-        //createAnswersForInline(tableLayout, previewQuestionAnswerSet, mAssesmant);
         parentLayout.addView(childCustomGrid);
     }
 
@@ -215,13 +216,12 @@ public class ShowSurveyPreview extends AppCompatActivity implements View.OnClick
            View inLineGridView = getLayoutInflater().inflate(R.layout.row_custom, tableLayout, false);
             LinearLayout linearLayout = (LinearLayout) inLineGridView.findViewById(R.id.linearLayout);
            TextView textView= new TextView(this);
-            textView.setTextSize(18);
             textView.setTextColor(getResources().getColor(R.color.black));
             for (AssesmentBean assesmentBean : mAssesmant) {
-
                 String id = (i+1) + "@" + assesmentBean.getQid();
                 TextView assessment = new TextView(context);
-                assessment.setGravity(Gravity.CENTER);
+                assessment.setGravity(Gravity.LEFT);
+                assessment.setTextSize(18);
                 assessment.setText(responses.get(id));
                 assessment.setTextColor(getResources().getColor(R.color.black));
                 if ("C".equalsIgnoreCase(assesmentBean.getQtype()) && responses.get(id) != null) {
@@ -251,7 +251,7 @@ public class ShowSurveyPreview extends AppCompatActivity implements View.OnClick
        String getTempHeading="";
        TextView textView= new TextView(this);
         textView.setTextSize(18);
-        textView.setTextColor(getResources().getColor(R.color.pink));
+        textView.setTextColor(getResources().getColor(R.color.grid_heading));
         for (int i = 0; i < mAssesmant.size(); i++) {
             if (i != 0)
                getTempHeading=getTempHeading + new StringBuilder().append(", ").append(mAssesmant.get(i).getAssessment()).toString();
@@ -262,73 +262,9 @@ public class ShowSurveyPreview extends AppCompatActivity implements View.OnClick
         tableLayout.addView(textView);
     }
 
-    private void createAnswersForInline(LinearLayout tableLayout, PreviewQuestionAnswerSet previewQuestionAnswerSet, List<AssesmentBean> mAssesmant) {
-
-        List<Integer> getinlineRowCount = DataBaseMapperClass.getRowCount(previewQuestionAnswerSet.getQuestionID(), dbHelper.getdatabaseinstance(), getSurveyPrimaryID);
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
 
-        for (int count : getinlineRowCount) {
-            LinearLayout assessmentAnswersRow = new LinearLayout(context);
-            assessmentAnswersRow.removeAllViews();
-            assessmentAnswersRow.setOrientation(LinearLayout.VERTICAL);
-            for (AssesmentBean assesmentBean : mAssesmant) {
 
-                String id = count + "@" + assesmentBean.getQid();
-                TextView assessment = new TextView(context);
-                assessment.setGravity(Gravity.LEFT);
-                assessment.setTextSize(18);
-                assessment.setLayoutParams(layoutParams);
-                assessment.setText(responses.get(id));
-                assessment.setBackgroundResource(R.drawable.textfieldbg);
-                if ("C".equalsIgnoreCase(assesmentBean.getQtype()) && responses.get(id) != null) {
-                    String[] ansSet = responses.get(id).replace("[", "").replace("]", "").split(",");
-                    String answer = "";
-                    for (String option : ansSet) {
-                        option = option.trim();
-                        answer = answer + "," + options.get(Integer.parseInt(option));
-                    }
-                    answer = answer.substring(1, answer.length());
-                    assessment.setText(answer);
-
-                }
-
-                assessment.setGravity(Gravity.CENTER);
-                assessment.setLayoutParams(new LinearLayout.LayoutParams(150, 70));
-                assessmentAnswersRow.addView(assessment);
-
-            }
-            tableLayout.addView(assessmentAnswersRow);
-
-        }
-
-    }
-
-    private void createQuestionsForInline(LinearLayout tableLayout, List<AssesmentBean> mAssesmant) {
-        LinearLayout.LayoutParams param2 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        LinearLayout assessmentHeadersRow = new LinearLayout(context);
-        assessmentHeadersRow.setBackgroundColor(getResources().getColor(R.color.orange));
-        assessmentHeadersRow.removeAllViews();
-        assessmentHeadersRow.setOrientation(LinearLayout.VERTICAL);
-        for (AssesmentBean assesmentBean : mAssesmant) {
-
-            TextView assessment = new TextView(context);
-            assessment.setLayoutParams(param2);
-            assessment.setText(assesmentBean.getAssessment());
-            assessment.setGravity(Gravity.CENTER);
-            assessment.setTextColor(Color.WHITE);
-
-            assessment.setBackgroundColor(getResources().getColor(R.color.orange));
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, 120);
-
-            params.gravity = Gravity.CENTER;
-            assessment.setLayoutParams(params);
-            assessmentHeadersRow.addView(assessment);
-
-        }
-        tableLayout.addView(assessmentHeadersRow);
-
-    }
 
     private void setGridAnswers(PreviewQuestionAnswerSet previewQuestionAnswerSet, LinearLayout parentLayout) {
 

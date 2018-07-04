@@ -70,6 +70,9 @@ public class Constants {
     public static final String NO_INTERNET = "Please check Internet Connection";
     public static final String SURVEYSTATUSTYPR = "SurveyResponseType";
     public static final String YEARLY = "Yearly";
+    public static final String GROUP = "Groups" ;
+    public static final String FPO = "Federations";
+    public static final String HOUSEHOLDS = "Households";
     public static List<Integer> blockQids=new ArrayList<>();
 
     //-------------------------*******************--------------------
@@ -191,6 +194,9 @@ public class Constants {
     public static int rowInflater=0;
     public static final String LocationSurveyflag="LocationSurveyflag";
     public static final String constraints="constraints";
+    public static final String Gender="Gender";
+    public static final String FEMALE="Female";
+    public static final String MALE="Male";
 
     private Constants(){
         // not using this constructor

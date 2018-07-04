@@ -23,11 +23,11 @@
 
 
     <!--Demo url-->
-    <string name="main_url">http://convenedemobackend.mahiti.org/api/</string>
-    <string name="answer_upload_url">http://convenedemobackend.mahiti.org/api/add-survey-answers/</string>
-    <string name="main_Url">http://convenedemobackend.mahiti.org/</string>
-    <string name="main_url_Beneficiary">http://convenedemobackend.mahiti.org/</string>
-    <string name="regionalLanguageURLS">http://convenedemobackend.mahiti.org/api/language-list/</string>
+    <string name="main_url">http://akrspiui.mahiti.org/api/</string>
+    <string name="answer_upload_url">http://akrspiui.mahiti.org/api/add-survey-answers/</string>
+    <string name="main_Url">http://akrspiui.mahiti.org/</string>
+    <string name="main_url_Beneficiary">http://akrspiui.mahiti.org/</string>
+    <string name="regionalLanguageURLS">http://akrspiui.mahiti.org/api/language-list/</string>
 
 
     <string name="loadmore_facility">Loading more Facility please wait&#8230;</string>

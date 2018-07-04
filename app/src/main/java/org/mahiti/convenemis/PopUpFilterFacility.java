@@ -75,7 +75,7 @@ public class PopUpFilterFacility {
         final Dialog dialog = new Dialog(activity);
         dialog.setContentView(R.layout.popup_filter_facility);
         final UpdateFilterInterface updatefilterinterface;
-        updatefilterinterface=activity;
+       // updatefilterinterface=activity;
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity);
         String modifiedDate=dbOpenHelper.getFacilityLastModifiedDate(typeValue,"");
         final List<Datum> getVillagelist= dbOpenHelper.getBeneficiaryListFromDb(typeValue,5,modifiedDate);
@@ -166,13 +166,13 @@ public class PopUpFilterFacility {
             }
         });
 
-        sortFilter.setOnClickListener(new View.OnClickListener() {
+       /* sortFilter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Logger.logD(TAG,"sortFilter on Click-->"+surveyIds.toString());
                 checkSurveyStatus(activity,updatefilterinterface,dialog,typeValue);
             }
-        });
+        });*/
     }
 
 

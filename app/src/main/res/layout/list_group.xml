@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="50dp"
     android:orientation="horizontal"
     android:padding="13dp"
     android:weightSum="2"
     android:background="@drawable/n_decorate">
-
     <TextView
         android:id="@+id/lblListHeader"
         android:layout_width="0dp"
