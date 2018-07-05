@@ -9,9 +9,7 @@
     android:orientation="vertical"
     android:paddingTop="10sp"
     android:paddingEnd="10sp"
-    android:paddingStart="10sp"
-
-    >
+    android:paddingStart="10sp">
     <TextView
         android:id="@+id/namelabel"
         android:layout_width="match_parent"
@@ -32,7 +30,7 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginTop="10dp"
-        android:background="@color/divider"/>
+        android:background="@color/pale_orange"/>
 </LinearLayout>
 
 </RelativeLayout>

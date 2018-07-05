@@ -73,6 +73,8 @@ public class Constants {
     public static final String GROUP = "Groups" ;
     public static final String FPO = "Federations";
     public static final String HOUSEHOLDS = "Households";
+    public static final String FARMERS = "Citizens";
+    public static final String NAME = "Name";
     public static List<Integer> blockQids=new ArrayList<>();
 
     //-------------------------*******************--------------------

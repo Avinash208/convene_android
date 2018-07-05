@@ -210,7 +210,6 @@ public class DataFormFragment extends Fragment implements PeriodicTypeInterface,
             emptyClosedtextview.setText(getString(R.string.no_completd_records_available));
             Logger.logD(TAG,"Survey List is empty");
         }
-
         showSurveyForm();
     }
 

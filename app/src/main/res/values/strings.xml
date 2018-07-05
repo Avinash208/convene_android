@@ -420,5 +420,6 @@
     <string name="YES">Delete</string>
     <string name="Cancel">Cancel</string>
     <string name="activity_module_is_on_progress">Activity module in progress</string>
+    <string name="no_beneficiary_added">No beneficiary added</string>
 
 </resources>

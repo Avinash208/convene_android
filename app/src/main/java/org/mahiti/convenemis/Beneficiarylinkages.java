@@ -13,6 +13,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import org.mahiti.convenemis.database.ExternalDbOpenHelper;
 import org.mahiti.convenemis.fragments.DataFormFragment;
@@ -44,8 +47,10 @@ public class Beneficiarylinkages extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_beneficiarylinkages);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        TextView toolbarTitle = findViewById(R.id.toolbarTitle);
+        ImageView imageMenu= findViewById(R.id.imageMenu);
+        toolbarTitle.setText("Beneficiary linkage");
+        imageMenu.setVisibility(View.GONE);
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         Tabthree = (TabItem) findViewById(R.id.tabItem3);
         prefs = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);

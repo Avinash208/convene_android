@@ -113,7 +113,7 @@
         android:layout_marginTop="200dp"
         android:visibility="gone"
         android:layout_centerInParent="true"
-        android:text="@string/beneficiaries_are_empty"
+        android:text="@string/no_beneficiary_added"
         android:gravity="center"/>
 
     <LinearLayout

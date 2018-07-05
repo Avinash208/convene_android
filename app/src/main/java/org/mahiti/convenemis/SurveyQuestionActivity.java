@@ -2139,12 +2139,11 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
         String[] arrayValidation = mathString.split(":");
         String ansText = editText.getText().toString();
         boolean checkMandatory = DBHandler.getMandatoryQuestion(String.valueOf(i), database);
-        Logger.logD(TAG, "EditTextMandatory" + checkMandatory);
         String getConstraints= prefs.getString(Constants.constraints,"");
         String[] tempDelete=getConstraints.split(",");
         for (int q=0;q<tempDelete.length;q++){
             if (!getConstraints.equals("") && Integer.parseInt(tempDelete[q])==i) {
-                if(!surveyHandler.isConstraintValueExist(ansText,i)) {
+                if(!surveyHandler.isConstraintValueExist(ansText,i,surveyPrimaryKeyId)) {
                     errorText.setVisibility(View.GONE);
                 }else{
                     errorText.setVisibility(View.VISIBLE);
@@ -2217,7 +2216,7 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
     private boolean isconstraintsFunctionality(String userEnteredText, int questionCode) {
       String getConstraints= prefs.getString(Constants.constraints,"");
       if (!getConstraints.equals("") && Integer.parseInt(getConstraints)==questionCode) {
-          return surveyHandler.isConstraintValueExist(userEnteredText,questionCode);
+          return surveyHandler.isConstraintValueExist(userEnteredText,questionCode, surveyPrimaryKeyId);
       }else{
           return true;
       }

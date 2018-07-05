@@ -6,6 +6,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -262,9 +265,11 @@ public class ListingActivity extends BaseActivity implements View.OnClickListene
             progress.dismiss();
             if (!syncSurveyList.isEmpty()){
                 typeListView.setVisibility(View.VISIBLE);
+                emptytextview.setVisibility(View.GONE);
                 GridLayoutManager linearLayoutManager = new GridLayoutManager(ListingActivity.this,2);
                 linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
                 typeListView.setLayoutManager(linearLayoutManager);
+
                 setstatusAdapter =new ListingGridViewAdapter(ListingActivity.this,syncSurveyList,qid,
                         dbConveneHelper,surveySummaryreportdbhandler,prefs,sharedPreferences,surveyId,getDynamicLabel(headerName));
                 typeListView.setAdapter(setstatusAdapter);
@@ -279,10 +284,16 @@ public class ListingActivity extends BaseActivity implements View.OnClickListene
         String headingName="";
         switch (headerName){
             case Constants.GROUP:
+                createNewButton.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.orange)));
                 return headerName;
             case Constants.FPO:
+                createNewButton.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.green)));
                 return headerName;
             case Constants.HOUSEHOLDS:
+                createNewButton.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.floating_button)));
+                return headerName;
+            case Constants.FARMERS:
+                createNewButton.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.fpo)));
                 return headerName;
             default:
                 break;

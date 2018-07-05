@@ -15,17 +15,29 @@
         android:paddingTop="@dimen/appbar_padding_top"
         android:theme="@style/MyTheme.AppBarOverlay">
 
-        <android.support.v7.widget.Toolbar
+        <!--<android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:layout_weight="1"
+            android:layout_gravity="center"
             android:background="?attr/colorPrimary"
             app:layout_scrollFlags="scroll|enterAlways"
             app:popupTheme="@style/MyTheme.AppBarOverlay"
             app:title="Beneficiary Linkage">
 
-        </android.support.v7.widget.Toolbar>
+        </android.support.v7.widget.Toolbar>-->
+       <!-- <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="45dp"
+            android:id="@+id/toolbar"
+            android:text="Beneficiary linkage"
+            android:textSize="20sp"
+            android:textColor="@color/white"
+            android:layout_gravity="center" />-->
+        <include
+            android:id="@+id/toolbar1"
+            layout="@layout/toolbar">
+        </include>
 
 
     </android.support.design.widget.AppBarLayout>
@@ -33,29 +45,32 @@
         android:id="@+id/tabs"
         android:layout_below="@+id/appbar"
         android:layout_width="match_parent"
-        style="@style/AppTabLayout"
-        app:tabBackground="@color/black"
-        app:tabSelectedTextColor="@color/white"
+        app:tabBackground="@color/tabColor"
+        app:tabSelectedTextColor="@color/black"
         app:tabIndicatorColor="@color/white"
-        app:tabTextColor="@color/inActiveText"
+        app:tabTextColor="@color/tabtextcolor"
+        app:tabTextAppearance="@style/AppTabTextAppearance"
         android:layout_height="wrap_content">
 
         <android.support.design.widget.TabItem
             android:id="@+id/tabItem"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            app:tabTextAppearance="@style/AppTabTextAppearance"
             android:text="@string/tab_text_1" />
 
         <android.support.design.widget.TabItem
             android:id="@+id/tabItem2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            app:tabTextAppearance="@style/AppTabTextAppearance"
             android:text="@string/tab_text_2" />
 
         <android.support.design.widget.TabItem
             android:id="@+id/tabItem3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            app:tabTextAppearance="@style/AppTabTextAppearance"
             android:text="@string/tab_text_3" />
 
     </android.support.design.widget.TabLayout>

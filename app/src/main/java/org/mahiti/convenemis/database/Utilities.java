@@ -6,7 +6,11 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Environment;
 import android.preference.PreferenceManager;
+import android.support.v4.app.FragmentActivity;
+import android.widget.ImageView;
+import android.widget.TextView;
 
+import org.mahiti.convenemis.R;
 import org.mahiti.convenemis.utils.Constants;
 import org.mahiti.convenemis.utils.Logger;
 
@@ -63,6 +67,24 @@ public class Utilities
         editList.putString(Constants.LocationSurveyflag,locationFlag);
         editList.apply();
     }
+
+    public static void setGender(ImageView imgUser, String gender, final Context context) {
+        imgUser.setTag(gender);
+        if ("Male".equalsIgnoreCase(gender))
+        {
+            imgUser.setImageDrawable(context.getDrawable(R.drawable.profile_male));
+
+        }
+        else if ("Female".equalsIgnoreCase(gender))
+        {
+            imgUser.setImageDrawable(context.getDrawable(R.drawable.profile_female));
+        }else
+        {
+            imgUser.setImageDrawable(context.getDrawable(R.drawable.profile_none));
+        }
+    }
+
+
 }
 
 

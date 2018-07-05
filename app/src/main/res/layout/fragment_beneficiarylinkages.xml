@@ -9,29 +9,28 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_weight="5"
-        >
+        android:layout_weight="5">
         <RelativeLayout
             android:layout_width="0dp"
             android:layout_weight="3"
             android:layout_height="match_parent"
-            android:paddingBottom="15dp"
+            android:paddingBottom="5dp"
             android:paddingEnd="15dp"
-            android:visibility="gone"
             android:paddingStart="15dp"
-            android:paddingTop="15dp">
+            android:paddingTop="15dp"
+            android:id="@+id/top_layout_container">
             <RelativeLayout
-                android:layout_width="100dp"
-                android:layout_height="80dp"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
                 android:layout_centerHorizontal="true"
-                android:id="@+id/userImageParent"
-                >
+                android:id="@+id/userImageParent">
                 <ImageView
                     android:id="@+id/userImage"
-                    android:layout_width="80dp"
-                    android:layout_height="80dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
                     android:layout_centerHorizontal="true"
-                    android:src="@drawable/icons8_user" />
+                    android:background="@drawable/profile_female" />
                 <TextView
                     android:layout_width="35dp"
                     android:layout_height="35dp"
@@ -41,6 +40,7 @@
                     android:background="@drawable/rounded_tv"
                     android:gravity="center"
                     android:padding="3dp"
+                    android:visibility="gone"
                     android:textColor="@color/white"
                     android:textSize="14sp"
                     android:textStyle="bold"
@@ -67,7 +67,7 @@
                     android:paddingLeft="30dp"
                     android:layout_gravity="center_horizontal"
                     android:textColor="@color/black"
-                    android:textSize="16sp"
+                    android:textSize="22sp"
                     android:textStyle="bold"
                     tools:text="KUMAR MV"
                     tools:textAllCaps="true" />
@@ -85,13 +85,14 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:paddingTop="3dp"
+                    android:visibility="gone"
                     android:paddingBottom="3dp"
                     android:paddingRight="30dp"
                     android:paddingLeft="30dp"
                     android:layout_gravity="center_horizontal"
                     android:singleLine="true"
                     android:textColor="@color/black"
-                    android:textSize="16sp"
+                    android:textSize="20sp"
                     tools:text="KUMAR MV"
                     />
 
@@ -107,7 +108,10 @@
             android:id="@+id/dynamic_question_set"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="20dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="20dp"
+            android:layout_marginTop="10dp"
             android:paddingBottom="20dp"
             android:orientation="vertical">
         </LinearLayout>

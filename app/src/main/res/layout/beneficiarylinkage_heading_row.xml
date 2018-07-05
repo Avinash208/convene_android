@@ -92,8 +92,18 @@
         android:id="@+id/child_dynamic_inflater"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:visibility="gone">
+        android:orientation="vertical">
+      <TextView
+          android:id="@+id/linkage_empty_label"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:text="No linkage added"
+          android:padding="10dp"
+          android:textSize="16dp"
+          android:visibility="gone"
+          android:textStyle="bold"
+          android:textColor="@color/meroon"
+          android:gravity="center"/>
     </LinearLayout>
   </ScrollView>
 

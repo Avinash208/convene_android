@@ -136,6 +136,8 @@ public class BeneficiaryLinkageActivityFragment extends Fragment implements Push
         Logger.logD("SurveyId in parentID", parentID + "");
     }
 
+
+
     private void callBeneficiaryLiakageApi() {
         HashMap<String, String> nextBirthDayParams = new HashMap<>();
         nextBirthDayParams.put("URL", "survey/all-linkages/");
@@ -190,6 +192,7 @@ public class BeneficiaryLinkageActivityFragment extends Fragment implements Push
                     View child = this.getLayoutInflater().inflate(R.layout.beneficiarylinkage_heading_row, getHeadingLayout, false);
                     LinearLayout childdynamicinflater = (LinearLayout) child.findViewById(R.id.child_dynamic_inflater);
                     TextView addlink = (TextView) child.findViewById(R.id.addlink);
+                    TextView linkageEmptyLabel = (TextView) child.findViewById(R.id.linkage_empty_label);
                     LinearLayout addlinkContainer = (LinearLayout) child.findViewById(R.id.linklabelcontainer);
                     ImageView addmembers = (ImageView) child.findViewById(R.id.addmembers);
                     TextView holdername = (TextView) child.findViewById(R.id.holdername);
@@ -198,6 +201,7 @@ public class BeneficiaryLinkageActivityFragment extends Fragment implements Push
                     Logger.logD("likage getChildUUids", getChildUUids + "");
                     List<QuestionAnswer> getUnderChildList = dbHandler.getAllChildRecord(getChildUUids, dbHandler, getQuestionIds);
                     if (!getChildUUids.isEmpty() && !getUnderChildList.isEmpty()) {
+                        linkageEmptyLabel.setVisibility(View.GONE);
                         childdynamicinflater.setVisibility(View.VISIBLE);
                         addlink.setText(String.valueOf(getUnderChildList.size()));
                         for (int j = 0; j < getUnderChildList.size(); j++) {
@@ -269,6 +273,7 @@ public class BeneficiaryLinkageActivityFragment extends Fragment implements Push
                             });
                         }
                     } else {
+                        linkageEmptyLabel.setVisibility(View.VISIBLE);
                         int finalI1 = i;
                         addlinkContainer.setOnClickListener(new View.OnClickListener() {
                             @Override

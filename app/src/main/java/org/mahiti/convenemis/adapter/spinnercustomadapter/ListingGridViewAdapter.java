@@ -94,6 +94,7 @@ public class ListingGridViewAdapter extends RecyclerView.Adapter<ListingGridView
             public void onClick(View view) {
                 Intent intent = new Intent(activity, Beneficiarylinkages.class);
                 intent.putExtra("SurveyId", statusbean.get(position).getSurveyId());
+                intent.putExtra(Constants.HEADER_NAME, getheading);
                 intent.putExtra("parentID", String.valueOf(statusbean.get(position).getQuestionAnswerList().get(0).getParentId()));
                 intent.putExtra("parent_form_primaryid", String.valueOf(statusbean.get(position).getParent_form_primaryid()));
                 intent.putExtra(Constants.SURVEY_ID, surveyId);
@@ -172,6 +173,7 @@ public class ListingGridViewAdapter extends RecyclerView.Adapter<ListingGridView
         switch (headingLabel){
             case Constants.GROUP:
                 imageView.setBackgroundResource(R.drawable.group_icon);
+
                 break;
             case Constants.FPO:
                 imageView.setBackgroundResource(R.drawable.federation_icon);
@@ -183,6 +185,9 @@ public class ListingGridViewAdapter extends RecyclerView.Adapter<ListingGridView
                    imageView.setBackgroundResource(R.drawable.household_female);
                else
                    imageView.setBackgroundResource(R.drawable.profile_none);
+                break;
+            case Constants.FARMERS:
+                imageView.setBackgroundResource(R.drawable.farmer_icon);
                 break;
              default:
                  imageView.setBackgroundResource(R.drawable.profile_none);

@@ -606,9 +606,9 @@ public class DBHandler extends SQLiteOpenHelper {
             answer="";
             for(int i=0;i<ansSet.length;i++){
                if (i==0)
-                   answer =dbOpenHelper.getOptionText(ansSet[i], 1, questionID);
+                   answer =answer + dbOpenHelper.getOptionText(ansSet[i], 1, questionID);
                else
-                   answer = ", "+ dbOpenHelper.getOptionText(ansSet[i], 1, questionID);
+                   answer =answer + ", "+ dbOpenHelper.getOptionText(ansSet[i], 1, questionID);
            }
         }else{
             answer = cursor.getString(cursor.getColumnIndex(ANSTEXT));
@@ -1577,9 +1577,9 @@ public class DBHandler extends SQLiteOpenHelper {
         return getPeriodicityCount;
     }
 
-    public boolean isConstraintValueExist(String userEnteredText, int questionCode) {
+    public boolean isConstraintValueExist(String userEnteredText, int questionCode, String surveyPrimaryKeyId) {
         boolean tempValue=false;
-        String gridQuery = "select * from Response where q_id="+questionCode+" and ans_text='"+userEnteredText+"' COLLATE NOCASE";
+        String gridQuery = "select * from Response where q_id="+questionCode+" and survey_id !='"+surveyPrimaryKeyId+"'  and ans_text='"+userEnteredText+"' COLLATE NOCASE";
         SQLiteDatabase db = getdatabaseinstance_read();
         Cursor cursor = db.rawQuery(gridQuery, null);
         try {
