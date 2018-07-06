@@ -166,9 +166,8 @@ public class ExpandableListAdapterDataCollection extends BaseExpandableListAdapt
         Logger.logD("-->start time","checking time line");
         if (sharedpreferences.getInt(SURVEY_ID,0)!=0) {
             Intent survrySummaryReport = new Intent(_context, ListingActivity.class);
-            survrySummaryReport.putExtra(SURVEY_ID, String.valueOf(surveyDetailBean.getSurveyId()));
+            survrySummaryReport.putExtra(SURVEY_ID, String.valueOf(sharedpreferences.getInt(SURVEY_ID,0)));
             survrySummaryReport.putExtra(Constants.HEADER_NAME, surveyDetailBean.getBeneficiaryType());
-
             _context.startActivity(survrySummaryReport);
         }else{
             Intent intent1=new Intent(_context, LocationBasedActivity.class);

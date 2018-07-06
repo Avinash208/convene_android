@@ -369,9 +369,7 @@ public class DataFormFragment extends Fragment implements PeriodicTypeInterface,
         else {
             addOrCompleteButton.setText(getString(R.string.pending));
         }
-
-
-        chooseFacilityOrBeneficiaryPopUp(spinnerSearch,surveysBean);
+        //chooseFacilityOrBeneficiaryPopUp(spinnerSearch,surveysBean);
         spinnerSearch.setTag(spinnerCount);
         if(!"".equalsIgnoreCase(benAndFaci)){
             spinnerSearch.setVisibility(View.VISIBLE);

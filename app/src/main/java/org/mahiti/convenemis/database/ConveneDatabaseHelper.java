@@ -888,8 +888,6 @@ public class ConveneDatabaseHelper extends SQLiteOpenHelper {
             if (cursor != null && cursor.moveToFirst()) {
                 do questionType = cursor.getString(cursor.getColumnIndex("answer"));
                 while (cursor.moveToNext());
-                cursor.close();
-
             }
             cursor.close();
         } catch (SQLException e) {

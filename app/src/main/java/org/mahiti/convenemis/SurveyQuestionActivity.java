@@ -1300,12 +1300,18 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
             checkBox.setTextColor(Color.parseColor("#000000"));
             if (getResponseCount != null) {
                 String getansweredOptionCode = getResponseCount.get(0).getAnswer();
-                String string = getansweredOptionCode.replaceAll("[\\p{Z}\\s]+", "");
-                String[] array = string.substring(1, string.length() - 1).split(",");
-                Logger.logD(TAG, " the answered check option ids" + array.length);
 
+                /* getansweredOptionCode= getansweredOptionCode.replace("[\"","").trim();
+                getansweredOptionCode= getansweredOptionCode.replace("\"]","");
+               // String string = getansweredOptionCode.replaceAll("[\\p{Z}\\s]+", "");
+
+                String[] array = getansweredOptionCode.split(",");
+                Logger.logD(TAG, " the answered check option ids" + array.length);
+             //   String[] ansSet = answer.replace("[", "").replace("]", "").split(",");*/
+
+                String[] array = getansweredOptionCode.replace("[", "").replace("]", "").split(",");
                 for (int h = 0; h < array.length; h++) {
-                    if (getCount.get(p).getAnswerCode().equals(array[h])) {
+                    if (getCount.get(p).getAnswerCode().equals(array[h].trim())) {
                         checkBox.setChecked(true);
                     }
                 }
