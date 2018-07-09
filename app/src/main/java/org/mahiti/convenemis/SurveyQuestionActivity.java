@@ -891,8 +891,6 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
     private void addressWidgetDisplay(Page page, String questionFont, String answerFont, int questionCode) {
 
         View child = this.getLayoutInflater().inflate(R.layout.address_widget, dynamicQuestionSet, false);//child.xml
-  /*  TextView question = child.findViewById(R.id.mainQuestion);
-    question.setText(page.getQuestion());*/
         LinearLayout relativeLayout = (LinearLayout) child.findViewById(R.id.relativeLayout);
         Spinner hamletspinner = (Spinner) child.findViewById(R.id.hamlet_spinner);
         Spinner villagespinner = (Spinner) child.findViewById(R.id.village_spinner);
@@ -1300,15 +1298,6 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
             checkBox.setTextColor(Color.parseColor("#000000"));
             if (getResponseCount != null) {
                 String getansweredOptionCode = getResponseCount.get(0).getAnswer();
-
-                /* getansweredOptionCode= getansweredOptionCode.replace("[\"","").trim();
-                getansweredOptionCode= getansweredOptionCode.replace("\"]","");
-               // String string = getansweredOptionCode.replaceAll("[\\p{Z}\\s]+", "");
-
-                String[] array = getansweredOptionCode.split(",");
-                Logger.logD(TAG, " the answered check option ids" + array.length);
-             //   String[] ansSet = answer.replace("[", "").replace("]", "").split(",");*/
-
                 String[] array = getansweredOptionCode.replace("[", "").replace("]", "").split(",");
                 for (int h = 0; h < array.length; h++) {
                     if (getCount.get(p).getAnswerCode().equals(array[h].trim())) {
@@ -1339,7 +1328,7 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
      */
     public void dropDownQuestionDisplay(Page displayQuestionModel, String questionFont, String answerFont, int questionCode) {
         HashMap<String, AnswersPage> getspinnerQuestionAnswer = getUserAnsweredResponseFromDB(displayQuestionModel.getQuestionNumber(), db, surveyPrimaryKeyId, restUrl);   // getting if already answered question
-        View child = this.getLayoutInflater().inflate(R.layout.dropdown, dynamicQuestionSet, false);//child.xml
+        View child = this.getLayoutInflater().inflate(R.layout.dropdown, dynamicQuestionSet, false);
         TextView question = child.findViewById(R.id.mainQuestionspinner);
         question.setTextSize(Integer.valueOf(questionFont));
         question.setPadding(4, 4, 4, 4);
@@ -1559,9 +1548,7 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
                                 }
                             }
                             if (tempFlag){
-                                //       if (true){
                                 boolean fileBoolean = FunctionalityCodeStoreGRid(gridviewQuestionCOde);
-                                //     list.add(String.valueOf(true));
                                 list.add(String.valueOf(fileBoolean));
                             } else {
                                 list.add(String.valueOf(false));
@@ -2147,6 +2134,7 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
         boolean checkMandatory = DBHandler.getMandatoryQuestion(String.valueOf(i), database);
         String getConstraints= prefs.getString(Constants.constraints,"");
         String[] tempDelete=getConstraints.split(",");
+
         for (int q=0;q<tempDelete.length;q++){
             if (!getConstraints.equals("") && Integer.parseInt(tempDelete[q])==i) {
                 if(!surveyHandler.isConstraintValueExist(ansText,i,surveyPrimaryKeyId)) {
@@ -2218,17 +2206,6 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
             return true;
         }
     }
-
-    private boolean isconstraintsFunctionality(String userEnteredText, int questionCode) {
-      String getConstraints= prefs.getString(Constants.constraints,"");
-      if (!getConstraints.equals("") && Integer.parseInt(getConstraints)==questionCode) {
-          return surveyHandler.isConstraintValueExist(userEnteredText,questionCode, surveyPrimaryKeyId);
-      }else{
-          return true;
-      }
-    }
-
-
     @Override
     public void onClick(View view) {
         switch (view.getId()) {

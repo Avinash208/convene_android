@@ -369,7 +369,6 @@ public class DataFormFragment extends Fragment implements PeriodicTypeInterface,
         else {
             addOrCompleteButton.setText(getString(R.string.pending));
         }
-        //chooseFacilityOrBeneficiaryPopUp(spinnerSearch,surveysBean);
         spinnerSearch.setTag(spinnerCount);
         if(!"".equalsIgnoreCase(benAndFaci)){
             spinnerSearch.setVisibility(View.VISIBLE);
@@ -788,60 +787,6 @@ public class DataFormFragment extends Fragment implements PeriodicTypeInterface,
 
     }
 
-    /**
-     * method to create view for facility list spinner popup
-     * @param spinnerSearch
-     * @param surveysBean
-     */
-    private void chooseFacilityOrBeneficiaryPopUp(SingleSpinnerSearch spinnerSearch, SurveysBean surveysBean) {
-        SharedPreferences  sharedpreferences = getActivity().getSharedPreferences(MY_PREFERENCES, Context.MODE_PRIVATE);
-        if((BENEFICIARIES_TITLE).equals(btype)){
-            String[] facilityLevels=surveysBean.getFacilityIds().split(",");
-            Logger.logV(TAG,"facilityLevels values==>" + facilityLevels.length);
-            if(facilityLevels.length>1){
-                for(int i = 0; i< facilityLevels.length; i++){
-                    facilityNames= externalDbOpenHelper.getFacilityNames(surveysBean.getFacilityIds(),"");
-                    createSpinnerView(facilityNames, facilityLevels,spinnerSearch,surveysBean);
-                }
-            }else{
-                facilityNames= externalDbOpenHelper.getFacilityNames(surveysBean.getFacilityIds(),"");
-                createSpinnerView(facilityNames, facilityLevels,spinnerSearch,surveysBean);
-            }
-        }else{
-            String[] beneficiaryLevels = sharedpreferences.getString(Constants.BENEFICIARY_IDS, "").split(",");
-            Logger.logD(TAG,"beneficiaryLevels length ==>" + beneficiaryLevels.length);
-            if(beneficiaryLevels.length>1){
-                for(int i = 0; i< beneficiaryLevels.length; i++){
-                    beneficiaryNames= externalDbOpenHelper.getBeneficaryNames(beneficiaryLevels[i],"");
-                    createSpinnerView(beneficiaryNames,  beneficiaryLevels,spinnerSearch,surveysBean);
-                }
-            }else{
-                beneficiaryNames= externalDbOpenHelper.getBeneficaryNames(beneficiaryLevels[0],"");
-                createSpinnerView(beneficiaryNames,  beneficiaryLevels,spinnerSearch,surveysBean);
-            }
-        }
-    }
-
-
-    /**
-     * method to get the selected facility from spinner popup
-     * @param beneficiaryNames
-     * @param arrayLevels
-     * @param spinnerSearch
-     * @param surveysBean
-
-     */
-    private void createSpinnerView(final List<Datum> beneficiaryNames, final String[] arrayLevels, final SingleSpinnerSearch spinnerSearch,SurveysBean surveysBean) {
-        spinnerSearch.setItems(beneficiaryNames, -1, items -> {
-            for(int j=0;j<items.size();j++){
-                if (items.get(j).isSelected()) {
-                    for(int k=0;k<arrayLevels.length;k++){
-                        startBeneficiaryFacilitySurvey(k,j,items,spinnerSearch,surveysBean);
-                    }
-                }
-            }
-        });
-    }
 
     /**
      * method to start the suvvey which is beneficiary and facility based survey and insert values into survey table

@@ -39,7 +39,6 @@ public class ListingGridViewAdapter extends RecyclerView.Adapter<ListingGridView
     Context context;
     Activity activity;
     List<StatusBean> statusbean;
-    LinearLayout filledlinearLayout;
     private  String qid;
     private  ConveneDatabaseHelper dbConveneHelper;
     DBHandler surveySummaryreportdbhandler;
@@ -80,12 +79,11 @@ public class ListingGridViewAdapter extends RecyclerView.Adapter<ListingGridView
             String[] qids=qid.split(",");
             for(int k=0;k<qids.length;k++)
             {
-                summary=summary + DBHandler.getAnswerFromPreviousQuestion(qids[k],surveySummaryreportdbhandler , String.valueOf(statusbean.get(position).getSurveyId()));
+                summary= new StringBuilder().append(summary).append(DBHandler.getAnswerFromPreviousQuestion(qids[k], surveySummaryreportdbhandler, String.valueOf(statusbean.get(position).getSurveyId()))).toString();
             }
-            String[] getClusterName=statusbean.get(position).getCaseId().split("#");
             Logger.logD("Getting many times","->"+position);
             viewHolder.anniversariesListDymanicLabel.removeAllViews();
-            setParentView(viewHolder.dynamicImage,statusbean.get(position).getQuestionAnswerList(),viewHolder.anniversariesListDymanicLabel,
+            setParentView(viewHolder.dynamicImage,statusbean.get(position).getQuestionAnswerList(),
                     viewHolder.nameLabel);
 
         }
@@ -152,8 +150,7 @@ public class ListingGridViewAdapter extends RecyclerView.Adapter<ListingGridView
         return position;
     }
 
-    private void setParentView(ImageView imageView, List<QuestionAnswer> questionAnswersList,
-                               LinearLayout ll, TextView nameLabel) {
+    private void setParentView(ImageView imageView, List<QuestionAnswer> questionAnswersList, TextView nameLabel) {
         try {
             for (int i=0;i<questionAnswersList.size();i++){
                 nameLabel.setText(questionAnswersList.get(0).getAnswerText());

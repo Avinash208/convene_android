@@ -55,7 +55,6 @@ public class LocationBasedActivity extends AppCompatActivity {
     private LinearLayout activityContainer;
     private String surveyName = "";
     private TextView toolbarTitle;
-    private LinearLayout backPress;
 
 
     @Override
@@ -80,12 +79,6 @@ public class LocationBasedActivity extends AppCompatActivity {
             }
         });
     }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
-
     private void getPreviousFromIntent() {
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
@@ -231,7 +224,7 @@ public class LocationBasedActivity extends AppCompatActivity {
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity);
         prefs = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
         relativeLayout = (LinearLayout) findViewById(R.id.relativeLayout);
-        backPress = (LinearLayout) findViewById(R.id.backPress);
+        LinearLayout  backPress = (LinearLayout) findViewById(R.id.backPress);
         activityContainer = (LinearLayout) findViewById(R.id.dymaicactivitydisplay);
         createNewButton = findViewById(R.id.createNewButton);
         toolbarTitle = (TextView) findViewById(R.id.toolbarTitle);

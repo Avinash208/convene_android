@@ -139,16 +139,12 @@ public class HomeActivityNew extends BaseActivity implements View.OnClickListene
         Logger.logD("MVP WORKING", listDataHeader.size() + "");
         listAdapter = new ExpandableListAdapterDataCollection(this, listDataHeader, listDataChild);
         expListView.setAdapter(listAdapter);
-       // expListView.expandGroup(0);
     }
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.logout:
                 Utils.callDialogConformation(this,this);
-                break;
-            case R.id.dataformsLinear:
-              //  setToPreferenceCallNextActivity(view);
                 break;
             case R.id.update_content:
                 Utils.contentUpdateConformation(this);

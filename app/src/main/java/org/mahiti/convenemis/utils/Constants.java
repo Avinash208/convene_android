@@ -75,6 +75,7 @@ public class Constants {
     public static final String HOUSEHOLDS = "Households";
     public static final String FARMERS = "Citizens";
     public static final String NAME = "Name";
+    public static final String TAG = "Exception facing";
     public static List<Integer> blockQids=new ArrayList<>();
 
     //-------------------------*******************--------------------

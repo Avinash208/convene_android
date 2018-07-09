@@ -69,7 +69,7 @@ public class ShowSurveyPreview extends AppCompatActivity implements View.OnClick
 
         context = ShowSurveyPreview.this;
         getSurveyPrimaryID = i.getStringExtra("surveyPrimaryKey");
-        surveyId = i.getIntExtra("survey_id", -1);
+        surveyId = i.getIntExtra(SURVEY_ID_KEY, -1);
         isVisible = i.getBooleanExtra("visibility", false);
         showSurveyPreviewPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         setButtonClickListener();
@@ -180,13 +180,14 @@ public class ShowSurveyPreview extends AppCompatActivity implements View.OnClick
             case 2:
                 if (answer != null) {
                     String[] ansSet = answer.replace("[", "").replace("]", "").split(",");
-                    answer = "";
-                    for (int i=0;i<ansSet.length;i++){
+                    StringBuilder answerBuilder = new StringBuilder();
+                    for (int i = 0; i<ansSet.length; i++){
                         if (i==0)
-                            answer = answer + options.get(Integer.parseInt(ansSet[i].trim()));
+                            answerBuilder.append(options.get(Integer.parseInt(ansSet[i].trim())));
                         else
-                            answer = answer + "," + options.get(Integer.parseInt(ansSet[i].trim()));
+                            answerBuilder.append(",").append(options.get(Integer.parseInt(ansSet[i].trim())));
                     }
+                    answer = answerBuilder.toString();
 
                 }
                 setAnswerToTv(answer, parentLayout, questionLabel);
@@ -248,17 +249,17 @@ public class ShowSurveyPreview extends AppCompatActivity implements View.OnClick
 
 
     private void createInlineGridHeading(LinearLayout tableLayout, List<AssesmentBean> mAssesmant) {
-       String getTempHeading="";
+       StringBuilder getTempHeading= new StringBuilder();
        TextView textView= new TextView(this);
         textView.setTextSize(18);
         textView.setTextColor(getResources().getColor(R.color.grid_heading));
         for (int i = 0; i < mAssesmant.size(); i++) {
             if (i != 0)
-               getTempHeading=getTempHeading + new StringBuilder().append(", ").append(mAssesmant.get(i).getAssessment()).toString();
+               getTempHeading.append(new StringBuilder().append(", ").append(mAssesmant.get(i).getAssessment()).toString());
             else
-                getTempHeading= getTempHeading + mAssesmant.get(i).getAssessment();
+                getTempHeading.append(mAssesmant.get(i).getAssessment());
         }
-        textView.setText(getTempHeading);
+        textView.setText(getTempHeading.toString());
         tableLayout.addView(textView);
     }
 

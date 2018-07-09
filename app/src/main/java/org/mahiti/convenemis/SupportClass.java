@@ -150,7 +150,6 @@ public class SupportClass {
 
             assessmentQuestionText.setLayoutParams(paramassessmentQuestionText);
             paramassessmentQuestionText.setMargins(10, 10, 10, 10);
-          //  layout.addView(assessmentQuestionText);
             String priorityQtype;
             String getGroupVaidation = "";
             if (gridType != 16) {
@@ -175,8 +174,6 @@ public class SupportClass {
             }
             switch (priorityQtype) {
                 case "T":
-                    LinearLayout.LayoutParams paramEdit;
-                    paramEdit = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 80);
                     View editTextView = activity.getLayoutInflater().inflate(R.layout.edittext, optionwidgetLL, false);//child.xml
                     TextView question = editTextView.findViewById(R.id.mainQuestion);
                     question.setVisibility(View.GONE);
@@ -190,12 +187,6 @@ public class SupportClass {
                     editView.setTextColor(Color.BLACK);
                     subCount = subCount + 20 + 2 + i;
                     editView.setId(subCount);
-                  //  editView.setHint("yes");
-                 //   editView.setLayoutParams(paramEdit);
-                    paramEdit.setMargins(4, 4, 4, 4);
-                   // editView.setPadding(10, 0, 0, 10);
-                   // editView.setBackgroundResource(R.drawable.textfieldbg);
-
                     if (mResponse != null && mResponse.size() > i - 1) {
                         editView.setText(mResponse.get(i - 1).getAnswer());
                         editView.setEnabled(false);
@@ -234,7 +225,6 @@ public class SupportClass {
                                         optionwidgetLL.addView(editTextView);
                                         addView.add(editView);
                                         editView.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL | InputType.TYPE_NUMBER_FLAG_SIGNED);
-                                        //maxLengthMobile = arrayValidation[3].length();
                                         maxLength = Integer.parseInt(array[3]);
                                         FilterArray = new InputFilter[1];
                                         FilterArray[0] = new InputFilter.LengthFilter(maxLength);
@@ -261,7 +251,6 @@ public class SupportClass {
                                         break;
                                 }
                             } else {
-                                //  layout.addView(editView);
                                 optionwidgetLL.addView(editTextView);
                                 addView.add(editView);
                                 editView.setInputType(InputType.TYPE_CLASS_TEXT);
@@ -296,7 +285,6 @@ public class SupportClass {
                     Logger.logD("GroupId", radioGroup.getId() + "");
                     s++;
                     int buttons = mOptions.size();
-                    //  List<Response> responseAnswer= DataBaseMapperClass.setAnswersForGridRadio(mAssesmant.get(i-1).getQid(),db,String.valueOf(surveyPrimaryKeyId));
                     for (int r = 1; r <= buttons; r++) {
                         radioGroup.setId(i + 10000 + r);
                         RadioButton rbn = new RadioButton(context);
@@ -313,7 +301,7 @@ public class SupportClass {
 
                         radioGroup.addView(rbn);
                     }
-                    View dividerLine = activity.getLayoutInflater().inflate(R.layout.divider_line, optionwidgetLL, false);//child.xml
+                    View dividerLine = activity.getLayoutInflater().inflate(R.layout.divider_line, optionwidgetLL, false);
 
                     optionwidgetLL.addView(radioGroup);
                     optionwidgetLL.addView(dividerLine);
@@ -339,15 +327,14 @@ public class SupportClass {
                     for (int d = 0; d < mOptionsDroupdown.size(); d++) {
                         optionText.add(mOptionsDroupdown.get(d).getAnswer());
                     }
-                    //    List<Response> responseAnswerSpinner= DataBaseMapperClass.setAnswersForGridRadio(mAssesmant.get(i-1).getQid(),db,String.valueOf(surveyPrimaryKeyId));
                     ArrayAdapter<AnswersPage> spinnerArrayAdapter = new ArrayAdapter<>(context, R.layout.spinner_multi_row_textview, mOptionsDroupdown);
-                    spinnerArrayAdapter.setDropDownViewResource(R.layout.spinner_multi_row_textview); // The drop down view
+                    spinnerArrayAdapter.setDropDownViewResource(R.layout.spinner_multi_row_textview);
                     spinner.setAdapter(spinnerArrayAdapter);
                     if (mResponse != null && mResponse.size() > i - 1) {
                         spinner.setSelection(optionText.indexOf(mResponse.get(i - 1).getAnswer()));
                     }
-                    View dividerLineLine = activity.getLayoutInflater().inflate(R.layout.spinnerline, optionwidgetLL, false);//child.xml
-                    View dividerLineRadio = activity.getLayoutInflater().inflate(R.layout.divider_line, optionwidgetLL, false);//child.xml
+                    View dividerLineLine = activity.getLayoutInflater().inflate(R.layout.spinnerline, optionwidgetLL, false);
+                    View dividerLineRadio = activity.getLayoutInflater().inflate(R.layout.divider_line, optionwidgetLL, false);
                     optionwidgetLL.addView(spinner);
                     optionwidgetLL.addView(dividerLineLine);
                     optionwidgetLL.addView(dividerLineRadio);
@@ -362,18 +349,9 @@ public class SupportClass {
                             LinearLayout.LayoutParams.WRAP_CONTENT));
                     checkboxContainer.setOrientation(LinearLayout.VERTICAL);
                     checkboxContainer.setGravity(Gravity.CENTER_VERTICAL);
-                    //  List<Response> responseAnswerCheckbox= DataBaseMapperClass.setAnswersForGridRadio(mAssesmant.get(i-1).getQid(),db,String.valueOf(surveyPrimaryKeyId));
                     if (mOptionsCheckbox.size() > 0) {
                         for (int c = 0; c < mOptionsCheckbox.size(); c++) {
                             CheckBox checkbox = new CheckBox(context);
-                                    /*if (responseAnswerCheckbox.size()>0){
-                                        for (int getCheck=0;getCheck<responseAnswerCheckbox.size();getCheck++){
-                                            if (mOptionsCheckbox.get(c).getId()==responseAnswerCheckbox.get(getCheck).getPrimaryID()
-                                                    && String.valueOf(mSubQuestions.get(j-1).getQuestionId()).equals(responseAnswerCheckbox.get(getCheck).getSubquestionId())){
-                                                checkbox.setChecked(true);
-                                            }
-                                        }
-                                    }*/
                             checkbox.setText(mOptionsCheckbox.get(c).getAnswer());
                             checkboxContainer.addView(checkbox);
 
@@ -469,7 +447,6 @@ public class SupportClass {
                                         break;
                                 }
                             } else {
-                                //  layout.addView(editView);
                                 optionwidgetLL.addView(dateEdit);
                                 addView.add(dateEdit);
                                 dateEdit.setInputType(InputType.TYPE_CLASS_TEXT);
@@ -507,7 +484,6 @@ public class SupportClass {
         }
         final int currentQuestionNumber = currentQuestionPage.getQuestionNumber();
 
-        //        txt.setText(questionPageBean.getSubQuestion());
         dialogBuilder.setTitle(currentQuestionPage.getQuestion());
         saveAndCreate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -602,7 +578,6 @@ public class SupportClass {
                                 surveyQuestionGridInlineInterface.OnSuccessfullGridInline(fillInlineRow, child, currentQuestionNumber, fillInlineHashMapKey, gridType);
 
                             } else {
-                                //  ToastUtils.displayToast("please fill Mandatory field", context);
                                 Logger.logD(LOGGER_TAG, "Invalid input");
                             }
                         } else {
@@ -617,7 +592,6 @@ public class SupportClass {
                                 List<AnswersPage> mOptions;
                                 for (int i = 0; i < MAssesmant.size(); i++) {
                                     if (questionPageBean.getAnswer().equalsIgnoreCase("N")) {
-                                        // bellow if block code is for sub question based answers fetching
                                         if (MAssesmant.get(i).getQtype().equalsIgnoreCase("R") || MAssesmant.get(i).getQtype().equalsIgnoreCase("S")) {
                                             mOptions = DataBaseMapperClass.getOptionsAnswersForGrid(mAssesmant.get(i).getQid(), database, answered.get(i), preferences.getInt("selectedLangauge", 1));
                                         } else if (MAssesmant.get(i).getQtype().equalsIgnoreCase("T")) {
@@ -628,10 +602,8 @@ public class SupportClass {
                                         if (mOptions.size() > 0) {
                                             Response response = new Response(String.valueOf(currentQuestionNumber), answered.get(i), mOptions.get(0).getAnswerCode(), "0", currentQuestionNumber, questionPageBean.getQuestionId(), String.valueOf(survey_ID), mAssesmant.get(i).getQid(), mOptions.get(0).getId(), MAssesmant.get(i).getQtype());
                                             responselist.add(response);
-                                            // Logger.logD("GridValues in Response", responselist.get(i).toString());
                                         }
                                     } else {
-                                        // else block code is for sub question based answers fetching
                                         if (questionPageBean.getAnswer().equalsIgnoreCase("R")) {
                                             mOptions = DataBaseMapperClass.getOptionsAnswersForGridSubQBased(questionPageBean.getQuestionId(), database, answered.get(i), true);
                                         } else {
@@ -676,7 +648,6 @@ public class SupportClass {
                             String getSkipCode = answeredtemp.get(answeredtemp.size() - 1);
                             AssesmentBean getQuestionCode = mAssesmant.get(mAssesmant.size() - 1);
                             List<AnswersPage> mOptions = DataBaseMapperClass.getOptionsAnswersForGridSubQBased(getQuestionCode.getQid(), database, getSkipCode, true);
-                            //  String skipcode = QuestionActivityUtils.checkSkipCode(String.valueOf(getQuestionCode.getQid()), database, String.valueOf(mOptions.get(0).getId()));
                             String skipcode = "";
                             List<AssesmentBean> MainMAssesmant = mainGridAssessmentMapDialog.get(String.valueOf(getQuestionCode.getAssessmentId()) + "_ASS");
 
@@ -1195,11 +1166,6 @@ public class SupportClass {
 
                     subCount = subCount + 20 + 2 + i;
                     editView.setId(subCount);
-                  //  editView.setLayoutParams(paramEdit);
-                 //   paramEdit.setMargins(4, 4, 4, 4);
-               ////     editView.setPadding(10, 0, 0, 10);
-               //     editView.setBackgroundResource(R.drawable.textfieldbg);
-
                     if (mResponse != null) {
                         for (int k = 0; k < mResponse.size(); k++) {
                             if (mResponse.get(k).getGroup_id() == mAssesmant.get(i - 1).getQid()) {
@@ -1376,11 +1342,6 @@ public class SupportClass {
                             }
                             String string = getansweredOptionCode.replace("[", "").replace("]","").replace("\"","");
                             String[] array = string.split(",");
-
-
-//
-//                            if (!string.isEmpty())
-//                                array = string.substring(1, string.length() - 1).split(",");
                             for (int k = 0; k < array.length; k++) {
                                 if (mOptionsCheckbox.get(c).getAnswerCode().equals(array[k])) {
                                     checkbox.setChecked(true);
@@ -1550,7 +1511,6 @@ public class SupportClass {
 
                         if (gridType == 14) {
                             if (subQuestionpage.getAnswer().equalsIgnoreCase("N")) {
-                                // bellow if block code is for sub question based answers fetching
                                 if (MAssesmant.get(i).getQtype().equalsIgnoreCase("R") || MAssesmant.get(i).getQtype().equalsIgnoreCase("S")) {
                                     mOptions = DataBaseMapperClass.getOptionsAnswersForGrid(mAssesmant.get(i).getQid(), database, answered.get(i), preferences.getInt("selectedLangauge", 1));
                                 } else {
@@ -1565,7 +1525,6 @@ public class SupportClass {
                                     ToastUtils.displayToast("Option code not found", context);
                                 }
                             } else {
-                                // else block code is for sub question based answers fetching
                                 if (subQuestionpage.getAnswer().equalsIgnoreCase("R") || subQuestionpage.getAnswer().equalsIgnoreCase("S")) {
                                     mOptions = DataBaseMapperClass.getOptionsAnswersForGridSubQBased(subQuestionpage.getQuestionId(), database, answered.get(i), true);
                                 } else {

@@ -8,7 +8,6 @@ import org.mahiti.convenemis.BeenClass.SurveysBean;
 import org.mahiti.convenemis.backgroundcallbacks.PendingCompletedSurveyAsyncResultListener;
 import org.mahiti.convenemis.database.DBHandler;
 import org.mahiti.convenemis.database.ExternalDbOpenHelper;
-import org.mahiti.convenemis.database.ResponseCheckController;
 import org.mahiti.convenemis.database.SurveyControllerDbHelper;
 
 import java.util.ArrayList;
@@ -23,10 +22,7 @@ public class PendingSurveyAsyncTask extends AsyncTask<String, Integer, List<Surv
     private List<SurveysBean> sourceList;
     private List<SurveysBean> resultList = new ArrayList<>();
     private ExternalDbOpenHelper externalDbOpenHelper;
-    private SharedPreferences defaultPreferences;
-    private SurveyControllerDbHelper periodicityCheckControllerDbHelper;
     private PendingCompletedSurveyAsyncResultListener pendingCompletedSurveyAsyncResultListener;
-    private ResponseCheckController responseCheckController;
     private DBHandler handler;
     String surveyPrimaryKeyId;
     int surveyid;
@@ -38,10 +34,7 @@ public class PendingSurveyAsyncTask extends AsyncTask<String, Integer, List<Surv
     public PendingSurveyAsyncTask(Context con, List<SurveysBean> sourceList, ExternalDbOpenHelper externalDbOpenHelper, SharedPreferences defaultPreferences, SurveyControllerDbHelper periodicityCheckControllerDbHelper,
                                   PendingCompletedSurveyAsyncResultListener pendingCompletedSurveyAsyncResultListener, DBHandler handler, String surveyPrimaryKeyId, int surveyId) {
         this.sourceList = sourceList;
-        this.responseCheckController = new ResponseCheckController(con);
         this.externalDbOpenHelper = externalDbOpenHelper;
-        this.defaultPreferences = defaultPreferences;
-        this.periodicityCheckControllerDbHelper = periodicityCheckControllerDbHelper;
         this.pendingCompletedSurveyAsyncResultListener = pendingCompletedSurveyAsyncResultListener;
         this.handler = handler;
         this.surveyPrimaryKeyId = surveyPrimaryKeyId;

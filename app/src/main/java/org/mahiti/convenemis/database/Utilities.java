@@ -6,9 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Environment;
 import android.preference.PreferenceManager;
-import android.support.v4.app.FragmentActivity;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import org.mahiti.convenemis.R;
 import org.mahiti.convenemis.utils.Constants;

@@ -43,6 +43,7 @@ public class DBHandler extends SQLiteOpenHelper {
     private static final String SYNCSTATUS = "sync_status";
     private static final String TYPOLOGYCODE = "typology_code";
     private static final String QCODE = "q_code";
+    private static final String SURVEYIDS = "survey_ids";
     public static SQLiteDatabase database;
     private final static String mName = "ENCRYPTED.db";
     private final static String TAG = "DbHndler";
@@ -60,7 +61,7 @@ public class DBHandler extends SQLiteOpenHelper {
     private String getServerPrimaryKeyStr = " getServerPrimaryKey";
     private String pendingSurveyQueryStr = "pendingSurveyQuery";
     private static final String DAILY = "Daily";
-    private String dateYy_Mm_Dd = "yyyy-MM-dd";
+    private String dateYyMmDd = "yyyy-MM-dd";
     private static final String WEEKLY = "Weekly";
     private static final String QUARTERLY = "Quarterly";
     private static final String HALF_YEARLY = "Half Yearly";
@@ -68,7 +69,6 @@ public class DBHandler extends SQLiteOpenHelper {
 
 
     private static final String STRFTIME_YEAR_CAPTURE = "strftime('%Y', date(end_date))='";
-    private static final String STRFTIME_MONTH = "(strftime('%m', date(end_date))='";
     private static final String STR_TO_CAPTURE_DATE = "' OR strftime('%Y %m', date(end_date))='";
 
 
@@ -197,7 +197,7 @@ public class DBHandler extends SQLiteOpenHelper {
             values.put("paper_entry_reason", queryValues.get("paper_entry_reason"));
             values.put("last_qcode", queryValues.get("last_qcode"));
             values.put("gps_tracker", queryValues.get("gps_tracker"));
-            values.put("survey_ids", queryValues.get(TYPOLOGYCODE));
+            values.put(SURVEYIDS, queryValues.get(TYPOLOGYCODE));
             values.put("cluster_id", queryValues.get("cluster_id"));
             values.put("cluster_name", queryValues.get("clustername"));
             values.put("cluster_key", queryValues.get("clusterkey"));
@@ -599,21 +599,23 @@ public class DBHandler extends SQLiteOpenHelper {
         return questionBean;
     }
 
-    private String checkCheckBoxFunctionality(String questionType, String answer, Cursor cursor, ConveneDatabaseHelper dbOpenHelper, int questionID) {
+    private String checkCheckBoxFunctionality(String questionType, String checkboxAnswer, Cursor cursor, ConveneDatabaseHelper dbOpenHelper, int questionID) {
         if (("C").equalsIgnoreCase(questionType)){
-            answer = cursor.getString(cursor.getColumnIndex(ANSTEXT));
-            String[] ansSet = answer.replace("[", "").replace("]", "").split(",");
-            answer="";
-            for(int i=0;i<ansSet.length;i++){
+            checkboxAnswer = cursor.getString(cursor.getColumnIndex(ANSTEXT));
+            String[] ansSet = checkboxAnswer.replace("[", "").replace("]", "").split(",");
+            StringBuilder checkboxAnswerBuilder = new StringBuilder();
+            for(int i = 0; i<ansSet.length; i++){
                if (i==0)
-                   answer =answer + dbOpenHelper.getOptionText(ansSet[i], 1, questionID);
+                   checkboxAnswerBuilder.append(dbOpenHelper.getOptionText(ansSet[i], 1, questionID));
                else
-                   answer =answer + ", "+ dbOpenHelper.getOptionText(ansSet[i], 1, questionID);
+                   checkboxAnswerBuilder.append(", ").append(dbOpenHelper.getOptionText(ansSet[i], 1, questionID));
            }
+            checkboxAnswer = checkboxAnswerBuilder.toString();
         }else{
-            answer = cursor.getString(cursor.getColumnIndex(ANSTEXT));
+            checkboxAnswer = cursor.getString(cursor.getColumnIndex(ANSTEXT));
         }
-        return answer;
+        return checkboxAnswer;
+
     }
 
 
@@ -1315,7 +1317,7 @@ public class DBHandler extends SQLiteOpenHelper {
                     if (!uuid.equals(""))
                         isCompleted = getUUIDStatus(uuid);
                     String getEndDate = cursor.getString(cursor.getColumnIndex("end_date"));
-                    int survey_ids = cursor.getInt(cursor.getColumnIndex("survey_ids"));
+                    int survey_ids = cursor.getInt(cursor.getColumnIndex(SURVEYIDS));
                     statusBeanTemp = dbOpenHelper.getDetails(getEndDate, survey_ids);
                     surveysBean.setSurveyEndDate(getEndDate);
                     surveysBean.setSurveyName(statusBeanTemp.getName());
@@ -1504,7 +1506,7 @@ public class DBHandler extends SQLiteOpenHelper {
                 do {
                     String clusterName = cursor.getString(cursor.getColumnIndex("cluster_name"));
                     String uuid = cursor.getString(cursor.getColumnIndex("uuid"));
-                    int surveyIds = cursor.getInt(cursor.getColumnIndex("survey_ids"));
+                    int surveyIds = cursor.getInt(cursor.getColumnIndex(SURVEYIDS));
                     LocationSurveyBeen locationSurveyBeen = new LocationSurveyBeen();
                     locationSurveyBeen.setUuid(uuid);
                     locationSurveyBeen.setLocationName(clusterName);
@@ -1532,7 +1534,7 @@ public class DBHandler extends SQLiteOpenHelper {
         try {
             Logger.logD(TAG,"Date capture from"+date.toString());
             String query = "";
-            String getCurrentDate = new SimpleDateFormat(dateYy_Mm_Dd, Locale.ENGLISH).format(date);
+            String getCurrentDate = new SimpleDateFormat(dateYyMmDd, Locale.ENGLISH).format(date);
             SQLiteDatabase db = getdatabaseinstance_read();
             String[] splitMonth = getCurrentDate.split("-");
             String startingQuery="select * from survey where ";
