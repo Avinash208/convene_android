@@ -15,7 +15,6 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -25,6 +24,7 @@ import net.sqlcipher.database.SQLiteDatabase;
 import org.mahiti.convenemis.BeenClass.QuestionAnswer;
 import org.mahiti.convenemis.BeenClass.StatusBean;
 import org.mahiti.convenemis.adapter.spinnercustomadapter.ListingGridViewAdapter;
+import org.mahiti.convenemis.api.FilterCallBackInterface;
 import org.mahiti.convenemis.database.ConveneDatabaseHelper;
 import org.mahiti.convenemis.database.DBHandler;
 import org.mahiti.convenemis.database.ExternalDbOpenHelper;
@@ -42,7 +42,7 @@ import java.util.List;
 import static org.mahiti.convenemis.utils.Constants.SURVEY_ID;
 
 
-public class ListingActivity extends BaseActivity implements View.OnClickListener {
+public class ListingActivity extends BaseActivity implements View.OnClickListener, FilterCallBackInterface {
     private SharedPreferences sharedPreferences;
     private RecyclerView typeListView;
     ExternalDbOpenHelper dbOpenHelper;
@@ -62,8 +62,6 @@ public class ListingActivity extends BaseActivity implements View.OnClickListene
     IntentFilter filter;
     IntentFilter intentFilter;
     Context context;
-    CustomAutoCompleteTextView myAutoComplete;
-    private Button filterPopUp;
     private static final String UPDATEBENEICIARY_FLAG = "UpdateBeneficiary";
     private static final String UPDATEFACILITY_FLAG = "UpdateFacility";
     private static final String CHECK_EDITBOOLEAN = "isEditBeneficiary";
@@ -86,6 +84,8 @@ public class ListingActivity extends BaseActivity implements View.OnClickListene
     private ConveneDatabaseHelper dbConveneHelper;
     private int surveyUUIDKEY = 0;
     private String surveyId = "0";
+    private ImageView filterButton;
+    private TextView filterLocationName;
 
 
     @Override
@@ -112,7 +112,7 @@ public class ListingActivity extends BaseActivity implements View.OnClickListene
             editor.putInt(SURVEY_ID, Integer.parseInt(surveyId));
             editor.apply();
         } catch (Exception e) {
-           Logger.logE(Constants.TAG,"ListingActivity",e);
+            Logger.logE(Constants.TAG, "ListingActivity", e);
         }
         methodToStoreSharedPreference(2);
         beneficiaryTypeId = i.getStringExtra(Constants.BENEFICIARY_TYPE_ID);
@@ -121,16 +121,14 @@ public class ListingActivity extends BaseActivity implements View.OnClickListene
         setDefaultPreference();
         qid = dbOpenHelper.getSummaryQid(prefs.getInt(Constants.SURVEY_ID, 0), dbOpenHelper);
         surveySummaryreportdbhandler = new DBHandler(this);
-        myAutoComplete.setText("");
         syncSurveyList = new ArrayList<>();
         syncSurveyListPending = new ArrayList<>();
         syncCompletedPendingListPending = new ArrayList<>();
         syncSurveySyncCompletedList = new ArrayList<>();
         syncSurveySyncPendingList = new ArrayList<>();
         updateSurveyKey(prefs);
-        new summaryReportSync().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+           new summaryReportSync().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         backPress.setOnClickListener(this);
-        filterPopUp.setOnClickListener(this);
         createNewButton.setOnClickListener(this);
     }
 
@@ -157,17 +155,35 @@ public class ListingActivity extends BaseActivity implements View.OnClickListene
         backPress = findViewById(R.id.backPress);
         toolbarTitle = findViewById(R.id.toolbarTitle);
         imageMenu = findViewById(R.id.imageMenu);
-        filterPopUp = findViewById(R.id.filter);
-        myAutoComplete = findViewById(R.id.autosearch_names);
-
+        filterButton = findViewById(R.id.filter);
+        filterLocationName = findViewById(R.id.locationTV);
+        filterButton.setOnClickListener(this);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        new summaryReportSync().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        updateFilterLabels();
+         new summaryReportSync().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         createNewButton.setOnClickListener(this);
     }
+
+    private void updateFilterLabels() {
+        try {
+            String getFilterRecords = sharedPreferences.getString(Constants.FILTER + "@" + surveyId, "");
+            if (!getFilterRecords.isEmpty()) {
+                Logger.logD("filterCallBack", getFilterRecords);
+                String[] getSelectedLocation = getFilterRecords.split(",");
+                if (getSelectedLocation.length > 0) {
+                    filterLocationName.setText(new StringBuilder().append("Location : ").append(" : ").append(getSelectedLocation[getSelectedLocation.length - 1]).toString());
+                  //   new updateListAccordingFilter(getSelectedLocation[getSelectedLocation.length - 1]).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                }
+            }
+        } catch (Exception e) {
+            Logger.logE("filterCallBack", "on onPause ", e);
+        }
+    }
+
 
     @Override
     protected void onPause() {
@@ -177,6 +193,17 @@ public class ListingActivity extends BaseActivity implements View.OnClickListene
         } catch (Exception ex) {
             Logger.logE("Listing Page", " Exception on onPause ", ex);
         }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    public void filterCallBack() {
+        updateFilterLabels();
+
     }
 
     /**
@@ -200,15 +227,25 @@ public class ListingActivity extends BaseActivity implements View.OnClickListene
 
     @Override
     public void onClick(View view) {
-        if (view.getId() == R.id.backPress) {
-            onBackPressed();
-        }
-        if (view.getId() == R.id.createNewButton) {
-            Utilities.setSurveyStatus(sharedPreferences, "new");
-            SharedPreferences.Editor editor = prefs.edit();
-            editor.putInt(SURVEY_ID, Integer.parseInt(surveyId));
-            editor.apply();
-            new StartSurvey(ListingActivity.this, ListingActivity.this, prefs.getInt(SURVEY_ID, 0), prefs.getInt(SURVEY_ID, 0), "Village Name", "", "", "", "").execute();
+        switch (view.getId()) {
+            case R.id.filter:
+                SupportClass supportClass = new SupportClass();
+                Bundle bundle = new Bundle();
+                bundle.putInt(Constants.SURVEY_ID, prefs.getInt(SURVEY_ID, 0));
+                supportClass.filterSupport(bundle, ListingActivity.this, dbOpenHelper);
+                break;
+            case R.id.backPress:
+                onBackPressed();
+                break;
+            case R.id.createNewButton:
+                Utilities.setSurveyStatus(sharedPreferences, "new");
+                SharedPreferences.Editor editor = prefs.edit();
+                editor.putInt(SURVEY_ID, Integer.parseInt(surveyId));
+                editor.apply();
+                new StartSurvey(ListingActivity.this, ListingActivity.this, prefs.getInt(SURVEY_ID, 0), prefs.getInt(SURVEY_ID, 0), "Village Name", "", "", "", "").execute();
+                break;
+            default:
+                break;
         }
     }
 
@@ -261,6 +298,9 @@ public class ListingActivity extends BaseActivity implements View.OnClickListene
             super.onPostExecute(o);
             Logger.logD("-->start time", "ended");
             progress.dismiss();
+
+            setAdapterList();
+
             if (!syncSurveyList.isEmpty()) {
                 typeListView.setVisibility(View.VISIBLE);
                 emptytextview.setVisibility(View.GONE);
@@ -277,26 +317,32 @@ public class ListingActivity extends BaseActivity implements View.OnClickListene
             }
         }
 
-        private String getDynamicLabel(String headerName) {
-            String headingName = "";
-            switch (headerName) {
-                case Constants.GROUP:
-                    createNewButton.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.orange)));
-                    return headerName;
-                case Constants.FPO:
-                    createNewButton.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.green)));
-                    return headerName;
-                case Constants.HOUSEHOLDS:
-                    createNewButton.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.floating_button)));
-                    return headerName;
-                case Constants.FARMERS:
-                    createNewButton.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.fpo)));
-                    return headerName;
-                default:
-                    break;
-            }
-            return headingName;
+
+    }
+
+    public String getDynamicLabel(String headerName) {
+        String headingName = "";
+        switch (headerName) {
+            case Constants.GROUP:
+                createNewButton.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.orange)));
+                return headerName;
+            case Constants.FPO:
+                createNewButton.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.green)));
+                return headerName;
+            case Constants.HOUSEHOLDS:
+                createNewButton.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.floating_button)));
+                return headerName;
+            case Constants.FARMERS:
+                createNewButton.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.fpo)));
+                return headerName;
+            default:
+                break;
         }
+        return headingName;
+    }
+
+    private void setAdapterList() {
+
     }
 
 
@@ -388,5 +434,49 @@ public class ListingActivity extends BaseActivity implements View.OnClickListene
     private String setSummaryReport(int pendSurveyStatus, String pendSurveyId) {
         return null;
     }
+
+
+    private class updateListAccordingFilter extends AsyncTask {
+
+
+        String locationName;
+        List<StatusBean> filterList = new ArrayList<>();
+
+        public updateListAccordingFilter(String leastLocationName) {
+            locationName = leastLocationName;
+        }
+
+        @Override
+        protected Object doInBackground(Object[] objects) {
+
+            filterList = surveySummaryreportdbhandler.updateList(locationName, surveyId);
+            for (int i = 0; i < filterList.size(); i++) {
+                List<QuestionAnswer> questionAnswerList = getParentDetails(filterList.get(i).getUuid(), prefs.getInt(Constants.SURVEY_ID, 0), qid);
+                StatusBean surveysBean = filterList.get(i);
+                surveysBean.setQuestionAnswerList(questionAnswerList);
+                filterList.set(i,surveysBean);
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Object o) {
+            super.onPostExecute(o);
+            if (!filterList.isEmpty()) {
+                GridLayoutManager linearLayoutManager = new GridLayoutManager(ListingActivity.this, 2);
+                linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+                typeListView.setLayoutManager(linearLayoutManager);
+
+                setstatusAdapter = new ListingGridViewAdapter(ListingActivity.this, filterList, qid,
+                        dbConveneHelper, surveySummaryreportdbhandler, prefs, sharedPreferences, surveyId, getDynamicLabel(headerName));
+                typeListView.setAdapter(setstatusAdapter);
+            } else {
+                typeListView.setVisibility(View.GONE);
+                emptytextview.setVisibility(View.VISIBLE);
+            }
+        }
+    }
+
 
 }

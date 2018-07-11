@@ -159,6 +159,7 @@ public class BeneficiaryLinkageDetails extends Fragment {
                 locationlabel.setTextColor(context.getResources().getColor(R.color.divider));
                 parentLayout.addView(child);
 
+
             }
 
         }

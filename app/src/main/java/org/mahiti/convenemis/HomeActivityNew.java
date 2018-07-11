@@ -17,6 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+
 import org.mahiti.convenemis.BeenClass.beneficiary.Datum;
 import org.mahiti.convenemis.adapter.ExpandableListAdapterDataCollection;
 import org.mahiti.convenemis.database.DBHandler;
@@ -92,9 +93,17 @@ public class HomeActivityNew extends BaseActivity implements View.OnClickListene
                 previousItem = groupPosition;
             }
         });
-
-
+        checkInternet();
     }
+
+    private void checkInternet() {
+        if (Utils.haveNetworkConnection(context)) {
+            Logger.logD("Online","Enable");
+        }else{
+            Toast.makeText(getBaseContext(), "Application is working in offline", Toast.LENGTH_SHORT).show();
+        }
+    }
+
     public int GetDipsFromPixel(float pixels){
         // Get the screen's density scale
         final float scale = getResources().getDisplayMetrics().density;
@@ -166,7 +175,7 @@ public class HomeActivityNew extends BaseActivity implements View.OnClickListene
             startActivity(intent);
             finish();
         } else
-            Toast.makeText(getBaseContext(), getString(R.string.pressToExit), Toast.LENGTH_SHORT).show();
+             Toast.makeText(getBaseContext(), getString(R.string.pressToExit), Toast.LENGTH_SHORT).show();
         backPressed = System.currentTimeMillis();
     }
 

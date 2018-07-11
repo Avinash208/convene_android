@@ -36,7 +36,7 @@
             android:layout_weight="1"
             android:textSize="14dp"
             android:gravity="center"
-            android:text="Update"
+            android:text="Sync data"
             android:textColor="#fff" />
 
         <View

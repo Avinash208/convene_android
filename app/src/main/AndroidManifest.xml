@@ -86,6 +86,11 @@
                 <action android:name="Survey" />
             </intent-filter>
         </service>
+        <service android:name=".MyIntentLinkage">
+            <intent-filter>
+                <action android:name="Linkage" />
+            </intent-filter>
+        </service>
         <service android:name=".network.LangService">
             <intent-filter>
                 <action android:name="LangService" />

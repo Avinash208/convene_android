@@ -1496,9 +1496,9 @@ public class DBHandler extends SQLiteOpenHelper {
         return list;
     }
 
-    public List<LocationSurveyBeen> getLeastLocationRecords(String leaseLevel) {
+    public List<LocationSurveyBeen> getLeastLocationRecords(String leaseLevel, int surveyid) {
         List<LocationSurveyBeen> listTemp = new ArrayList<>();
-        String gridQuery = "select * from Survey where cluster_name='" + leaseLevel + "'";
+        String gridQuery = "select * from Survey where cluster_name='" + leaseLevel + "' and survey_ids= "+surveyid;
         SQLiteDatabase db = getdatabaseinstance_read();
         Cursor cursor = db.rawQuery(gridQuery, null);
         try {
@@ -1506,11 +1506,13 @@ public class DBHandler extends SQLiteOpenHelper {
                 do {
                     String clusterName = cursor.getString(cursor.getColumnIndex("cluster_name"));
                     String uuid = cursor.getString(cursor.getColumnIndex("uuid"));
+                    String endDate = cursor.getString(cursor.getColumnIndex("end_date"));
                     int surveyIds = cursor.getInt(cursor.getColumnIndex(SURVEYIDS));
                     LocationSurveyBeen locationSurveyBeen = new LocationSurveyBeen();
                     locationSurveyBeen.setUuid(uuid);
                     locationSurveyBeen.setLocationName(clusterName);
                     locationSurveyBeen.setSurveyid(surveyIds);
+                    locationSurveyBeen.setCaptureDate(endDate);
                     listTemp.clear();
                     listTemp.add(locationSurveyBeen);
 
@@ -1597,5 +1599,35 @@ public class DBHandler extends SQLiteOpenHelper {
         }
 
         return tempValue;
+    }
+
+    public List<StatusBean> updateList( String locationName, String surveyId) {
+        List<StatusBean> tempList= new ArrayList<>();
+        String gridQuery = "select * from Survey where survey_ids="+surveyId+" and cluster_name='"+locationName+"' order by start_date desc";
+        SQLiteDatabase db = getdatabaseinstance_read();
+        Cursor cursor = db.rawQuery(gridQuery, null);
+        try {
+            if (cursor.getCount() != 0 && cursor.moveToFirst()) {
+                do {
+
+                    String clusterName = cursor.getString(cursor.getColumnIndex("cluster_name"));
+                    String uuid = cursor.getString(cursor.getColumnIndex("uuid"));
+                    int serverPrimaryKey = cursor.getInt(cursor.getColumnIndex("server_primary_key"));
+                    String endDate = cursor.getString(cursor.getColumnIndex("end_date"));
+                    int surveyIds = cursor.getInt(cursor.getColumnIndex(SURVEYIDS));
+                    StatusBean statusBean= new StatusBean();
+                    statusBean.setClusterName(clusterName);
+                    statusBean.setSurveyId(uuid);
+                    statusBean.setParent_form_primaryid(serverPrimaryKey);
+                    statusBean.setUuid(uuid);
+                    tempList.add(statusBean);
+
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+        } catch (Exception e) {
+            Logger.logE(TAG, "Exception on getting all assessment", e);
+        }
+        return tempList;
     }
 }

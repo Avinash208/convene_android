@@ -15,6 +15,7 @@ public class StatusBean {
     private String date ;
     private String clusterName;
     private int parent_form_primaryid;
+    private String uuid;
 
     private List<QuestionAnswer> questionAnswerList;
 
@@ -148,5 +149,13 @@ public class StatusBean {
 
     public void setParent_form_primaryid(int parent_form_primaryid) {
         this.parent_form_primaryid = parent_form_primaryid;
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 }

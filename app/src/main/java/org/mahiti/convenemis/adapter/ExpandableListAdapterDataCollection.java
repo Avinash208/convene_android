@@ -171,9 +171,9 @@ public class ExpandableListAdapterDataCollection extends BaseExpandableListAdapt
             _context.startActivity(survrySummaryReport);
         }else{
             Intent intent1=new Intent(_context, LocationBasedActivity.class);
-            intent1.putExtra(Constants.PERIODICITY,"");
+            intent1.putExtra(Constants.PERIODICITY,surveyDetailBean.getPiriodicityFlag());
             intent1.putExtra(Constants.P_LIMIT,1);
-            intent1.putExtra("periodicity_count",0);
+            intent1.putExtra("periodicity_count",1);
             intent1.putExtra(SURVEY_ID,surveyDetailBean.getSurveyId());
             intent1.putExtra("survey_name",surveyDetailBean.getSurveyName());
             intent1.putExtra("benId","");

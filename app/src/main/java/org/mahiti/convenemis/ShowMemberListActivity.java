@@ -12,6 +12,7 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -62,6 +63,8 @@ public class ShowMemberListActivity extends AppCompatActivity implements HomeTil
     private String configuredQuestion;
     private MaterialSearchBar searchBar;
     private TextView tittleHeading;
+    private HorizontalScrollView horizontalScrollView;
+    private LinearLayout backPress;
 
 
     @Override
@@ -125,11 +128,14 @@ public class ShowMemberListActivity extends AppCompatActivity implements HomeTil
     private void initVariable() {
         surveyPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         memberListRV = (RecyclerView) findViewById(R.id.schoolAsignRv);
+        horizontalScrollView = (HorizontalScrollView) findViewById(R.id.selectedSchoolLayout);
+
         addMember = (Button) findViewById(R.id.addMember);
         parentTextLayout = (LinearLayout) findViewById(R.id.parentTextLayout);
         noDataLabel = (LinearLayout) findViewById(R.id.nodatalabel);
         searchBar = (MaterialSearchBar) findViewById(R.id.searchBar);
         tittleHeading = (TextView) findViewById(R.id.title_heading);
+        backPress = (LinearLayout) findViewById(R.id.imageBack);
 
         searchBar.setHint("Search member");
         searchBar.setTextHintColor(getResources().getColor(R.color.white));
@@ -137,6 +143,7 @@ public class ShowMemberListActivity extends AppCompatActivity implements HomeTil
         dbHandlershowMember = new DBHandler(this);
         addMember.setOnClickListener(this);
         searchBar.setOnSearchActionListener(this);
+        backPress.setOnClickListener(this);
 
 
 
@@ -192,6 +199,12 @@ public class ShowMemberListActivity extends AppCompatActivity implements HomeTil
             questionAnswer.setSelectedChildUUID(schoolTypeBean.getSelectedChildUUID());
             questionAnswer.setChild_form_primaryid(schoolTypeBean.getChild_form_primaryid());
             getSelectedChildList.add(questionAnswer);
+            horizontalScrollView.post(new Runnable() {
+                @Override
+                public void run() {
+                    horizontalScrollView.fullScroll(View.FOCUS_RIGHT);
+                }
+            });
         }
 
     }
@@ -200,8 +213,8 @@ public class ShowMemberListActivity extends AppCompatActivity implements HomeTil
         if (view.getId() == R.id.addMember) {
             if (!getSelectedChildList.isEmpty()) {
                 createLinkageBundle();
-            } else {
-                ToastUtils.displayToast("No member selected", this);
+            } else if(view.getId() == R.id.imageBack){
+                onBackPressed();
             }
 
         }
@@ -317,9 +330,14 @@ public class ShowMemberListActivity extends AppCompatActivity implements HomeTil
     public void onSearchStateChanged(boolean enabled) {
         if (enabled){
             tittleHeading.setVisibility(View.GONE);
+            backPress.setVisibility(View.GONE);
 
         }else{
             tittleHeading.setVisibility(View.VISIBLE);
+            backPress.setVisibility(View.VISIBLE);
+            backPress.setOnClickListener(this);
+
+            tittleHeading.setText("Add/Link");
 
         }
     }

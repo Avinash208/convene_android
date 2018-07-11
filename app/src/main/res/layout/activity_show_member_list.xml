@@ -23,6 +23,24 @@
             app:mt_clearIconTint="@color/white"
             app:mt_searchBarColor="@color/pink" />
 
+       <LinearLayout
+           android:layout_width="wrap_content"
+           android:layout_height="match_parent"
+           android:orientation="vertical"
+           android:gravity="center"
+           android:layout_marginLeft="20dp"
+           android:id="@+id/imageBack">
+           <ImageView
+
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:layout_gravity="center_vertical"
+               android:visibility="visible"
+
+               android:background="@drawable/ic_arrow_back_white_24dp" />
+
+       </LinearLayout>
+
         <TextView
             android:id="@+id/title_heading"
             android:layout_width="wrap_content"
@@ -30,7 +48,8 @@
             android:layout_weight="2.6"
             android:gravity="center"
             android:paddingLeft="10dp"
-            android:text="Add Members"
+            android:layout_toEndOf="@+id/imageBack"
+            android:text="Add/Link"
             android:textColor="#ffffff"
             android:textSize="18dp" />
 

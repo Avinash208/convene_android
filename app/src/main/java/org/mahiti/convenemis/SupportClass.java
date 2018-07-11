@@ -12,6 +12,7 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.TextInputLayout;
 import android.text.InputFilter;
@@ -24,6 +25,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -34,13 +36,19 @@ import android.widget.RadioGroup;
 import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.rey.material.app.Dialog;
 
 import org.mahiti.convenemis.BeenClass.AnswersPage;
 import org.mahiti.convenemis.BeenClass.AssesmentBean;
 import org.mahiti.convenemis.BeenClass.Page;
 import org.mahiti.convenemis.BeenClass.Response;
+import org.mahiti.convenemis.BeenClass.parentChild.LevelBeen;
+import org.mahiti.convenemis.api.FilterCallBackInterface;
 import org.mahiti.convenemis.database.DBHandler;
 import org.mahiti.convenemis.database.DataBaseMapperClass;
+import org.mahiti.convenemis.database.ExternalDbOpenHelper;
 import org.mahiti.convenemis.network.SurveyGridInlineInterface.surveyQuestionGridInlineInterface;
 import org.mahiti.convenemis.utils.Constants;
 import org.mahiti.convenemis.utils.Logger;
@@ -56,6 +64,7 @@ import static android.content.Context.MODE_PRIVATE;
 import static org.mahiti.convenemis.SurveyQuestionActivity.MY_PREFS_NAME;
 import static org.mahiti.convenemis.utils.Constants.GridResponseHashMap;
 import static org.mahiti.convenemis.utils.Constants.GridResponseHashMapKeys;
+import static org.mahiti.convenemis.utils.Constants.TAG;
 import static org.mahiti.convenemis.utils.Constants.buttonDynamicDateGrid;
 import static org.mahiti.convenemis.utils.Constants.dateButton;
 import static org.mahiti.convenemis.utils.Constants.fillInlineHashMapKey;
@@ -72,6 +81,7 @@ public class SupportClass {
 
     private static final String LOGGER_TAG = "SupportClass";
     private static List<String> GridlistHashMapKey = new ArrayList<>();
+    List<Spinner> storeAllDynamicSpinner = new ArrayList<>();
     Activity activity;
     Context context;
 
@@ -1340,7 +1350,7 @@ public class SupportClass {
                                 if (istrue)
                                     break;
                             }
-                            String string = getansweredOptionCode.replace("[", "").replace("]","").replace("\"","");
+                            String string = getansweredOptionCode.replace("[", "").replace("]", "").replace("\"", "");
                             String[] array = string.split(",");
                             for (int k = 0; k < array.length; k++) {
                                 if (mOptionsCheckbox.get(c).getAnswerCode().equals(array[k])) {
@@ -1385,9 +1395,9 @@ public class SupportClass {
 
                         for (int k = 0; k < mResponse.size(); k++) {
                             for (int l = 0; l < mAssesmant.size(); l++) {
-                                if (mResponse.get(k).getGroup_id()==(mAssesmant.get(l).getQid()) && mResponse.get(k).getQ_type().equalsIgnoreCase("D")) {
+                                if (mResponse.get(k).getGroup_id() == (mAssesmant.get(l).getQid()) && mResponse.get(k).getQ_type().equalsIgnoreCase("D")) {
                                     button.setText(mResponse.get(k).getAnswer());
-                                    Logger.logD(LOGGER_TAG, " date Answer" +mResponse.get(k).getAnswer());
+                                    Logger.logD(LOGGER_TAG, " date Answer" + mResponse.get(k).getAnswer());
 
                                 }
                             }
@@ -1583,4 +1593,164 @@ public class SupportClass {
         });
 
     }
+
+    public void filterSupport(Bundle bundle, ListingActivity listingActivity, ExternalDbOpenHelper dbhelper) {
+
+        storeAllDynamicSpinner.clear();
+        int surveyId = bundle.getInt(Constants.SURVEY_ID);
+        String levels;
+        String labels;
+        String[] orderLabels;
+        String[] orderLeves;
+        activity = listingActivity;
+        final Dialog dialog = new Dialog(activity);
+        dialog.setCancelable(true);
+        dialog.setContentView(R.layout.filterdialog);
+        LinearLayout dymaicactivitydisplay = (LinearLayout) dialog.findViewById(R.id.dymaicactivitydisplay);
+        TextView headinglabel = (TextView) dialog.findViewById(R.id.headinglabel);
+        levels = dbhelper.getOrderLevels(surveyId);
+        levels = "level2,level3,level4,level5,level6,level7";
+        labels = "State,District,Taluk,Grama Panchayath,Village,Hamlet";
+        // labels = dbhelper.getOrderlabels(surveyId);
+        orderLabels = labels.split(",");
+        orderLeves = levels.split(",");
+        if (orderLabels.length > 0 && orderLeves.length > 0) {
+
+            createDynamicSpinnerAndLabel(orderLabels, orderLeves, dymaicactivitydisplay, dbhelper);
+        } else {
+            Toast.makeText(activity, "Sorry! Levels are empty", Toast.LENGTH_SHORT).show();
+
+        }
+        createDynamicSpinnerAndLabel(orderLabels, orderLeves, dymaicactivitydisplay, dbhelper);
+        filterButtonClickFunctionality(dialog, surveyId);
+        dialog.show();
+
+
+    }
+
+    private void filterButtonClickFunctionality(Dialog dialog, int surveyId) {
+        Button filterbutton = (Button) dialog.findViewById(R.id.filterbutton);
+        filterbutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Spinner getLastSpinner = storeAllDynamicSpinner.get(storeAllDynamicSpinner.size() - 1);
+                LevelBeen levelBeen = (LevelBeen) getLastSpinner.getSelectedItem();
+                if (levelBeen != null && !levelBeen.getName().equalsIgnoreCase("Select")) {
+                    buildFilterRecordSharedPrefarence(surveyId,dialog);
+                } else {
+                    ToastUtils.displayToast("Please select upto least level", activity);
+                }
+            }
+        });
+
+
+    }
+
+    private void buildFilterRecordSharedPrefarence(int surveyId, Dialog dialog) {
+        SharedPreferences filterPreference = PreferenceManager.getDefaultSharedPreferences(activity);
+        StringBuilder selectedLevels = new StringBuilder();
+        for (int i = 0; i < storeAllDynamicSpinner.size(); i++) {
+            Spinner getLastSpinner = storeAllDynamicSpinner.get(i);
+            LevelBeen levelBeen = (LevelBeen) getLastSpinner.getSelectedItem();
+            if (i == 0)
+                selectedLevels.append(levelBeen.getName());
+            else
+                selectedLevels.append(",").append(levelBeen.getName());
+        }
+        filterPreference.edit().putString(Constants.FILTER + "@" + surveyId, selectedLevels.toString()).apply();
+        FilterCallBackInterface filterCallBackInterface= (FilterCallBackInterface) activity;
+        filterCallBackInterface.filterCallBack();
+        dialog.cancel();
+    }
+
+
+    private void createDynamicSpinnerAndLabel(String[] orderLabels, String[] orderLeves,
+                                              LinearLayout dymaicactivitydisplay, ExternalDbOpenHelper dbhelper) {
+        dymaicactivitydisplay.removeAllViews();
+        storeAllDynamicSpinner.clear();
+        try {
+            for (int i = 0; i < orderLeves.length; i++) {
+                View child = activity.getLayoutInflater().inflate(R.layout.dropdown, dymaicactivitydisplay, false);//child.xml
+                TextView mainQuestionspinner = child.findViewById(R.id.mainQuestionspinner);
+                Spinner dynamicSpinner = child.findViewById(R.id.spinner);
+                dynamicSpinner.setTag(i);
+                dynamicSpinner.setId(i);
+                mainQuestionspinner.setText(orderLabels[i]);
+                setValuesToSpinner(orderLeves[i], dynamicSpinner, dbhelper);
+                storeAllDynamicSpinner.add(dynamicSpinner);
+                dymaicactivitydisplay.addView(child);
+                setOnclickListnerDynamic(dynamicSpinner, orderLeves[i], dbhelper);
+
+            }
+
+        } catch (Exception e) {
+            Logger.logE(TAG, "createDynamicSpinnerAndLabel", e);
+        }
+    }
+
+
+    private void setValuesToSpinner(String orderLeve, Spinner dynamicSpinner, ExternalDbOpenHelper dbhelper) {
+        List<LevelBeen> getLevelsrecords = dbhelper.getLevelsrecords(orderLeve, dbhelper);
+        if (!getLevelsrecords.isEmpty()) {
+            ArrayAdapter<LevelBeen> spinnerArrayAdapter = new ArrayAdapter(activity, R.layout.spinner_multi_row_textview, getLevelsrecords);
+            spinnerArrayAdapter.setDropDownViewResource(R.layout.spinner_multi_row_textview);// The drop down view
+            dynamicSpinner.setAdapter(spinnerArrayAdapter);
+        }
+    }
+
+    private void setOnclickListnerDynamic(Spinner dynamicSpinner, String orderLeve, ExternalDbOpenHelper dbhelper) {
+        dynamicSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+
+                Logger.logD(TAG, "clicked Ites" + adapterView.getId());
+                updateValuesDynamic(adapterView.getId(), orderLeve, dbhelper);
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+    }
+
+    private void updateValuesDynamic(int selectedLevel, String orderLeve, ExternalDbOpenHelper dbhelper) {
+
+
+        try {
+            String getStringLevel = orderLeve.substring(5, 6);
+            int getLevel = Integer.valueOf(getStringLevel);
+            for (int i = selectedLevel; i < storeAllDynamicSpinner.size() - 1; i++) {
+
+                Logger.logD(TAG, "clicked spinner" + selectedLevel);
+                Spinner getStoredSpinner = storeAllDynamicSpinner.get(selectedLevel);
+                Spinner nextSpinner = storeAllDynamicSpinner.get(i + 1);
+                Logger.logD(TAG, "clicked next spinner" + selectedLevel);
+                LevelBeen levelBeen = (LevelBeen) getStoredSpinner.getSelectedItem();
+                getLevel++;
+                List<LevelBeen> stateList = dbhelper.setSpinnerD("level" + (getLevel - 1) + "_id", String.valueOf("level" + getLevel), levelBeen.getId());
+
+                if (!stateList.isEmpty()) {
+                    ArrayAdapter<LevelBeen> spinnerArrayAdapter = new ArrayAdapter(activity, R.layout.spinner_multi_row_textview, stateList);
+                    spinnerArrayAdapter.setDropDownViewResource(R.layout.spinner_multi_row_textview);// The drop down view
+                    nextSpinner.setAdapter(spinnerArrayAdapter);
+
+
+                } else {
+                    List<LevelBeen> emptyStateList = new ArrayList<>();
+                    LevelBeen level1 = new LevelBeen(0, "Select");
+                    emptyStateList.add(level1);
+                    ArrayAdapter<LevelBeen> spinnerArrayAdapter = new ArrayAdapter(activity, R.layout.spinner_multi_row_textview, emptyStateList);
+                    spinnerArrayAdapter.setDropDownViewResource(R.layout.spinner_multi_row_textview);// The drop down view
+                    nextSpinner.setAdapter(spinnerArrayAdapter);
+
+
+                }
+            }
+        } catch (Exception e) {
+            Logger.logE(TAG, "updateValuesDynamic", e);
+        }
+    }
+
 }

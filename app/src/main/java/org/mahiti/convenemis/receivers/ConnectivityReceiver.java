@@ -10,6 +10,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
@@ -24,6 +25,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.mahiti.convenemis.AutoSyncActivity;
+import org.mahiti.convenemis.MyIntentLinkage;
+import org.mahiti.convenemis.MyIntentService;
 import org.mahiti.convenemis.R;
 import org.mahiti.convenemis.api.BeneficiaryApis.SaveBeneficiary;
 import org.mahiti.convenemis.api.BeneficiaryApis.SaveFacility;
@@ -185,6 +188,8 @@ public class ConnectivityReceiver extends BroadcastReceiver {
                     String created_on= jsonObject1.getString("created_on");
                     int updatedResponseKey=dbHandlershowMember.updateBeneficiaryLinkageStatus(getUUID,created_on,dbHandlershowMember);
                     Logger.logD("response Updated successfullty",updatedResponseKey+"");
+                    Intent intent = new Intent(context, MyIntentLinkage.class);
+                    context.startService(intent);
                 }
             }
         } catch (JSONException e) {

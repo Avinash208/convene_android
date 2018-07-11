@@ -5,11 +5,15 @@ package org.mahiti.convenemis;
  */
 
 import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,6 +37,7 @@ import org.mahiti.convenemis.api.PushingResultsInterface;
 import org.mahiti.convenemis.database.DBHandler;
 import org.mahiti.convenemis.database.ExternalDbOpenHelper;
 import org.mahiti.convenemis.database.Utilities;
+import org.mahiti.convenemis.fragments.DataFormFragment;
 import org.mahiti.convenemis.utils.Constants;
 import org.mahiti.convenemis.utils.Logger;
 import org.mahiti.convenemis.utils.StartSurvey;
@@ -81,6 +86,8 @@ public class BeneficiaryLinkageActivityFragment extends Fragment implements Push
     private String getQuestionIds;
     private static final String MY_PREFS_NAME = "MyPrefs";
     private SharedPreferences prefs;
+    IntentFilter linkageIntentFilter;
+    private LinkageReceiver linkageReceiver;
 
 
     public BeneficiaryLinkageActivityFragment() {
@@ -111,9 +118,23 @@ public class BeneficiaryLinkageActivityFragment extends Fragment implements Push
     }
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        linkageIntentFilter = new IntentFilter("Linkage");
+        linkageReceiver=new LinkageReceiver();
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
         callBeneficiaryLiakageApi();
+        getActivity().registerReceiver(linkageReceiver, linkageIntentFilter);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        getActivity().unregisterReceiver(linkageReceiver);
     }
 
     private void initVariable(View rootView) {
@@ -203,6 +224,7 @@ public class BeneficiaryLinkageActivityFragment extends Fragment implements Push
                     if (!getChildUUids.isEmpty() && !getUnderChildList.isEmpty()) {
                         linkageEmptyLabel.setVisibility(View.GONE);
                         childdynamicinflater.setVisibility(View.VISIBLE);
+                       addlink.setVisibility(View.VISIBLE);
                         addlink.setText(String.valueOf(getUnderChildList.size()));
                         for (int j = 0; j < getUnderChildList.size(); j++) {
                             View childView = this.getLayoutInflater().inflate(R.layout.linkage_custom_row, childdynamicinflater, false);
@@ -274,6 +296,7 @@ public class BeneficiaryLinkageActivityFragment extends Fragment implements Push
                         }
                     } else {
                         linkageEmptyLabel.setVisibility(View.VISIBLE);
+                        addlink.setVisibility(View.GONE);
                         int finalI1 = i;
                         addlinkContainer.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -300,6 +323,7 @@ public class BeneficiaryLinkageActivityFragment extends Fragment implements Push
 
         }
     }
+
 
     private void addlinkContainerFunctionality(List<QuestionAnswer> headingNameList, int finalI1, ArrayList<childLink> getChildUUids) {
         Bundle bundle = new Bundle();
@@ -450,4 +474,12 @@ public class BeneficiaryLinkageActivityFragment extends Fragment implements Push
 
     }
 
+    private class LinkageReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String getGroupId = dbOpenHelper.getGroupIds(surveysId, dbOpenHelper);
+            List<QuestionAnswer> headingNameList = dbOpenHelper.getLinkageHeadings(getGroupId, dbOpenHelper);
+            renderView(headingNameList);
+        }
+    }
 }

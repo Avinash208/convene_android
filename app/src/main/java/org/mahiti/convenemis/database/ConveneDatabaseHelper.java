@@ -993,6 +993,7 @@ public class ConveneDatabaseHelper extends SQLiteOpenHelper {
                 }else{
                     question="";
                 }
+                cursor.close();
             }catch (Exception e){
                 Logger.logE("Exception","getting questions based on blocks" , e);
             }finally {

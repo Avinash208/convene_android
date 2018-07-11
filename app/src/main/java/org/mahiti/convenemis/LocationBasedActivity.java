@@ -1,5 +1,9 @@
 package org.mahiti.convenemis;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -14,17 +18,20 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.mahiti.convenemis.BeenClass.SurveysBean;
 import org.mahiti.convenemis.BeenClass.parentChild.LevelBeen;
 import org.mahiti.convenemis.BeenClass.parentChild.LocationSurveyBeen;
 import org.mahiti.convenemis.database.DBHandler;
 import org.mahiti.convenemis.database.ExternalDbOpenHelper;
 import org.mahiti.convenemis.database.Utilities;
+import org.mahiti.convenemis.fragments.DataFormFragment;
 import org.mahiti.convenemis.utils.Constants;
 import org.mahiti.convenemis.utils.Logger;
 import org.mahiti.convenemis.utils.StartSurvey;
 import org.mahiti.convenemis.utils.ToastUtils;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static org.mahiti.convenemis.utils.Constants.SURVEY_ID;
@@ -55,6 +62,9 @@ public class LocationBasedActivity extends AppCompatActivity {
     private LinearLayout activityContainer;
     private String surveyName = "";
     private TextView toolbarTitle;
+    private String periodicityFlag;
+    IntentFilter periodicityFilter;
+    PeriodicReceiver periodicReceiver;
 
 
     @Override
@@ -62,6 +72,8 @@ public class LocationBasedActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_location_based_new);
         initVariables();
+        periodicityFilter = new IntentFilter("Survey");
+        periodicReceiver=new PeriodicReceiver();
         getPreviousFromIntent();
         getDynamicLabelsandTypes();
 
@@ -71,7 +83,14 @@ public class LocationBasedActivity extends AppCompatActivity {
                 if (!updateListLocation.equalsIgnoreCase("Select")) {
                     Utilities.setSurveyStatus(sharedPreferences, "new");
                     Utilities.setLocationSurveyFlag(sharedPreferences, "new");
-                    new StartSurvey(activity, activity, prefs.getInt(Constants.SURVEY_ID, 0), clusterID, updateListLocation, "", "", "", "").execute();
+                    SurveysBean surveysBean= new SurveysBean();
+                    int getCount = handler.getPeriodicityPreviousCountOnline(surveysBean, prefs.getInt(Constants.SURVEY_ID, 0), periodicityFlag, new Date(), "")                                             ;
+
+                   if (getCount==0) {
+                       new StartSurvey(activity, activity, prefs.getInt(Constants.SURVEY_ID, 0), clusterID, updateListLocation, "", "", "", "").execute();
+                   }else{
+                       ToastUtils.displayToast("Periodicity completed", activity);
+                   }
                 } else {
                     ToastUtils.displayToast("Please select upto least level", activity);
                 }
@@ -79,12 +98,28 @@ public class LocationBasedActivity extends AppCompatActivity {
             }
         });
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        registerReceiver(periodicReceiver, periodicityFilter);
+
+
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(periodicReceiver);
+    }
+
     private void getPreviousFromIntent() {
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             typeName = extras.getString("typeName");
             surveyId = String.valueOf(extras.getInt("survey_id"));
             surveyName = String.valueOf(extras.getString("survey_name"));
+            periodicityFlag = String.valueOf(extras.getString(Constants.PERIODICITY,""));
             toolbarTitle.setText(surveyName);
             SharedPreferences.Editor locationEditor = prefs.edit();
             locationEditor.putInt(SURVEY_ID, Integer.parseInt(surveyId));
@@ -158,8 +193,6 @@ public class LocationBasedActivity extends AppCompatActivity {
                 updateValuesDynamic(adapterView.getId(), orderLeve);
 
             }
-
-
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
 
@@ -229,6 +262,7 @@ public class LocationBasedActivity extends AppCompatActivity {
         createNewButton = findViewById(R.id.createNewButton);
         toolbarTitle = (TextView) findViewById(R.id.toolbarTitle);
         setBackPressLisiner(backPress);
+        IntentFilter periodicityFilter;
 
 
     }
@@ -263,7 +297,7 @@ public class LocationBasedActivity extends AppCompatActivity {
 
         @Override
         protected String doInBackground(String... strings) {
-            locationcaptureList = handler.getLeastLocationRecords(leaseLevel);
+            locationcaptureList = handler.getLeastLocationRecords(leaseLevel,prefs.getInt(Constants.SURVEY_ID, 0));
             return "";
         }
 
@@ -283,16 +317,35 @@ public class LocationBasedActivity extends AppCompatActivity {
             LinearLayout cv = (LinearLayout) child.findViewById(R.id.cv);
             TextView editTextLabel = (TextView) child.findViewById(R.id.pending);
             TextView villageName = (TextView) child.findViewById(R.id.villageName);
-            if (!locationcaptureList.get(i).getLocationName().isEmpty()) {
-                villageName.setText(locationcaptureList.get(i).getLocationName());
-                editTextLabel.setText("Completed");
-                setOnclickListner(editTextLabel,locationcaptureList.get(i));
-            }
-
+            TextView periodicityTextview = (TextView) child.findViewById(R.id.periodicityTextview);
+            TextView capturedatevalue = (TextView) child.findViewById(R.id.capturedatevalue);
+            checkPeriodicityFunctionalityAndUpdate(i,villageName,editTextLabel,periodicityTextview,
+                    capturedatevalue);
             activityContainer.addView(child);
         }
 
 
+    }
+
+    private void checkPeriodicityFunctionalityAndUpdate(int i, TextView editTextLabel,
+                                                        TextView villageName, TextView periodicityTextview, TextView capturedatevalue) {
+        SurveysBean surveysBean= new SurveysBean();
+        int getCount = handler.getPeriodicityPreviousCountOnline(surveysBean, prefs.getInt(Constants.SURVEY_ID, 0), periodicityFlag, new Date(), "");
+        if (getCount==0) {
+            if (!locationcaptureList.get(i).getLocationName().isEmpty()) {
+                villageName.setText(getResources().getString(R.string.view) );
+                periodicityTextview.setText(periodicityFlag );
+                editTextLabel.setText(locationcaptureList.get(i).getLocationName());
+                capturedatevalue.setText(locationcaptureList.get(i).getCaptureDate());
+                setOnclickListner(villageName, locationcaptureList.get(i));
+            }
+        }else{
+            villageName.setText(getResources().getString(R.string.edit_or_view) );
+            periodicityTextview.setText(periodicityFlag );
+            editTextLabel.setText(locationcaptureList.get(i).getLocationName());
+            capturedatevalue.setText(surveysBean.getSurveyEndDate());
+            setOnclickListner(villageName, locationcaptureList.get(i));
+        }
     }
 
     private void setOnclickListner(TextView editTextLabel, LocationSurveyBeen locationSurveyBeen) {
@@ -300,12 +353,29 @@ public class LocationBasedActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     Logger.logV("selected UUID ", locationSurveyBeen.getUuid() + "");
+                    sharedPreferences.edit().putString("recentPreviewRecord", "edit").apply();
+                    Logger.logD(TAG, "Clicked Completed Periodicity survey" + locationSurveyBeen.getUuid());
+                    Intent startShowSurveyPreview = new Intent(activity, ShowSurveyPreview.class);
+                    startShowSurveyPreview.putExtra("surveyPrimaryKey",locationSurveyBeen.getUuid());
+                    startShowSurveyPreview.putExtra("survey_id",prefs.getInt(Constants.SURVEY_ID, 0));
+                    startShowSurveyPreview.putExtra("visibility",false);
+                    startActivityForResult(startShowSurveyPreview,200);
 
                 }
             });
-
-
-
+    }
+    /**
+     * Receiver Class
+     */
+    public class PeriodicReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            try {
+                getDynamicLabelsandTypes();
+            } catch (Exception e) {
+                Logger.logE(ListingActivity.class.getSimpleName(), "Exception in SyncSurveyActivity  Myreceiver class  ", e);
+            }
+        }
     }
 
 }

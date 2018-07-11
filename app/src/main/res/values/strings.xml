@@ -21,11 +21,13 @@
     <!--<string name="answer_upload_url">http://crydemo.mahiti.org/api/add-survey-answers/</string>-->
     <!--<string name="main_Url">http://crydemo.mahiti.org/</string>-->
     <!--<string name="main_url_Beneficiary">http://crydemo.mahiti.org/</string>-->
-    <!--<string name="regionalLanguageURLS">http://crydemo.mahiti.org/api/language-list/</string>-->
+    <!--<string name="regionalLanguageURLS">http://crydemo.mahiti.org/api/language-list/</string>
+    http://convenemddemo.mahiti.org/api/-->
 
 
     <!--Demo url-->
-    <string name="main_url">http://akrspiui.mahiti.org/api/</string>
+
+    <string name="main_url">http://akrspiui.mahiti.org/</string>
     <string name="answer_upload_url">http://akrspiui.mahiti.org/api/add-survey-answers/</string>
     <string name="main_Url">http://akrspiui.mahiti.org/</string>
     <string name="main_url_Beneficiary">http://akrspiui.mahiti.org/</string>
@@ -346,10 +348,10 @@
     <string name="updating_beneficiary">Updating beneficiary</string>
     <string name="PREVIEW">PREVIEW</string>
     <string name="closed">CLOSED</string>
-    <string name="all_data_collected">All data has been collected</string>
+    <string name="all_data_collected">No activities</string>
     <string name="Home">Home</string>
     <string name="recently_completed_data_collection_forms">Recently Completed Activity</string>
-    <string name="no_records_has_been_collected">No responses are available</string>
+    <string name="no_records_has_been_collected">No activities</string>
     <string name="Edit">Edit</string>
     <string name="data_collection_not_availabe">Data collection form not available</string>
     <string name="no_completd_records_available">No completed records available</string>
@@ -421,5 +423,9 @@
     <string name="Cancel">Cancel</string>
     <string name="activity_module_is_on_progress">Activity module in progress</string>
     <string name="no_beneficiary_added">No beneficiary added</string>
+    <string name="view">View</string>
+    <string name="filter_applied">Filter Applied</string>
+    <string name="location_">Location</string>
+    <string name="status_">Status : Completed </string>
 
 </resources>

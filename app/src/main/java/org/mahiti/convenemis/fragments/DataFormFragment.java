@@ -272,7 +272,6 @@ public class DataFormFragment extends Fragment implements PeriodicTypeInterface,
      * @param benAndFaci
      */
     private void callPendingView(SurveysBean surveysBean, String benAndFaci) {
-        Logger.logD(TAG+"Guru","previous available previous pending");
         createPendingRecordView( surveysBean,benAndFaci);
 
     }
@@ -418,25 +417,6 @@ public class DataFormFragment extends Fragment implements PeriodicTypeInterface,
                 if (!gpsTracker.canGetLocation()) {
                     gpsTracker.showSettingsAlert();
                 }else {
-                    /*if((1)==(defaultPreferences.getInt(Constants.SELECTEDLANGUAGE,0))){
-                        boolean isLanguageExist=databaseHelper.checkLanguageExistOrNot(surveysBean.getId(),defaultPreferences.getInt(Constants.SELECTEDLANGUAGE,0));
-                        Logger.logD("isLanguageExist","-->"+isLanguageExist);
-                        if(isLanguageExist){
-
-                        }else{
-                            Utils.showAlertPopUp(getActivity());
-                        }
-                    }else{
-                        boolean isRegionalLangExist=databaseHelper.checkRegionalLanguageExist(surveysBean.getId(),defaultPreferences.getInt(Constants.SELECTEDLANGUAGE,0));
-                        if(isRegionalLangExist){
-                            if (surveysBean.getSurveyStatus() == 1)
-                                showPrevSurveyDailog(surveysBean, null, -1);
-                            else
-                                new StartSurvey(getActivity(), getActivity(),surveysBean.getId(), Integer.parseInt(locationId), locationName, beneficiaryArray, boundaryLevel,"", "").execute();
-                        }else{
-                            Utils.showAlertPopUp(getActivity());
-                        }
-                    }*/
                     new StartSurvey(getActivity(), getActivity(),surveysBean.getId(), 0, "Static Village", surveyPrimaryKeyId, boundaryLevel,"", "").execute();
                 }
 

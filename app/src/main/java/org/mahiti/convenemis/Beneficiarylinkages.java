@@ -3,6 +3,7 @@ package org.mahiti.convenemis;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.Nullable;
 import android.support.design.widget.TabItem;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -14,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.mahiti.convenemis.database.ExternalDbOpenHelper;
@@ -48,6 +50,7 @@ public class Beneficiarylinkages extends AppCompatActivity {
         setContentView(R.layout.activity_beneficiarylinkages);
         TextView toolbarTitle = findViewById(R.id.toolbarTitle);
         ImageView imageMenu= findViewById(R.id.imageMenu);
+        LinearLayout backPress= findViewById(R.id.backPress);
         toolbarTitle.setText("Beneficiary linkage");
         imageMenu.setVisibility(View.GONE);
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
@@ -61,14 +64,23 @@ public class Beneficiarylinkages extends AppCompatActivity {
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
+        tabLayout.setupWithViewPager(mViewPager);
 
 
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
-
+        setOnClick(backPress);
 
     }
 
+    private void setOnClick(LinearLayout backPress) {
+        backPress.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
+    }
 
 
     private String isBeneficiaryTypeLinkage() {
@@ -108,8 +120,20 @@ public class Beneficiarylinkages extends AppCompatActivity {
      */
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
+        private String beneficiaryWithLinkage[] = {getResources().getString(R.string.tab_text_1), getResources().getString(R.string.tab_text_2), getResources().getString(R.string.tab_text_3)};
+        private String beneficiaryWithOUTLinkage[] = {getResources().getString(R.string.tab_text_1), getResources().getString(R.string.tab_text_2)};
+
         public SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
+        }
+
+        @Nullable
+        @Override
+        public CharSequence getPageTitle(int position) {
+            if (isBeneficiaryTypeLinkage.equals(""))
+                return beneficiaryWithOUTLinkage[position];
+            else
+                return beneficiaryWithLinkage[position];
         }
 
         @Override
@@ -135,9 +159,9 @@ public class Beneficiarylinkages extends AppCompatActivity {
         public int getCount() {
             // Show 3 total pages.
             if (isBeneficiaryTypeLinkage.equals(""))
-                return 2;
+                return beneficiaryWithOUTLinkage.length;
             else
-                return 3;
+                return beneficiaryWithLinkage.length;
 
         }
     }
