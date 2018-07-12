@@ -94,7 +94,7 @@ public class ListingActivity extends BaseActivity implements View.OnClickListene
         setContentView(R.layout.activity_listing);
         context = ListingActivity.this;
         initializeViews();
-        imageMenu.setVisibility(View.VISIBLE);
+        imageMenu.setVisibility(View.GONE);
         beneficiryReceiver = new Myreceiver();
 
         filter = new IntentFilter("BeneficiaryIntentReceiver");
@@ -105,7 +105,6 @@ public class ListingActivity extends BaseActivity implements View.OnClickListene
 
         Intent i = getIntent();
         headerName = i.getStringExtra(Constants.HEADER_NAME);
-
         try {
             surveyId = i.getStringExtra(Constants.SURVEY_ID);
             SharedPreferences.Editor editor = prefs.edit();
@@ -127,7 +126,7 @@ public class ListingActivity extends BaseActivity implements View.OnClickListene
         syncSurveySyncCompletedList = new ArrayList<>();
         syncSurveySyncPendingList = new ArrayList<>();
         updateSurveyKey(prefs);
-           new summaryReportSync().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+          // new summaryReportSync().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         backPress.setOnClickListener(this);
         createNewButton.setOnClickListener(this);
     }
@@ -164,7 +163,7 @@ public class ListingActivity extends BaseActivity implements View.OnClickListene
     protected void onResume() {
         super.onResume();
         updateFilterLabels();
-         new summaryReportSync().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+      //   new summaryReportSync().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         createNewButton.setOnClickListener(this);
     }
 
@@ -175,9 +174,14 @@ public class ListingActivity extends BaseActivity implements View.OnClickListene
                 Logger.logD("filterCallBack", getFilterRecords);
                 String[] getSelectedLocation = getFilterRecords.split(",");
                 if (getSelectedLocation.length > 0) {
-                    filterLocationName.setText(new StringBuilder().append("Location : ").append(" : ").append(getSelectedLocation[getSelectedLocation.length - 1]).toString());
-                  //   new updateListAccordingFilter(getSelectedLocation[getSelectedLocation.length - 1]).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                    filterLocationName.setText(new StringBuilder().append("Location").append(" : ").append(getSelectedLocation[getSelectedLocation.length - 1]).toString());
+                     new updateListAccordingFilter(getSelectedLocation[getSelectedLocation.length - 1]).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 }
+            }else{
+                SupportClass supportClass = new SupportClass();
+                Bundle bundle = new Bundle();
+                bundle.putInt(Constants.SURVEY_ID, prefs.getInt(SURVEY_ID, 0));
+                supportClass.filterSupport(bundle, ListingActivity.this, dbOpenHelper);
             }
         } catch (Exception e) {
             Logger.logE("filterCallBack", "on onPause ", e);

@@ -1093,12 +1093,14 @@ public class ConveneDatabaseHelper extends SQLiteOpenHelper {
                     PreviewQuestionAnswerSet previewQuestionAnswerSet = new PreviewQuestionAnswerSet();
 
                     String questionText = cursor.getString(cursor.getColumnIndex("question_text"));
+                    String answerTypename = cursor.getString(cursor.getColumnIndex("answer"));
                     String answerType = String.valueOf(cursor.getInt(cursor.getColumnIndex("answer_type")));
                     int questionCode = cursor.getInt(cursor.getColumnIndex("id"));
 
                     previewQuestionAnswerSet.setQuestion(questionText);
                     previewQuestionAnswerSet.setQuestionType(answerType);
                     previewQuestionAnswerSet.setQuestionID(questionCode);
+                    previewQuestionAnswerSet.setAnswer(answerTypename);
                     Logger.logD("", "selected option" + questionText);
                     previewQuestionAnswerSets.add(previewQuestionAnswerSet);
                 }

@@ -261,10 +261,10 @@ public class UpdateSurveyAsyncTask extends AsyncTask<Context, Integer, String> {
                            Object value = inInnerObject.get(inInnerKey);
                            Logger.logD(TAG,"-->"+value);
                            if (("R").equalsIgnoreCase(getQuestionType) || ("S").equalsIgnoreCase(getQuestionType) ) {
-                               Response responseTemp = new Response(key, "", String.valueOf(value), "", Integer.parseInt(key), Integer.parseInt(innerKey), "", Integer.parseInt(inInnerKey), Integer.parseInt(innerKey), getQuestionType);
+                               Response responseTemp = new Response(key, "", String.valueOf(value), "0", Integer.parseInt(key), Integer.parseInt(innerKey), "", Integer.parseInt(inInnerKey), Integer.parseInt(innerKey), getQuestionType);
                                collectResponse.add(responseTemp);
                            } else if (("T").equalsIgnoreCase(getQuestionType) || ("D").equalsIgnoreCase(getQuestionType) || ("C").equalsIgnoreCase(getQuestionType)){
-                               Response responseTemp = new Response(key, String.valueOf(value), "", "", Integer.parseInt(key), Integer.parseInt(innerKey), "", Integer.parseInt(inInnerKey), Integer.parseInt(innerKey), getQuestionType);
+                               Response responseTemp = new Response(key, String.valueOf(value), "", "0", Integer.parseInt(key), Integer.parseInt(innerKey), "", Integer.parseInt(inInnerKey), Integer.parseInt(innerKey), getQuestionType);
                                collectResponse.add(responseTemp);
                            }
                        }
@@ -275,10 +275,10 @@ public class UpdateSurveyAsyncTask extends AsyncTask<Context, Integer, String> {
                    Object value = jsonObjectGetQuestion.get(key);
                    Logger.logD(TAG,"-->"+value);
                    if (("R").equalsIgnoreCase(getQuestionType) || ("S").equalsIgnoreCase(getQuestionType) ) {
-                       Response responseTemp = new Response(key, "", String.valueOf(value), "", Integer.parseInt(key), 0, "", 0, 0, getQuestionType);
+                       Response responseTemp = new Response(key, "", String.valueOf(value), "0", Integer.parseInt(key), 0, "", 0, 0, getQuestionType);
                        collectResponse.add(responseTemp);
                    } else if (("T").equalsIgnoreCase(getQuestionType) || ("D").equalsIgnoreCase(getQuestionType) ||("AI").equalsIgnoreCase(getQuestionType) || ("C").equalsIgnoreCase(getQuestionType)){
-                       Response responseTemp = new Response(key, String.valueOf(value), "", "", Integer.parseInt(key), 0, "", 0, 0, getQuestionType);
+                       Response responseTemp = new Response(key, String.valueOf(value), "", "0", Integer.parseInt(key), 0, "", 0, 0, getQuestionType);
                        collectResponse.add(responseTemp);
                    }
                }else{

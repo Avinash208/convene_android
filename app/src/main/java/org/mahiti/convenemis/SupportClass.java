@@ -1353,7 +1353,7 @@ public class SupportClass {
                             String string = getansweredOptionCode.replace("[", "").replace("]", "").replace("\"", "");
                             String[] array = string.split(",");
                             for (int k = 0; k < array.length; k++) {
-                                if (mOptionsCheckbox.get(c).getAnswerCode().equals(array[k])) {
+                                if (mOptionsCheckbox.get(c).getAnswerCode().equals(array[k].trim())) {
                                     checkbox.setChecked(true);
                                 }
                             }
@@ -1609,9 +1609,9 @@ public class SupportClass {
         LinearLayout dymaicactivitydisplay = (LinearLayout) dialog.findViewById(R.id.dymaicactivitydisplay);
         TextView headinglabel = (TextView) dialog.findViewById(R.id.headinglabel);
         levels = dbhelper.getOrderLevels(surveyId);
-        levels = "level2,level3,level4,level5,level6,level7";
-        labels = "State,District,Taluk,Grama Panchayath,Village,Hamlet";
-        // labels = dbhelper.getOrderlabels(surveyId);
+      //  levels = "level2,level3,level4,level5,level6,level7";
+        //labels = "State,District,Taluk,Grama Panchayath,Village,Hamlet";
+         labels = dbhelper.getOrderlabels(surveyId);
         orderLabels = labels.split(",");
         orderLeves = levels.split(",");
         if (orderLabels.length > 0 && orderLeves.length > 0) {

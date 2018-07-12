@@ -947,6 +947,8 @@ public class DBHandler extends SQLiteOpenHelper {
             values.put("level5", getLevel5Id.getId());
             values.put("level6", getLevel6Id.getId());
             values.put("level7", getLevel7Id.getId());
+            values.put("cluster_name", getLevel7Id.getName());
+            values.put("cluster_code", getLevel7Id.getId());
             getInsertedresult = sqLiteDatabase.update(SURVEY_TABLE, values, "uuid" + " = ?", new String[]{surveyPrimaryKeyId});
             Logger.logD("exception", "->" + getInsertedresult);
         } catch (Exception e) {
@@ -1418,9 +1420,9 @@ public class DBHandler extends SQLiteOpenHelper {
                         answer = cursor.getString(cursor.getColumnIndex(ANSTEXT));
                     }
 
-                    if (groupId != 0 && subQuestionId != null && !subQuestionId.isEmpty() && !"0".equalsIgnoreCase(subQuestionId))
+                    if (groupId != 0 && subQuestionId != null && !subQuestionId.isEmpty() && !"0".equalsIgnoreCase(subQuestionId)) //
                         result.put(subQuestionId + "@" + groupId, answer);
-                    else if (groupId != 0 && "0".equalsIgnoreCase(subQuestionId))
+                    else if (groupId != 0 && "0".equalsIgnoreCase(subQuestionId))// for inline
                         result.put(prime_key + "@" + groupId, answer);
                     else
                         result.put(String.valueOf(questionID), answer);

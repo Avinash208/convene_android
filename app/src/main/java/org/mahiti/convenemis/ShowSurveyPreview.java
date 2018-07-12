@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -213,36 +214,45 @@ public class ShowSurveyPreview extends AppCompatActivity implements View.OnClick
 
     private void createINlineAnswerList(LinearLayout tableLayout, PreviewQuestionAnswerSet previewQuestionAnswerSet, List<AssesmentBean> mAssesmant) {
         List<Integer> getinlineRowCount = DataBaseMapperClass.getRowCount(previewQuestionAnswerSet.getQuestionID(), dbHelper.getdatabaseinstance(), getSurveyPrimaryID);
-        for (int i=0;i<getinlineRowCount.size();i++){
-           View inLineGridView = getLayoutInflater().inflate(R.layout.row_custom, tableLayout, false);
-            LinearLayout linearLayout = (LinearLayout) inLineGridView.findViewById(R.id.linearLayout);
-           TextView textView= new TextView(this);
-            textView.setTextColor(getResources().getColor(R.color.black));
-            for (AssesmentBean assesmentBean : mAssesmant) {
-                String id = (i+1) + "@" + assesmentBean.getQid();
-                TextView assessment = new TextView(context);
-                assessment.setGravity(Gravity.LEFT);
-                assessment.setTextSize(18);
-                assessment.setText(responses.get(id));
-                assessment.setTextColor(getResources().getColor(R.color.black));
-                if ("C".equalsIgnoreCase(assesmentBean.getQtype()) && responses.get(id) != null) {
-                    String[] ansSet = responses.get(id).replace("[", "").replace("]", "").split(",");
-                    String answer = "";
-                    for (String option : ansSet) {
-                        option = option.trim();
-                        answer = answer + "," + options.get(Integer.parseInt(option));
+        try {
+            for (int i=0;i<getinlineRowCount.size();i++){
+               View inLineGridView = getLayoutInflater().inflate(R.layout.row_custom, tableLayout, false);
+                LinearLayout linearLayout = (LinearLayout) inLineGridView.findViewById(R.id.linearLayout);
+               TextView textView= new TextView(this);
+                textView.setTextColor(getResources().getColor(R.color.black));
+                for (AssesmentBean assesmentBean : mAssesmant) {
+                    String id = (i+1) + "@" + assesmentBean.getQid();
+                    TextView assessment = new TextView(context);
+                    assessment.setGravity(Gravity.LEFT);
+                    assessment.setTextSize(18);
+                    assessment.setText(responses.get(id));
+                    assessment.setTextColor(getResources().getColor(R.color.black));
+                    if ("C".equalsIgnoreCase(assesmentBean.getQtype()) && responses.get(id) != null) {
+                        String[] ansSet = responses.get(id).replace("[","").replace("]","").split(",");
+                        StringBuilder answer = new StringBuilder();
+                        for (int h = 0; h < ansSet.length; h++) {
+                            if (h==0){
+                                answer = new StringBuilder(options.get(Integer.parseInt(ansSet[h].replace("\"", "").trim())));
+                            }else{
+                                answer.append(",").append(options.get(Integer.parseInt(ansSet[h].replace("\"", "").trim())));
+                            }
+                        }
+                        answer = new StringBuilder(answer.substring(1, answer.length()));
+                        assessment.setText(answer.toString());
+
                     }
-                    answer = answer.substring(1, answer.length());
-                    assessment.setText(answer);
+
+                    linearLayout.addView(assessment);
 
                 }
 
-                linearLayout.addView(assessment);
+               tableLayout.addView(inLineGridView);
 
             }
-
-           tableLayout.addView(inLineGridView);
-
+        } catch (Resources.NotFoundException e) {
+            e.printStackTrace();
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
         }
     }
 
