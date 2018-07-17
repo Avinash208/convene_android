@@ -322,7 +322,7 @@ public class StartSurvey extends AsyncTask<Context, Integer, String> {
             if (("").equalsIgnoreCase(beneficiaryDetails)) {
 
                 values.put("beneficiary_details", "");
-                values.put(BENEFICIARY_IDS_KEY, "0");
+                values.put(BENEFICIARY_IDS_KEY, "");
                 values.put(FACILITY_IDS_KEY, "0");
                 values.put(BENEFICIARY_TYPE_ID, "0");
                 values.put(facilityTypeIdStr, "0");

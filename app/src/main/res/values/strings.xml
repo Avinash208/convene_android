@@ -428,5 +428,6 @@
     <string name="filter_applied">Filter Applied</string>
     <string name="location_">Location</string>
     <string name="status_">Status : Completed </string>
+    <string name="projectandactivity"><![CDATA[Project & Activities]]></string>
 
 </resources>

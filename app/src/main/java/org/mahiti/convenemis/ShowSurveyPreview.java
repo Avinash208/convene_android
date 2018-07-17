@@ -221,7 +221,7 @@ public class ShowSurveyPreview extends AppCompatActivity implements View.OnClick
                TextView textView= new TextView(this);
                 textView.setTextColor(getResources().getColor(R.color.black));
                 for (AssesmentBean assesmentBean : mAssesmant) {
-                    String id = (i+1) + "@" + assesmentBean.getQid();
+                    String id = getinlineRowCount.get(i) + "@" + assesmentBean.getQid();
                     TextView assessment = new TextView(context);
                     assessment.setGravity(Gravity.LEFT);
                     assessment.setTextSize(18);
@@ -237,7 +237,6 @@ public class ShowSurveyPreview extends AppCompatActivity implements View.OnClick
                                 answer.append(",").append(options.get(Integer.parseInt(ansSet[h].replace("\"", "").trim())));
                             }
                         }
-                        answer = new StringBuilder(answer.substring(1, answer.length()));
                         assessment.setText(answer.toString());
 
                     }

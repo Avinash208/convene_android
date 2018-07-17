@@ -22,6 +22,7 @@ import com.google.gson.JsonSyntaxException;
 
 import org.json.JSONObject;
 import org.mahiti.convenemis.BeenClass.BeneficiaryLinkage;
+import org.mahiti.convenemis.BeenClass.Project;
 import org.mahiti.convenemis.BeenClass.facilities.FacilityListInterface;
 import org.mahiti.convenemis.BeenClass.facilitiesBeen.FacilitiesAreaInterface;
 import org.mahiti.convenemis.BeenClass.service.ServiceListInterface;
@@ -890,19 +891,61 @@ public class UpdateMasterLoading extends BaseActivity implements ClusterToTypo, 
     @Override
     public void fillSurveyResponseInterfaceCallBack(boolean result) {
 
-        HashMap<String,String> nextBirthDayParams= new HashMap<>();
-        nextBirthDayParams.put("URL","survey/all-linkages/");
+        callProjectSelectionListApi();
 
-        if(Utils.haveNetworkConnection(this)){
-            CallServerForApi.callServerApi(this,this,nextBirthDayParams,null, 200);
-
-        }
     }
 
     @Override
     public void setResults(String results, int apiCode) {
+
+        switch (apiCode){
+            case 200:
+                executeNeXtFunctionality(results);
+                break;
+            case 201:
+
+               saveProjectResponsetoDatabase(results);
+                HashMap<String,String> nextBirthDayParams= new HashMap<>();
+                nextBirthDayParams.put("URL","survey/all-linkages/");
+                if(Utils.haveNetworkConnection(this)){
+                    CallServerForApi.callServerApi(this,this,nextBirthDayParams,null, 200);
+
+                }
+                break;
+            default:
+                break;
+        }
+
+
+    }
+
+    private void saveProjectResponsetoDatabase(String results) {
+        Gson gson=new Gson();
+        Project project= gson.fromJson(results,Project.class);
+        Logger.logD("projectBrean filled",project.getMessage());
+        Logger.logD("projectBrean filled",project.getProjectList().size()+"");
+        if (!project.getProjectList().isEmpty())
+            fullProjectResponseDatabase(project);
+
+    }
+
+    private void fullProjectResponseDatabase(Project project) {
+        dbOpenHelper.updateProjectResponse(project);
+    }
+
+    private void callProjectSelectionListApi() {
+        HashMap<String,String> projectApiParms= new HashMap<>();
+        projectApiParms.put("URL","survey/projectbasedsurveylisting/");
+        projectApiParms.put("userid", defaultPreferences.getString("UID", ""));
+        if(Utils.haveNetworkConnection(this)){
+            CallServerForApi.callServerApi(this,this,projectApiParms,null, 201);
+
+        }
+    }
+
+    private void executeNeXtFunctionality(String results) {
         try {
-          DBHandler dbHandler= new DBHandler(this);
+            DBHandler dbHandler= new DBHandler(this);
             Gson gson = new Gson();
             BeneficiaryLinkage beneficiaryLinkage = gson.fromJson(results, BeneficiaryLinkage.class);
             Logger.logD("ParceAndUpdateToDatabase in bean",beneficiaryLinkage.getMessage());

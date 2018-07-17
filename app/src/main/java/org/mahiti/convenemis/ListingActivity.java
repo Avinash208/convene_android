@@ -131,6 +131,11 @@ public class ListingActivity extends BaseActivity implements View.OnClickListene
         createNewButton.setOnClickListener(this);
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+    }
+
     /**
      * @param prefs prefs
      */
@@ -455,7 +460,7 @@ public class ListingActivity extends BaseActivity implements View.OnClickListene
 
             filterList = surveySummaryreportdbhandler.updateList(locationName, surveyId);
             for (int i = 0; i < filterList.size(); i++) {
-                List<QuestionAnswer> questionAnswerList = getParentDetails(filterList.get(i).getUuid(), prefs.getInt(Constants.SURVEY_ID, 0), qid);
+                List<QuestionAnswer> questionAnswerList = getParentDetails(filterList.get(i).getUuid(), Integer.parseInt(surveyId), qid);
                 StatusBean surveysBean = filterList.get(i);
                 surveysBean.setQuestionAnswerList(questionAnswerList);
                 filterList.set(i,surveysBean);
@@ -481,6 +486,7 @@ public class ListingActivity extends BaseActivity implements View.OnClickListene
             }
         }
     }
+
 
 
 }

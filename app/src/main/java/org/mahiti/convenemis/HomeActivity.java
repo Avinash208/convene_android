@@ -279,7 +279,6 @@ public class HomeActivity extends BaseActivity implements BeneficaryTypeInterfac
         pressBack = findViewById(R.id.backPress);
         pressBack.setVisibility(View.GONE);
         userNameLabel = findViewById(R.id.userNameLabel);
-        dueCountLable = findViewById(R.id.duecountLable);
         String userName = defaultPreferences.getString("user_name", "");
         userNameLabel.setText(String.format("Logged in as: %s", userName));
         userNameLabel.setTypeface(customFont);
@@ -300,12 +299,6 @@ public class HomeActivity extends BaseActivity implements BeneficaryTypeInterfac
         if(!new CheckNetwork(getApplicationContext()).checkNetwork())
             ToastUtils.displayToast("Application is working in offline",getApplicationContext());
 
-        int getDUECount = updateDueCount(dbhelper, dbHandler);
-        if (getDUECount > 0) {
-            dueCountLable.setVisibility(View.VISIBLE);
-            dueCountLable.setText(String.format("%s%s", DUE + " - ", String.valueOf(getDUECount)));
-        } else
-            dueCountLable.setVisibility(View.GONE);
          gpsTracker.stopUsingGPS();
     }
 
@@ -425,12 +418,6 @@ public class HomeActivity extends BaseActivity implements BeneficaryTypeInterfac
                 break;
             case R.id.logout:
                 Utils.callDialogConformation(this,this);
-                break;
-            case R.id.duecountLable:
-                syncFunction();
-                syncSurveyEditor = syncSurveyPreferences.edit();
-                syncSurveyEditor.putBoolean("sendingSurvey", true);
-                syncSurveyEditor.apply();
                 break;
             case R.id.dataformsLinear:
                 setToPreferenceCallNextActivity(view);

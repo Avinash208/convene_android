@@ -73,7 +73,6 @@ public class HomeActivityNew extends BaseActivity implements View.OnClickListene
         logOut.setOnClickListener(this);
         logOut.setOnClickListener(this);
         dataformsLinear.setOnClickListener(this);
-        dueCountLable.setOnClickListener(this);
         DisplayMetrics metrics;
         int width;
         metrics = new DisplayMetrics();
@@ -124,7 +123,6 @@ public class HomeActivityNew extends BaseActivity implements View.OnClickListene
         pressBack =  findViewById(R.id.backPress);
         pressBack.setVisibility(View.GONE);
         userNameLabel =  findViewById(R.id.userNameLabel);
-        dueCountLable =  findViewById(R.id.duecountLable);
         String userName = defaultPreferences.getString("user_name", "");
         userNameLabel.setText(String.format(userName));
         userNameLabel.setTypeface(customFont);
@@ -133,7 +131,9 @@ public class HomeActivityNew extends BaseActivity implements View.OnClickListene
         dataformsLinear =  findViewById(R.id.dataformsLinear);
         expListView =  findViewById(R.id.expandableListview);
         TextView contentUpdateView =  findViewById(R.id.update_content);
+        TextView activityButton =  findViewById(R.id.activity);
         contentUpdateView.setOnClickListener(this);
+        activityButton.setOnClickListener(this);
     }
 
     @Override
@@ -158,10 +158,18 @@ public class HomeActivityNew extends BaseActivity implements View.OnClickListene
             case R.id.update_content:
                 Utils.contentUpdateConformation(this);
                 break;
+            case R.id.activity:
+                callProjectSelectionActivity();
+                break;
             default:
                 break;
         }
     }
+
+    private void callProjectSelectionActivity() {
+        startActivity(new Intent(activity,ProjectSelectionActivity.class));
+    }
+
     /**
      * method back press from device functionality which will exit from app
      */

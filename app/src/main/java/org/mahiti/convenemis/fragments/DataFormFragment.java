@@ -74,21 +74,21 @@ public class DataFormFragment extends Fragment implements PeriodicTypeInterface,
     private ExternalDbOpenHelper externalDbOpenHelper;
     private ConveneDatabaseHelper databaseHelper;
     private DBHandler handler;
-    private static final String MY_PREFERENCES = "MyPrefs" ;
-    private static final String BENEFICIARIES_TITLE ="Beneficiaries";
-    private static final String SAVE_TO_DRAFT_FLAG_KEY ="SaveDraftButtonFlag";
-    private static final String CHECK_CONNECTIVITY ="No internet connection";
-    private static final String RECENT_PREVIEW_RECORD ="recentPreviewRecord";
-    private static final String SURVEY_ID_KEY ="survey_id";
+    private static final String MY_PREFERENCES = "MyPrefs";
+    private static final String BENEFICIARIES_TITLE = "Beneficiaries";
+    private static final String SAVE_TO_DRAFT_FLAG_KEY = "SaveDraftButtonFlag";
+    private static final String CHECK_CONNECTIVITY = "No internet connection";
+    private static final String RECENT_PREVIEW_RECORD = "recentPreviewRecord";
+    private static final String SURVEY_ID_KEY = "survey_id";
     List<SurveysBean> surveyList;
-    int spinnerCount=0;
+    int spinnerCount = 0;
     private String locationName;
     private String beneficiaryArray;
     private String boundaryLevel;
     private String locationId;
     private Datum datum;
-    List<Datum> beneficiaryNames=new ArrayList<>();
-    List<Datum> facilityNames=new ArrayList<>();
+    List<Datum> beneficiaryNames = new ArrayList<>();
+    List<Datum> facilityNames = new ArrayList<>();
     IntentFilter periodicityFilter;
     private LinearLayout dynamicClosedDataCollectionForm;
     private TextView emptyClosedtextview;
@@ -121,56 +121,55 @@ public class DataFormFragment extends Fragment implements PeriodicTypeInterface,
     private int parent_form_primaryid;
 
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Logger.logD("TimeTest","@onCreate");
-        args=getArguments();
-        periodicReceiver=new PeriodicReceiver();
+        Logger.logD("TimeTest", "@onCreate");
+        args = getArguments();
+        periodicReceiver = new PeriodicReceiver();
         periodicityFilter = new IntentFilter("Survey");
-        langReceiver=new LangReceiver();
+        langReceiver = new LangReceiver();
         langFilter = new IntentFilter("LangService");
-        addBeneficiaryUtils=new AddBeneficiaryUtils(getActivity());
+        addBeneficiaryUtils = new AddBeneficiaryUtils(getActivity());
         defaultPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         prefs = getActivity().getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
         setToStringFromBundle(args);
     }
 
 
-
     /**
      * method
+     *
      * @param args
      */
     private void setToStringFromBundle(Bundle args) {
 
-            beneficiaryType= defaultPreferences.getString("beneficiary_type","");
-            locationName= defaultPreferences.getString("locationName","");
-            locationId= defaultPreferences.getString("location_id","");
-            boundaryLevel= defaultPreferences.getString("boundary_level","");
-            btype= defaultPreferences.getString("typeName","");
-            surveyIdDCF= defaultPreferences.getInt("surveyIdDCF",-1);
-            uuid=defaultPreferences.getString(Constants.UUID,"");
-            if((BENEFICIARIES_TITLE).equals(btype)){
-                beneficiaryTypeId= defaultPreferences.getString("beneficiary_type_id","");
-            }else{
-                beneficiaryTypeId= defaultPreferences.getString("facility_type_id","");
-            }
+        beneficiaryType = defaultPreferences.getString("beneficiary_type", "");
+        locationName = defaultPreferences.getString("locationName", "");
+        locationId = defaultPreferences.getString("location_id", "");
+        boundaryLevel = defaultPreferences.getString("boundary_level", "");
+        btype = defaultPreferences.getString("typeName", "");
+        surveyIdDCF = defaultPreferences.getInt("surveyIdDCF", -1);
+        uuid = defaultPreferences.getString(Constants.UUID, "");
+        if ((BENEFICIARIES_TITLE).equals(btype)) {
+            beneficiaryTypeId = defaultPreferences.getString("beneficiary_type_id", "");
+        } else {
+            beneficiaryTypeId = defaultPreferences.getString("facility_type_id", "");
+        }
 
     }
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Logger.logD("TimeTest","@onCreateView");
-        View view= inflater.inflate(R.layout.data_collection_fragment, container, false);
-        emptytextview= view.findViewById(R.id.emptytextview);
-        progressBarDf= view.findViewById(R.id.progressBarDf);
-        selectedLangText= view.findViewById(R.id.selectedLangText);
-        dynamicDataCollectionForm= view.findViewById(R.id.dynamicDataCollectionForm);
-        dynamicClosedDataCollectionForm= view.findViewById(R.id.dynamicClosedDataCollectionForm);
-        emptyClosedtextview= view.findViewById(R.id.emptyClosedtextview);
+        Logger.logD("TimeTest", "@onCreateView");
+        View view = inflater.inflate(R.layout.data_collection_fragment, container, false);
+        emptytextview = view.findViewById(R.id.emptytextview);
+        progressBarDf = view.findViewById(R.id.progressBarDf);
+        selectedLangText = view.findViewById(R.id.selectedLangText);
+        dynamicDataCollectionForm = view.findViewById(R.id.dynamicDataCollectionForm);
+        dynamicClosedDataCollectionForm = view.findViewById(R.id.dynamicClosedDataCollectionForm);
+        emptyClosedtextview = view.findViewById(R.id.emptyClosedtextview);
         handler = new DBHandler(getActivity());
         db = handler.getdatabaseinstance();
         Intent surveyPrimaryKeyIntent = getActivity().getIntent();
@@ -189,41 +188,38 @@ public class DataFormFragment extends Fragment implements PeriodicTypeInterface,
     }
 
     private void setLanguage() {
-        String selectedLang = defaultPreferences.getString(Constants.SELECTEDLANGUAGELABEL,"English");
+        String selectedLang = defaultPreferences.getString(Constants.SELECTEDLANGUAGELABEL, "English");
         selectedLangText.setText(getActivity().getString(R.string.selected_language_str) + selectedLang);
     }
 
 
     /**
-     *
      * method to display the data collection form for Beneficiary and Facility based on btype
      */
     private void methodToGetTheSurveyList() {
 
-        if(!surveyList.isEmpty()){
-            Logger.logD(TAG,"Survey List is empty"+surveyList.toString());
+        if (!surveyList.isEmpty()) {
+            Logger.logD(TAG, "Survey List is empty" + surveyList.toString());
             emptytextview.setVisibility(View.GONE);
-        }else{
+        } else {
             emptytextview.setVisibility(View.VISIBLE);
             emptytextview.setText(getString(R.string.data_collection_not_availabe));
             emptyClosedtextview.setVisibility(View.VISIBLE);
             emptyClosedtextview.setText(getString(R.string.no_completd_records_available));
-            Logger.logD(TAG,"Survey List is empty");
+            Logger.logD(TAG, "Survey List is empty");
         }
         showSurveyForm();
     }
 
     /**
-     *
      * method to get the facility based survey based on facility id in survey table
      */
     private void getTheFacilityBasedForm() {
-        surveyList = externalDbOpenHelper.getTypeBasedSurvey("Facility",String.valueOf(prefs.getInt("survey_id", 0)), "facility_ids");
+        surveyList = externalDbOpenHelper.getTypeBasedSurvey("Facility",String.valueOf(surveysId), "facility_ids");
     }
 
 
     /**
-     *
      * method to get the list of survey based on beneficiary and facility
      */
     private void getBeneficiaryFacilityBasedForm() {
@@ -232,23 +228,21 @@ public class DataFormFragment extends Fragment implements PeriodicTypeInterface,
 
 
     /**
-     *
      * method to get the list of survey based on beneficiary ids
      */
     private void getBeneficiaryBasedSurvey() {
-        surveyList = externalDbOpenHelper.getTypeBasedSurvey("Beneficiary",beneficiaryTypeId, "beneficiary_ids");
+        surveyList = externalDbOpenHelper.getTypeBasedSurvey("Beneficiary", beneficiaryTypeId, "beneficiary_ids");
     }
 
 
     /**
-     *
      * method to view the survey details
      */
     private void showSurveyForm() {
         if (surveyList.isEmpty())
             return;
-        new PendingSurveyAsyncTask(getActivity(),surveyList,externalDbOpenHelper,defaultPreferences,periodicityCheckControllerDbHelper,this,handler,surveyPrimaryKeyId,surveysId).execute();
-        new CompletedSurveyAsyncTask(getActivity(),surveyList,externalDbOpenHelper,defaultPreferences,surveyPrimaryKeyId,this,handler).execute();
+        new PendingSurveyAsyncTask(getActivity(), surveyList, externalDbOpenHelper, defaultPreferences, periodicityCheckControllerDbHelper, this, handler, surveyPrimaryKeyId, surveysId).execute();
+        new CompletedSurveyAsyncTask(getActivity(), surveyList, externalDbOpenHelper, defaultPreferences, surveyPrimaryKeyId, this, handler).execute();
 
     }
 
@@ -258,8 +252,8 @@ public class DataFormFragment extends Fragment implements PeriodicTypeInterface,
      */
     private void setPendingCardView() {
         dynamicDataCollectionForm.removeAllViews();
-        for (int surveyPosition =0 ; surveyPosition<pendingSurvey.size();surveyPosition++) {
-            String benAndFaci ="";
+        for (int surveyPosition = 0; surveyPosition < pendingSurvey.size(); surveyPosition++) {
+            String benAndFaci = "";
             callPendingView(pendingSurvey.get(surveyPosition), benAndFaci);
 
         }
@@ -272,13 +266,13 @@ public class DataFormFragment extends Fragment implements PeriodicTypeInterface,
      * @param benAndFaci
      */
     private void callPendingView(SurveysBean surveysBean, String benAndFaci) {
-        createPendingRecordView( surveysBean,benAndFaci);
+        createPendingRecordView(surveysBean, benAndFaci);
 
     }
 
     @Override
-    public void onSuccessPeriodicResponse(String periodicResponse,boolean flag) {
-        Logger.logD(TAG,"showSurveyForm ");
+    public void onSuccessPeriodicResponse(String periodicResponse, boolean flag) {
+        Logger.logD(TAG, "showSurveyForm ");
 
     }
 
@@ -287,7 +281,7 @@ public class DataFormFragment extends Fragment implements PeriodicTypeInterface,
      */
     @Override
     public void pendingSurveys(List<SurveysBean> pendingSurvey) {
-        Logger.logD(TAG,"pendingSurvey size"+pendingSurvey.size());
+        Logger.logD(TAG, "pendingSurvey size" + pendingSurvey.size());
         this.pendingSurvey = pendingSurvey;
         setPendingCardView();
         if (!pendingSurvey.isEmpty())
@@ -300,7 +294,7 @@ public class DataFormFragment extends Fragment implements PeriodicTypeInterface,
 
     @Override
     public void completedSurveys(List<SurveysBean> completedSurvey) {
-        Logger.logD(TAG,"completedSurvey size"+completedSurvey.size());
+        Logger.logD(TAG, "completedSurvey size" + completedSurvey.size());
         this.completedSurveyList = completedSurvey;
         showSummeryReport();
         if (!completedSurveyList.isEmpty())
@@ -325,7 +319,8 @@ public class DataFormFragment extends Fragment implements PeriodicTypeInterface,
             }
         }
     }
-/**
+
+    /**
      * Receiver Class
      */
     public class LangReceiver extends BroadcastReceiver {
@@ -341,25 +336,25 @@ public class DataFormFragment extends Fragment implements PeriodicTypeInterface,
 
     /**
      * creating dynamic view for pending data collection form
+     *
      * @param surveysBean
      * @param benAndFaci
      */
     private void createPendingRecordView(SurveysBean surveysBean, String benAndFaci) {
-        final View childView=getActivity().getLayoutInflater().inflate(R.layout.data_collection_form, dynamicDataCollectionForm, false);
-        final TextView surveyNameTextView= childView.findViewById(R.id.surveyName);
-        final TextView periodicityName= childView.findViewById(R.id.periodicityName);
-        final TextView addOrCompleteButton= childView.findViewById(R.id.addOrComplete);
-        final TextView noteText= childView.findViewById(R.id.noteText);
-        final SingleSpinnerSearch spinnerSearch= childView.findViewById(R.id.searchSingleSpinner);
-        Typeface customfont = Typeface.createFromAsset(getActivity().getAssets(),  "fonts/Roboto-Regular.ttf");
+        final View childView = getActivity().getLayoutInflater().inflate(R.layout.data_collection_form, dynamicDataCollectionForm, false);
+        final TextView surveyNameTextView = childView.findViewById(R.id.surveyName);
+        final TextView periodicityName = childView.findViewById(R.id.periodicityName);
+        final TextView addOrCompleteButton = childView.findViewById(R.id.addOrComplete);
+        final TextView noteText = childView.findViewById(R.id.noteText);
+        final SingleSpinnerSearch spinnerSearch = childView.findViewById(R.id.searchSingleSpinner);
+        Typeface customfont = Typeface.createFromAsset(getActivity().getAssets(), "fonts/Roboto-Regular.ttf");
         surveyNameTextView.setTypeface(customfont);
-        final String SurveyName=surveysBean.getSurveyName();
+        final String SurveyName = surveysBean.getSurveyName();
         if (surveysBean.getSurveyStatus() == 1) {
             noteText.setVisibility(View.VISIBLE);
-            noteText.setText("Note: previous "+surveysBean.getPeriodicityFlag().replace("ly","").toLowerCase()+" response is pending yet.");
+            noteText.setText("Note: previous " + surveysBean.getPeriodicityFlag().replace("ly", "").toLowerCase() + " response is pending yet.");
         }
-        if (surveysBean.getSurveyStatus() == 1 || surveysBean.getSurveyStatus() == 2)
-        {
+        if (surveysBean.getSurveyStatus() == 1 || surveysBean.getSurveyStatus() == 2) {
             addOrCompleteButton.setText(getString(R.string.pending));
         }
 
@@ -369,11 +364,11 @@ public class DataFormFragment extends Fragment implements PeriodicTypeInterface,
             addOrCompleteButton.setText(getString(R.string.pending));
         }
         spinnerSearch.setTag(spinnerCount);
-        if(!"".equalsIgnoreCase(benAndFaci)){
+        if (!"".equalsIgnoreCase(benAndFaci)) {
             spinnerSearch.setVisibility(View.VISIBLE);
             setDefaultAdapter(spinnerSearch);
             addOrCompleteButton.setVisibility(View.GONE);
-        }else{
+        } else {
             spinnerSearch.setVisibility(View.GONE);
             addOrCompleteButton.setVisibility(View.VISIBLE);
 
@@ -384,65 +379,64 @@ public class DataFormFragment extends Fragment implements PeriodicTypeInterface,
         dynamicDataCollectionForm.addView(childView);
 
 
-
         addOrCompleteButton.setOnClickListener(view -> {
 
-            TextView btn = (TextView)view;
+            TextView btn = (TextView) view;
             AnimationUtils.viewAnimation(view);
             setToStringFromBundle(args);
-            methodToCallAdd(btn.getText().toString(),surveyNameTextView.getText().toString(),surveysBean);
+            methodToCallAdd(btn.getText().toString(), surveyNameTextView.getText().toString(), surveysBean);
         });
 
     }
 
 
     /**
-     *
-     *  @param btn
+     * @param btn
      * @param surveyNameTextView
      * @param surveysBean
      */
-    private void methodToCallAdd(String btn, String surveyNameTextView,SurveysBean surveysBean) {
-        try{
-            if(btn.equals(getString(R.string.pending))){
-                addBeneficiaryUtils.setToPreferences(getActivity(),surveyNameTextView,0,0," static Village",beneficiaryArray,defaultPreferences,
+    private void methodToCallAdd(String btn, String surveyNameTextView, SurveysBean surveysBean) {
+        try {
+            if (btn.equals(getString(R.string.pending))) {
+                addBeneficiaryUtils.setToPreferences(getActivity(), surveyNameTextView, 0, 0, " static Village", beneficiaryArray, defaultPreferences,
                         surveysBean);
                 SharedPreferences.Editor editor11 = defaultPreferences.edit();
-                editor11.putBoolean(ISLOCATIONBASED,false);
+                editor11.putBoolean(ISLOCATIONBASED, false);
                 editor11.putBoolean(NOTLOCATIONBASED, false);
-                editor11.putBoolean(SAVE_TO_DRAFT_FLAG_KEY,true);
-                editor11.putInt(SURVEY_ID_KEY,surveysBean.getId());
+                editor11.putBoolean(SAVE_TO_DRAFT_FLAG_KEY, true);
+                editor11.putInt(SURVEY_ID_KEY, surveysBean.getId());
                 editor11.apply();
                 calligGPS();
                 if (!gpsTracker.canGetLocation()) {
                     gpsTracker.showSettingsAlert();
-                }else {
-                    new StartSurvey(getActivity(), getActivity(),surveysBean.getId(), 0, "Static Village", surveyPrimaryKeyId, boundaryLevel,"", "").execute();
+                } else {
+                    new StartSurvey(getActivity(), getActivity(), surveysBean.getId(), 0, "Static Village", surveyPrimaryKeyId, boundaryLevel, "", "").execute();
                 }
 
-            }else if (("Continue").equalsIgnoreCase(btn)){
+            } else if (("Continue").equalsIgnoreCase(btn)) {
                 if (surveysBean.getSurveyStatus() == 1)
                     showPrevSurveyDailog(surveysBean, null, -2);
-                SharedPreferences.Editor editorSaveDraft= defaultPreferences.edit();
-                editorSaveDraft.putBoolean(SAVE_TO_DRAFT_FLAG_KEY,true);
-                editorSaveDraft.putBoolean(ISLOCATIONBASED,false);
+                SharedPreferences.Editor editorSaveDraft = defaultPreferences.edit();
+                editorSaveDraft.putBoolean(SAVE_TO_DRAFT_FLAG_KEY, true);
+                editorSaveDraft.putBoolean(ISLOCATIONBASED, false);
                 editorSaveDraft.putBoolean(NOTLOCATIONBASED, false);
                 editorSaveDraft.apply();
                 Intent intent = new Intent(getActivity(), SurveyQuestionActivity.class);
                 intent.putExtra("SurveyId", String.valueOf(surveysBean.getSurveyPId()));
-                intent.putExtra(SURVEY_ID_KEY,String.valueOf(surveysBean.getId()));
+                intent.putExtra(SURVEY_ID_KEY, String.valueOf(surveysBean.getId()));
                 startActivity(intent);
-            } else{
-                ToastUtils.displayToast("Periodic limit exceed",getActivity());
+            } else {
+                ToastUtils.displayToast("Periodic limit exceed", getActivity());
             }
-        }catch (Exception e){
-            Logger.logE(TAG,"Exception on clock of pending",e);
+        } catch (Exception e) {
+            Logger.logE(TAG, "Exception on clock of pending", e);
         }
     }
 
 
     /**
      * method
+     *
      * @param surveysBean
      * @param jsonArray
      * @param selectedBeneficiaryId
@@ -458,23 +452,24 @@ public class DataFormFragment extends Fragment implements PeriodicTypeInterface,
             dialog.cancel();
             if (selectedBeneficiaryId == -2)
                 return;
-            String previousPeriodLastDate =PeriodicityUtils.getPreviousPeriodLastDate(surveysBean.getPeriodicityFlag());
+            String previousPeriodLastDate = PeriodicityUtils.getPreviousPeriodLastDate(surveysBean.getPeriodicityFlag());
             if (jsonArray != null)
-                new StartSurvey(getActivity(), getActivity(),surveysBean.getId(), Integer.parseInt(locationId), locationName,jsonArray.toString(), boundaryLevel, selectedBeneficiaryId, previousPeriodLastDate).execute();
+                new StartSurvey(getActivity(), getActivity(), surveysBean.getId(), Integer.parseInt(locationId), locationName, jsonArray.toString(), boundaryLevel, selectedBeneficiaryId, previousPeriodLastDate).execute();
             else
-                new StartSurvey(getActivity(), getActivity(),surveysBean.getId(), Integer.parseInt(locationId), locationName, beneficiaryArray, boundaryLevel,"", previousPeriodLastDate).execute();
+                new StartSurvey(getActivity(), getActivity(), surveysBean.getId(), Integer.parseInt(locationId), locationName, beneficiaryArray, boundaryLevel, "", previousPeriodLastDate).execute();
         });
         dialog.show();
     }
 
     /**
      * method
+     *
      * @param spinnerSearch
      */
     private void setDefaultAdapter(SingleSpinnerSearch spinnerSearch) {
-        List<String> stringList=new ArrayList<>();
+        List<String> stringList = new ArrayList<>();
         stringList.add(Constants.SELECT);
-        ArrayAdapter<String> adapterSpinner = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item,stringList);
+        ArrayAdapter<String> adapterSpinner = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, stringList);
         spinnerSearch.setAdapter(adapterSpinner);
     }
 
@@ -486,8 +481,8 @@ public class DataFormFragment extends Fragment implements PeriodicTypeInterface,
             setToStringFromBundle(args);
             getActivity().registerReceiver(periodicReceiver, periodicityFilter);
             getActivity().registerReceiver(langReceiver, langFilter);
-        }catch (Exception e){
-            Logger.logE(TAG,"Exception on register ",e);
+        } catch (Exception e) {
+            Logger.logE(TAG, "Exception on register ", e);
         }
 
     }
@@ -498,43 +493,44 @@ public class DataFormFragment extends Fragment implements PeriodicTypeInterface,
         try {
             getActivity().unregisterReceiver(periodicReceiver);
             getActivity().unregisterReceiver(langReceiver);
-        }catch (Exception ex){
-            Logger.logE(TAG," Exception on onPause ",ex);
+        } catch (Exception ex) {
+            Logger.logE(TAG, " Exception on onPause ", ex);
         }
     }
+
     @Override
     public void onDestroy() {
         try {
             super.onDestroy();
-        }catch (Exception e){
-            Logger.logE(TAG," Exception on unregisterReceiver ",e);
+        } catch (Exception e) {
+            Logger.logE(TAG, " Exception on unregisterReceiver ", e);
         }
     }
+
     /**
      * creating dynamic view for summery report
      */
     private void showSummeryReport() {
         dynamicClosedDataCollectionForm.removeAllViews();
-        for(int i=0;i<completedSurveyList.size();i++){
-            final View childView=getActivity().getLayoutInflater().inflate(R.layout.activity_summery_report, dynamicClosedDataCollectionForm, false);
-            final TextView surveyTextView= childView.findViewById(R.id.surveyTextView);
-            final TextView periodicityTextview= childView.findViewById(R.id.periodicityTextview);
-            final TextView statusTextView= childView.findViewById(R.id.statusTextView);
-            final TextView capturedTextView= childView.findViewById(R.id.capturedTextview);
-            Typeface customfont = Typeface.createFromAsset(getActivity().getAssets(),  "fonts/Roboto-Regular.ttf");
+        for (int i = 0; i < completedSurveyList.size(); i++) {
+            final View childView = getActivity().getLayoutInflater().inflate(R.layout.activity_summery_report, dynamicClosedDataCollectionForm, false);
+            final TextView surveyTextView = childView.findViewById(R.id.surveyTextView);
+            final TextView periodicityTextview = childView.findViewById(R.id.periodicityTextview);
+            final TextView statusTextView = childView.findViewById(R.id.statusTextView);
+            final TextView capturedTextView = childView.findViewById(R.id.capturedTextview);
+            Typeface customfont = Typeface.createFromAsset(getActivity().getAssets(), "fonts/Roboto-Regular.ttf");
             surveyTextView.setTypeface(customfont);
             periodicityTextview.setTypeface(customfont);
-            periodicityTextview.setText("Periodicity : "+ completedSurveyList.get(i).getPeriodicityFlag());
+            periodicityTextview.setText("Periodicity : " + completedSurveyList.get(i).getPeriodicityFlag());
             surveyTextView.setText(completedSurveyList.get(i).getSurveyName());
-            capturedTextView.setText("Captured on : "+ completedSurveyList.get(i).getSurveyEndDate());
-           if (completedSurveyList.get(i).isSurveyDone()==1){
-               statusTextView.setText("VIEW");
-               onClickFunctionalityVIew(statusTextView,completedSurveyList.get(i).getUuid(),completedSurveyList.get(i).getId());
-           }else{
-               statusTextView.setText(R.string.edit_or_view);
-               onClickFunctionality(statusTextView,surveyPrimaryKeyId,completedSurveyList.get(i).getId());
-           }
-
+            capturedTextView.setText("Captured on : " + completedSurveyList.get(i).getSurveyEndDate());
+            if (completedSurveyList.get(i).isSurveyDone() == 1) {
+                statusTextView.setText("VIEW");
+                onClickFunctionalityVIew(statusTextView, completedSurveyList.get(i).getUuid(), completedSurveyList.get(i).getId());
+            } else {
+                statusTextView.setText(R.string.edit_or_view);
+                onClickFunctionality(statusTextView, surveyPrimaryKeyId, completedSurveyList.get(i).getId());
+            }
             dynamicClosedDataCollectionForm.addView(childView);
         }
 
@@ -546,10 +542,10 @@ public class DataFormFragment extends Fragment implements PeriodicTypeInterface,
             public void onClick(View view) {
                 Logger.logD(TAG, "Clicked Completed Periodicity survey" + surveyPrimaryKeyId);
                 Intent startShowSurveyPreview = new Intent(getActivity(), ShowSurveyPreview.class);
-                startShowSurveyPreview.putExtra("surveyPrimaryKey",surveyPrimaryKeyId);
-                startShowSurveyPreview.putExtra("survey_id",id);
-                startShowSurveyPreview.putExtra("visibility",false);
-                startActivityForResult(startShowSurveyPreview,200);
+                startShowSurveyPreview.putExtra("surveyPrimaryKey", surveyPrimaryKeyId);
+                startShowSurveyPreview.putExtra("survey_id", id);
+                startShowSurveyPreview.putExtra("visibility", false);
+                startActivityForResult(startShowSurveyPreview, 200);
             }
         });
 
@@ -559,20 +555,19 @@ public class DataFormFragment extends Fragment implements PeriodicTypeInterface,
         statusTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String parentUUIDExist= handler.getActivityUUID(beneficiaryUuid);
+                String parentUUIDExist = handler.getActivityUUID(beneficiaryUuid);
                 if (!parentUUIDExist.equals("")) {
                     SharedPreferences.Editor recentPreview = defaultPreferences.edit();
                     recentPreview.putString("recentPreviewRecord", "edit");
                     recentPreview.apply();
                     Logger.logD(TAG, "Clicked Completed Periodicity survey" + surveyPrimaryKeyId);
                     Intent startShowSurveyPreview = new Intent(getActivity(), ShowSurveyPreview.class);
-                    startShowSurveyPreview.putExtra("surveyPrimaryKey",parentUUIDExist);
-                    startShowSurveyPreview.putExtra("survey_id",surveysId);
-                    startShowSurveyPreview.putExtra("visibility",false);
-                    startActivityForResult(startShowSurveyPreview,200);
-                }
-                else{
-                    Toast.makeText(getActivity(),"Sorry Activity Response not found.!",Toast.LENGTH_SHORT).show();
+                    startShowSurveyPreview.putExtra("surveyPrimaryKey", parentUUIDExist);
+                    startShowSurveyPreview.putExtra("survey_id", surveysId);
+                    startShowSurveyPreview.putExtra("visibility", false);
+                    startActivityForResult(startShowSurveyPreview, 200);
+                } else {
+                    Toast.makeText(getActivity(), "Sorry Activity Response not found.!", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -581,94 +576,83 @@ public class DataFormFragment extends Fragment implements PeriodicTypeInterface,
 
     /**
      * method to get the completed records from Periodicity  table and set to view
+     *
      * @param getCompletedSurveyList param
      * @param surveyTextView
      * @param statusTextView
      * @param capturedTextView
      * @param periodicityTextview
-
-     *
      */
     private void setCompletedPeriodicityRecords(final List<StatusBean> getCompletedSurveyList, TextView surveyTextView, final TextView statusTextView,
                                                 TextView capturedTextView, TextView periodicityTextview, final String uuid, SurveysBean surveysBean) {
         DBHandler handler = new DBHandler(getActivity());
         int surveyPrimaryKey = surveysBean.getId();
-        int getSurveyPid= handler.checkPrymaryExist(surveyPrimaryKey,uuid,0);
-        Logger.logD("Gettting primary key","pi"+getSurveyPid);
-        if (getSurveyPid!=0) {
+        int getSurveyPid = handler.checkPrymaryExist(surveyPrimaryKey, uuid, 0);
+        Logger.logD("Gettting primary key", "pi" + getSurveyPid);
+        if (getSurveyPid != 0) {
             handler.deleteExistingSurveyRecord(String.valueOf(getSurveyPid), 1);
             handler.deleteExistingSurveyRecord(String.valueOf(getSurveyPid), 2);
         }
-        if (!getCompletedSurveyList.isEmpty()){
+        if (!getCompletedSurveyList.isEmpty()) {
 
-            for(int k=0;k<getCompletedSurveyList.size();k++){
+            for (int k = 0; k < getCompletedSurveyList.size(); k++) {
                 setPreviousFlag(statusTextView, surveysBean.getIsViewOrEdit());
-                if (getSurveyPid!=0) {
+                if (getSurveyPid != 0) {
                     final int finalK = k;
                     statusTextView.setOnClickListener(view -> {
                         view.setTag(getCompletedSurveyList.get(finalK).getPrimaryId());
-                        Logger.logD("Clicked Tag",""+getCompletedSurveyList.get(finalK).getPrimaryId());
+                        Logger.logD("Clicked Tag", "" + getCompletedSurveyList.get(finalK).getPrimaryId());
                         if (("EDIT/VIEW").equalsIgnoreCase(statusTextView.getText().toString())) {
-                            methodToCallEdittedSurveyResponse(surveyPrimaryKey,view);
-                            SharedPreferences.Editor recentPreview= defaultPreferences.edit();
-                            recentPreview.putString(RECENT_PREVIEW_RECORD,String.valueOf(view.getTag()));
-                            recentPreview.putBoolean(isEditableStr,true);
+                            methodToCallEdittedSurveyResponse(surveyPrimaryKey, view);
+                            SharedPreferences.Editor recentPreview = defaultPreferences.edit();
+                            recentPreview.putString(RECENT_PREVIEW_RECORD, String.valueOf(view.getTag()));
+                            recentPreview.putBoolean(isEditableStr, true);
                             recentPreview.apply();
-                        }
-                        else if (("View").equalsIgnoreCase(statusTextView.getText().toString()))
-                        {
-                            methodToCallEdittedSurveyResponse(surveyPrimaryKey,view);
-                            SharedPreferences.Editor recentPreview= defaultPreferences.edit();
-                            recentPreview.putBoolean(isEditableStr,false);
-                            recentPreview.putString(RECENT_PREVIEW_RECORD,String.valueOf(view.getTag()));
+                        } else if (("View").equalsIgnoreCase(statusTextView.getText().toString())) {
+                            methodToCallEdittedSurveyResponse(surveyPrimaryKey, view);
+                            SharedPreferences.Editor recentPreview = defaultPreferences.edit();
+                            recentPreview.putBoolean(isEditableStr, false);
+                            recentPreview.putString(RECENT_PREVIEW_RECORD, String.valueOf(view.getTag()));
                             recentPreview.apply();
-                        }
-
-                        else{
-                            if(Utils.haveNetworkConnection(getActivity())) {
+                        } else {
+                            if (Utils.haveNetworkConnection(getActivity())) {
                                 callServerTOResponse(view, surveyPrimaryKey);
-                                SharedPreferences.Editor recentPreview= defaultPreferences.edit();
-                                recentPreview.putBoolean(isEditableStr,true);
+                                SharedPreferences.Editor recentPreview = defaultPreferences.edit();
+                                recentPreview.putBoolean(isEditableStr, true);
                                 recentPreview.apply();
-                            }else{
-                                ToastUtils.displayToast(CHECK_CONNECTIVITY,getActivity());
+                            } else {
+                                ToastUtils.displayToast(CHECK_CONNECTIVITY, getActivity());
                             }
                         }
                     });
-                }
-                else {
+                } else {
                     final int finalK = k;
                     statusTextView.setOnClickListener(view -> {
                         view.setTag(getCompletedSurveyList.get(finalK).getPrimaryId());
-                        Logger.logD("Clicked Tag",""+getCompletedSurveyList.get(finalK).getPrimaryId());
+                        Logger.logD("Clicked Tag", "" + getCompletedSurveyList.get(finalK).getPrimaryId());
                         if (("EDIT/VIEW").equalsIgnoreCase(statusTextView.getText().toString())) {
-                            if(Utils.haveNetworkConnection(getActivity())){
+                            if (Utils.haveNetworkConnection(getActivity())) {
                                 callServerTOResponse(view, surveyPrimaryKey);
-                                SharedPreferences.Editor recentPreview= defaultPreferences.edit();
-                                recentPreview.putString(RECENT_PREVIEW_RECORD,String.valueOf(view.getTag()));
-                                recentPreview.putBoolean(isEditableStr,true);
+                                SharedPreferences.Editor recentPreview = defaultPreferences.edit();
+                                recentPreview.putString(RECENT_PREVIEW_RECORD, String.valueOf(view.getTag()));
+                                recentPreview.putBoolean(isEditableStr, true);
                                 recentPreview.apply();
-                            }else{
-                                ToastUtils.displayToast(CHECK_CONNECTIVITY,getActivity());
+                            } else {
+                                ToastUtils.displayToast(CHECK_CONNECTIVITY, getActivity());
                             }
-                        }
-                        else if (("View").equalsIgnoreCase(statusTextView.getText().toString()))
-                        {
-                            methodToCallEdittedSurveyResponse(surveyPrimaryKey,view);
-                            SharedPreferences.Editor recentPreview= defaultPreferences.edit();
-                            recentPreview.putString(RECENT_PREVIEW_RECORD,String.valueOf(view.getTag()));
-                            recentPreview.putBoolean(isEditableStr,false);
+                        } else if (("View").equalsIgnoreCase(statusTextView.getText().toString())) {
+                            methodToCallEdittedSurveyResponse(surveyPrimaryKey, view);
+                            SharedPreferences.Editor recentPreview = defaultPreferences.edit();
+                            recentPreview.putString(RECENT_PREVIEW_RECORD, String.valueOf(view.getTag()));
+                            recentPreview.putBoolean(isEditableStr, false);
                             recentPreview.apply();
-                        }
-
-
-                        else{
-                            if(Utils.haveNetworkConnection(getActivity())){
+                        } else {
+                            if (Utils.haveNetworkConnection(getActivity())) {
                                 callServerTOResponse(view, surveyPrimaryKey);
-                                SharedPreferences.Editor recentPreview= defaultPreferences.edit();
+                                SharedPreferences.Editor recentPreview = defaultPreferences.edit();
                                 recentPreview.apply();
-                            }else{
-                                ToastUtils.displayToast(CHECK_CONNECTIVITY,getActivity());
+                            } else {
+                                ToastUtils.displayToast(CHECK_CONNECTIVITY, getActivity());
                             }
 
                         }
@@ -685,55 +669,50 @@ public class DataFormFragment extends Fragment implements PeriodicTypeInterface,
 
 
     /**
-     *
      * method  to call the response api
+     *
      * @param surveyPrimaryKey
      * @param view
      */
     private void methodToCallEdittedSurveyResponse(int surveyPrimaryKey, View view) {
-        if(Utils.haveNetworkConnection(getActivity()))
-        {
+        if (Utils.haveNetworkConnection(getActivity())) {
             callServerTOResponse(view, surveyPrimaryKey);
-        }else{
-            ToastUtils.displayToast(CHECK_CONNECTIVITY,getActivity());
+        } else {
+            ToastUtils.displayToast(CHECK_CONNECTIVITY, getActivity());
         }
     }
 
     /**
-     *  @param statusTextView
+     * @param statusTextView
      * @param surveyStatus
      */
     private void setPreviousFlag(TextView statusTextView, int surveyStatus) {
-        if (surveyStatus == 2)
-        {
+        if (surveyStatus == 2) {
             statusTextView.setText("View");
 
-        }
-        else
-            {
-                statusTextView.setText(R.string.edit_or_view);
+        } else {
+            statusTextView.setText(R.string.edit_or_view);
         }
     }
 
 
     /**
-     *
      * @param getServerKey
      * @param getSurveyId
      */
     private void callServerTOResponse(View getServerKey, int getSurveyId) {
         try {
             setToStringFromBundle(args);
-            new ResponseUpdateAPI(getActivity(),getActivity(),getString(R.string.main_Url)+"api/response-detail/",String.valueOf(getServerKey.getTag()),Integer.parseInt(locationId),locationName,beneficiaryArray, boundaryLevel,getSurveyId).execute();
-        }catch (Exception e){
-            Logger.logE(TAG,"Exception on calling response list api",e);
+            new ResponseUpdateAPI(getActivity(), getActivity(), getString(R.string.main_Url) + "api/response-detail/", String.valueOf(getServerKey.getTag()), Integer.parseInt(locationId), locationName, beneficiaryArray, boundaryLevel, getSurveyId).execute();
+        } catch (Exception e) {
+            Logger.logE(TAG, "Exception on calling response list api", e);
         }
     }
 
 
     /**
-     *
      * method to get the completed the records from survey table
+     *
      * @param getPausedCompletedSurveyList
      * @param statusTextView
      * @param periodicityTextview
@@ -742,23 +721,23 @@ public class DataFormFragment extends Fragment implements PeriodicTypeInterface,
      */
     private void setCompletedRecordsInCard(List<StatusBean> getPausedCompletedSurveyList, TextView statusTextView, TextView periodicityTextview, TextView surveyTextView, TextView capturedTextView,
                                            final int surveyNameID, String uuid) {
-        if (!getPausedCompletedSurveyList.isEmpty()){
-            final int getSurveyPid= new DBHandler(getActivity()).checkPrymarySaveDraftExist(surveyNameID,uuid);
-            for(int k=0;k<getPausedCompletedSurveyList.size();k++){
+        if (!getPausedCompletedSurveyList.isEmpty()) {
+            final int getSurveyPid = new DBHandler(getActivity()).checkPrymarySaveDraftExist(surveyNameID, uuid);
+            for (int k = 0; k < getPausedCompletedSurveyList.size(); k++) {
                 statusTextView.setText(R.string.edit_or_view);
                 surveyTextView.setText(String.format("%s( Offline )", getPausedCompletedSurveyList.get(k).getName()));
                 statusTextView.setTextColor(getResources().getColor(R.color.green));
                 capturedTextView.setText(String.format("Captured on : %s", getPausedCompletedSurveyList.get(k).getDate()));
                 periodicityTextview.setText(String.format("Periodicity : %s", getPausedCompletedSurveyList.get(k).getLanguage()));
                 statusTextView.setOnClickListener(view -> {
-                    SharedPreferences.Editor editorSaveDraft= defaultPreferences.edit();
-                    editorSaveDraft.putBoolean(SAVE_TO_DRAFT_FLAG_KEY,true);
-                    editorSaveDraft.putString(RECENT_PREVIEW_RECORD,String.valueOf(view.getTag()));
+                    SharedPreferences.Editor editorSaveDraft = defaultPreferences.edit();
+                    editorSaveDraft.putBoolean(SAVE_TO_DRAFT_FLAG_KEY, true);
+                    editorSaveDraft.putString(RECENT_PREVIEW_RECORD, String.valueOf(view.getTag()));
                     editorSaveDraft.apply();
                     Intent intent = new Intent(getActivity(), SurveyQuestionActivity.class);
                     intent.putExtra("SurveyId", String.valueOf(getSurveyPid));
-                    Logger.logD("survey_id survey_id-->","-->"+getSurveyPid);
-                    intent.putExtra(SURVEY_ID_KEY,String.valueOf(surveyNameID));
+                    Logger.logD("survey_id survey_id-->", "-->" + getSurveyPid);
+                    intent.putExtra(SURVEY_ID_KEY, String.valueOf(surveyNameID));
                     startActivity(intent);
                 });
             }
@@ -770,24 +749,26 @@ public class DataFormFragment extends Fragment implements PeriodicTypeInterface,
 
     /**
      * method to start the suvvey which is beneficiary and facility based survey and insert values into survey table
+     *
      * @param k
      * @param j
      * @param items
      * @param spinnerSearch
      * @param surveysBean
      */
-    private void startBeneficiaryFacilitySurvey(int k, int j, List<Datum> items, SingleSpinnerSearch spinnerSearch,SurveysBean surveysBean) {
-        if(String.valueOf(k).equals(spinnerSearch.getTag().toString())){
+    private void startBeneficiaryFacilitySurvey(int k, int j, List<Datum> items, SingleSpinnerSearch spinnerSearch, SurveysBean surveysBean) {
+        if (String.valueOf(k).equals(spinnerSearch.getTag().toString())) {
             calligGPS();
             if (!gpsTracker.canGetLocation()) {
                 gpsTracker.showSettingsAlert();
-            }else {
+            } else {
                 loginDialog = ProgressUtils.showProgress(getActivity(), false, "Loading...");
                 loginDialog.show();
                 methodToCallStartSurvey(spinnerSearch, j, items, surveysBean);
             }
         }
     }
+
     /**
      * method to initialize the GPS tracker
      */
@@ -797,66 +778,66 @@ public class DataFormFragment extends Fragment implements PeriodicTypeInterface,
 
     /**
      * method to call start survey asynctask and add the details to survey table
+     *
      * @param spinnerSearch
      * @param j
      * @param items
      * @param surveysBean
-
      */
     private void methodToCallStartSurvey(SingleSpinnerSearch spinnerSearch, int j, List<Datum> items, SurveysBean surveysBean) {
         try {
             String spinnerSelectedValue;
-            if(!(Constants.SELECT).equalsIgnoreCase(spinnerSearch.getSelectedItem().toString())) {
-                addBeneficiaryUtils.setToPreferences(getActivity(),surveysBean.getSurveyName(),Integer.parseInt(locationId),Integer.parseInt(boundaryLevel),locationName,beneficiaryArray,defaultPreferences, surveysBean);
+            if (!(Constants.SELECT).equalsIgnoreCase(spinnerSearch.getSelectedItem().toString())) {
+                addBeneficiaryUtils.setToPreferences(getActivity(), surveysBean.getSurveyName(), Integer.parseInt(locationId), Integer.parseInt(boundaryLevel), locationName, beneficiaryArray, defaultPreferences, surveysBean);
                 Integer selectedBeneficiaryId;
-                JSONArray jsonArray=new JSONArray(beneficiaryArray);
-                jsonArray.getJSONObject(0).put("fac_uuid",items.get(j).getUuid());
+                JSONArray jsonArray = new JSONArray(beneficiaryArray);
+                jsonArray.getJSONObject(0).put("fac_uuid", items.get(j).getUuid());
 
                 Logger.logV(TAG, "selecteditem beneficiaryArray==>" + jsonArray);
                 if (datum == null) {
                     spinnerSelectedValue = spinnerSearch.getSelectedItem().toString();
                     selectedBeneficiaryId = items.get(j).getBeneficiaryTypeId();
-                    if((1)==(defaultPreferences.getInt(Constants.SELECTEDLANGUAGE,0))){
-                        boolean isLanguageExist=databaseHelper.checkLanguageExistOrNot(surveysBean.getId(),defaultPreferences.getInt(Constants.SELECTEDLANGUAGE,0));
-                        Logger.logD("isLanguageExist","-->"+isLanguageExist);
-                        if(isLanguageExist){
+                    if ((1) == (defaultPreferences.getInt(Constants.SELECTEDLANGUAGE, 0))) {
+                        boolean isLanguageExist = databaseHelper.checkLanguageExistOrNot(surveysBean.getId(), defaultPreferences.getInt(Constants.SELECTEDLANGUAGE, 0));
+                        Logger.logD("isLanguageExist", "-->" + isLanguageExist);
+                        if (isLanguageExist) {
                             beneficiaryType = items.get(j).getBeneficiaryType();
-                            ToastUtils.displayToastUi(spinnerSelectedValue +" is selected",getActivity());
+                            ToastUtils.displayToastUi(spinnerSelectedValue + " is selected", getActivity());
                             if (surveysBean.getSurveyStatus() == 1)
-                                showPrevSurveyDailog(surveysBean,jsonArray , selectedBeneficiaryId);
+                                showPrevSurveyDailog(surveysBean, jsonArray, selectedBeneficiaryId);
                             else
-                                new StartSurvey(getActivity(), getActivity(),surveysBean.getId(), Integer.parseInt(locationId), locationName,jsonArray.toString(), boundaryLevel, selectedBeneficiaryId, "").execute();
+                                new StartSurvey(getActivity(), getActivity(), surveysBean.getId(), Integer.parseInt(locationId), locationName, jsonArray.toString(), boundaryLevel, selectedBeneficiaryId, "").execute();
 
-                        }else{
+                        } else {
                             Utils.showAlertPopUp(getActivity());
                         }
-                    }else{
-                        boolean isRegionalLangExist=databaseHelper.checkRegionalLanguageExist(surveysBean.getId(),defaultPreferences.getInt(Constants.SELECTEDLANGUAGE,0));
-                        if(isRegionalLangExist){
+                    } else {
+                        boolean isRegionalLangExist = databaseHelper.checkRegionalLanguageExist(surveysBean.getId(), defaultPreferences.getInt(Constants.SELECTEDLANGUAGE, 0));
+                        if (isRegionalLangExist) {
 
                             beneficiaryType = items.get(j).getBeneficiaryType();
-                            ToastUtils.displayToastUi(spinnerSelectedValue +" is selected",getActivity());
+                            ToastUtils.displayToastUi(spinnerSelectedValue + " is selected", getActivity());
                             if (surveysBean.getSurveyStatus() == 1)
-                                showPrevSurveyDailog(surveysBean,jsonArray , selectedBeneficiaryId);
+                                showPrevSurveyDailog(surveysBean, jsonArray, selectedBeneficiaryId);
                             else
-                                new StartSurvey(getActivity(), getActivity(),surveysBean.getId(), Integer.parseInt(locationId), locationName,jsonArray.toString(), boundaryLevel, selectedBeneficiaryId, "").execute();
-                        }else{
-                                Utils.showAlertPopUp(getActivity());
+                                new StartSurvey(getActivity(), getActivity(), surveysBean.getId(), Integer.parseInt(locationId), locationName, jsonArray.toString(), boundaryLevel, selectedBeneficiaryId, "").execute();
+                        } else {
+                            Utils.showAlertPopUp(getActivity());
                         }
                     }
                 } else {
                     datum = (Datum) spinnerSearch.getSelectedItem();
                     selectedBeneficiaryId = Integer.parseInt(datum.getBeneficiaryType());
                     beneficiaryType = String.valueOf(datum.getBeneficiaryTypeId());
-                    new StartSurvey(getActivity(), getActivity(),surveysBean.getId(), Integer.parseInt(locationId), locationName,beneficiaryArray, boundaryLevel, selectedBeneficiaryId, "").execute();
+                    new StartSurvey(getActivity(), getActivity(), surveysBean.getId(), Integer.parseInt(locationId), locationName, beneficiaryArray, boundaryLevel, selectedBeneficiaryId, "").execute();
 
                 }
                 ProgressUtils.CancelProgress(loginDialog);
-            }else{
-                ToastUtils.displayToast("Please select the facilty",getActivity());
+            } else {
+                ToastUtils.displayToast("Please select the facilty", getActivity());
             }
         } catch (Exception e) {
-            Logger.logE("exception","" , e);
+            Logger.logE("exception", "", e);
         }
     }
 
@@ -866,33 +847,20 @@ public class DataFormFragment extends Fragment implements PeriodicTypeInterface,
         protected String doInBackground(String... strings) {
             periodicityCheckControllerDbHelper = new SurveyControllerDbHelper(getActivity());
             responseCheckController = new ResponseCheckController(getActivity());
-            externalDbOpenHelper = ExternalDbOpenHelper.getInstance(getActivity(), defaultPreferences.getString(Constants.DBNAME,""), defaultPreferences.getString("uId",""));
-            databaseHelper = ConveneDatabaseHelper.getInstance(getActivity(), defaultPreferences.getString(Constants.CONVENE_DB,""), defaultPreferences.getString("UID",""));
-            surveyList=new ArrayList<>();
+            externalDbOpenHelper = ExternalDbOpenHelper.getInstance(getActivity(), defaultPreferences.getString(Constants.DBNAME, ""), defaultPreferences.getString("uId", ""));
+            databaseHelper = ConveneDatabaseHelper.getInstance(getActivity(), defaultPreferences.getString(Constants.CONVENE_DB, ""), defaultPreferences.getString("UID", ""));
+            surveyList = new ArrayList<>();
             try {
-                JSONArray jsonArray=new JSONArray(address);
-                List<Address> addressList=Utils.getAddressList(jsonArray,syncStatus);
-                if(!addressList.isEmpty()){
-                    locationId= String.valueOf(addressList.get(0).getBoundaryId());
+                JSONArray jsonArray = new JSONArray(address);
+                List<Address> addressList = Utils.getAddressList(jsonArray, syncStatus);
+                if (!addressList.isEmpty()) {
+                    locationId = String.valueOf(addressList.get(0).getBoundaryId());
                 }
-            }catch (Exception e){
-                Logger.logE(TAG,"",e);
+            } catch (Exception e) {
+                Logger.logE(TAG, "", e);
             }
 
-            if (surveyIdDCF != -1)
-            {
-                surveyList = externalDbOpenHelper.getSingleTypeBasedSurvey(surveyIdDCF);
-            }
-            else if (btype != null && (BENEFICIARIES_TITLE).equals(btype)) {
-                boolean checkBeneficiary= externalDbOpenHelper.checkBeneficiaryBasedSurvey("facility_ids","beneficiary_ids");
-                if(checkBeneficiary){
-                    getBeneficiaryBasedSurvey();
-                }else{
-                    getBeneficiaryFacilityBasedForm();
-                }
-            }else{
-                getTheFacilityBasedForm();
-            }
+            getTheFacilityBasedForm();
             return "";
         }
 

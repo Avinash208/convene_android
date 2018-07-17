@@ -17,6 +17,8 @@ import com.google.gson.Gson;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.mahiti.convenemis.BeenClass.Activitylist;
+import org.mahiti.convenemis.BeenClass.Project;
 import org.mahiti.convenemis.BeenClass.QuestionAnswer;
 import org.mahiti.convenemis.BeenClass.ResponsesData;
 import org.mahiti.convenemis.BeenClass.StatusBean;
@@ -4201,5 +4203,45 @@ public class ExternalDbOpenHelper extends SQLiteOpenHelper {
         database = this.getWritableDatabase();
         query = "DELETE FROM Surveys ";
         database.execSQL(query);
+    }
+
+    public void updateProjectResponse(Project project) {
+        try {
+            ContentValues cv = new ContentValues();
+            database = this.getWritableDatabase();
+            for (int i = 0; i < project.getProjectList().size(); i++) {
+                cv.put("project_id", project.getProjectList().get(i).getProjectId());
+                cv.put("project_name", project.getProjectList().get(i).getProjectName());
+                cv.put("created_on", project.getProjectList().get(i).getCreatedOn());
+                cv.put("modified_on", "");
+                cv.put("active", "");
+                cv.put("order", "");
+                updateActiveDatabase(project.getProjectList().get(i).getProjectId(),
+                        project.getProjectList().get(i).getActivitylist());
+                database.insertWithOnConflict("Project", null, cv, SQLiteDatabase.CONFLICT_REPLACE);
+            }
+
+        } catch (Exception e) {
+            Logger.logE("", "", e);
+        }
+    }
+
+    private void updateActiveDatabase(Integer projectId, List<Activitylist> activitylist) {
+        try {
+            ContentValues cv = new ContentValues();
+            database = this.getWritableDatabase();
+            for (int i = 0; i < activitylist.size(); i++) {
+                cv.put("project_id", projectId);
+                cv.put("activity_name", activitylist.get(i).getActivityName());
+                cv.put("activity_id", activitylist.get(i).getActivityName());
+                cv.put("leavbe", activitylist.get(i).getActivityName());
+
+                updateActiveDatabase(project.getProjectList().get(i).getProjectId(), project.getProjectList().get(i).getActivitylist());
+                database.insertWithOnConflict("ProjectActivityTable", null, cv, SQLiteDatabase.CONFLICT_REPLACE);
+            }
+
+        } catch (Exception e) {
+            Logger.logE("", "", e);
+        }
     }
 }

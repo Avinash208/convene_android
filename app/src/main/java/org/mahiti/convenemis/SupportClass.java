@@ -22,6 +22,7 @@ import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -188,7 +189,7 @@ public class SupportClass {
                     TextView question = editTextView.findViewById(R.id.mainQuestion);
                     question.setVisibility(View.GONE);
                     TextInputLayout v = (TextInputLayout) editTextView.findViewById(R.id.textInput);
-                    v.setHint(mAssesmant.get(i - 1).getAssessment());
+                    v.setHint(mAssesmant.get(i - 1).getAssessment() + " *");
                     v.setHintTextAppearance(R.style.hintstyle);
                     EditText editView = (EditText) editTextView.findViewById(R.id.ans_text);
                     editView.setSingleLine(true);
@@ -909,7 +910,7 @@ public class SupportClass {
         Spannable word = new SpannableString(text);
         labelObj.setText(word);
         Spannable wordTwo = new SpannableString(" *");
-        wordTwo.setSpan(new ForegroundColorSpan(Color.RED), 0, wordTwo.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        wordTwo.setSpan(new ForegroundColorSpan(Color.BLACK), 0, wordTwo.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         labelObj.append(wordTwo);
     }
 
@@ -1166,13 +1167,12 @@ public class SupportClass {
                     TextView question = editTextView.findViewById(R.id.mainQuestion);
                     question.setVisibility(View.GONE);
                     TextInputLayout v = (TextInputLayout) editTextView.findViewById(R.id.textInput);
-                    v.setHint(mAssesmant.get(i - 1).getAssessment());
+                    v.setHint(mAssesmant.get(i - 1).getAssessment() + " *");
                     v.setHintTextAppearance(R.style.hintstyle);
                     EditText editView = (EditText) editTextView.findViewById(R.id.ans_text);
                     editView.setSingleLine(true);
                     editView.setHintTextColor(activity.getResources().getColor(R.color.black));
                     question.setFocusable(true);
-
 
                     subCount = subCount + 20 + 2 + i;
                     editView.setId(subCount);
@@ -1604,27 +1604,44 @@ public class SupportClass {
         String[] orderLeves;
         activity = listingActivity;
         final Dialog dialog = new Dialog(activity);
-        dialog.setCancelable(true);
+        dialog.setCancelable(false);
         dialog.setContentView(R.layout.filterdialog);
         LinearLayout dymaicactivitydisplay = (LinearLayout) dialog.findViewById(R.id.dymaicactivitydisplay);
         TextView headinglabel = (TextView) dialog.findViewById(R.id.headinglabel);
         levels = dbhelper.getOrderLevels(surveyId);
-      //  levels = "level2,level3,level4,level5,level6,level7";
-        //labels = "State,District,Taluk,Grama Panchayath,Village,Hamlet";
-         labels = dbhelper.getOrderlabels(surveyId);
+        labels = dbhelper.getOrderlabels(surveyId);
         orderLabels = labels.split(",");
         orderLeves = levels.split(",");
         if (orderLabels.length > 0 && orderLeves.length > 0) {
 
-            createDynamicSpinnerAndLabel(orderLabels, orderLeves, dymaicactivitydisplay, dbhelper);
+            createDynamicSpinnerAndLabel(orderLabels, orderLeves, dymaicactivitydisplay, dbhelper, surveyId);
         } else {
             Toast.makeText(activity, "Sorry! Levels are empty", Toast.LENGTH_SHORT).show();
 
         }
-        createDynamicSpinnerAndLabel(orderLabels, orderLeves, dymaicactivitydisplay, dbhelper);
+        createDynamicSpinnerAndLabel(orderLabels, orderLeves, dymaicactivitydisplay, dbhelper, surveyId);
         filterButtonClickFunctionality(dialog, surveyId);
+        handleDialogBackPress(dialog);
         dialog.show();
 
+
+    }
+
+    private void handleDialogBackPress(Dialog dialog) {
+        dialog.setOnKeyListener(new Dialog.OnKeyListener() {
+
+            @Override
+            public boolean onKey(DialogInterface arg0, int keyCode,
+                                 KeyEvent event) {
+                // TODO Auto-generated method stub
+
+                if (keyCode == KeyEvent.KEYCODE_BACK) {
+                    activity.finish();
+                    dialog.dismiss();
+                }
+                return true;
+            }
+        });
 
     }
 
@@ -1636,7 +1653,7 @@ public class SupportClass {
                 Spinner getLastSpinner = storeAllDynamicSpinner.get(storeAllDynamicSpinner.size() - 1);
                 LevelBeen levelBeen = (LevelBeen) getLastSpinner.getSelectedItem();
                 if (levelBeen != null && !levelBeen.getName().equalsIgnoreCase("Select")) {
-                    buildFilterRecordSharedPrefarence(surveyId,dialog);
+                    buildFilterRecordSharedPrefarence(surveyId, dialog);
                 } else {
                     ToastUtils.displayToast("Please select upto least level", activity);
                 }
@@ -1658,14 +1675,23 @@ public class SupportClass {
                 selectedLevels.append(",").append(levelBeen.getName());
         }
         filterPreference.edit().putString(Constants.FILTER + "@" + surveyId, selectedLevels.toString()).apply();
-        FilterCallBackInterface filterCallBackInterface= (FilterCallBackInterface) activity;
+        FilterCallBackInterface filterCallBackInterface = (FilterCallBackInterface) activity;
         filterCallBackInterface.filterCallBack();
         dialog.cancel();
     }
 
 
+    /**
+     * Dynamic setting lable and setting the value to the spinner and also adding lisiner dynamically.
+     * @param orderLabels dynamic order labels.
+     * @param orderLeves dynamic order leave
+     * @param dymaicactivitydisplay parent linearLayout
+     * @param dbhelper database instance
+     * @param surveyId survey id
+     */
     private void createDynamicSpinnerAndLabel(String[] orderLabels, String[] orderLeves,
-                                              LinearLayout dymaicactivitydisplay, ExternalDbOpenHelper dbhelper) {
+                                              LinearLayout dymaicactivitydisplay, ExternalDbOpenHelper dbhelper,
+                                              int surveyId) {
         dymaicactivitydisplay.removeAllViews();
         storeAllDynamicSpinner.clear();
         try {
@@ -1676,10 +1702,10 @@ public class SupportClass {
                 dynamicSpinner.setTag(i);
                 dynamicSpinner.setId(i);
                 mainQuestionspinner.setText(orderLabels[i]);
-                setValuesToSpinner(orderLeves[i], dynamicSpinner, dbhelper);
+                setValuesToSpinner(orderLeves[i], dynamicSpinner, dbhelper, surveyId );
                 storeAllDynamicSpinner.add(dynamicSpinner);
                 dymaicactivitydisplay.addView(child);
-                setOnclickListnerDynamic(dynamicSpinner, orderLeves[i], dbhelper);
+                setOnclickListnerDynamic(dynamicSpinner, orderLeves[i], dbhelper, surveyId);
 
             }
 
@@ -1689,8 +1715,19 @@ public class SupportClass {
     }
 
 
-    private void setValuesToSpinner(String orderLeve, Spinner dynamicSpinner, ExternalDbOpenHelper dbhelper) {
+    /**
+     * setting default value to the Dynamic spinner and if already exist get from the SP and set @ first spinner.
+     * @param orderLeve dynamic order level
+     * @param dynamicSpinner dynamic spinner .
+     * @param dbhelper  encreapted database.
+     * @param surveyId  survey id.
+     */
+    private void setValuesToSpinner(String orderLeve, Spinner dynamicSpinner, ExternalDbOpenHelper dbhelper, int surveyId) {
+        SharedPreferences filterPreference = PreferenceManager.getDefaultSharedPreferences(activity);
         List<LevelBeen> getLevelsrecords = dbhelper.getLevelsrecords(orderLeve, dbhelper);
+        String getFilterRecords = filterPreference.getString(Constants.FILTER + "@" + surveyId, "");
+        if (!getFilterRecords.isEmpty())
+            getLevelsrecords.remove(0);
         if (!getLevelsrecords.isEmpty()) {
             ArrayAdapter<LevelBeen> spinnerArrayAdapter = new ArrayAdapter(activity, R.layout.spinner_multi_row_textview, getLevelsrecords);
             spinnerArrayAdapter.setDropDownViewResource(R.layout.spinner_multi_row_textview);// The drop down view
@@ -1698,13 +1735,21 @@ public class SupportClass {
         }
     }
 
-    private void setOnclickListnerDynamic(Spinner dynamicSpinner, String orderLeve, ExternalDbOpenHelper dbhelper) {
+    /**
+     * Dynamic onClickLisiner and setting the value from the database.
+     * @param dynamicSpinner dynamic spinner .
+     * @param orderLeve dynamic location level
+     * @param dbhelper database instance
+     * @param surveyId survey id
+     */
+    private void setOnclickListnerDynamic(Spinner dynamicSpinner, String orderLeve, ExternalDbOpenHelper dbhelper,
+                                          int surveyId) {
         dynamicSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
 
                 Logger.logD(TAG, "clicked Ites" + adapterView.getId());
-                updateValuesDynamic(adapterView.getId(), orderLeve, dbhelper);
+                updateValuesDynamic(adapterView.getId(), orderLeve, dbhelper, surveyId);
 
             }
 
@@ -1715,9 +1760,17 @@ public class SupportClass {
         });
     }
 
-    private void updateValuesDynamic(int selectedLevel, String orderLeve, ExternalDbOpenHelper dbhelper) {
+    /**
+     * updating Value to spinner dynamically
+     * @param selectedLevel loop selected level
+     * @param orderLeve order leave
+     * @param dbhelper database instance
+     * @param surveyId survey id
+     */
+    private void updateValuesDynamic(int selectedLevel, String orderLeve, ExternalDbOpenHelper dbhelper,
+                                     int surveyId) {
 
-
+        SharedPreferences filterPreference = PreferenceManager.getDefaultSharedPreferences(activity);
         try {
             String getStringLevel = orderLeve.substring(5, 6);
             int getLevel = Integer.valueOf(getStringLevel);
@@ -1735,8 +1788,11 @@ public class SupportClass {
                     ArrayAdapter<LevelBeen> spinnerArrayAdapter = new ArrayAdapter(activity, R.layout.spinner_multi_row_textview, stateList);
                     spinnerArrayAdapter.setDropDownViewResource(R.layout.spinner_multi_row_textview);// The drop down view
                     nextSpinner.setAdapter(spinnerArrayAdapter);
-
-
+                    String getFilterRecords = filterPreference.getString(Constants.FILTER + "@" + surveyId, "");
+                    if (!getFilterRecords.isEmpty()) {
+                        spinnerPreSelectFunctionaliy(nextSpinner, stateList,
+                                getFilterRecords);
+                    }
                 } else {
                     List<LevelBeen> emptyStateList = new ArrayList<>();
                     LevelBeen level1 = new LevelBeen(0, "Select");
@@ -1752,5 +1808,26 @@ public class SupportClass {
             Logger.logE(TAG, "updateValuesDynamic", e);
         }
     }
+
+    /**
+     * Pre-populating the spinner value back
+     * @param nextSpinner next spinner in the loop
+     * @param stateList  spinner value list .
+     * @param getFilterRecords getting value from the SP if already selected .
+     */
+    private void spinnerPreSelectFunctionaliy(Spinner nextSpinner,
+                                              List<LevelBeen> stateList, String getFilterRecords) {
+
+        String[] getSelectedLocation = getFilterRecords.split(",");
+        for (int i = 0; i < stateList.size(); i++) {
+            for (String aGetSelectedLocation : getSelectedLocation) {
+                if (aGetSelectedLocation.equalsIgnoreCase(stateList.get(i).getName())) {
+                    nextSpinner.setSelection(i);
+                }
+            }
+        }
+
+    }
+
 
 }
