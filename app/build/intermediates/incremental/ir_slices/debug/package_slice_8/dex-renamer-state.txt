@@ -1,4 +1,0 @@
-#Mon Apr 23 18:32:43 IST 2018
-base.0=/Volumes/DATA/Cry_Updated_Code/app/build/intermediates/transforms/dexMerger/debug/8
-path.0=classes.dex
-renamed.0=classes.dex
