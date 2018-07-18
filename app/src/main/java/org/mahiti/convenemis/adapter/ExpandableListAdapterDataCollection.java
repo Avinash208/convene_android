@@ -151,6 +151,7 @@ public class ExpandableListAdapterDataCollection extends BaseExpandableListAdapt
         String[] orderLevels = surveyDetailBean.getOrderLevels().split(",");
         editor.putString(Constants.O_LEAVEL, orderLevels[orderLevels.length-1]);
         editor.putString(Constants.CODE, surveyDetailBean.getPcode());
+        editor.putString(Constants.PROJECTFLOW, "0");
         if (datum.getActive()==0)
             editor.putInt(SURVEY_ID, datum.getBeneficiaryTypeId());
         else

@@ -120,8 +120,7 @@ import static org.mahiti.convenemis.utils.Constants.listHashMapKey;
 import static org.mahiti.convenemis.utils.Constants.rowInflater;
 
 
-
-public class SurveyQuestionActivity extends BaseActivity implements View.OnClickListener, surveyQuestionPreviewInterface ,
+public class SurveyQuestionActivity extends BaseActivity implements View.OnClickListener, surveyQuestionPreviewInterface,
         surveyQuestionGridInlineInterface {
     public static final String MY_PREFS_NAME = "MyPrefsFile";
     public static final String dateFormat = "dd-MM-yyyy";
@@ -152,6 +151,7 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
     protected List<Integer> blockIds;
     HashMap<String, List<Response>> hashMapAnswersEditText = new HashMap<>();
     private HashMap<String, LinearLayout> gridViewLinearLayoutHolderInline = new HashMap<>();
+    private List<TextView> storeAIWidgettextView = new ArrayList<>();
 
     int editcount = 0;
     int radiocount = 0;
@@ -216,7 +216,7 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
     HashMap<String, Spinner> hashMapDropdown = new HashMap<>();
     HashMap<String, List<AnswersPage>> hashMapForAnswerBeen = new HashMap<>();
     HashMap<String, TextView> hashMapTextError = new HashMap<>();
-    Map<String,Spinner> dynamicSpinnerHashMap= new HashMap<>();
+    Map<String, Spinner> dynamicSpinnerHashMap = new HashMap<>();
     File mFileTemp;
     int pageSetCount = 0;
     private String radioAnswerCode;
@@ -241,8 +241,8 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
     private boolean saveToDraftFlag = false;
     private ScrollView scrollView;
     private int surveysId;
-    String getParentsBeneficiary="";
-    String getParentsBeneficiaryName="";
+    String getParentsBeneficiary = "";
+    String getParentsBeneficiaryName = "";
     List<String> getAllGridQuestionCode = new ArrayList<>();
     List<String> getAllGridQuestionCodeInline = new ArrayList<>();
     surveyQuestionGridInlineInterface surveyQuestionGridInlineInterface;
@@ -456,24 +456,24 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
     @Override
     public void onBackPressed() {
         //TODO need to change the above code .
-      if (surveyPreferences.getString(Constants.SURVEYSTATUSTYPR,"").equals("new")){
-          Logger.logD(TAG,"New Survey");
-          SupportClass supportClass = new SupportClass();
-          supportClass.backButtonFunction(SurveyQuestionActivity.this, db, surveyHandler, surveyPrimaryKeyId);
-      }else{
-          Logger.logD(TAG,"Edit Survey");
-          AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
-          alertDialogBuilder.setTitle(R.string.exitSurvey).setPositiveButton("YES", new DialogInterface.OnClickListener() {
-              public void onClick(DialogInterface dialog, int which) {
-                  finish();
-              }
-          }).setNegativeButton("NO", new DialogInterface.OnClickListener() {
-              public void onClick(DialogInterface dialog, int which) {
-                  Logger.logD(TAG,"onClick");
-              }
-          }).show();
+        if (surveyPreferences.getString(Constants.SURVEYSTATUSTYPR, "").equals("new")) {
+            Logger.logD(TAG, "New Survey");
+            SupportClass supportClass = new SupportClass();
+            supportClass.backButtonFunction(SurveyQuestionActivity.this, db, surveyHandler, surveyPrimaryKeyId);
+        } else {
+            Logger.logD(TAG, "Edit Survey");
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+            alertDialogBuilder.setTitle(R.string.exitSurvey).setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    finish();
+                }
+            }).setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    Logger.logD(TAG, "onClick");
+                }
+            }).show();
 
-      }
+        }
 
 
     }
@@ -516,7 +516,7 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
                 previousButton.setVisibility(View.VISIBLE);
             }
             //setting 5 Questions in One Page
-            questionPageList = QuestionActivityUtils.getQuestionFromMainList(count, tempQidsList, surveyDatabase, pageSetCount, prefs.getInt(SURVEYID, 0), restUrl,dbOpenHelper);
+            questionPageList = QuestionActivityUtils.getQuestionFromMainList(count, tempQidsList, surveyDatabase, pageSetCount, prefs.getInt(SURVEYID, 0), restUrl, dbOpenHelper);
             List<String> currentPageQIDS = new ArrayList<>();
             int pageCount = questionPageList.size();
             for (int i = 0; i < pageCount; i++) {
@@ -608,7 +608,7 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
                     addressWidgetDisplay(listOfPage.get(k), questionFont, answerFont, questionCode);
                     break;
                 case 10:
-                   beneficiaryParentDisplay(listOfPage.get(k), questionFont, answerFont, questionCode);
+                    beneficiaryParentDisplay(listOfPage.get(k), questionFont, answerFont, questionCode);
                     break;
                 case 14:
                     normalGirdDisplay(listOfPage.get(k), questionCode);
@@ -625,9 +625,9 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
 
     private void inLineGridDisplay(Page page) {
         final View childInline = getLayoutInflater().inflate(R.layout.dialoginline, dynamicQuestionSet, false);
-       TextView question = (TextView) childInline.findViewById(R.id.mainQuestion);
+        TextView question = (TextView) childInline.findViewById(R.id.mainQuestion);
         Button dynamicInlineAdd = (Button) childInline.findViewById(R.id.addorcreateinline);
-        validateMandatoryView(page,childInline,question);
+        validateMandatoryView(page, childInline, question);
 
 
         final Page questionID = page;
@@ -638,7 +638,7 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
                 SupportClass.moduleToCreateInlineDialogForm(questionID, surveyDatabase, SurveyQuestionActivity.this, childInline, defaultPreferences);
             }
         });
-        gridQuestionMapDialog.put(getCurrentQuestionID+QUESTION,questionID);
+        gridQuestionMapDialog.put(getCurrentQuestionID + QUESTION, questionID);
         try {
             final List<Response> setAnswersListInline = setAnswersForGrid(page.getQuestionNumber(), db, String.valueOf(surveyPrimaryKeyId));
             if (setAnswersListInline.size() > 0) {
@@ -709,8 +709,8 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
     }
 
     private void normalGirdDisplay(Page page, int questionCode) {
-        View   child = getLayoutInflater().inflate(R.layout.dialog_grid, dynamicQuestionSet, false);//child.xml
-        TextView   question = (TextView) child.findViewById(R.id.mainQuestion);
+        View child = getLayoutInflater().inflate(R.layout.dialog_grid, dynamicQuestionSet, false);//child.xml
+        TextView question = (TextView) child.findViewById(R.id.mainQuestion);
         if (page.getMandatory().contains("1")) {
             if (!page.getToolTip().equalsIgnoreCase("")) {
                 final String getHelpText = page.getToolTip();
@@ -782,7 +782,7 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
             for (int preSubQue = 0; preSubQue < mSubQuestions.size(); preSubQue++) {
                 List<Response> getAnswer = new ArrayList<>();
                 for (int preAnswer = 0; preAnswer < setAnswers_listInline.size(); preAnswer++) {
-                    if (mSubQuestions.get(preSubQue).getQuestionId() == setAnswers_listInline.get(preAnswer).getPrimarykey()  ) {
+                    if (mSubQuestions.get(preSubQue).getQuestionId() == setAnswers_listInline.get(preAnswer).getPrimarykey()) {
                         Response response = setAnswers_listInline.get(preAnswer);
                         getAnswer.add(response);
                     }
@@ -848,40 +848,43 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
 
     private void beneficiaryParentDisplay(Page page, String questionFont, String answerFont, int questionCode) {
 
-        getBenificiaryQids= new ArrayList<>();
+        getBenificiaryQids = new ArrayList<>();
         View child = this.getLayoutInflater().inflate(R.layout.parentselecting, dynamicQuestionSet, false);//child.xml
         LinearLayout singleSpinnerContainer = (LinearLayout) child.findViewById(R.id.singlespinnercontainer);
         TextView parentHeading = (TextView) child.findViewById(R.id.parent_heading);
-        if (page.getQuestion()!=null && !page.getQuestion().equals(""))
+        TextView errorText = (TextView) child.findViewById(R.id.error_heading);
+        if (page.getQuestion() != null && !page.getQuestion().equals(""))
             parentHeading.setText(page.getQuestion());
-        spinnerSearch=new SingleSpinnerSearchFilter(this);
+        spinnerSearch = new SingleSpinnerSearchFilter(this);
         singleSpinnerContainer.addView(spinnerSearch);
         dynamicQuestionSet.addView(child);
-        List<LevelBeen> list= DataBaseMapperClass.getBenificiaryParentDetails(db,page.getPartnerId());
+        List<LevelBeen> list = DataBaseMapperClass.getBenificiaryParentDetails(db, page.getPartnerId());
         HashMap<String, AnswersPage> getDataAnswer = getUserAnsweredResponseFromDB(page.getQuestionNumber(), db, surveyPrimaryKeyId, restUrl);   // getting if already answered question
-        int getIndex=0;
-        if (!getDataAnswer.isEmpty()){
-            for(int p=0;p<list.size();p++){
-                AnswersPage answersPage=getDataAnswer.get(String.valueOf(questionCode));
+        int getIndex = 0;
+        if (!getDataAnswer.isEmpty()) {
+            for (int p = 0; p < list.size(); p++) {
+                AnswersPage answersPage = getDataAnswer.get(String.valueOf(questionCode));
                 if (answersPage.getAnswer().equals(list.get(p).getUuid()))
-                    getIndex=p;
+                    getIndex = p;
             }
         }
+        storeAIWidgettextView.add(errorText);
         spinnerSearch.setFilterItems(list, getIndex, new SpinnerListenerFilter() {
 
             @Override
             public void onItemsSelected(List<LevelBeen> items) {
                 try {
-                    for(int j=0;j<items.size();j++){
+                    for (int j = 0; j < items.size(); j++) {
                         if (items.get(j).isSelected()) {
-                            Logger.logD("Selected","Item is"+list.get(j).getUuid());
-                            getParentsBeneficiary=list.get(j).getUuid();
-                            getParentsBeneficiaryName=list.get(j).getName();
+                            Logger.logD("Selected", "Item is" + list.get(j).getUuid());
+                            getParentsBeneficiary = list.get(j).getUuid();
+                            getParentsBeneficiaryName = list.get(j).getName();
                             getBenificiaryQids.add(page.getQuestionNumber());
+
                         }
                     }
-                }catch (Exception e){
-                    Logger.logE(TAG,"onItemsSelected in ",e);
+                } catch (Exception e) {
+                    Logger.logE(TAG, "onItemsSelected in ", e);
                 }
 
             }
@@ -902,13 +905,13 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
         Spinner spinner = (Spinner) child.findViewById(R.id.spinner);
         TextView errorTextdropdownview = (TextView) child.findViewById(R.id.errorTextdropdownview);
         TextView mainQuestionspinner = (TextView) child.findViewById(R.id.mainQuestionspinner);
-        List<Level1> countryList=dbhelper.setStateSpinner("Level1");
-        List<Level1> statepinnerList=dbhelper.setStateSpinner("Level2");
-        List<Level1> districtList=dbhelper.setStateSpinner("Level3");
-        List<Level1> talukList=dbhelper.setStateSpinner("Level4");
-        List<Level1> gpList=dbhelper.setStateSpinner("Level5");
-        List<Level1> villageList=dbhelper.setStateSpinner("Level6");
-        List<Level1> hamletList=dbhelper.setStateSpinner("Level7");
+        List<Level1> countryList = dbhelper.setStateSpinner("Level1");
+        List<Level1> statepinnerList = dbhelper.setStateSpinner("Level2");
+        List<Level1> districtList = dbhelper.setStateSpinner("Level3");
+        List<Level1> talukList = dbhelper.setStateSpinner("Level4");
+        List<Level1> gpList = dbhelper.setStateSpinner("Level5");
+        List<Level1> villageList = dbhelper.setStateSpinner("Level6");
+        List<Level1> hamletList = dbhelper.setStateSpinner("Level7");
 
         ArrayAdapter<Level1> spinnerArrayAdapter = new ArrayAdapter<Level1>(this, R.layout.spinner_multi_row_textview, countryList);
         spinnerArrayAdapter.setDropDownViewResource(R.layout.spinner_multi_row_textview);// The drop down view
@@ -916,14 +919,14 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                Level1 countryList= (Level1)  adapterView.getSelectedItem();
-                int getStateIdFromResponse= DataBaseMapperClass.getStateResponse("level2",surveyPrimaryKeyId,db);
-                List<Level1> stateList=dbhelper.setSpinnerByID("level1_id","Level2",countryList.getId());
+                Level1 countryList = (Level1) adapterView.getSelectedItem();
+                int getStateIdFromResponse = DataBaseMapperClass.getStateResponse("level2", surveyPrimaryKeyId, db);
+                List<Level1> stateList = dbhelper.setSpinnerByID("level1_id", "Level2", countryList.getId());
                 ArrayAdapter<Level1> districtArrayAdapter = new ArrayAdapter<Level1>(SurveyQuestionActivity.this, R.layout.spinner_multi_row_textview, stateList);
                 districtArrayAdapter.setDropDownViewResource(R.layout.spinner_multi_row_textview);// The drop down view
                 statespinner.setAdapter(districtArrayAdapter);
-                for(int k=0;k<stateList.size();k++){
-                    if (stateList.get(k).getId()==getStateIdFromResponse){
+                for (int k = 0; k < stateList.size(); k++) {
+                    if (stateList.get(k).getId() == getStateIdFromResponse) {
                         statespinner.setSelection(k);
                     }
                 }
@@ -938,14 +941,14 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
         statespinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                Level1 countryList= (Level1)  adapterView.getSelectedItem();
-                int getStateIdFromResponse= DataBaseMapperClass.getStateResponse("level3",surveyPrimaryKeyId,db);
-                List<Level1> stateList=dbhelper.setSpinnerByID("level2_id","Level3",countryList.getId());
+                Level1 countryList = (Level1) adapterView.getSelectedItem();
+                int getStateIdFromResponse = DataBaseMapperClass.getStateResponse("level3", surveyPrimaryKeyId, db);
+                List<Level1> stateList = dbhelper.setSpinnerByID("level2_id", "Level3", countryList.getId());
                 ArrayAdapter<Level1> districtArrayAdapter = new ArrayAdapter<Level1>(SurveyQuestionActivity.this, R.layout.spinner_multi_row_textview, stateList);
                 districtArrayAdapter.setDropDownViewResource(R.layout.spinner_multi_row_textview);// The drop down view
                 districtspinner.setAdapter(districtArrayAdapter);
-                for(int k=0;k<stateList.size();k++){
-                    if (stateList.get(k).getId()==getStateIdFromResponse){
+                for (int k = 0; k < stateList.size(); k++) {
+                    if (stateList.get(k).getId() == getStateIdFromResponse) {
                         districtspinner.setSelection(k);
                     }
                 }
@@ -959,10 +962,10 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
         districtspinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                Level1 countryList= (Level1)  adapterView.getSelectedItem();
-                int getStateIdFromResponse= DataBaseMapperClass.getStateResponse("level4",surveyPrimaryKeyId,db);
+                Level1 countryList = (Level1) adapterView.getSelectedItem();
+                int getStateIdFromResponse = DataBaseMapperClass.getStateResponse("level4", surveyPrimaryKeyId, db);
 
-                List<Level1> stateList=dbhelper.setSpinnerByID("level3_id","Level4",countryList.getId());
+                List<Level1> stateList = dbhelper.setSpinnerByID("level3_id", "Level4", countryList.getId());
                 if (stateList.isEmpty()) {
                     Level1 level1 = new Level1(0, 0, "", 0, "Select Taluk");
                     stateList.add(level1);
@@ -970,8 +973,8 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
                 ArrayAdapter<Level1> taArrayAdapter = new ArrayAdapter<Level1>(SurveyQuestionActivity.this, R.layout.spinner_multi_row_textview, stateList);
                 taArrayAdapter.setDropDownViewResource(R.layout.spinner_multi_row_textview);// The drop down view
                 talukspinner.setAdapter(taArrayAdapter);
-                for(int k=0;k<stateList.size();k++){
-                    if (stateList.get(k).getId()==getStateIdFromResponse){
+                for (int k = 0; k < stateList.size(); k++) {
+                    if (stateList.get(k).getId() == getStateIdFromResponse) {
                         talukspinner.setSelection(k);
                     }
                 }
@@ -985,10 +988,10 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
         talukspinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                Level1 countryList= (Level1)  adapterView.getSelectedItem();
-                int getStateIdFromResponse= DataBaseMapperClass.getStateResponse("level5",surveyPrimaryKeyId,db);
+                Level1 countryList = (Level1) adapterView.getSelectedItem();
+                int getStateIdFromResponse = DataBaseMapperClass.getStateResponse("level5", surveyPrimaryKeyId, db);
 
-                List<Level1> stateList=dbhelper.setSpinnerByID("level4_id","Level5",countryList.getId());
+                List<Level1> stateList = dbhelper.setSpinnerByID("level4_id", "Level5", countryList.getId());
                 if (stateList.isEmpty()) {
                     Level1 level1 = new Level1(0, 0, "", 0, "Select gramaPanchayath");
                     stateList.add(level1);
@@ -996,8 +999,8 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
                 ArrayAdapter<Level1> taArrayAdapter = new ArrayAdapter<Level1>(SurveyQuestionActivity.this, R.layout.spinner_multi_row_textview, stateList);
                 taArrayAdapter.setDropDownViewResource(R.layout.spinner_multi_row_textview);// The drop down view
                 gramaPanchayathspinner.setAdapter(taArrayAdapter);
-                for(int k=0;k<stateList.size();k++){
-                    if (stateList.get(k).getId()==getStateIdFromResponse){
+                for (int k = 0; k < stateList.size(); k++) {
+                    if (stateList.get(k).getId() == getStateIdFromResponse) {
                         gramaPanchayathspinner.setSelection(k);
                     }
                 }
@@ -1011,10 +1014,10 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
         gramaPanchayathspinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                Level1 countryList= (Level1)  adapterView.getSelectedItem();
-                int getStateIdFromResponse= DataBaseMapperClass.getStateResponse("level6",surveyPrimaryKeyId,db);
+                Level1 countryList = (Level1) adapterView.getSelectedItem();
+                int getStateIdFromResponse = DataBaseMapperClass.getStateResponse("level6", surveyPrimaryKeyId, db);
 
-                List<Level1> stateList=dbhelper.setSpinnerByID("level5_id","Level6",countryList.getId());
+                List<Level1> stateList = dbhelper.setSpinnerByID("level5_id", "Level6", countryList.getId());
                 if (stateList.isEmpty()) {
                     Level1 level1 = new Level1(0, 0, "", 0, "Select Village");
                     stateList.add(level1);
@@ -1022,8 +1025,8 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
                 ArrayAdapter<Level1> taArrayAdapter = new ArrayAdapter<Level1>(SurveyQuestionActivity.this, R.layout.spinner_multi_row_textview, stateList);
                 taArrayAdapter.setDropDownViewResource(R.layout.spinner_multi_row_textview);// The drop down view
                 villagespinner.setAdapter(taArrayAdapter);
-                for(int k=0;k<stateList.size();k++){
-                    if (stateList.get(k).getId()==getStateIdFromResponse){
+                for (int k = 0; k < stateList.size(); k++) {
+                    if (stateList.get(k).getId() == getStateIdFromResponse) {
                         villagespinner.setSelection(k);
                     }
                 }
@@ -1037,10 +1040,10 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
         villagespinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                Level1 countryList= (Level1)  adapterView.getSelectedItem();
-                int getStateIdFromResponse= DataBaseMapperClass.getStateResponse("level7",surveyPrimaryKeyId,db);
+                Level1 countryList = (Level1) adapterView.getSelectedItem();
+                int getStateIdFromResponse = DataBaseMapperClass.getStateResponse("level7", surveyPrimaryKeyId, db);
 
-                List<Level1> stateList=dbhelper.setSpinnerByID("level6_id","Level7",countryList.getId());
+                List<Level1> stateList = dbhelper.setSpinnerByID("level6_id", "Level7", countryList.getId());
                 if (stateList.isEmpty()) {
                     Level1 level1 = new Level1(0, 0, "", 0, "Select Hamlate");
                     stateList.add(level1);
@@ -1048,8 +1051,8 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
                 ArrayAdapter<Level1> taArrayAdapter = new ArrayAdapter<Level1>(SurveyQuestionActivity.this, R.layout.spinner_multi_row_textview, stateList);
                 taArrayAdapter.setDropDownViewResource(R.layout.spinner_multi_row_textview);// The drop down view
                 hamletspinner.setAdapter(taArrayAdapter);
-                for(int k=0;k<stateList.size();k++){
-                    if (stateList.get(k).getId()==getStateIdFromResponse){
+                for (int k = 0; k < stateList.size(); k++) {
+                    if (stateList.get(k).getId() == getStateIdFromResponse) {
                         hamletspinner.setSelection(k);
                     }
                 }
@@ -1060,15 +1063,15 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
 
             }
         });
-        getAddressQuestionIds= new ArrayList<>();
+        getAddressQuestionIds = new ArrayList<>();
         getAddressQuestionIds.add(page.getQuestionNumber());
-        dynamicSpinnerHashMap.put("level1",spinner);
-        dynamicSpinnerHashMap.put("level2",statespinner);
-        dynamicSpinnerHashMap.put("level3",districtspinner);
-        dynamicSpinnerHashMap.put("level4",talukspinner);
-        dynamicSpinnerHashMap.put("level5",gramaPanchayathspinner);
-        dynamicSpinnerHashMap.put("level6",villagespinner);
-        dynamicSpinnerHashMap.put("level7",hamletspinner);
+        dynamicSpinnerHashMap.put("level1", spinner);
+        dynamicSpinnerHashMap.put("level2", statespinner);
+        dynamicSpinnerHashMap.put("level3", districtspinner);
+        dynamicSpinnerHashMap.put("level4", talukspinner);
+        dynamicSpinnerHashMap.put("level5", gramaPanchayathspinner);
+        dynamicSpinnerHashMap.put("level6", villagespinner);
+        dynamicSpinnerHashMap.put("level7", hamletspinner);
         dynamicQuestionSet.addView(child);
 
 
@@ -1095,10 +1098,9 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
             v.setHint(displayQuestionModel.getQuestion());
 
 
-
         v.setHintTextAppearance(R.style.hintstyle);
 
-         EditText edittext = (EditText) child.findViewById(R.id.ans_text);
+        EditText edittext = (EditText) child.findViewById(R.id.ans_text);
         edittext.setSingleLine(true);
         edittext.setHintTextColor(getResources().getColor(R.color.pink));
         question.setFocusable(true);
@@ -1193,10 +1195,10 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
                     String[] array = mathString.split(":");
                     switch (array[1]) {
                         case "NOV":
-                            showDateDialog(dateDialogId, mathString,button);
+                            showDateDialog(dateDialogId, mathString, button);
                             break;
                         case "D":
-                            showDateDialog(dateDialogId, mathString,button);
+                            showDateDialog(dateDialogId, mathString, button);
                             break;
                         case "T":
                             String timeFormatZoon = array[2];
@@ -1207,7 +1209,7 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
                     }
                 } else {
                     setDateView = 1;
-                    showDateDialog(dateDialogId, mathString,button);
+                    showDateDialog(dateDialogId, mathString, button);
                 }
             }
 
@@ -1239,7 +1241,8 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
         question.setTextSize(Integer.valueOf(questionFont));
         question.setFocusable(true);
         LinearLayout LR = (LinearLayout) child.findViewById(R.id.relativeLayoutradio);
-        RadioGroup RG =(RadioGroup) child.findViewById(R.id.myRadioGroup);
+        TextView errorText = (TextView) child.findViewById(R.id.errortext);
+        RadioGroup RG = (RadioGroup) child.findViewById(R.id.myRadioGroup);
         RG.setTag(displayQuestionModel.getQuestionNumber());
         HashMap<String, List<AnswersPage>> answerValues = DataBaseMapperClass.getAnswerFromDBnew(displayQuestionModel.getQuestionNumber(), surveyDatabase, restUrl,/*defaultPreferences.getInt(Constants.SELECTEDLANGUAGE,0)*/1);
         List<AnswersPage> answerEditList = answerValues.get(String.valueOf(questionCode));
@@ -1261,15 +1264,12 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
             radioButtons[j].setId(generateIncrementalInteger());
             RG.addView(radioButtons[j]);
         }
-        TextView errorTextRadio = new TextView(this);
-        errorTextRadio.setTextColor(Color.RED);
-        hashMapTextError.put(String.valueOf(displayQuestionModel.getQuestionNumber()), errorTextRadio);
+        hashMapTextError.put(String.valueOf(displayQuestionModel.getQuestionNumber()), errorText);
         hashMapRadio.put(String.valueOf(displayQuestionModel.getQuestionNumber()), RG);
 
         getAllradiobuttonQuestionCode.add(String.valueOf(displayQuestionModel.getQuestionNumber()));
         allRadioGroups.add(RG);
-        LR.addView(errorTextRadio);
-        errorTextRadio.setVisibility(View.GONE);
+        errorText.setVisibility(View.GONE);
         dynamicQuestionSet.addView(child);
     }
 
@@ -1514,17 +1514,26 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
                      */
                     case 9:
                         list.add(String.valueOf(true));
-                        Logger.logD("Validation part","Storing all the spinner values to survey table");
+                        Logger.logD("Validation part", "Storing all the spinner values to survey table");
                         fillAllLevelToDatabase();
 
                         break;
                     case 10:
-                        if (!getParentsBeneficiary.equals("")) {
+                        TextView errorTextView = storeAIWidgettextView.get(0);
+
+                        if (!getParentsBeneficiary.equals("") && !getParentsBeneficiaryName.equals("Select Household")) {
+                            errorTextView.setVisibility(View.GONE);
                             list.add(String.valueOf(true));
-                            fillAIResponseToDB(getBenificiaryQids.get(0), getParentsBeneficiary, 10,getParentsBeneficiaryName);
+                            fillAIResponseToDB(getBenificiaryQids.get(0), getParentsBeneficiary, 10, getParentsBeneficiaryName);
+                        } else {
+                            list.add(String.valueOf(false));
+                            errorTextView.setText("Select household");
+                            errorTextView.setVisibility(View.VISIBLE);
+                            errorTextView.startAnimation(animShake);
+                            errorTextView.setFocusable(true);
+                            errorTextView.setFocusableInTouchMode(true);
+                            errorTextView.requestFocus();
                         }
-                        else
-                            list.add(String.valueOf(true));
                         break;
 
                     case 14:
@@ -1547,7 +1556,7 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
                                     tempFlag = true;
                                 }
                             }
-                            if (tempFlag){
+                            if (tempFlag) {
                                 boolean fileBoolean = FunctionalityCodeStoreGRid(gridviewQuestionCOde);
                                 list.add(String.valueOf(fileBoolean));
                             } else {
@@ -1595,7 +1604,7 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
         Logger.logD(TAG, "the grid QuestionID" + gridviewQuestionCOde);
         if (fillInlineRow.size() > 0) {
 
-           return validateAndUpdateHashMap(getResponseKeys,gridviewQuestionCOde);
+            return validateAndUpdateHashMap(getResponseKeys, gridviewQuestionCOde);
 
         } else {
             boolean checkMandatory = DBHandler.getMandatoryQuestion(String.valueOf(gridviewQuestionCOde), surveyDatabase);
@@ -1670,7 +1679,7 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
 
     private void fillAllLevelToDatabase() {
         try {
-            int getUpdatedResult= surveyHandler.updateAddressRecordToSurveyTable(surveyPrimaryKeyId,dynamicSpinnerHashMap);
+            int getUpdatedResult = surveyHandler.updateAddressRecordToSurveyTable(surveyPrimaryKeyId, dynamicSpinnerHashMap);
             Spinner getLevel7Spinner = dynamicSpinnerHashMap.get("level7");
             Level1 getLevel7Id = (Level1) getLevel7Spinner.getSelectedItem();
             fillResponseToDB(getAddressQuestionIds.get(0), String.valueOf(getLevel7Id.getName()), 9);
@@ -1678,6 +1687,7 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
             e.printStackTrace();
         }
     }
+
     /**
      * Clearing all question counts under each type
      */
@@ -1708,7 +1718,7 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
         list.clear();
         GridResponseHashMap.clear();
         rowInflater = 0;
-        GridCount=0;
+        GridCount = 0;
         gridCountInline = 0;
         editcount = 0;
         getAllGridQuestionCodeInline.clear();
@@ -1726,6 +1736,7 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
             }
         }
     };
+
     private void updateGridDateView(DatePicker view) {
         Date date = new Date();
         String UserFormate = String.valueOf((new StringBuilder().append(mDay).append("/").append(mMonth + 1).append("/").append(mYear).append(" ")));
@@ -2099,7 +2110,8 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
                 skipcode = QuestionActivityUtils.checkSkipCode(String.valueOf(questionCode), database, radioAnswerCode);
             }
         }
-        if (checkMandatory && radioGroup[0].getCheckedRadioButtonId() == -1) {
+        Logger.logD("getRadioStatus",radioGroup[0].getCheckedRadioButtonId()+"");
+        if (checkMandatory && !checkRadioEach(radioGroup[0])) {
             errorTextView.setVisibility(View.VISIBLE);
             errorTextView.setText(R.string.mandatoryQuestion);
             errorTextView.startAnimation(animShake);
@@ -2111,6 +2123,16 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
         if (!checkMandatory && radioGroup[0].getCheckedRadioButtonId() == -1)
             radioBoolean = true;
         return radioBoolean;
+    }
+
+    private boolean checkRadioEach(RadioGroup radioGroup) {
+       for(int i=0;i<radioGroup.getChildCount();i++){
+           final RadioButton button = (RadioButton) radioGroup.getChildAt(i);
+           return button.isChecked();
+       }
+
+
+        return false;
     }
 
 
@@ -2132,14 +2154,14 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
         String[] arrayValidation = mathString.split(":");
         String ansText = editText.getText().toString();
         boolean checkMandatory = DBHandler.getMandatoryQuestion(String.valueOf(i), database);
-        String getConstraints= prefs.getString(Constants.constraints,"");
-        String[] tempDelete=getConstraints.split(",");
+        String getConstraints = prefs.getString(Constants.constraints, "");
+        String[] tempDelete = getConstraints.split(",");
 
-        for (int q=0;q<tempDelete.length;q++){
-            if (!getConstraints.equals("") && Integer.parseInt(tempDelete[q])==i) {
-                if(!surveyHandler.isConstraintValueExist(ansText,i,surveyPrimaryKeyId)) {
+        for (int q = 0; q < tempDelete.length; q++) {
+            if (!getConstraints.equals("") && Integer.parseInt(tempDelete[q]) == i) {
+                if (!surveyHandler.isConstraintValueExist(ansText, i, surveyPrimaryKeyId)) {
                     errorText.setVisibility(View.GONE);
-                }else{
+                } else {
                     errorText.setVisibility(View.VISIBLE);
                     errorText.setText("Record already exist ");
                     errorText.startAnimation(animShakeObj);
@@ -2206,6 +2228,7 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
             return true;
         }
     }
+
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
@@ -2223,12 +2246,12 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
             case R.id.backPress:
                 Logger.logD(TAG, "Clicked backPress button");
                 clearAllWidgetMapCounts();
-                if (surveyPreferences.getString(Constants.SURVEYSTATUSTYPR,"").equals("new")){
-                    Logger.logD(TAG,"New Survey");
+                if (surveyPreferences.getString(Constants.SURVEYSTATUSTYPR, "").equals("new")) {
+                    Logger.logD(TAG, "New Survey");
                     SupportClass supportClass = new SupportClass();
                     supportClass.backButtonFunction(SurveyQuestionActivity.this, db, surveyHandler, surveyPrimaryKeyId);
-                }else{
-                    Logger.logD(TAG,"Edit Survey");
+                } else {
+                    Logger.logD(TAG, "Edit Survey");
                     AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
                     alertDialogBuilder.setTitle(R.string.exitSurvey).setPositiveButton("YES", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
@@ -2281,7 +2304,7 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
         Logger.logD(TAG, booleanValue.toString());
         Intent intent = new Intent(this, MyIntentService.class);
         startService(intent);
-        Utilities.setLocationSurveyFlag(defaultPreferences,"clear");
+        Utilities.setLocationSurveyFlag(defaultPreferences, "clear");
         finish();
     }
 
@@ -2337,9 +2360,9 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
                 SharedPreferences.Editor editorSaveDraft = surveyPreferences.edit();
                 editorSaveDraft.putString("recentPreviewRecord", "");
                 editorSaveDraft.apply();
-              /** PreviewPopUp pre = new PreviewPopUp();
-                pre.showPreviewPopUp(SurveyQuestionActivity.this, surveyPrimaryKeyId, dbOpenHelper, nextB, previousButton, surveysId);
-                Modified by Guru */
+                /** PreviewPopUp pre = new PreviewPopUp();
+                 pre.showPreviewPopUp(SurveyQuestionActivity.this, surveyPrimaryKeyId, dbOpenHelper, nextB, previousButton, surveysId);
+                 Modified by Guru */
                 callPopUpActivity();
                 return;
             }
@@ -2655,13 +2678,12 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
             // close current activity screen and relaunch previous page with updates if any changes in current screen
             Intent nextIntent;
             if (surveyPreferences.getBoolean("isLocationBased", false)) {
-                Utilities.setLocationSurveyFlag(surveyPreferences,"clear");
+                Utilities.setLocationSurveyFlag(surveyPreferences, "clear");
                 finish();
                 return;
-            }
-            else {
+            } else {
 
-                intent.putExtra("surveyIdDCF","1");
+                intent.putExtra("surveyIdDCF", "1");
              /*if (surveyPreferences.getString(Constants.SURVEYSTATUSTYPR,"").equalsIgnoreCase("new")){
                  Utilities.setLocationSurveyFlag(surveyPreferences,"clear");
                  Intent intent1=new Intent(this, LocationBasedActivity.class);
@@ -2675,7 +2697,7 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
              }*/
                 nextIntent = new Intent(SurveyQuestionActivity.this, ListingActivity.class);
                 finish();
-                            }
+            }
             //closeLaunchNextPage(nextIntent);
         } catch (Exception e) {
             Logger.logE("", "Submit functionality", e);
@@ -2690,7 +2712,7 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
     public void closeLaunchNextPage(Intent intent) {
 
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        intent.putExtra(Constants.HEADER_NAME,prefs.getString("Survey_tittle", ""));
+        intent.putExtra(Constants.HEADER_NAME, prefs.getString("Survey_tittle", ""));
         startActivity(intent);
         questionDisplayPageCount = 1;
         SupportClass supportClass = new SupportClass();
@@ -2859,7 +2881,7 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
     private void checkResult(int resultCode) {
         if (resultCode == Activity.RESULT_OK)
             submitCloseActivity();
-        else{
+        else {
             nextB.setVisibility(View.VISIBLE);
             previousButton.setVisibility(View.VISIBLE);
         }
@@ -2894,12 +2916,13 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
         answersCollection.add(response);
         hashMapAnswersEditText.put(MessageFormat.format("{0}_{1}", questionCode, qType), answersCollection);
     }
+
     /**
      * @param questionCode
      * @param answer
      * @param qType
      */
-    private void fillAIResponseToDB(int questionCode, String answer, int qType,String benificaryName) {
+    private void fillAIResponseToDB(int questionCode, String answer, int qType, String benificaryName) {
         List<Response> answersCollection = new ArrayList<>();
         List<AnswersPage> ans_code = hashMapForAnswerBeen.get(String.valueOf(questionCode));
         int survey_ID = getSharedPreferences(MY_PREFS_NAME_SURVEY, MODE_PRIVATE).getInt(SURVEYID, 0);
@@ -3098,9 +3121,8 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
                         Button editResponseButton = (Button) childInlineGrid.findViewById(R.id.edit);
                         Button deleteResponseButton = (Button) childInlineGrid.findViewById(R.id.delete);
                         List<Response> getResponseListFrmHashmap = hashMapGridResponse.get(getResponseKeys.get(j));
-                        List<AssesmentBean> MAssesmant = DataBaseMapperClass.getAssesements(currentQuestionNumber,surveyDatabase,1);
-                        gridAssessmentMapDialog.put(String.valueOf(currentQuestionNumber)+ "_ASS",MAssesmant);
-
+                        List<AssesmentBean> MAssesmant = DataBaseMapperClass.getAssesements(currentQuestionNumber, surveyDatabase, 1);
+                        gridAssessmentMapDialog.put(String.valueOf(currentQuestionNumber) + "_ASS", MAssesmant);
 
 
                         editResponseButton.setTag(String.valueOf(getResponseKeys.get(j) + "@EDIT"));
@@ -3137,10 +3159,10 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
                                 Logger.logD(TAG, "splitTag " + spiltTag[1]);
                                 Logger.logD(TAG, "rowInflater value " + rowInflater);
                                 Logger.logD(TAG, "Key value value " + Integer.getInteger(splitKeypare[1]));
-                                if (MAssessment!=null && questionPagebean!=null)
+                                if (MAssessment != null && questionPagebean != null)
                                     SupportClass.showDialogEdit(getResponseForEdit, MAssessment, SurveyQuestionActivity.this, SurveyQuestionActivity.this, questionPagebean, surveyDatabase, spiltTag[0], childTemp, 16, questionPagebean);
                                 else
-                                    ToastUtils.displayToast("Some thing  went wrong",SurveyQuestionActivity.this);
+                                    ToastUtils.displayToast("Some thing  went wrong", SurveyQuestionActivity.this);
                             }
                         });
 
@@ -3231,13 +3253,14 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
             return null;
         }
     }
+
     private void callPopUpActivity() {
         editcount = 0;
-        gridCountInline=0;
+        gridCountInline = 0;
         Intent startIntert = new Intent(SurveyQuestionActivity.this, ShowSurveyPreview.class);
-        startIntert.putExtra("surveyPrimaryKey",surveyPrimaryKeyId);
-        startIntert.putExtra("survey_id",surveysId);
-        startIntert.putExtra("visibility",true);
-        startActivityForResult(startIntert,POP_UP_ACTIVITY);
+        startIntert.putExtra("surveyPrimaryKey", surveyPrimaryKeyId);
+        startIntert.putExtra("survey_id", surveysId);
+        startIntert.putExtra("visibility", true);
+        startActivityForResult(startIntert, POP_UP_ACTIVITY);
     }
 }

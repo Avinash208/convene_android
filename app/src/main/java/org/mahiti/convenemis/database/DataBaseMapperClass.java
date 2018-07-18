@@ -1319,6 +1319,10 @@ public class DataBaseMapperClass {
     public static List<LevelBeen> getBenificiaryParentDetails(net.sqlcipher.database.SQLiteDatabase db, String questionid) {
        List<LevelBeen> getBeneficiaryParentList= new ArrayList<>();
         String selectQuery = "SELECT Response.ans_text, Survey.uuid FROM Response INNER JOIN Survey ON Response.survey_id = Survey.uuid where Response.q_code="+questionid;
+        LevelBeen levelBeenDefault= new LevelBeen();
+        levelBeenDefault.setUuid("0");
+        levelBeenDefault.setName("Select Household");
+        getBeneficiaryParentList.add(levelBeenDefault);
         Cursor cursor = db.rawQuery(selectQuery, null);
         if (cursor.moveToFirst()) {
             do {

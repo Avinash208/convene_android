@@ -24,7 +24,6 @@ import org.mahiti.convenemis.BeenClass.parentChild.LocationSurveyBeen;
 import org.mahiti.convenemis.database.DBHandler;
 import org.mahiti.convenemis.database.ExternalDbOpenHelper;
 import org.mahiti.convenemis.database.Utilities;
-import org.mahiti.convenemis.fragments.DataFormFragment;
 import org.mahiti.convenemis.utils.Constants;
 import org.mahiti.convenemis.utils.Logger;
 import org.mahiti.convenemis.utils.StartSurvey;
@@ -202,7 +201,7 @@ public class LocationBasedActivity extends AppCompatActivity {
 
     private void updateValuesDynamic(int selectedLevel, String orderLeve) {
 
-
+        SharedPreferences sharedpreferences = activity.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
         try {
             String getStringLevel = orderLeve.substring(5, 6);
             int getLevel = Integer.valueOf(getStringLevel);
@@ -214,7 +213,7 @@ public class LocationBasedActivity extends AppCompatActivity {
                 Logger.logD(TAG, "clicked next spinner" + selectedLevel);
                 LevelBeen levelBeen = (LevelBeen) getStoredSpinner.getSelectedItem();
                 getLevel++;
-                List<LevelBeen> stateList = dbhelper.setSpinnerD("level" + (getLevel - 1) + "_id", String.valueOf("level" + getLevel), levelBeen.getId());
+                List<LevelBeen> stateList = dbhelper.setSpinnerD("level" + (getLevel - 1) + "_id", String.valueOf("level" + getLevel), levelBeen.getId(), sharedpreferences);
 
                 if (!stateList.isEmpty()) {
                     ArrayAdapter<LevelBeen> spinnerArrayAdapter = new ArrayAdapter(this, R.layout.spinner_multi_row_textview, stateList);

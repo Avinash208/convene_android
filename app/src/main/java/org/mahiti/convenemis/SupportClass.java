@@ -1596,6 +1596,7 @@ public class SupportClass {
 
     public void filterSupport(Bundle bundle, ListingActivity listingActivity, ExternalDbOpenHelper dbhelper) {
 
+
         storeAllDynamicSpinner.clear();
         int surveyId = bundle.getInt(Constants.SURVEY_ID);
         String levels;
@@ -1603,13 +1604,16 @@ public class SupportClass {
         String[] orderLabels;
         String[] orderLeves;
         activity = listingActivity;
+        SharedPreferences filterPreference = PreferenceManager.getDefaultSharedPreferences(activity);
+        SharedPreferences sharedpreferences = activity.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
         final Dialog dialog = new Dialog(activity);
         dialog.setCancelable(false);
         dialog.setContentView(R.layout.filterdialog);
         LinearLayout dymaicactivitydisplay = (LinearLayout) dialog.findViewById(R.id.dymaicactivitydisplay);
         TextView headinglabel = (TextView) dialog.findViewById(R.id.headinglabel);
-        levels = dbhelper.getOrderLevels(surveyId);
-        labels = dbhelper.getOrderlabels(surveyId);
+        levels = getAccessBasedLevels(sharedpreferences,surveyId,dbhelper);
+        labels =getAccessBasedLables(sharedpreferences,surveyId,dbhelper);
+
         orderLabels = labels.split(",");
         orderLeves = levels.split(",");
         if (orderLabels.length > 0 && orderLeves.length > 0) {
@@ -1621,22 +1625,44 @@ public class SupportClass {
         }
         createDynamicSpinnerAndLabel(orderLabels, orderLeves, dymaicactivitydisplay, dbhelper, surveyId);
         filterButtonClickFunctionality(dialog, surveyId);
-        handleDialogBackPress(dialog);
+        String getFilterRecords = filterPreference.getString(Constants.FILTER + "@" + surveyId, "");
+        handleDialogBackPress(dialog,getFilterRecords);
         dialog.show();
 
 
     }
 
-    private void handleDialogBackPress(Dialog dialog) {
+    private String getAccessBasedLables(SharedPreferences sharedpreferences, int surveyId, ExternalDbOpenHelper dbhelper) {
+        String getAccessBasedLocation="";
+        if (sharedpreferences.getString(Constants.PROJECTFLOW,"").equalsIgnoreCase("1")){
+            getAccessBasedLocation=sharedpreferences.getString(Constants.O_LABLES,"");
+        }else if(sharedpreferences.getString(Constants.PROJECTFLOW,"").equalsIgnoreCase("0")) {
+            getAccessBasedLocation=   dbhelper.getOrderlabels(surveyId);
+        }
+        return getAccessBasedLocation;
+    }
+
+    private String getAccessBasedLevels(SharedPreferences filterPreference, int surveyId, ExternalDbOpenHelper dbhelper) {
+     String getAccessBasedLocation="";
+      if (filterPreference.getString(Constants.PROJECTFLOW,"").equalsIgnoreCase("1")){
+          getAccessBasedLocation=filterPreference.getString(Constants.O_LEAVEL,"");
+      }else if(filterPreference.getString(Constants.PROJECTFLOW,"").equalsIgnoreCase("0")) {
+          getAccessBasedLocation=  dbhelper.getOrderLevels(surveyId);
+      }
+        return getAccessBasedLocation;
+    }
+
+    private void handleDialogBackPress(Dialog dialog, String getFilterRecords) {
         dialog.setOnKeyListener(new Dialog.OnKeyListener() {
 
             @Override
             public boolean onKey(DialogInterface arg0, int keyCode,
                                  KeyEvent event) {
                 // TODO Auto-generated method stub
-
-                if (keyCode == KeyEvent.KEYCODE_BACK) {
+                if (keyCode == KeyEvent.KEYCODE_BACK && getFilterRecords.isEmpty()) {
                     activity.finish();
+                    dialog.dismiss();
+                }else{
                     dialog.dismiss();
                 }
                 return true;
@@ -1771,6 +1797,7 @@ public class SupportClass {
                                      int surveyId) {
 
         SharedPreferences filterPreference = PreferenceManager.getDefaultSharedPreferences(activity);
+        SharedPreferences sharedpreferences = activity.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
         try {
             String getStringLevel = orderLeve.substring(5, 6);
             int getLevel = Integer.valueOf(getStringLevel);
@@ -1782,7 +1809,8 @@ public class SupportClass {
                 Logger.logD(TAG, "clicked next spinner" + selectedLevel);
                 LevelBeen levelBeen = (LevelBeen) getStoredSpinner.getSelectedItem();
                 getLevel++;
-                List<LevelBeen> stateList = dbhelper.setSpinnerD("level" + (getLevel - 1) + "_id", String.valueOf("level" + getLevel), levelBeen.getId());
+                List<LevelBeen> stateList = dbhelper.setSpinnerD("level" + (getLevel - 1) + "_id", String.valueOf("level" + getLevel), levelBeen.getId(),
+                        sharedpreferences);
 
                 if (!stateList.isEmpty()) {
                     ArrayAdapter<LevelBeen> spinnerArrayAdapter = new ArrayAdapter(activity, R.layout.spinner_multi_row_textview, stateList);

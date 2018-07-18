@@ -930,6 +930,8 @@ public class UpdateMasterLoading extends BaseActivity implements ClusterToTypo, 
     }
 
     private void fullProjectResponseDatabase(Project project) {
+       dbOpenHelper.deleteProject();
+       dbOpenHelper.deleteProjectActivity();
         dbOpenHelper.updateProjectResponse(project);
     }
 

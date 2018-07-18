@@ -51,5 +51,8 @@ public class ProjectList {
     public void setActivitylist(List<Activitylist> activitylist) {
         this.activitylist = activitylist;
     }
+    public String toString(){
+        return projectName;
+    }
 
 }

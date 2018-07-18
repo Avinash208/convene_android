@@ -9,7 +9,75 @@
         android:id="@+id/toolbar1"
         layout="@layout/toolbar">
     </include>
+    <LinearLayout
+        android:id="@+id/dynmic_spinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_below="@+id/toolbar1"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="14dp"
+            android:text="Select Project"
+            android:paddingLeft="2dp"
+            android:layout_marginLeft="10dp"
+            android:textColor="@color/black"/>
+        <Spinner
+            android:id="@+id/projectspinner"
+            android:layout_width="match_parent"
+            android:layout_height="38dp"
+            android:backgroundTint="@color/pink">
+        </Spinner>
+        <View
+            android:id="@+id/viewLine"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:paddingStart="3dp"
+            android:background="@color/pale_orange" />
+    </LinearLayout>
 
-
-
+    <LinearLayout
+        android:id="@+id/headinglayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginLeft="10dp"
+        android:gravity="center"
+        android:layout_marginRight="10dp"
+        android:layout_below="@+id/dynmic_spinner">
+        <Button
+            android:id="@+id/locationbtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Location"
+            android:drawableLeft="@drawable/ic_add_location_white_24dp"
+            android:textColor="@color/white"/>
+        <Button
+            android:id="@+id/beneficiarybtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Beneficiary"
+            android:textColor="@color/white"/>
+    </LinearLayout>
+    <android.support.v7.widget.RecyclerView
+       android:id="@+id/projectrecycler"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:layout_below="@+id/headinglayout"/>
+    <TextView
+        android:id="@+id/emptytextview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/linearheader"
+        android:layout_marginTop="200dp"
+        android:visibility="gone"
+        android:layout_centerInParent="true"
+        android:text="No Activity available"
+        android:gravity="center"/>
 </RelativeLayout>

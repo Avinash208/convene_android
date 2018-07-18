@@ -18,7 +18,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.mahiti.convenemis.BeenClass.Activitylist;
+import org.mahiti.convenemis.BeenClass.Levelid;
 import org.mahiti.convenemis.BeenClass.Project;
+import org.mahiti.convenemis.BeenClass.ProjectList;
 import org.mahiti.convenemis.BeenClass.QuestionAnswer;
 import org.mahiti.convenemis.BeenClass.ResponsesData;
 import org.mahiti.convenemis.BeenClass.StatusBean;
@@ -4032,7 +4034,7 @@ public class ExternalDbOpenHelper extends SQLiteOpenHelper {
         }
         return getLevelTemp;
     }
-    public List<LevelBeen> setSpinnerD(String previous, String tablename, int countryList) {
+    public List<LevelBeen> setSpinnerD(String previous, String tablename, int countryList, SharedPreferences sharedpreferences) {
         List<LevelBeen> getLevelTemp = new ArrayList<>();
         LevelBeen levelBeendefault= new LevelBeen();
         levelBeendefault.setId(0);
@@ -4041,9 +4043,10 @@ public class ExternalDbOpenHelper extends SQLiteOpenHelper {
         getLevelTemp.add(levelBeendefault);
         Logger.logV(TAG, "the level is............" + level);
         SQLiteDatabase db = openDataBase();
-        String query = SELECT_FROM + tablename + " where " + previous + "=" + countryList + " and active=2";
-        Cursor cursor = db.rawQuery(query, null);
-        Logger.logV(TAG, "the value is" + query);
+        String DynamicQuery= getDynamicQuery(sharedpreferences,tablename,previous,countryList);
+      //  String query = SELECT_FROM + tablename + " where " + previous + "=" + countryList + " and active=2";
+        Cursor cursor = db.rawQuery(DynamicQuery, null);
+        Logger.logV(TAG, "the value is" + DynamicQuery);
         if (cursor != null && cursor.getCount() != 0 && cursor.moveToFirst()) {
             do {
                 int id = cursor.getInt(cursor.getColumnIndex("id"));
@@ -4057,6 +4060,42 @@ public class ExternalDbOpenHelper extends SQLiteOpenHelper {
             }
         }
         return getLevelTemp;
+    }
+
+    private String getDynamicQuery(SharedPreferences sharedpreferences, String tablename,
+                                   String previous, int countryList) {
+        String query="";
+        switch (tablename){
+            case "level1":
+                break;
+            case "level2":
+                String getTaggedLocationLevel2=sharedpreferences.getString(Constants.LEVEL2_ID,"");
+                query = SELECT_FROM + tablename + " where " + previous + "=" + countryList + " and id IN ("+getTaggedLocationLevel2+")  and active=2";
+                break;
+            case "level3":
+                String getTaggedLocationLevel3=sharedpreferences.getString(Constants.LEVEL3_ID,"");
+                query = SELECT_FROM + tablename + " where " + previous + "=" + countryList + " and id IN ("+getTaggedLocationLevel3+")  and active=2";
+                break;
+            case "level4":
+                String getTaggedLocationLevel4=sharedpreferences.getString(Constants.LEVEL4_ID,"");
+                query = SELECT_FROM + tablename + " where " + previous + "=" + countryList + " and id IN ("+getTaggedLocationLevel4+")  and active=2";
+                break;
+            case "level5":
+                String getTaggedLocationLevel5=sharedpreferences.getString(Constants.LEVEL5_ID,"");
+                query = SELECT_FROM + tablename + " where " + previous + "=" + countryList + " and id IN ("+getTaggedLocationLevel5+")  and active=2";
+                break;
+            case "level6":
+                String getTaggedLocationLevel6=sharedpreferences.getString(Constants.LEVEL6_ID,"");
+                query = SELECT_FROM + tablename + " where " + previous + "=" + countryList + " and id IN ("+getTaggedLocationLevel6+")  and active=2";
+                break;
+            case "level7":
+                String getTaggedLocationLevel7=sharedpreferences.getString(Constants.LEVEL7_ID,"");
+                query = SELECT_FROM + tablename + " where " + previous + "=" + countryList + " and id IN ("+getTaggedLocationLevel7+")  and active=2";
+                break;
+            default:
+                break;
+        }
+        return query;
     }
 
     public String getSummaryQid(int survey_id, ExternalDbOpenHelper dbHelper) {
@@ -4215,9 +4254,9 @@ public class ExternalDbOpenHelper extends SQLiteOpenHelper {
                 cv.put("created_on", project.getProjectList().get(i).getCreatedOn());
                 cv.put("modified_on", "");
                 cv.put("active", "");
-                cv.put("order", "");
-                updateActiveDatabase(project.getProjectList().get(i).getProjectId(),
-                        project.getProjectList().get(i).getActivitylist());
+                if (!project.getProjectList().get(i).getActivitylist().isEmpty())
+                      updateActiveDatabase(project.getProjectList().get(i).getProjectId(),
+                            project.getProjectList().get(i).getActivitylist());
                 database.insertWithOnConflict("Project", null, cv, SQLiteDatabase.CONFLICT_REPLACE);
             }
 
@@ -4233,15 +4272,177 @@ public class ExternalDbOpenHelper extends SQLiteOpenHelper {
             for (int i = 0; i < activitylist.size(); i++) {
                 cv.put("project_id", projectId);
                 cv.put("activity_name", activitylist.get(i).getActivityName());
-                cv.put("activity_id", activitylist.get(i).getActivityName());
-                cv.put("leavbe", activitylist.get(i).getActivityName());
-
-                updateActiveDatabase(project.getProjectList().get(i).getProjectId(), project.getProjectList().get(i).getActivitylist());
+                cv.put("activity_id", activitylist.get(i).getActivityId());
+                cv.put("levels", activitylist.get(i).getOrderLevels());
+                cv.put("lables", activitylist.get(i).getLabels());
+                if (!activitylist.get(i).getOrderLevels().isEmpty()){
+                    String[] getLevelsLables= activitylist.get(i).getOrderLevels().split(",");
+                    fillLableIfExistLevels(getLevelsLables,cv,activitylist.get(i).getLevelids());
+                }
                 database.insertWithOnConflict("ProjectActivityTable", null, cv, SQLiteDatabase.CONFLICT_REPLACE);
             }
 
         } catch (Exception e) {
             Logger.logE("", "", e);
         }
+    }
+
+    private void fillLableIfExistLevels(String[] getLevelsLables, ContentValues cv, List<Levelid> levelids) throws JSONException {
+    Gson gson= new Gson();
+    String levelIds=gson.toJson(levelids);
+        Logger.logD("levelids",levelIds);
+        JSONArray jsonArray= new JSONArray(levelIds);
+      for (int i=0;i<getLevelsLables.length;i++){
+          switch (getLevelsLables[i]){
+              case "level1":
+                  JSONObject jsonObjectLevel1= jsonArray.getJSONObject(i);
+                  cv.put("level1", jsonObjectLevel1.getString(getLevelsLables[i]));
+
+                  break;
+              case "level2":
+                  JSONObject jsonObjectLevel2= jsonArray.getJSONObject(i);
+                  cv.put("level2", jsonObjectLevel2.getString(getLevelsLables[i]));
+                  break;
+              case "level3":
+                  JSONObject jsonObjectLevel3= jsonArray.getJSONObject(i);
+                  cv.put("level3", jsonObjectLevel3.getString(getLevelsLables[i]));
+                  break;
+              case "level4":
+                  JSONObject jsonObjectLevel4= jsonArray.getJSONObject(i);
+                  cv.put("level4", jsonObjectLevel4.getString(getLevelsLables[i]));
+                  break;
+              case "level5":
+                  JSONObject jsonObjectLevel5= jsonArray.getJSONObject(i);
+                  cv.put("level5", jsonObjectLevel5.getString(getLevelsLables[i]));
+                  break;
+              case "level6":
+                  JSONObject jsonObjectLevel6= jsonArray.getJSONObject(i);
+                  cv.put("level6", jsonObjectLevel6.getString(getLevelsLables[i]));
+                  break;
+              case "level7":
+                  JSONObject jsonObjectLevel7= jsonArray.getJSONObject(i);
+                  cv.put("level7", jsonObjectLevel7.getString(getLevelsLables[i]));
+                  break;
+
+
+          }
+      }
+    }
+
+    public void deleteProject() {
+        String query;
+        database = this.getWritableDatabase();
+        query = "DELETE FROM Project";
+        database.execSQL(query);
+    }
+
+    public void deleteProjectActivity() {
+        String query;
+        database = this.getWritableDatabase();
+        query = "DELETE FROM ProjectActivityTable";
+        database.execSQL(query);
+    }
+
+    public List<ProjectList> getAllProjectList(ExternalDbOpenHelper dbhelper) {
+        List<ProjectList> tempList= new ArrayList<>();
+        ProjectList project= new ProjectList();
+        project.setProjectId(0);
+        project.setProjectName("Select");
+        tempList.add(project);
+        try {
+            String pendingSurveyQuery = "select * from Project";
+            SQLiteDatabase db = dbhelper.getWritableDatabase();
+            Cursor cursor = db.rawQuery(pendingSurveyQuery, null);
+            if (cursor.getCount() != 0 && cursor.moveToFirst()) {
+                do {
+                    int projectId = cursor.getInt(cursor.getColumnIndex("project_id"));
+                    String projectName = cursor.getString(cursor.getColumnIndex("project_name"));
+                    String created_on = cursor.getString(cursor.getColumnIndex("created_on"));
+
+                    ProjectList projectList= new ProjectList();
+                    projectList.setProjectId(projectId);
+                    projectList.setProjectName(projectName);
+                    tempList.add(projectList);
+                } while (cursor.moveToNext());
+                cursor.close();
+            }
+        } catch (Exception e) {
+            Logger.logV("", "checkPrymarySaveDraftExist from Survey table" + e);
+
+        }
+
+        return tempList;
+    }
+
+    public List<SurveyDetail> getLocationActivityBasedProject(Integer projectId, ExternalDbOpenHelper dbhelper, int getFlag) {
+        List<SurveyDetail> tempList= new ArrayList<>();
+        try {
+            String pendingSurveyQuery="";
+            if (getFlag==200) {
+                pendingSurveyQuery = "select Surveys.surveyName,Surveys.surveyId, Project.project_id,Project.project_name, Surveys.PeriodicityFlag ,\n" +
+                       "Surveys.beneficiary_ids, Surveys.beneficiary_type, Surveys.category_name ,ProjectActivityTable.lables,ProjectActivityTable.levels, " +
+                        "ProjectActivityTable.Level1,ProjectActivityTable.Level2,ProjectActivityTable.Level3,ProjectActivityTable.Level4,ProjectActivityTable.Level5,ProjectActivityTable.Level6,ProjectActivityTable.Level7\n" +
+                       " from Surveys\n" +
+                       "inner join ProjectActivityTable on ProjectActivityTable.activity_id= Surveys.surveyId\n" +
+                       "inner join Project on ProjectActivityTable.project_id = Project.project_id\n" +
+                       " where Surveys.beneficiary_ids=\"\" and Project.project_id=" + projectId;
+           }else if (getFlag==201){
+                pendingSurveyQuery = "select Surveys.surveyName,Surveys.surveyId, Project.project_id,Project.project_name, Surveys.PeriodicityFlag ,\n" +
+                        "Surveys.beneficiary_ids, Surveys.beneficiary_type, Surveys.category_name ,ProjectActivityTable.lables,ProjectActivityTable.levels, " +
+                        "ProjectActivityTable.Level1,ProjectActivityTable.Level2,ProjectActivityTable.Level3,ProjectActivityTable.Level4,ProjectActivityTable.Level5,ProjectActivityTable.Level6,ProjectActivityTable.Level7\n" +
+                        " from Surveys\n" +
+                       "inner join ProjectActivityTable on ProjectActivityTable.activity_id= Surveys.surveyId\n" +
+                       "inner join Project on ProjectActivityTable.project_id = Project.project_id\n" +
+                       " where Surveys.beneficiary_ids !=\"\" and Project.project_id=" + projectId;
+           }
+            SQLiteDatabase db = dbhelper.getWritableDatabase();
+            Cursor cursor = db.rawQuery(pendingSurveyQuery, null);
+            if (cursor.getCount() != 0 && cursor.moveToFirst()) {
+                do {
+                    int surveyId = cursor.getInt(cursor.getColumnIndex("surveyId"));
+                    int projectID = cursor.getInt(cursor.getColumnIndex("project_id"));
+                    String beneficiary_ids = cursor.getString(cursor.getColumnIndex("beneficiary_ids"));
+                    String surveyName = cursor.getString(cursor.getColumnIndex("surveyName"));
+                    String projectName = cursor.getString(cursor.getColumnIndex("project_name"));
+                    String periodicityFlag = cursor.getString(cursor.getColumnIndex("PeriodicityFlag"));
+                    String beneficiaryType = cursor.getString(cursor.getColumnIndex("beneficiary_type"));
+                    String lables = cursor.getString(cursor.getColumnIndex("lables"));
+                    String levels = cursor.getString(cursor.getColumnIndex("levels"));
+                    String level1 = cursor.getString(cursor.getColumnIndex("level1"));
+                    String level2 = cursor.getString(cursor.getColumnIndex("level2"));
+                    String level3 = cursor.getString(cursor.getColumnIndex("level3"));
+                    String level4 = cursor.getString(cursor.getColumnIndex("level4"));
+                    String level5 = cursor.getString(cursor.getColumnIndex("level5"));
+                    String level6 = cursor.getString(cursor.getColumnIndex("level6"));
+                    String level7 = cursor.getString(cursor.getColumnIndex("level7"));
+
+                    SurveyDetail surveyDetail= new SurveyDetail();
+                    surveyDetail.setSurveyName(surveyName);
+                    surveyDetail.setSurveyId(surveyId);
+                    surveyDetail.setProjectID(projectID);
+                    surveyDetail.setProjectName(projectName);
+                    surveyDetail.setPiriodicityFlag(periodicityFlag);
+                    surveyDetail.setBeneficiaryType(beneficiaryType);
+                    surveyDetail.setBeneficiaryIds(beneficiary_ids);
+                    surveyDetail.setLabels(lables);
+                    surveyDetail.setOrderLevels(levels);
+                    surveyDetail.setLevel1(level1);
+                    surveyDetail.setLevel2(level2);
+                    surveyDetail.setLevel3(level3);
+                    surveyDetail.setLevel4(level4);
+                    surveyDetail.setLevel5(level5);
+                    surveyDetail.setLevel6(level6);
+                    surveyDetail.setLevel7(level7);
+
+                    tempList.add(surveyDetail);
+                } while (cursor.moveToNext());
+                cursor.close();
+            }
+        } catch (Exception e) {
+            Logger.logV("", "checkPrymarySaveDraftExist from Survey table" + e);
+
+        }
+
+        return tempList;
     }
 }

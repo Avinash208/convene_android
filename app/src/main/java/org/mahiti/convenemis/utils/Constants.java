@@ -77,6 +77,8 @@ public class Constants {
     public static final String NAME = "Name";
     public static final String TAG = "Exception facing";
     public static final String FILTER = "filter";
+    public static final String PROJECTFLOW = "ProjectFlow";
+    public static final String O_LABLES = "lables";
     public static List<Integer> blockQids=new ArrayList<>();
 
     //-------------------------*******************--------------------
