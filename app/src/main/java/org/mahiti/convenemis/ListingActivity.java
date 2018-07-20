@@ -179,7 +179,7 @@ public class ListingActivity extends BaseActivity implements View.OnClickListene
                 Logger.logD("filterCallBack", getFilterRecords);
                 String[] getSelectedLocation = getFilterRecords.split(",");
                 if (getSelectedLocation.length > 0) {
-                    filterLocationName.setText(new StringBuilder().append("Location").append(" : ").append(getSelectedLocation[getSelectedLocation.length - 1]).toString());
+                    filterLocationName.setText(new StringBuilder().append(getSelectedLocation[getSelectedLocation.length - 1]).toString());
                      new updateListAccordingFilter(getSelectedLocation[getSelectedLocation.length - 1]).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 }
             }else{
@@ -345,6 +345,7 @@ public class ListingActivity extends BaseActivity implements View.OnClickListene
                 createNewButton.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.fpo)));
                 return headerName;
             default:
+                headingName= headerName;
                 break;
         }
         return headingName;
@@ -473,6 +474,7 @@ public class ListingActivity extends BaseActivity implements View.OnClickListene
         protected void onPostExecute(Object o) {
             super.onPostExecute(o);
             if (!filterList.isEmpty()) {
+                typeListView.setVisibility(View.VISIBLE);
                 GridLayoutManager linearLayoutManager = new GridLayoutManager(ListingActivity.this, 2);
                 linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
                 typeListView.setLayoutManager(linearLayoutManager);

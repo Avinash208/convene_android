@@ -1,5 +1,6 @@
 package org.mahiti.convenemis;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -40,7 +41,7 @@ public class Beneficiarylinkages extends AppCompatActivity {
     private ViewPager mViewPager;
     private TabItem Tabthree;
     ExternalDbOpenHelper dbOpenHelper;
-    private String isBeneficiaryTypeLinkage="";
+    private String isBeneficiaryTypeLinkage = "";
     private static final String MY_PREFS_NAME = "MyPrefs";
     private SharedPreferences prefs;
 
@@ -49,14 +50,14 @@ public class Beneficiarylinkages extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_beneficiarylinkages);
         TextView toolbarTitle = findViewById(R.id.toolbarTitle);
-        ImageView imageMenu= findViewById(R.id.imageMenu);
-        LinearLayout backPress= findViewById(R.id.backPress);
-        toolbarTitle.setText("Beneficiary linkage");
+        ImageView imageMenu = findViewById(R.id.imageMenu);
+        LinearLayout backPress = findViewById(R.id.backPress);
+
         imageMenu.setVisibility(View.GONE);
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         Tabthree = (TabItem) findViewById(R.id.tabItem3);
         prefs = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
-        isBeneficiaryTypeLinkage=isBeneficiaryTypeLinkage();
+        isBeneficiaryTypeLinkage = isBeneficiaryTypeLinkage();
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
@@ -69,7 +70,19 @@ public class Beneficiarylinkages extends AppCompatActivity {
 
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
+        getPreviousFromIntent(toolbarTitle);
         setOnClick(backPress);
+
+    }
+
+    private void getPreviousFromIntent(TextView toolbarTitle) {
+        Intent intent = getIntent();
+        String headerName = intent.getStringExtra(Constants.HEADER_NAME);
+        if (headerName != null && !headerName.isEmpty()) {
+            toolbarTitle.setText(headerName);
+        } else {
+            toolbarTitle.setText("Beneficiary linkage");
+        }
 
     }
 
@@ -86,7 +99,7 @@ public class Beneficiarylinkages extends AppCompatActivity {
     private String isBeneficiaryTypeLinkage() {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         dbOpenHelper = ExternalDbOpenHelper.getInstance(this, sharedPreferences.getString(Constants.DBNAME, ""), sharedPreferences.getString("uId", ""));
-        isBeneficiaryTypeLinkage= dbOpenHelper.getGroupIds(prefs.getInt("survey_id", 0), dbOpenHelper);
+        isBeneficiaryTypeLinkage = dbOpenHelper.getGroupIds(prefs.getInt("survey_id", 0), dbOpenHelper);
         return isBeneficiaryTypeLinkage;
     }
 
@@ -120,8 +133,8 @@ public class Beneficiarylinkages extends AppCompatActivity {
      */
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
-        private String beneficiaryWithLinkage[] = {getResources().getString(R.string.tab_text_1), getResources().getString(R.string.tab_text_2), getResources().getString(R.string.tab_text_3)};
-        private String beneficiaryWithOUTLinkage[] = {getResources().getString(R.string.tab_text_1), getResources().getString(R.string.tab_text_2)};
+        private String beneficiaryWithLinkage[] = {getResources().getString(R.string.tab_text_2), getResources().getString(R.string.tab_text_1), getResources().getString(R.string.tab_text_3)};
+        private String beneficiaryWithOUTLinkage[] = {getResources().getString(R.string.tab_text_2), getResources().getString(R.string.tab_text_1)};
 
         public SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -140,14 +153,14 @@ public class Beneficiarylinkages extends AppCompatActivity {
         public Fragment getItem(int position) {
             // getItem is called to instantiate the fragment for the given page.
             // Return a BeneficiaryLinkageDetails (defined as a static inner class below).
-            if (position == 0)
-                return BeneficiaryLinkageDetails.newInstance(position + 1);
-            else if (position == 1) {
-
+            if (position == 0) {
                 Bundle bundle = new Bundle();
                 DataFormFragment dataFormFragment = new DataFormFragment();
                 dataFormFragment.setArguments(bundle);
                 return dataFormFragment;
+            } else if (position == 1) {
+                return BeneficiaryLinkageDetails.newInstance(position + 1);
+
             } else if (position == 2)
                 return BeneficiaryLinkageActivityFragment.newInstance(position + 1);
             else

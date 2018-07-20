@@ -412,7 +412,7 @@
     <string name="convene_2_0">Convene 2.0</string>
     <string name="let_s_go">LET\'S GO</string>
     <string name="title_activity_main">MainActivity</string>
-    <string name="tab_text_1">Profile</string>
+    <string name="tab_text_1">Details</string>
     <string name="tab_text_2">Activities </string>
     <string name="tab_text_3">Linkages</string>
     <string name="action_settings">Settings</string>
@@ -426,8 +426,8 @@
     <string name="no_beneficiary_added">No beneficiary added</string>
     <string name="view">View</string>
     <string name="filter_applied">Filter Applied</string>
-    <string name="location_">Location</string>
+    <string name="location_">Location : </string>
     <string name="status_">Status : Completed </string>
-    <string name="projectandactivity"><![CDATA[Project & Activities]]></string>
+    <string name="projectandactivity"><![CDATA[Projects & Activities]]></string>
 
 </resources>

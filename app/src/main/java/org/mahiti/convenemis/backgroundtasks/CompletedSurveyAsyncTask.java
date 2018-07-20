@@ -10,6 +10,7 @@ import org.mahiti.convenemis.database.DBHandler;
 import org.mahiti.convenemis.database.ExternalDbOpenHelper;
 import org.mahiti.convenemis.database.ResponseCheckController;
 import org.mahiti.convenemis.utils.Constants;
+import org.mahiti.convenemis.utils.Logger;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -20,8 +21,6 @@ import java.util.List;
 // 3. result type (String)
 
 public class CompletedSurveyAsyncTask extends AsyncTask<String, Integer, List<SurveysBean>> {
-    private static String uuid;
-  //  private final SurveyControllerDbHelper periodicityCheckControllerDbHelper;
     private List<SurveysBean> sourceList;
     private List<SurveysBean> resultList = new ArrayList<>();
     private ExternalDbOpenHelper externalDbOpenHelper;
@@ -30,6 +29,7 @@ public class CompletedSurveyAsyncTask extends AsyncTask<String, Integer, List<Su
     private ResponseCheckController responseCheckController;
     private DBHandler handler;
     private String surveyPrimaryKeyId;
+    SharedPreferences preferences;
 
     protected void onPreExecute() {
         // Executed in UIThread
@@ -41,9 +41,9 @@ public class CompletedSurveyAsyncTask extends AsyncTask<String, Integer, List<Su
         this.responseCheckController = new ResponseCheckController(con);
         this.externalDbOpenHelper = externalDbOpenHelper;
         this.pendingCompletedSurveyAsyncResultListener = pendingCompletedSurveyAsyncResultListener;
-        uuid=defaultPreferences.getString(Constants.UUID,"");
         this.handler=handler;
         this.surveyPrimaryKeyId=surveyPrimaryKeyId;
+        this.preferences=defaultPreferences;
     }
 
     protected List<SurveysBean> doInBackground(String... strings) {
@@ -60,6 +60,7 @@ public class CompletedSurveyAsyncTask extends AsyncTask<String, Integer, List<Su
                 }
             }
         }
+
         return resultList;
     }
     protected void onProgressUpdate(Integer... values) {
@@ -68,7 +69,29 @@ public class CompletedSurveyAsyncTask extends AsyncTask<String, Integer, List<Su
 
     protected void onPostExecute(List<SurveysBean> result) {
         // Executed in UIThread
-        pendingCompletedSurveyAsyncResultListener.completedSurveys(result);
+        if (preferences.getString(Constants.PROJECTFLOW, "").equalsIgnoreCase("1")) {
+            int getSeletedProjectActivity = preferences.getInt(Constants.SELECTEDPROJECTID, 0);
+            Logger.logD("Seleced Project Activity", getSeletedProjectActivity + "");
+            List<SurveysBean> sortedProjectActivity=removeAddedActivityBasedOnProject(result, getSeletedProjectActivity);
+            pendingCompletedSurveyAsyncResultListener.completedSurveys(sortedProjectActivity);
+        } else {
+            pendingCompletedSurveyAsyncResultListener.completedSurveys(result);
+        }
+    }
+    /**
+     * @param result completed Activity list
+     * @param getSeletedProjectActivity selected survey id from the project flow .
+     * @return return sorted according to the selected project
+     */
+    private List<SurveysBean> removeAddedActivityBasedOnProject(List<SurveysBean> result, int getSeletedProjectActivity) {
+        List<SurveysBean> sortedList= new ArrayList<>();
+        for (int i = 0; i < result.size(); i++) {
+            if (result.get(i).getId() == getSeletedProjectActivity) {
+                sortedList.add(result.get(i));
+
+            }
+        }
+        return sortedList;
     }
 
 

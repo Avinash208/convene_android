@@ -58,13 +58,21 @@ public class LocationBasedProjectAdapter extends RecyclerView.Adapter<LocationBa
             viewHolder.activityname.setText(locationBasedProjectActivity.get(position).getSurveyName());
         }
         if (!locationBasedProjectActivity.get(position).getPiriodicityFlag().isEmpty() ){
-            viewHolder.periodicityname.setText(new StringBuilder().append(locationBasedProjectActivity.get(position).getBeneficiaryType()).append(" - ").append(locationBasedProjectActivity.get(position).getPiriodicityFlag()).toString());
+           // viewHolder.periodicityname.setText(new StringBuilder().append(locationBasedProjectActivity.get(position).getBeneficiaryType()).append(" - ").append(locationBasedProjectActivity.get(position).getPiriodicityFlag()).toString());
+            viewHolder.periodicityname.setText(new StringBuilder().append("Periodicity : ").append(locationBasedProjectActivity.get(position).getPiriodicityFlag()).toString());
         }
         if (!locationBasedProjectActivity.get(position).getProjectName().isEmpty()){
-            viewHolder.projectname.setText(locationBasedProjectActivity.get(position).getProjectName());
+            viewHolder.projectname.setText(new StringBuilder().append("Beneficiary type : ").append(locationBasedProjectActivity.get(position).getBeneficiaryType()));
         }
         setOnClickLisiner(viewHolder,locationBasedProjectActivity.get(position));
+        setOrHideBottomView(viewHolder,position);
 
+    }
+
+    private void setOrHideBottomView(ViewHolder viewHolder, int position) {
+        if (position==locationBasedProjectActivity.size()-1){
+            viewHolder.viewLine.setVisibility(View.GONE);
+        }
     }
 
     private void setOnClickLisiner(ViewHolder viewHolder, SurveyDetail surveyDetail) {
@@ -92,12 +100,14 @@ public class LocationBasedProjectAdapter extends RecyclerView.Adapter<LocationBa
         private TextView periodicityname;
         private TextView activityname;
         private LinearLayout layout;
+        private View viewLine;
         public ViewHolder(View view) {
             super(view);
             projectname  = (TextView) view.findViewById(R.id.projectname);
             periodicityname = (TextView) view.findViewById(R.id.periodicityname);
             activityname = (TextView) view.findViewById(R.id.activityname);
             layout = (LinearLayout) view.findViewById(R.id.complete_row);
+            viewLine = (View) view.findViewById(R.id.viewline);
 
         }
     }
@@ -130,7 +140,6 @@ public class LocationBasedProjectAdapter extends RecyclerView.Adapter<LocationBa
         editor.putInt(Constants.RD, 0);
         editor.putString(Constants.constraints, "");
 
-        String[] orderLevels = surveyDetailBean.getOrderLevels().split(",");
         editor.putString(Constants.O_LEAVEL, surveyDetailBean.getOrderLevels());
         editor.putString(Constants.O_LABLES, surveyDetailBean.getLabels());
         editor.putString(Constants.CODE, surveyDetailBean.getPcode());
@@ -144,6 +153,7 @@ public class LocationBasedProjectAdapter extends RecyclerView.Adapter<LocationBa
         editor.putString(Constants.BENEFICIARY_TYPE,surveyDetailBean.getBeneficiaryType());
         editor.putString(Constants.BENEFICIARY_IDS,surveyDetailBean.getBeneficiaryIds());
         editor.putString(Constants.FACILITY_IDS,surveyDetailBean.getFacilityIds());
+        editor.putInt(Constants.SELECTEDPROJECTID,surveyDetailBean.getSurveyId());
         getAllLevels(editor,surveyDetailBean);
         editor.putString("Survey_tittle",surveyDetailBean.getSurveyName());
         Logger.logV("the survye id is","the survey id is"+surveyDetailBean.getSurveyId());

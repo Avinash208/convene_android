@@ -17,13 +17,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/headinglabel"
-        android:layout_above="@+id/footer">
+        android:layout_above="@+id/footer"
+        >
         <LinearLayout
             android:id="@+id/dymaicactivitydisplay"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/spinnerscroll"
-            android:padding="20dp"
+            android:padding="10dp"
             android:orientation="vertical" />
 
     </ScrollView>

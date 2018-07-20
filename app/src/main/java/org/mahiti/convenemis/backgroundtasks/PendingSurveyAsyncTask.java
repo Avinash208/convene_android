@@ -9,6 +9,8 @@ import org.mahiti.convenemis.backgroundcallbacks.PendingCompletedSurveyAsyncResu
 import org.mahiti.convenemis.database.DBHandler;
 import org.mahiti.convenemis.database.ExternalDbOpenHelper;
 import org.mahiti.convenemis.database.SurveyControllerDbHelper;
+import org.mahiti.convenemis.utils.Constants;
+import org.mahiti.convenemis.utils.Logger;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -26,6 +28,7 @@ public class PendingSurveyAsyncTask extends AsyncTask<String, Integer, List<Surv
     private DBHandler handler;
     String surveyPrimaryKeyId;
     int surveyid;
+    SharedPreferences preferences;
 
     protected void onPreExecute() {
         // Executed in UIThread
@@ -39,6 +42,7 @@ public class PendingSurveyAsyncTask extends AsyncTask<String, Integer, List<Surv
         this.handler = handler;
         this.surveyPrimaryKeyId = surveyPrimaryKeyId;
         this.surveyid = surveyId;
+        this.preferences = defaultPreferences;
     }
 
     protected List<SurveysBean> doInBackground(String... strings) {
@@ -58,7 +62,31 @@ public class PendingSurveyAsyncTask extends AsyncTask<String, Integer, List<Surv
 
 
     protected void onPostExecute(List<SurveysBean> result) {
-        pendingCompletedSurveyAsyncResultListener.pendingSurveys(result);
+        if (preferences.getString(Constants.PROJECTFLOW, "").equalsIgnoreCase("1")) {
+            int getSeletedProjectActivity = preferences.getInt(Constants.SELECTEDPROJECTID, 0);
+            Logger.logD("Seleced Project Activity", getSeletedProjectActivity + "");
+            List<SurveysBean> sortedProjectActivity=removeAddedActivityBasedOnProject(result, getSeletedProjectActivity);
+            pendingCompletedSurveyAsyncResultListener.pendingSurveys(sortedProjectActivity);
+        } else {
+            pendingCompletedSurveyAsyncResultListener.pendingSurveys(result);
+        }
+
+    }
+
+    /**
+     * @param result completed Activity list
+     * @param getSeletedProjectActivity selected survey id from the project flow .
+     * @return return sorted according to the selected project
+     */
+    private List<SurveysBean> removeAddedActivityBasedOnProject(List<SurveysBean> result, int getSeletedProjectActivity) {
+        List<SurveysBean> sortedList= new ArrayList<>();
+        for (int i = 0; i < result.size(); i++) {
+            if (result.get(i).getId() == getSeletedProjectActivity) {
+                sortedList.add(result.get(i));
+
+            }
+        }
+        return sortedList;
     }
 }
                                 

@@ -79,6 +79,7 @@ public class Constants {
     public static final String FILTER = "filter";
     public static final String PROJECTFLOW = "ProjectFlow";
     public static final String O_LABLES = "lables";
+    public static final String SELECTEDPROJECTID = "selectedActivity";
     public static List<Integer> blockQids=new ArrayList<>();
 
     //-------------------------*******************--------------------

@@ -21,4 +21,6 @@
     <dimen name="toolbar_font_loading">20sp</dimen>
     <dimen name="fourteen_sp">14sp</dimen>
     <dimen name="sixteen_sp">16sp</dimen>
+    <dimen name="forty_dp">40dp</dimen>
+    <dimen name="onefour_sp">14sp</dimen>
 </resources>

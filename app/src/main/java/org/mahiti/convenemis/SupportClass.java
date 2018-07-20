@@ -20,12 +20,14 @@ import android.text.InputType;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -1750,7 +1752,8 @@ public class SupportClass {
      */
     private void setValuesToSpinner(String orderLeve, Spinner dynamicSpinner, ExternalDbOpenHelper dbhelper, int surveyId) {
         SharedPreferences filterPreference = PreferenceManager.getDefaultSharedPreferences(activity);
-        List<LevelBeen> getLevelsrecords = dbhelper.getLevelsrecords(orderLeve, dbhelper);
+        SharedPreferences sharedpreferences = activity.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+        List<LevelBeen> getLevelsrecords = dbhelper.getLevelsrecords(orderLeve, dbhelper, sharedpreferences);
         String getFilterRecords = filterPreference.getString(Constants.FILTER + "@" + surveyId, "");
         if (!getFilterRecords.isEmpty())
             getLevelsrecords.remove(0);

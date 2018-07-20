@@ -1582,6 +1582,56 @@ public class DBHandler extends SQLiteOpenHelper {
         }
         return getPeriodicityCount;
     }
+    public int getPeriodicityLocationBased(SurveysBean surveysBean, int surveyId, String periodicityFlag, Date date, String parentUUId) {
+        int getPeriodicityCount = 0;
+        try {
+            Logger.logD(TAG,"Date capture from"+date.toString());
+            String query = "";
+            String getCurrentDate = new SimpleDateFormat(dateYyMmDd, Locale.ENGLISH).format(date);
+            SQLiteDatabase db = getdatabaseinstance_read();
+            String[] splitMonth = getCurrentDate.split("-");
+            String startingQuery="select * from survey where ";
+            String upEndQuery=" and survey_ids=" + surveyId + " and beneficiary_ids='" + parentUUId + "'";
+            String beneficiaryBased="and cluster_name= "+parentUUId+" ";
+            switch (periodicityFlag) {
+                case DAILY:
+                    query = startingQuery+ " date(end_date)='" + getCurrentDate + "'" +upEndQuery;
+                    Logger.logV(TAG, "" + query + query);
+                    break;
+                case WEEKLY:
+                    query = startingQuery +" ( strftime('%W', end_date) = strftime('%W', 'now') )  "+ upEndQuery;
+                    break;
+                case Constants.YEARLY:
+                    query = startingQuery +STRFTIME_YEAR_CAPTURE + splitMonth[0] + "'"+ upEndQuery;
+                    break;
+                case QUARTERLY:
+                    List<String> Quarterly = Utils.getQuarterlyMonth(splitMonth[1]);
+                    query = startingQuery +"(strftime('%Y %m', date(end_date))='"+ splitMonth[0]+" "+ Quarterly.get(0) + STR_TO_CAPTURE_DATE + splitMonth[0]+" " + Quarterly.get(1) + STR_TO_CAPTURE_DATE + splitMonth[0]+" " + Quarterly.get(2) + "')" + upEndQuery;
+                    break;
+                case HALF_YEARLY:
+                    List<String> halfYearly = Utils.getHalfYearly(splitMonth[1]);
+                    query =startingQuery +"(strftime('%Y %m', date(end_date))='"+ splitMonth[0]+" "+ halfYearly.get(0) + STR_TO_CAPTURE_DATE + splitMonth[0]+" "+ halfYearly.get(1) + STR_TO_CAPTURE_DATE + splitMonth[0]+" "+ halfYearly.get(2) + STR_TO_CAPTURE_DATE + splitMonth[0]+" "+ halfYearly.get(3) + STR_TO_CAPTURE_DATE + splitMonth[0]+" "+ halfYearly.get(4) + STR_TO_CAPTURE_DATE + splitMonth[0]+" "+ halfYearly.get(5) + "')"+ upEndQuery;
+                    break;
+                case MONTHLY:
+                    query = startingQuery+ " strftime('%m', date(end_date))='" + splitMonth[1] + "'"+ upEndQuery + beneficiaryBased;
+                    break;
+                default:
+                    break;
+            }
+            Cursor cursor = db.rawQuery(query, null);
+            Logger.logD(TAG,"getPeriodicityPreviousCountOnline"+query+"Cursur count->"+cursor.getCount());
+
+            if (cursor.getCount() != 0 && cursor.moveToFirst()) {
+                String endDate = cursor.getString(cursor.getColumnIndex("end_date"));
+                surveysBean.setSurveyEndDate(endDate);
+                getPeriodicityCount = cursor.getCount();
+            }
+            cursor.close();
+        } catch (Exception e) {
+            Logger.logE(TAG, "", e);
+        }
+        return getPeriodicityCount;
+    }
 
     public boolean isConstraintValueExist(String userEnteredText, int questionCode, String surveyPrimaryKeyId) {
         boolean tempValue=false;

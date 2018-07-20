@@ -4043,8 +4043,12 @@ public class ExternalDbOpenHelper extends SQLiteOpenHelper {
         getLevelTemp.add(levelBeendefault);
         Logger.logV(TAG, "the level is............" + level);
         SQLiteDatabase db = openDataBase();
-        String DynamicQuery= getDynamicQuery(sharedpreferences,tablename,previous,countryList);
-      //  String query = SELECT_FROM + tablename + " where " + previous + "=" + countryList + " and active=2";
+        String DynamicQuery="";
+        if (sharedpreferences.getString(Constants.PROJECTFLOW,"").equalsIgnoreCase("1")){
+            DynamicQuery= getDynamicQuery(sharedpreferences,tablename,previous,countryList);
+        }else{
+            DynamicQuery = SELECT_FROM + tablename + " where " + previous + "=" + countryList + " and active=2";
+        }
         Cursor cursor = db.rawQuery(DynamicQuery, null);
         Logger.logV(TAG, "the value is" + DynamicQuery);
         if (cursor != null && cursor.getCount() != 0 && cursor.moveToFirst()) {
@@ -4195,7 +4199,7 @@ public class ExternalDbOpenHelper extends SQLiteOpenHelper {
     }
 
 
-    public List<LevelBeen> getLevelsrecords(String orderLeve, ExternalDbOpenHelper dbOpenHelper) {
+    public List<LevelBeen> getLevelsrecords(String orderLeve, ExternalDbOpenHelper dbOpenHelper, SharedPreferences prefs) {
         List<LevelBeen> tempList= new ArrayList<>();
         LevelBeen levelBeendefault= new LevelBeen();
         levelBeendefault.setId(0);
@@ -4203,7 +4207,13 @@ public class ExternalDbOpenHelper extends SQLiteOpenHelper {
         levelBeendefault.setLocationLevel(2);
         tempList.add(levelBeendefault);
         try {
-            String pendingSurveyQuery = "select * from "+orderLeve+"";
+            String pendingSurveyQuery="";
+            if (prefs.getString(Constants.PROJECTFLOW,"").equalsIgnoreCase("1")){
+                pendingSurveyQuery=createDynamicQuery(prefs,orderLeve);
+            }else if (prefs.getString(Constants.PROJECTFLOW,"").equalsIgnoreCase("0")){
+                pendingSurveyQuery = "select * from "+orderLeve+"";
+            }
+
             SQLiteDatabase db = dbOpenHelper.getWritableDatabase();
             Cursor cursor = db.rawQuery(pendingSurveyQuery, null);
             if (cursor.getCount() != 0 && cursor.moveToFirst()) {
@@ -4227,6 +4237,42 @@ public class ExternalDbOpenHelper extends SQLiteOpenHelper {
         }
 
         return tempList;
+    }
+
+    private String createDynamicQuery(SharedPreferences prefs, String orderLeve) {
+        String tempQuery="";
+        switch (orderLeve){
+            case "level1":
+
+                break;
+            case "level2":
+                String getTaggedLocationLevel2=prefs.getString(Constants.LEVEL2_ID,"");
+                tempQuery= "select * from "+orderLeve+" where  id IN ("+getTaggedLocationLevel2+")  and active=2";
+                break;
+            case "level3":
+                String getTaggedLocationLevel3=prefs.getString(Constants.LEVEL3_ID,"");
+                tempQuery= "select * from "+orderLeve+" where  id IN ("+getTaggedLocationLevel3+")  and active=2";
+                break;
+            case "level4":
+                String getTaggedLocationLevel4=prefs.getString(Constants.LEVEL4_ID,"");
+                tempQuery= "select * from "+orderLeve+" where  id IN ("+getTaggedLocationLevel4+")  and active=2";
+                break;
+            case "level5":
+                String getTaggedLocationLevel5=prefs.getString(Constants.LEVEL5_ID,"");
+                tempQuery= "select * from "+orderLeve+" where  id IN ("+getTaggedLocationLevel5+")  and active=2";
+                break;
+            case "level6":
+                String getTaggedLocationLevel6=prefs.getString(Constants.LEVEL6_ID,"");
+                tempQuery= "select * from "+orderLeve+" where  id IN ("+getTaggedLocationLevel6+")  and active=2";
+                break;
+            case "level7":
+                String getTaggedLocationLevel7=prefs.getString(Constants.LEVEL7_ID,"");
+                tempQuery= "select * from "+orderLeve+" where  id IN ("+getTaggedLocationLevel7+")  and active=2";
+                break;
+
+
+        }
+        return tempQuery;
     }
 
 
@@ -4345,10 +4391,6 @@ public class ExternalDbOpenHelper extends SQLiteOpenHelper {
 
     public List<ProjectList> getAllProjectList(ExternalDbOpenHelper dbhelper) {
         List<ProjectList> tempList= new ArrayList<>();
-        ProjectList project= new ProjectList();
-        project.setProjectId(0);
-        project.setProjectName("Select");
-        tempList.add(project);
         try {
             String pendingSurveyQuery = "select * from Project";
             SQLiteDatabase db = dbhelper.getWritableDatabase();

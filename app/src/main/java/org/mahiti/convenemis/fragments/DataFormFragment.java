@@ -241,8 +241,8 @@ public class DataFormFragment extends Fragment implements PeriodicTypeInterface,
     private void showSurveyForm() {
         if (surveyList.isEmpty())
             return;
-        new PendingSurveyAsyncTask(getActivity(), surveyList, externalDbOpenHelper, defaultPreferences, periodicityCheckControllerDbHelper, this, handler, surveyPrimaryKeyId, surveysId).execute();
-        new CompletedSurveyAsyncTask(getActivity(), surveyList, externalDbOpenHelper, defaultPreferences, surveyPrimaryKeyId, this, handler).execute();
+        new PendingSurveyAsyncTask(getActivity(), surveyList, externalDbOpenHelper, prefs, periodicityCheckControllerDbHelper, this, handler, surveyPrimaryKeyId, surveysId).execute();
+        new CompletedSurveyAsyncTask(getActivity(), surveyList, externalDbOpenHelper, prefs, surveyPrimaryKeyId, this, handler).execute();
 
     }
 

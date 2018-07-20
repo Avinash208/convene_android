@@ -83,7 +83,7 @@ public class LocationBasedActivity extends AppCompatActivity {
                     Utilities.setSurveyStatus(sharedPreferences, "new");
                     Utilities.setLocationSurveyFlag(sharedPreferences, "new");
                     SurveysBean surveysBean= new SurveysBean();
-                    int getCount = handler.getPeriodicityPreviousCountOnline(surveysBean, prefs.getInt(Constants.SURVEY_ID, 0), periodicityFlag, new Date(), "")                                             ;
+                    int getCount = handler.getPeriodicityLocationBased(surveysBean, prefs.getInt(Constants.SURVEY_ID, 0), periodicityFlag, new Date(), updateListLocation)                                             ;
 
                    if (getCount==0) {
                        new StartSurvey(activity, activity, prefs.getInt(Constants.SURVEY_ID, 0), clusterID, updateListLocation, "", "", "", "").execute();
@@ -241,7 +241,7 @@ public class LocationBasedActivity extends AppCompatActivity {
     }
 
     private void setValuesToSpinner(String orderLeve, Spinner dynamicSpinner) {
-        List<LevelBeen> getLevelsrecords = dbhelper.getLevelsrecords(orderLeve, dbhelper);
+        List<LevelBeen> getLevelsrecords = dbhelper.getLevelsrecords(orderLeve, dbhelper,prefs);
         if (!getLevelsrecords.isEmpty()) {
             ArrayAdapter<LevelBeen> spinnerArrayAdapter = new ArrayAdapter(this, R.layout.spinner_multi_row_textview, getLevelsrecords);
             spinnerArrayAdapter.setDropDownViewResource(R.layout.spinner_multi_row_textview);// The drop down view
