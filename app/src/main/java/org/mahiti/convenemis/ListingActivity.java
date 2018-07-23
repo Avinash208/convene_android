@@ -3,6 +3,7 @@ package org.mahiti.convenemis;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
@@ -11,6 +12,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -19,8 +21,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.rey.material.app.Dialog;
+
 import net.sqlcipher.database.SQLiteDatabase;
 
+import org.mahiti.convenemis.BeenClass.LanguageBean;
 import org.mahiti.convenemis.BeenClass.QuestionAnswer;
 import org.mahiti.convenemis.BeenClass.StatusBean;
 import org.mahiti.convenemis.adapter.spinnercustomadapter.ListingGridViewAdapter;
@@ -86,6 +91,9 @@ public class ListingActivity extends BaseActivity implements View.OnClickListene
     private String surveyId = "0";
     private ImageView filterButton;
     private TextView filterLocationName;
+    private FloatingActionButton dynamicFloatingMenu;
+    AlertDialog dialog;
+    List<LanguageBean> languageList;
 
 
     @Override
@@ -113,7 +121,8 @@ public class ListingActivity extends BaseActivity implements View.OnClickListene
         } catch (Exception e) {
             Logger.logE(Constants.TAG, "ListingActivity", e);
         }
-        methodToStoreSharedPreference(2);
+
+        callLanguageMethodRunBackground();
         beneficiaryTypeId = i.getStringExtra(Constants.BENEFICIARY_TYPE_ID);
         partnerId = i.getStringExtra("partner_id");
         toolbarTitle.setText(headerName);
@@ -129,6 +138,10 @@ public class ListingActivity extends BaseActivity implements View.OnClickListene
           // new summaryReportSync().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         backPress.setOnClickListener(this);
         createNewButton.setOnClickListener(this);
+    }
+
+    private void callLanguageMethodRunBackground() {
+         new languageThread().run();
     }
 
     @Override
@@ -147,7 +160,10 @@ public class ListingActivity extends BaseActivity implements View.OnClickListene
     private void methodToStoreSharedPreference(int which) {
         SharedPreferences.Editor editor = defaultPreferences.edit();
         editor.putInt("DEFAULT_SELECT", which);
+        editor.putInt(Constants.SELECTEDLANGUAGE, languageList.get(which).getLanguagecode());
+        editor.putString(Constants.SELECTEDLANGUAGELABEL, languageList.get(which).getLanguageName());
         editor.apply();
+        ToastUtils.displayToast("Selected "+languageList.get(which).getLanguageName(),this);
     }
 
     /*method to intialize all the views */
@@ -162,16 +178,14 @@ public class ListingActivity extends BaseActivity implements View.OnClickListene
         filterButton = findViewById(R.id.filter);
         filterLocationName = findViewById(R.id.locationTV);
         filterButton.setOnClickListener(this);
+        languageList= new ArrayList<>();
     }
-
     @Override
     protected void onResume() {
         super.onResume();
         updateFilterLabels();
-      //   new summaryReportSync().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         createNewButton.setOnClickListener(this);
     }
-
     private void updateFilterLabels() {
         try {
             String getFilterRecords = sharedPreferences.getString(Constants.FILTER + "@" + surveyId, "");
@@ -247,15 +261,60 @@ public class ListingActivity extends BaseActivity implements View.OnClickListene
                 onBackPressed();
                 break;
             case R.id.createNewButton:
-                Utilities.setSurveyStatus(sharedPreferences, "new");
-                SharedPreferences.Editor editor = prefs.edit();
-                editor.putInt(SURVEY_ID, Integer.parseInt(surveyId));
-                editor.apply();
-                new StartSurvey(ListingActivity.this, ListingActivity.this, prefs.getInt(SURVEY_ID, 0), prefs.getInt(SURVEY_ID, 0), "Village Name", "", "", "", "").execute();
+               if (!languageList.isEmpty()){
+                   List<String> getLanguageToString= new ArrayList<>();
+                   for (int i=0;i<languageList.size();i++){
+                       getLanguageToString.add(languageList.get(i).getLanguageName());
+                   }
+                   showFilterList(getLanguageToString);
+               }else{
+                   ToastUtils.displayToast("Sorry no Language found to continue!",this);
+               }
                 break;
             default:
                 break;
         }
+    }
+
+    /**
+     * method to set the filterLogin option in alert dialog for beneficiary and facility
+     * @param filterBy - based on list set the alert dialog to show the filterLogin option
+     */
+    private void showFilterList(final  List<String>  filterBy) {
+        if (!filterBy.isEmpty()) {
+            DialogInterface.OnClickListener dialogInterface = (dialog, which) -> {
+                setAdapters(which);
+                dialog.cancel();
+            };
+            AlertDialog.Builder builder = new AlertDialog.Builder(ListingActivity.this);
+            builder.setTitle(getString(R.string.SelectLanguage));
+            builder.setSingleChoiceItems(filterBy.toArray(new String[filterBy.size()]),  defaultPreferences.getInt("DEFAULT_SELECT",0), dialogInterface);
+            dialog = builder.create();
+            dialog.show();
+
+
+        }else{
+            ToastUtils.displayToast("filterLogin is not available",context);
+        }
+    }
+    private void setAdapters(int which) {
+        setSortingOrder(which);
+
+        Utilities.setSurveyStatus(prefs, "new");
+                SharedPreferences.Editor editor = prefs.edit();
+                editor.putInt(SURVEY_ID, Integer.parseInt(surveyId));
+                editor.apply();
+                new StartSurvey(ListingActivity.this, ListingActivity.this, prefs.getInt(SURVEY_ID, 0), prefs.getInt(SURVEY_ID, 0), "Village Name", "", "", "", "").execute();
+
+    }
+
+    /**
+     * method to set the adapter based on sort selection
+     * @param which
+
+     */
+    private void setSortingOrder(int which) {
+        methodToStoreSharedPreference(which);
     }
 
     /**
@@ -490,5 +549,10 @@ public class ListingActivity extends BaseActivity implements View.OnClickListene
     }
 
 
-
+    private class languageThread implements   Runnable{
+        @Override
+        public void run() {
+            languageList=dbConveneHelper.getAllRegionalLanguage();
+        }
+    }
 }

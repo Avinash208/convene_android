@@ -16,6 +16,7 @@ import com.google.gson.Gson;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.mahiti.convenemis.BeenClass.LanguageBean;
 import org.mahiti.convenemis.BeenClass.PreviewQuestionAnswerSet;
 import org.mahiti.convenemis.BeenClass.beneficiaryList.Jsondata;
 import org.mahiti.convenemis.BeenClass.regionallanguage.GetLanguageAssessment;
@@ -1117,5 +1118,38 @@ public class ConveneDatabaseHelper extends SQLiteOpenHelper {
                 cursor.close();
         }
         return previewQuestionAnswerSets;
+    }
+
+    public List<LanguageBean> getAllRegionalLanguage() {
+        List<LanguageBean> getTempLanguageList= new ArrayList<>();
+        String query= "select * from Language where Language.active=2";
+        Cursor cursor = null;
+        try {
+            database = openDataBase();
+            cursor = database.rawQuery(query, null);
+            Logger.logD("Fetching", "language query" + query + "-->" + cursor.getCount());
+            if (cursor.moveToFirst()) {
+                do {
+                    int language_code = cursor.getInt(cursor.getColumnIndex("language_code"));
+                    String language_name = cursor.getString(cursor.getColumnIndex("language_name"));
+                    LanguageBean languageBean= new LanguageBean();
+                    languageBean.setLanguagecode(language_code);
+                    languageBean.setLanguageName(language_name);
+                    getTempLanguageList.add(languageBean);
+                }
+                while (cursor.moveToNext());
+
+
+            }
+            cursor.close();
+        }catch (Exception e)
+        {
+            Logger.logE("getAllOptions",e.getMessage(),e);
+        }
+        finally {
+            if (cursor != null)
+                cursor.close();
+        }
+        return getTempLanguageList;
     }
 }

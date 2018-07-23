@@ -456,7 +456,7 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
     @Override
     public void onBackPressed() {
         //TODO need to change the above code .
-        if (surveyPreferences.getString(Constants.SURVEYSTATUSTYPR, "").equals("new")) {
+        if (prefs.getString(Constants.SURVEYSTATUSTYPR, "").equals("new")) {
             Logger.logD(TAG, "New Survey");
             SupportClass supportClass = new SupportClass();
             supportClass.backButtonFunction(SurveyQuestionActivity.this, db, surveyHandler, surveyPrimaryKeyId);
@@ -1244,7 +1244,7 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
         TextView errorText = (TextView) child.findViewById(R.id.errortext);
         RadioGroup RG = (RadioGroup) child.findViewById(R.id.myRadioGroup);
         RG.setTag(displayQuestionModel.getQuestionNumber());
-        HashMap<String, List<AnswersPage>> answerValues = DataBaseMapperClass.getAnswerFromDBnew(displayQuestionModel.getQuestionNumber(), surveyDatabase, restUrl,/*defaultPreferences.getInt(Constants.SELECTEDLANGUAGE,0)*/1);
+        HashMap<String, List<AnswersPage>> answerValues = DataBaseMapperClass.getAnswerFromDBnew(displayQuestionModel.getQuestionNumber(), surveyDatabase, restUrl,defaultPreferences.getInt(Constants.SELECTEDLANGUAGE,0));
         List<AnswersPage> answerEditList = answerValues.get(String.valueOf(questionCode));
         // set Question and tool tip
         displayQuestionTextTooTip(displayQuestionModel, question, child.findViewById(R.id.tooltip));
@@ -1336,7 +1336,7 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
         Spinner spinner = child.findViewById(R.id.spinner);
         spinner.setTag(displayQuestionModel.getQuestionNumber());
 
-        List<AnswersPage> spinnerAnswer = DataBaseMapperClass.getAnswerFromDB(displayQuestionModel.getQuestionNumber(), surveyDatabase, 1/*surveyPreferences.getInt(Constants.SELECTEDLANGUAGE,0)*/);
+        List<AnswersPage> spinnerAnswer = DataBaseMapperClass.getAnswerFromDB(displayQuestionModel.getQuestionNumber(), surveyDatabase, surveyPreferences.getInt(Constants.SELECTEDLANGUAGE,0));
         // set Question and tool tip
         displayQuestionTextTooTip(displayQuestionModel, question, child.findViewById(R.id.tooltip));
         // Application of the Array to the Spinner
@@ -2246,7 +2246,7 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
             case R.id.backPress:
                 Logger.logD(TAG, "Clicked backPress button");
                 clearAllWidgetMapCounts();
-                if (surveyPreferences.getString(Constants.SURVEYSTATUSTYPR, "").equals("new")) {
+                if (prefs.getString(Constants.SURVEYSTATUSTYPR, "").equals("new") ) {
                     Logger.logD(TAG, "New Survey");
                     SupportClass supportClass = new SupportClass();
                     supportClass.backButtonFunction(SurveyQuestionActivity.this, db, surveyHandler, surveyPrimaryKeyId);

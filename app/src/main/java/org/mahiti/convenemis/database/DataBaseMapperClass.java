@@ -335,8 +335,8 @@ public class DataBaseMapperClass {
         String QuestionQuery="";
         if (selectedLangauge==1){
             QuestionQuery="SELECT "+ Constants.OPTION_TEXT + ", a.id from Options a, Question q where a.question_pid=q.id and q.id="+questionNumber+ORDER_BY_OPTION_ORDER;
-        }else if(selectedLangauge==2){
-            QuestionQuery="SELECT LanguageOptions.option_text from Options, Question,  LanguageOptions where Options.id=LanguageOptions.option_pid and   Question.id= LanguageOptions.question_pid and Question.id="+questionNumber+"  and LanguageOptions.language_id="+selectedLangauge+" order BY Options.option_order";
+        }else if(selectedLangauge!=1){
+            QuestionQuery="SELECT LanguageOptions.option_text,Options.id from Options, Question,  LanguageOptions where Options.id=LanguageOptions.option_pid and   Question.id= LanguageOptions.question_pid and Question.id="+questionNumber+"  and LanguageOptions.language_id="+selectedLangauge+" order BY Options.option_order";
         }else{
             QuestionQuery="SELECT "+ Constants.OPTION_TEXT + " from Options a, Question q where a.question_pid=q.id and q.id="+questionNumber+ORDER_BY_OPTION_ORDER;
         }

@@ -705,20 +705,12 @@ public class UpdateMasterLoading extends BaseActivity implements ClusterToTypo, 
      */
     @Override
     public void onSuccessfullRegionalLanguage(String result, boolean flag) {
-        ohterimagestatus.setVisibility(View.VISIBLE);
-        ohterimagestatus.setBackgroundResource(R.drawable.done);
-        otherProgressBar.setProgress(98);
-        otherStatus.setText(getString(R.string.completed));
-        if (flag) {
-            if (Utils.haveNetworkConnection(this)) {
-                addressProofAsyncTask = new AddressProofAsyncTask(context, this, this);
-                addressProofAsyncTask.execute();
-            } else {
-                showAlertErrorInternetConnectivity(context, 24, RETRY_CONNECTIVITY, true);
-            }
+        HashMap<String,String> projectApiParms= new HashMap<>();
+        projectApiParms.put("URL","survey/projectbasedsurveylisting/");
+        projectApiParms.put("userid", defaultPreferences.getString("UID", ""));
+        if(Utils.haveNetworkConnection(this)){
+            CallServerForApi.callServerApi(this,this,projectApiParms,null, 201);
 
-        } else {
-            showAlertErrorInternetConnectivity(context, 23, RESPONSE_ERROR, false);
         }
     }
 
@@ -936,13 +928,15 @@ public class UpdateMasterLoading extends BaseActivity implements ClusterToTypo, 
     }
 
     private void callProjectSelectionListApi() {
-        HashMap<String,String> projectApiParms= new HashMap<>();
-        projectApiParms.put("URL","survey/projectbasedsurveylisting/");
-        projectApiParms.put("userid", defaultPreferences.getString("UID", ""));
-        if(Utils.haveNetworkConnection(this)){
-            CallServerForApi.callServerApi(this,this,projectApiParms,null, 201);
-
+        if (Utils.haveNetworkConnection(this)) {
+            UpdateRegionalLanguge updateRegionalLanguge = new UpdateRegionalLanguge(UpdateMasterLoading.this, getString(R.string.regionalLanguageURLS), UpdateMasterLoading.this, otherProgressBar);
+            updateRegionalLanguge.execute();
+        } else {
+            showAlertErrorInternetConnectivity(context, 23, RETRY_CONNECTIVITY, true);
         }
+
+
+
     }
 
     private void executeNeXtFunctionality(String results) {

@@ -80,7 +80,7 @@ public class LocationBasedActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (!updateListLocation.equalsIgnoreCase("Select")) {
-                    Utilities.setSurveyStatus(sharedPreferences, "new");
+                    Utilities.setSurveyStatus(prefs, "new");
                     Utilities.setLocationSurveyFlag(sharedPreferences, "new");
                     SurveysBean surveysBean= new SurveysBean();
                     int getCount = handler.getPeriodicityLocationBased(surveysBean, prefs.getInt(Constants.SURVEY_ID, 0), periodicityFlag, new Date(), updateListLocation)                                             ;

@@ -273,7 +273,7 @@ public class BeneficiaryLinkageActivityFragment extends Fragment implements Push
                                     SharedPreferences.Editor preferenceEd = sharedPreferences.edit();
                                     preferenceEd.putBoolean("isLocationBased", true);
                                     preferenceEd.apply();
-                                    Utilities.setSurveyStatus(sharedPreferences,"new");
+                                    Utilities.setSurveyStatus(prefs,"new");
                                     new StartSurvey(getActivity(), getActivity(), sharedPreferences.getInt(Constants.SURVEY_ID, 0), sharedPreferences.getInt(Constants.SURVEY_ID, 0), "Village Name", "", "", "", "").execute();
                                 }
                             });
@@ -347,7 +347,7 @@ public class BeneficiaryLinkageActivityFragment extends Fragment implements Push
         SharedPreferences.Editor preferenceEd = sharedPreferences.edit();
         preferenceEd.putBoolean("isLocationBased", true);
         preferenceEd.apply();
-        Utilities.setSurveyStatus(sharedPreferences,"new");
+        Utilities.setSurveyStatus(prefs,"new");
         new StartSurvey(getActivity(), getActivity(), sharedPreferences.getInt(Constants.SURVEY_ID, 0), sharedPreferences.getInt(Constants.SURVEY_ID, 0), "Village Name", "", "", "", "").execute();
     }
 
