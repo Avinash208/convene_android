@@ -11,6 +11,8 @@ import org.mahiti.convenemis.BeenClass.AssesmentBean;
 import org.mahiti.convenemis.BeenClass.Page;
 import org.mahiti.convenemis.BeenClass.Response;
 import org.mahiti.convenemis.BeenClass.parentChild.LevelBeen;
+import org.mahiti.convenemis.beansClassSetQuestion.Option;
+import org.mahiti.convenemis.beansClassSetQuestion.RuleEngine;
 import org.mahiti.convenemis.utils.Constants;
 import org.mahiti.convenemis.utils.Logger;
 import org.mahiti.convenemis.utils.PreferenceConstants;
@@ -418,7 +420,7 @@ public class DataBaseMapperClass {
         int ansCode=0;
         String QuestionQuery="";
         if (selectedLangauge!=1)
-            QuestionQuery="SELECT Options.id from Options , LanguageOptions where Options.question_pid="+questionNumber+" and Options.id=LanguageOptions.option_pid and LanguageOptions.option_text= '"+answer+"'";
+            QuestionQuery="SELECT option_pid as id from LanguageOptions where question_pid="+questionNumber+"  and option_text= '"+answer+"'";
         else
             QuestionQuery="SELECT id from Options where question_pid="+questionNumber+"  and option_text= '"+answer+"'";        Cursor cursor=null;
         try {
@@ -846,10 +848,7 @@ public class DataBaseMapperClass {
         String query;
         if (language_id==1)
             query = "select * from Question where  sub_question= "+questionNumber+" order by sub_question ASC";
-        else if(language_id==2)
-            query = "select  Question.id, LanguageQuestion.question_text, Question.question_code, Question.answer from LanguageQuestion , Question where  Question.sub_question="+questionNumber+" and LanguageQuestion.question_pid=Question.id and LanguageQuestion.language_id="+language_id;
-        else
-            query = "select * from Question where  sub_question= "+questionNumber+" order by sub_question ASC";
+        else query = "select  Question.id, LanguageQuestion.question_text, Question.question_code, Question.answer from LanguageQuestion , Question where  Question.sub_question="+questionNumber+" and LanguageQuestion.question_pid=Question.id and LanguageQuestion.language_id="+language_id;
         Cursor questionCursor = database.rawQuery(query, null);
         try {
             if (questionCursor.moveToFirst()) {
@@ -888,10 +887,7 @@ public class DataBaseMapperClass {
         try{
             if (selectedLangauge==1)
                 selectQuery = selecOptionQuery+qid;
-            else if (selectedLangauge==2)
-                selectQuery = "select Options.id,Options.question_pid,Options.option_code,LanguageOptions.option_text,Options.assessment_pid from LanguageOptions , Options where LanguageOptions.option_pid=Options.id and LanguageOptions.language_id="+selectedLangauge+" and  Options.assessment_pid="+qid;
-            else
-                selectQuery = selecOptionQuery+qid;
+            else selectQuery = "select Options.id,Options.question_pid,Options.option_code,LanguageOptions.option_text,Options.assessment_pid from LanguageOptions , Options where LanguageOptions.option_pid=Options.id and LanguageOptions.language_id="+selectedLangauge+" and  Options.assessment_pid="+qid;
             Cursor cursor = database.rawQuery(selectQuery, null);
             list.clear();
             if (cursor.getCount()<=0){
@@ -999,7 +995,7 @@ public class DataBaseMapperClass {
         String selectQuery="";
         if (languageid==1) {
             selectQuery = "select * from Options where option_text= '" + ansTxt + "'and assessment_pid=" + qid;
-        } else if (languageid==2){
+        } else if (languageid!=1){
             selectQuery = "select Options.id,Options.question_pid,Options.option_code,Options.assessment_pid, LanguageOptions.option_text  from Options , LanguageOptions where LanguageOptions.option_text= '"+ansTxt+"' and LanguageOptions.option_pid= Options.id and Options.assessment_pid="+qid+" and LanguageOptions.language_id="+languageid;
         }else{
             selectQuery = "select * from Options where option_text= '"+ansTxt+"'and assessment_pid="+qid;
@@ -1074,7 +1070,7 @@ public class DataBaseMapperClass {
 
         Cursor cursor = db.rawQuery(selectQuery, null);
         listPrimaryKey.clear();
-        if (cursor.moveToFirst()) {
+        if ( cursor.getCount() != 0 && cursor.moveToFirst()) {
             do {
                 int primarykey = cursor.getInt(cursor.getColumnIndex(primaryKeyStr));
                 Logger.logD(TAG," the primarykey-->"+primarykey);
@@ -1366,7 +1362,8 @@ public class DataBaseMapperClass {
         if (language_id==1)
             query = "select * from Assessment where active=2 and  question_pid = "+q_code;
         else if (language_id!=1)
-            query = "select Assessment.id,LanguageAssessment.assessment,Assessment.qtype,Assessment.mandatory,Assessment.question_pid,Assessment.group_validation from LanguageAssessment, Assessment where Assessment.active=2 and question_pid= "+q_code+" and  LanguageAssessment.language_id="+language_id+" and  Assessment.id =LanguageAssessment.assessment_pid";
+            query = "select Assessment.id,LanguageAssessment.assessment,Assessment.qtype,Assessment.mandatory,Assessment.question_pid,Assessment.group_validation " +
+                    "from LanguageAssessment, Assessment where Assessment.active=2 and question_pid= "+q_code+" and  LanguageAssessment.language_id="+language_id+" and  Assessment.id =LanguageAssessment.assessment_pid";
         else
             query = "select * from Assessment where active=2 and  question_pid = "+q_code;
 
@@ -1453,5 +1450,109 @@ public class DataBaseMapperClass {
         if (cursor != null)
             cursor.close();
         return list;
+    }
+
+    public static String getTestQuestionAnswerCode(String currentPageLastQuestionId, SQLiteDatabase surveyDatabase,
+                                                   String userEnterText) {
+        String answerType = "";
+        List<Option> listRuleEnginOption= new ArrayList<>();
+        try {
+            String query = "select * from Options where  Options.question_pid=" + currentPageLastQuestionId;
+            Cursor cursor = surveyDatabase.rawQuery(query, null);
+            if (cursor != null && cursor.moveToFirst()) {
+                do {
+                  int  id = cursor.getInt(cursor.getColumnIndex("id"));
+                  int  question_pid = cursor.getInt(cursor.getColumnIndex("question_pid"));
+                  String  skip_code = cursor.getString(cursor.getColumnIndex("skip_code"));
+                  String  rule_engin = cursor.getString(cursor.getColumnIndex("rule_engin"));
+                    Option option= new Option();
+                    option.setId(id);
+                    option.setQuestionPid(question_pid);
+                    option.setSkipCode(skip_code);
+                    List<RuleEngine> getList= new ArrayList<>();
+                    boolean isRuleEnginValid= false;
+                    try {
+                        isRuleEnginValid = bindRuleEnginFrmString(rule_engin,getList,Integer.parseInt(userEnterText));
+                    } catch (NumberFormatException e) {
+                        e.printStackTrace();
+                    }
+                    if (isRuleEnginValid)
+                      return String.valueOf(id);
+                  else
+                      answerType=String.valueOf(id);
+                    option.setRuleEngine(getList);
+                    listRuleEnginOption.add(option);
+
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+        } catch (Exception e) {
+            Logger.logE(TAG, "getting answertype from question table", e);
+        }
+        return answerType;
+    }
+
+    private static boolean bindRuleEnginFrmString(String rule_engin, List<RuleEngine> getList, int userEnterText) {
+        if (!rule_engin.isEmpty()){
+            try {
+                RuleEngine ruleEngine= new RuleEngine();
+                JSONArray jsonArray = new JSONArray(rule_engin);
+                List<Boolean> validateList= new ArrayList<>();
+                for (int i=0;i<jsonArray.length();i++){
+                    JSONObject jsonObject= jsonArray.getJSONObject(i);
+                    ruleEngine.setDataType(jsonObject.getString("data_type"));
+                    ruleEngine.setOperator(jsonObject.getString("operator"));
+                    ruleEngine.setQuestionId(jsonObject.getInt("question_id"));
+                    ruleEngine.setValue(jsonObject.getString("value"));
+                    validateList.add(setRuleEnginScane(ruleEngine.getValue(),ruleEngine.getOperator(),userEnterText));
+                    getList.add(ruleEngine);
+                }
+                if (!validateList.contains(false))
+                    return true;
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return false;
+    }
+
+    private static boolean setRuleEnginScane(String getRuleEnginValue,String operator, int userText) {
+        switch (operator){
+            case "<=":
+                if (userText<=Integer.parseInt(getRuleEnginValue))
+                    return true;
+                break;
+            case ">=":
+                if (userText>=Integer.parseInt(getRuleEnginValue))
+                    return true;
+                break;
+            case "<":
+                break;
+            case ">":
+                if (userText>Integer.parseInt(getRuleEnginValue))
+                    return true;
+                break;
+            case "==":
+                break;
+            default:
+                break;
+
+        }
+        return false;
+    }
+
+    public static String getResponseText(net.sqlcipher.database.SQLiteDatabase db, String surveyPrimaryKeyId,String questionID) {
+        String getResponseText="";
+        String selectQuery = "select ans_text from Response where Response.survey_id='"+surveyPrimaryKeyId+"' and Response.q_id="+questionID;
+
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        if (cursor != null && cursor.moveToFirst()) {
+            do {
+                getResponseText = cursor.getString(cursor.getColumnIndex("ans_text"));
+            } while (cursor.moveToNext());
+        }
+        if (cursor != null)
+            cursor.close();
+        return getResponseText;
     }
 }

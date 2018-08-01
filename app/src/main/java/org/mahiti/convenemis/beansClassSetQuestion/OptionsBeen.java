@@ -1,11 +1,9 @@
 
 package org.mahiti.convenemis.beansClassSetQuestion;
 
+import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class OptionsBeen {
 
@@ -15,19 +13,9 @@ public class OptionsBeen {
     @SerializedName("message")
     @Expose
     private String message;
-    @SerializedName("total_count")
-    @Expose
-    private Integer totalCount;
-    @SerializedName("page_count")
-    @Expose
-    private Integer pageCount;
-    @SerializedName("records_per_page")
-    @Expose
-    private Integer recordsPerPage;
     @SerializedName("Options")
     @Expose
-    private List<Options> options = new ArrayList<>();
-
+    private List<Option> options = null;
 
     public Integer getStatus() {
         return status;
@@ -45,35 +33,11 @@ public class OptionsBeen {
         this.message = message;
     }
 
-    public Integer getTotalCount() {
-        return totalCount;
-    }
-
-    public void setTotalCount(Integer totalCount) {
-        this.totalCount = totalCount;
-    }
-
-    public Integer getPageCount() {
-        return pageCount;
-    }
-
-    public void setPageCount(Integer pageCount) {
-        this.pageCount = pageCount;
-    }
-
-    public Integer getRecordsPerPage() {
-        return recordsPerPage;
-    }
-
-    public void setRecordsPerPage(Integer recordsPerPage) {
-        this.recordsPerPage = recordsPerPage;
-    }
-
-    public List<Options> getOptions() {
+    public List<Option> getOptions() {
         return options;
     }
 
-    public void setOptions(List<Options> options) {
+    public void setOptions(List<Option> options) {
         this.options = options;
     }
 

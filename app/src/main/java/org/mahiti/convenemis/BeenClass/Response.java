@@ -80,6 +80,11 @@ public class Response implements Parcelable,Parcelable.Creator{
 	public String getQ_id() {
 		return q_id;
 	}
+
+	public void setQ_id(String q_id) {
+		this.q_id = q_id;
+	}
+
 	public String getSubquestionId() {
 		return sub_questionId;
 	}

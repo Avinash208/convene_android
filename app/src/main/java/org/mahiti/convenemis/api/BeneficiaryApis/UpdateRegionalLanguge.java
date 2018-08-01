@@ -53,6 +53,8 @@ public class UpdateRegionalLanguge extends AsyncTask<Context, Integer, String> {
         this.regionalLanguageInterface=loginParentActivity1;
         this.dbhelper=ConveneDatabaseHelper.getInstance(context, preferences.getString(Constants.CONVENE_DB, ""), preferences.getString("UID", ""));
         this.progressBar= progressBar;
+
+
     }
     protected void onPreExecute() {
         super.onPreExecute();
@@ -61,6 +63,7 @@ public class UpdateRegionalLanguge extends AsyncTask<Context, Integer, String> {
     @Override
     protected String doInBackground(Context... contexts) {
         try {
+            dbhelper.deleteLanguageALl();
             String regionalLanguage = dbhelper.getregionallLanguageUpdates("language","updated_time");
             preferences = PreferenceManager.getDefaultSharedPreferences(context);
             List<NameValuePair> paramsL = new ArrayList<>();

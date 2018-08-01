@@ -54,6 +54,9 @@ public class Options {
     @SerializedName("extra_column2")
     @Expose
     private Integer extraColumn2;
+    @SerializedName("Rule_engine")
+    @Expose
+    private String ruleEngin;
     @SerializedName("assessment_pid")
     @Expose
     private Integer assessmentPid;
@@ -192,5 +195,13 @@ public class Options {
 
     public void setOption_order(Integer option_order) {
         this.option_order = option_order;
+    }
+
+    public String getRuleEngin() {
+        return ruleEngin;
+    }
+
+    public void setRuleEngin(String ruleEngin) {
+        this.ruleEngin = ruleEngin;
     }
 }

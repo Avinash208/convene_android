@@ -575,11 +575,11 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
         if (!surveyDatabase.isOpen()) {
             surveyDatabase = dbOpenHelper.getWritableDatabase();
         }
-        listOfPage = DataBaseMapperClass.getQuestionOnBlocks(questionCode, surveyDatabase, surveysId, surveyPreferences.getInt(Constants.SELECTEDLANGUAGE, 0), mainQList);
+        listOfPage = DataBaseMapperClass.getQuestionOnBlocks(questionCode, surveyDatabase, surveysId, surveyPreferences.getInt(Constants.SELECTEDLANGUAGE, 1), mainQList);
         for (int k = 0; k < listOfPage.size(); k++) {
             int selectQuestionType = listOfPage.get(k).getQuestionId();
             int blockId = listOfPage.get(k).getBlockId();
-            String blockNameTitle = DataBaseMapperClass.getBlockName(surveyDatabase, surveysId, blockId, surveyPreferences.getInt("selectedLanguage", 0));
+            String blockNameTitle = DataBaseMapperClass.getBlockName(surveyDatabase, surveysId, blockId, surveyPreferences.getInt("selectedLanguage", 1));
             blockName.setText(blockNameTitle);
             listQuestionType.add(String.valueOf(selectQuestionType));
             String questionFont = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).getString("question", "18");
@@ -635,6 +635,7 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
         dynamicInlineAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 SupportClass.moduleToCreateInlineDialogForm(questionID, surveyDatabase, SurveyQuestionActivity.this, childInline, defaultPreferences);
             }
         });
@@ -672,6 +673,7 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
         gridViewLinearLayoutHolderInline.put(String.valueOf(page.getQuestionNumber()), dynamicQuestionSet);
         getAllGridQuestionCodeInline.add(String.valueOf(page.getQuestionNumber()));
     }
+
 
     private void validateMandatoryView(Page page, View childInline, TextView question) {
         if (page.getMandatory().contains("1")) {
@@ -773,8 +775,8 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
         final List<String> GridlistHashMapKey = new ArrayList<>();
         final int getCurrentGridQuestionID = questionNumber;
         final List<Response> setAnswers_listInline = surveyHandler.setAnswersForGrid(getCurrentGridQuestionID, String.valueOf(surveyPrimaryKeyId));
-        final List<AssesmentBean> MAssesmant = DataBaseMapperClass.getAssesements(getCurrentGridQuestionID, surveyDatabase, defaultPreferences.getInt("selectedLangauge", 0));
-        final List<Page> mSubQuestions = DataBaseMapperClass.getSubquestionNew(getCurrentGridQuestionID, surveyDatabase, defaultPreferences.getInt("selectedLangauge", 0));
+        final List<AssesmentBean> MAssesmant = DataBaseMapperClass.getAssesements(getCurrentGridQuestionID, surveyDatabase, surveyPreferences.getInt(Constants.SELECTEDLANGUAGE, 1));
+        final List<Page> mSubQuestions = DataBaseMapperClass.getSubquestionNew(getCurrentGridQuestionID, surveyDatabase, surveyPreferences.getInt(Constants.SELECTEDLANGUAGE, 1));
         gridSubQuestionMapDialog.put(getCurrentGridQuestionID + "_SUBQ", mSubQuestions);
         gridAssessmentMapDialog.put(String.valueOf(getCurrentGridQuestionID) + "_ASS", MAssesmant);
         gridQuestionMapDialog.put(String.valueOf(getCurrentGridQuestionID) + QUESTION, page);
@@ -1244,7 +1246,7 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
         TextView errorText = (TextView) child.findViewById(R.id.errortext);
         RadioGroup RG = (RadioGroup) child.findViewById(R.id.myRadioGroup);
         RG.setTag(displayQuestionModel.getQuestionNumber());
-        HashMap<String, List<AnswersPage>> answerValues = DataBaseMapperClass.getAnswerFromDBnew(displayQuestionModel.getQuestionNumber(), surveyDatabase, restUrl,defaultPreferences.getInt(Constants.SELECTEDLANGUAGE,0));
+        HashMap<String, List<AnswersPage>> answerValues = DataBaseMapperClass.getAnswerFromDBnew(displayQuestionModel.getQuestionNumber(), surveyDatabase, restUrl, defaultPreferences.getInt(Constants.SELECTEDLANGUAGE, 0));
         List<AnswersPage> answerEditList = answerValues.get(String.valueOf(questionCode));
         // set Question and tool tip
         displayQuestionTextTooTip(displayQuestionModel, question, child.findViewById(R.id.tooltip));
@@ -1336,7 +1338,7 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
         Spinner spinner = child.findViewById(R.id.spinner);
         spinner.setTag(displayQuestionModel.getQuestionNumber());
 
-        List<AnswersPage> spinnerAnswer = DataBaseMapperClass.getAnswerFromDB(displayQuestionModel.getQuestionNumber(), surveyDatabase, surveyPreferences.getInt(Constants.SELECTEDLANGUAGE,0));
+        List<AnswersPage> spinnerAnswer = DataBaseMapperClass.getAnswerFromDB(displayQuestionModel.getQuestionNumber(), surveyDatabase, surveyPreferences.getInt(Constants.SELECTEDLANGUAGE, 1));
         // set Question and tool tip
         displayQuestionTextTooTip(displayQuestionModel, question, child.findViewById(R.id.tooltip));
         // Application of the Array to the Spinner
@@ -1607,6 +1609,11 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
             return validateAndUpdateHashMap(getResponseKeys, gridviewQuestionCOde);
 
         } else {
+            /*List<Response> answersEditTextTemp = new ArrayList<>();
+            Response response= new Response();
+          response.setQ_id(String.valueOf(gridviewQuestionCOde));
+          answersEditTextTemp.add(response);
+            hashMapAnswersEditText.put(String.valueOf(gridviewQuestionCOde + "_" + 16), answersEditTextTemp);*/
             boolean checkMandatory = DBHandler.getMandatoryQuestion(String.valueOf(gridviewQuestionCOde), surveyDatabase);
             if (checkMandatory) {
                 return false;
@@ -2052,7 +2059,7 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
                     checkcounter = checkcounter + 1;
                     checkBoolean = true;
                     checked = checkbox.getText().toString();
-                    getAnswercode = DataBaseMapperClass.getAnswerCode(String.valueOf(checkBoxQuestionCode), database, checked, 1);
+                    getAnswercode = DataBaseMapperClass.getAnswerCode(String.valueOf(checkBoxQuestionCode), database, checked, surveyPreferences.getInt(Constants.SELECTEDLANGUAGE, 1));
                     getALlSelectedids.add(getAnswercode);
                 }
 
@@ -2104,13 +2111,13 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
                 radioBoolean = true;
                 errorTextView.setVisibility(View.GONE);
                 checkedItemData = button.getText().toString();
-                String getAnswercode = DataBaseMapperClass.getAnswerCode(String.valueOf(questionCode), database, checkedItemData, 1);
+                String getAnswercode = DataBaseMapperClass.getAnswerCode(String.valueOf(questionCode), database, checkedItemData, surveyPreferences.getInt(Constants.SELECTEDLANGUAGE, 1));
                 radioAnswerCode = getAnswercode;
                 fillResponseToDBNONwidget(questionCode, checkedItemData, getAnswercode, qType); // filling Question and Answer to Been and Table
                 skipcode = QuestionActivityUtils.checkSkipCode(String.valueOf(questionCode), database, radioAnswerCode);
             }
         }
-        Logger.logD("getRadioStatus",radioGroup[0].getCheckedRadioButtonId()+"");
+        Logger.logD("getRadioStatus", radioGroup[0].getCheckedRadioButtonId() + "");
         if (checkMandatory && !checkRadioEach(radioGroup[0])) {
             errorTextView.setVisibility(View.VISIBLE);
             errorTextView.setText(R.string.mandatoryQuestion);
@@ -2126,12 +2133,12 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
     }
 
     private boolean checkRadioEach(RadioGroup radioGroup) {
-       for(int i=0;i<radioGroup.getChildCount();i++){
-           final RadioButton button = (RadioButton) radioGroup.getChildAt(i);
-           return button.isChecked();
-       }
-
-
+        for (int i = 0; i < radioGroup.getChildCount(); i++) {
+            final RadioButton button = (RadioButton) radioGroup.getChildAt(i);
+            if (button.isChecked()) {
+                return true;
+            }
+        }
         return false;
     }
 
@@ -2246,7 +2253,7 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
             case R.id.backPress:
                 Logger.logD(TAG, "Clicked backPress button");
                 clearAllWidgetMapCounts();
-                if (prefs.getString(Constants.SURVEYSTATUSTYPR, "").equals("new") ) {
+                if (prefs.getString(Constants.SURVEYSTATUSTYPR, "").equals("new")) {
                     Logger.logD(TAG, "New Survey");
                     SupportClass supportClass = new SupportClass();
                     supportClass.backButtonFunction(SurveyQuestionActivity.this, db, surveyHandler, surveyPrimaryKeyId);
@@ -2381,12 +2388,21 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
                     }
                     Logger.logD(TAG, "currentPageLastQuestionResponseCode = " + currentPageLastQuestionResponseCode);
                 } else {
-                    currentPageLastQuestionResponseCode = "";
+                    List<Response> response= hashMapAnswersEditText.get(currentPageLastQuestionId+"_1");
+                    String getResposeTextPrevious=DataBaseMapperClass.getResponseText(db,surveyPrimaryKeyId,currentPageLastQuestionId);
+                    String getResposeText=response.get(0).getAnswer();
+                    String getKeyBasedSkipCode = DataBaseMapperClass.getTestQuestionAnswerCode(currentPageLastQuestionId,surveyDatabase,getResposeText);
+                    radioAnswerCode=getKeyBasedSkipCode;
+                    if (!getResposeTextPrevious.isEmpty())
+                        currentPageLastQuestionResponseCode = response.get(0).getAns_code();
+                    else
+                        currentPageLastQuestionResponseCode = "";
                 }
             }
             for (int i = 0; i < questionList.size(); i++) {
                 // bellow piece of code is for direct skip code through options table
                 Logger.logD(TAG, "pageCountValue-------" + radioAnswerCode);
+
                 skipcode = QuestionActivityUtils.checkSkipCode(questionList.get(i), surveyDatabase, radioAnswerCode);
                 Logger.logD(TAG, "Skip value of particular qid in question list " + skipcode);
                 if ("".equals(skipcode)) {
@@ -2466,7 +2482,6 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
             Logger.logE(TAG, "Exception in Next Button Functionality ", e);
         }
     }
-
     /**
      * method
      */
@@ -2969,6 +2984,11 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
                 count++;
                 listQuestionType.clear();
                 clearAllWidgetMapCounts();
+                if (count==mainQList.size()){
+                    setAllDataToResponse();
+                    showSubmitPopUp(currentQid);
+                    return;
+                }
                 nextButtonFunctionality(count, mainQList);
             } else {
                 count = questionList.indexOf(displayQids.get(0));
@@ -3035,7 +3055,6 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
      * @param qType
      */
     public void fillResponseToDBNONwidget(int questionCode, String answer, String answerCode, int qType) {
-
         List<Response> answersCollectionList = new ArrayList<>();
         String optionPID = DataBaseMapperClass.getAnswerPid(String.valueOf(questionCode), surveyDatabase, answerCode, answerCode);
         int survey_ID = getSharedPreferences(MY_PREFS_NAME_SURVEY, MODE_PRIVATE).getInt(SURVEYID, 0);
@@ -3113,15 +3132,17 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
                             Logger.logD(TAG, "the only key for this QuestioID " + getResponseKeys.toString());
                         }
                     }
+                    LinearLayout ll=null;
                     for (int j = 0; j < getResponseKeys.size(); j++) {
-                        final View childInlineGrid = getLayoutInflater().inflate(R.layout.gridlist_adapter, null, false);
-                        final View childTemp = getLayoutInflater().inflate(R.layout.dialoginline, null, false);
+                        View childInlineGrid = getLayoutInflater().inflate(R.layout.gridlist_adapter, null, false);
+                        View childTemp = getLayoutInflater().inflate(R.layout.dialoginline, null, false);
                         TextView setMandatoryText = (TextView) childInlineGrid.findViewById(R.id.mandatorytextnameEdit);
                         TextView setGridAnswer = (TextView) childInlineGrid.findViewById(R.id.gridanswer);
+
                         Button editResponseButton = (Button) childInlineGrid.findViewById(R.id.edit);
                         Button deleteResponseButton = (Button) childInlineGrid.findViewById(R.id.delete);
                         List<Response> getResponseListFrmHashmap = hashMapGridResponse.get(getResponseKeys.get(j));
-                        List<AssesmentBean> MAssesmant = DataBaseMapperClass.getAssesements(currentQuestionNumber, surveyDatabase, 1);
+                        List<AssesmentBean> MAssesmant = DataBaseMapperClass.getAssesements(currentQuestionNumber, surveyDatabase, surveyPreferences.getInt(Constants.SELECTEDLANGUAGE, 1));
                         gridAssessmentMapDialog.put(String.valueOf(currentQuestionNumber) + "_ASS", MAssesmant);
 
 
@@ -3130,18 +3151,23 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
                         Logger.logD("If edited new Value Print", "-->" + getResponseListFrmHashmap.get(0).getAnswer() + "ANS-->" + setMandatoryText.getText().toString());
                         setMandatoryText.setText(MAssesmant.get(0).getAssessment());
                         setGridAnswer.setText(getResponseListFrmHashmap.get(0).getAnswer());
-                        Logger.logD("If edited new Value Print After", "-->" + setMandatoryText.getText().toString());
+                        Logger.logD("If edited new Value Print After", "-->" + getResponseListFrmHashmap.get(0).getAnswer());
                         deleteResponseButton.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                String[] spiltDeleteTag = v.getTag().toString().split("@");
-                                Logger.logD(TAG, "hashMapGridResponse-->before " + hashMapGridResponse.size());
-                                Logger.logD(TAG, "spiltDeleteTag " + spiltDeleteTag[0]);
-                                String[] split_GetIndex = spiltDeleteTag[0].split("_");
-                                hashMapGridResponse.remove(spiltDeleteTag[0]);
-                                methodToClearHashMapKey(split_GetIndex[1], split_GetIndex[0], spiltDeleteTag[0]);
-                                Logger.logD(TAG, "hashMapGridResponse-->after " + hashMapGridResponse.size());
-                                ((LinearLayout) childInlineGrid.getParent()).removeView(childInlineGrid);
+                               if (hashMapGridResponse.size()>1){
+                                   String[] spiltDeleteTag = v.getTag().toString().split("@");
+                                   Logger.logD(TAG, "hashMapGridResponse-->before " + hashMapGridResponse.size());
+                                   Logger.logD(TAG, "spiltDeleteTag " + spiltDeleteTag[0]);
+                                   String[] split_GetIndex = spiltDeleteTag[0].split("_");
+                                   hashMapGridResponse.remove(spiltDeleteTag[0]);
+                                   methodToClearHashMapKey(split_GetIndex[1], split_GetIndex[0], spiltDeleteTag[0]);
+                                   Logger.logD(TAG, "hashMapGridResponse-->after " + hashMapGridResponse.size());
+                                   ((LinearLayout) childInlineGrid.getParent()).removeView(childInlineGrid);
+                               }else{
+                                   ToastUtils.displayToast("one item is mandatory", SurveyQuestionActivity.this);
+                               }
+
                             }
                         });
 
@@ -3166,9 +3192,7 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
                             }
                         });
 
-                        Logger.logD(TAG, "gridListLinearLayoutOnSuccessfullGridInline PRE" + gridListLinearLayoutOnSuccessfullGridInline.getChildCount());
                         gridListLinearLayoutOnSuccessfullGridInline.addView(childInlineGrid);
-                        Logger.logD(TAG, "gridListLinearLayoutOnSuccessfullGridInline POST" + gridListLinearLayoutOnSuccessfullGridInline.getChildCount());
 
 
                     }

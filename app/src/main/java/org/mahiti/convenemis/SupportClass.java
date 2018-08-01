@@ -45,6 +45,7 @@ import com.rey.material.app.Dialog;
 
 import org.mahiti.convenemis.BeenClass.AnswersPage;
 import org.mahiti.convenemis.BeenClass.AssesmentBean;
+import org.mahiti.convenemis.BeenClass.Assessment;
 import org.mahiti.convenemis.BeenClass.Page;
 import org.mahiti.convenemis.BeenClass.Response;
 import org.mahiti.convenemis.BeenClass.parentChild.LevelBeen;
@@ -69,6 +70,7 @@ import static org.mahiti.convenemis.utils.Constants.GridResponseHashMap;
 import static org.mahiti.convenemis.utils.Constants.GridResponseHashMapKeys;
 import static org.mahiti.convenemis.utils.Constants.TAG;
 import static org.mahiti.convenemis.utils.Constants.buttonDynamicDateGrid;
+import static org.mahiti.convenemis.utils.Constants.constraints;
 import static org.mahiti.convenemis.utils.Constants.dateButton;
 import static org.mahiti.convenemis.utils.Constants.fillInlineHashMapKey;
 import static org.mahiti.convenemis.utils.Constants.fillInlineRow;
@@ -134,6 +136,7 @@ public class SupportClass {
      * @param questionPageBean
      */
     public static void showChangeLangDialog(final List<Response> mResponse, final List<AssesmentBean> mAssesmant, final Context context, final SurveyQuestionActivity activity, final Page currentQuestionPage, final SQLiteDatabase database, final View child, final int gridType, final Page questionPageBean, final String skipCode) {
+        List<AssesmentBean> gridDisplayPageList= new ArrayList<>();
         final surveyQuestionGridInlineInterface surveyQuestionGridInlineInterface;
         final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         surveyQuestionGridInlineInterface = activity;
@@ -146,10 +149,15 @@ public class SupportClass {
         final List<View> addView = new ArrayList<>();
         final ScrollView scrollView = (ScrollView) dialogView.findViewById(R.id.dialogScroll);
 
+        List<AssesmentBean> mainQList= mAssesmant;
+        int assessemntSize = mainQList.size();
+        Logger.logV("MainList", "MainListSize" + mainQList.size());
+        List<AssesmentBean> tempList= new ArrayList<>();
+        tempList.add(mainQList.get(0));
+        gridDisplayPageList=prePareNextDisplayQuestion(mainQList,tempList);
 
-        int assessemntSize = mAssesmant.size();
-        Logger.logV("the size of the n", "size" + assessemntSize);
         for (int i = 1; i < assessemntSize + 1; i++) {
+      //  for (int i = 1; i < gridDisplayPageList + 1; i++) {
             int subCount = i;
             LinearLayout.LayoutParams paramassessmentQuestionText;
             paramassessmentQuestionText = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -191,7 +199,13 @@ public class SupportClass {
                     TextView question = editTextView.findViewById(R.id.mainQuestion);
                     question.setVisibility(View.GONE);
                     TextInputLayout v = (TextInputLayout) editTextView.findViewById(R.id.textInput);
-                    v.setHint(mAssesmant.get(i - 1).getAssessment() + " *");
+                    if (mAssesmant.get(i - 1).getMandatory() == 1) {
+                        v.setHint(mAssesmant.get(i - 1).getAssessment() + " *");
+                    }else{
+                        v.setHint(mAssesmant.get(i - 1).getAssessment());
+                    }
+
+
                     v.setHintTextAppearance(R.style.hintstyle);
                     EditText editView = (EditText) editTextView.findViewById(R.id.ans_text);
                     editView.setSingleLine(true);
@@ -324,9 +338,9 @@ public class SupportClass {
                     layout.addView(assessmentQuestionText);
                     List<AnswersPage> mOptionsDroupdown;
                     if (!mAssesmant.get(i - 1).getQtype().equalsIgnoreCase("N")) {
-                        mOptionsDroupdown = DataBaseMapperClass.getOptionsAnswers(mAssesmant.get(i - 1).getQid(), database, preferences.getInt("selectedLangauge", 1));
+                        mOptionsDroupdown = DataBaseMapperClass.getOptionsAnswers(mAssesmant.get(i - 1).getQid(), database, preferences.getInt(Constants.SELECTEDLANGUAGE, 1));
                     } else {
-                        mOptionsDroupdown = DataBaseMapperClass.getOptionsAnswers(questionPageBean.getQuestionId(), database, preferences.getInt("selectedLangauge", 1));
+                        mOptionsDroupdown = DataBaseMapperClass.getOptionsAnswers(questionPageBean.getQuestionId(), database, preferences.getInt(Constants.SELECTEDLANGUAGE, 1));
                     }
 
 
@@ -518,7 +532,7 @@ public class SupportClass {
                     List<AnswersPage> mOptions;
                     for (int i = 0; i < MAssesmant.size(); i++) {
                         if (MAssesmant.get(i).getQtype().equals("R") || MAssesmant.get(i).getQtype().equalsIgnoreCase("S")) {
-                            mOptions = DataBaseMapperClass.getOptionsAnswersForGrid(mAssesmant.get(i).getQid(), database, answered.get(i), preferences.getInt("selectedLangauge", 1));
+                            mOptions = DataBaseMapperClass.getOptionsAnswersForGrid(mAssesmant.get(i).getQid(), database, answered.get(i), preferences.getInt(Constants.SELECTEDLANGUAGE, 1));
                         } else {
                             mOptions = DataBaseMapperClass.getOptionsAnswers(mAssesmant.get(i).getQid(), database, preferences.getInt("selectedLangauge", 1));
                         }
@@ -569,11 +583,11 @@ public class SupportClass {
                                 List<AnswersPage> mOptions;
                                 for (int i = 0; i < mAssesmant.size(); i++) {
                                     if (mAssesmant.get(i).getQtype().equals("R") || mAssesmant.get(i).getQtype().equalsIgnoreCase("S")) {
-                                        mOptions = DataBaseMapperClass.getOptionsAnswersForGrid(mAssesmant.get(i).getQid(), database, answered.get(i), preferences.getInt("selectedLangauge", 1));
+                                        mOptions = DataBaseMapperClass.getOptionsAnswersForGrid(mAssesmant.get(i).getQid(), database, answered.get(i), preferences.getInt(Constants.SELECTEDLANGUAGE, 1));
                                     } else if (mAssesmant.get(i).getQtype().equalsIgnoreCase("T")) {
                                         mOptions = DataBaseMapperClass.getOptionsAnswersTEXTBOX(mAssesmant.get(i).getQid(), database);
                                     } else {
-                                        mOptions = DataBaseMapperClass.getOptionsAnswers(mAssesmant.get(i).getQid(), database, preferences.getInt("selectedLangauge", 1));
+                                        mOptions = DataBaseMapperClass.getOptionsAnswers(mAssesmant.get(i).getQid(), database, preferences.getInt(Constants.SELECTEDLANGUAGE, 1));
                                     }
                                     Response response = new Response(String.valueOf(currentQuestionNumber), answered.get(i), mOptions.get(0).getAnswerCode(), "0", currentQuestionNumber, mSubQuestions.get(0).getQuestionId(), String.valueOf(survey_ID), mAssesmant.get(i).getQid(), mOptions.get(0).getId(), mAssesmant.get(i).getQtype());
                                     responselist.add(response);
@@ -606,7 +620,7 @@ public class SupportClass {
                                 for (int i = 0; i < MAssesmant.size(); i++) {
                                     if (questionPageBean.getAnswer().equalsIgnoreCase("N")) {
                                         if (MAssesmant.get(i).getQtype().equalsIgnoreCase("R") || MAssesmant.get(i).getQtype().equalsIgnoreCase("S")) {
-                                            mOptions = DataBaseMapperClass.getOptionsAnswersForGrid(mAssesmant.get(i).getQid(), database, answered.get(i), preferences.getInt("selectedLangauge", 1));
+                                            mOptions = DataBaseMapperClass.getOptionsAnswersForGrid(mAssesmant.get(i).getQid(), database, answered.get(i), preferences.getInt(Constants.SELECTEDLANGUAGE, 1));
                                         } else if (MAssesmant.get(i).getQtype().equalsIgnoreCase("T")) {
                                             mOptions = DataBaseMapperClass.getOptionsAnswersTEXTBOX(mAssesmant.get(i).getQid(), database);
                                         } else {
@@ -707,6 +721,20 @@ public class SupportClass {
 
     }
 
+    private static List<AssesmentBean> prePareNextDisplayQuestion(List<AssesmentBean> mainQList, List<AssesmentBean> tempList) {
+        List<AssesmentBean> returnList= new ArrayList<>();
+        returnList.addAll(tempList);
+        int maintListIndex= mainQList.indexOf(tempList.size()-1);
+        for(int k=maintListIndex;k<mainQList.size();k++){
+           if (true){
+               return returnList;
+           }else{
+               returnList.add(mainQList.get(k));
+           }
+        }
+        return returnList;
+    }
+
     private static void ClearALlViews(List<View> layout, final ScrollView scrollView, List<AssesmentBean> mAssesmant) {
         for (int clearview = 0; clearview < mAssesmant.size(); clearview++) {
             switch (mAssesmant.get(clearview).getQtype()) {
@@ -749,7 +777,7 @@ public class SupportClass {
     public static void moduleToCreateInlineDialogForm(Page currentQuestionPage, SQLiteDatabase database, SurveyQuestionActivity surveyQuestionActivity, View child, SharedPreferences preferences) {
         Context context = surveyQuestionActivity;
         SurveyQuestionActivity activity = surveyQuestionActivity;
-        final List<AssesmentBean> MAssesmant = DataBaseMapperClass.getAssesements(currentQuestionPage.getQuestionNumber(), database, preferences.getInt("selectedLangauge", 1));
+        final List<AssesmentBean> MAssesmant = DataBaseMapperClass.getAssesements(currentQuestionPage.getQuestionNumber(), database, preferences.getInt(Constants.SELECTEDLANGUAGE, 1));
         gridAssessmentMapDialog.put(currentQuestionPage.getQuestionNumber() + "_ASS", MAssesmant);
         mainGridAssessmentMapDialog.put(currentQuestionPage.getQuestionNumber() + "_ASS", MAssesmant);
         for (int i = 0; i < MAssesmant.size(); i++) {
@@ -1115,7 +1143,8 @@ public class SupportClass {
         return answerList;
     }
 
-    public static void showDialogEdit(final List<Response> mResponse, final List<AssesmentBean> mAssesmant, final Context context, final SurveyQuestionActivity activity, Page currentQuestionPage, final SQLiteDatabase database, final String hashMapKey, final View child, final int gridType, final Page subQuestionpage) {
+    public static void showDialogEdit(final List<Response> mResponse, final List<AssesmentBean> mAssesmant, final Context context, final SurveyQuestionActivity activity, Page currentQuestionPage, final SQLiteDatabase database, final String hashMapKey,
+                                      final View child, final int gridType, final Page subQuestionpage) {
         final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         final surveyQuestionGridInlineInterface surveyQuestionGridInlineInterface;
         surveyQuestionGridInlineInterface = activity;
@@ -1285,7 +1314,7 @@ public class SupportClass {
                     break;
                 case "S":
                     layout.addView(assessmentQuestionText);
-                    List<AnswersPage> mOptionsDroupdown = DataBaseMapperClass.getOptionsAnswers(mAssesmant.get(i - 1).getQid(), database, preferences.getInt("selectedLangauge", 1));
+                    List<AnswersPage> mOptionsDroupdown = DataBaseMapperClass.getOptionsAnswers(mAssesmant.get(i - 1).getQid(), database, preferences.getInt(Constants.SELECTEDLANGUAGE, 1));
                     List<String> optionText = new ArrayList<>();
                     Spinner spinner = new Spinner(context);
 
@@ -1524,7 +1553,7 @@ public class SupportClass {
                         if (gridType == 14) {
                             if (subQuestionpage.getAnswer().equalsIgnoreCase("N")) {
                                 if (MAssesmant.get(i).getQtype().equalsIgnoreCase("R") || MAssesmant.get(i).getQtype().equalsIgnoreCase("S")) {
-                                    mOptions = DataBaseMapperClass.getOptionsAnswersForGrid(mAssesmant.get(i).getQid(), database, answered.get(i), preferences.getInt("selectedLangauge", 1));
+                                    mOptions = DataBaseMapperClass.getOptionsAnswersForGrid(mAssesmant.get(i).getQid(), database, answered.get(i), preferences.getInt(Constants.SELECTEDLANGUAGE, 1));
                                 } else {
                                     mOptions = DataBaseMapperClass.getOptionsAnswers(mAssesmant.get(i).getQid(), database, preferences.getInt("selectedLangauge", 1));
                                 }
@@ -1555,7 +1584,7 @@ public class SupportClass {
                             }
                         } else {
                             if (MAssesmant.get(i).getQtype().equalsIgnoreCase("R") || MAssesmant.get(i).getQtype().equalsIgnoreCase("S")) {
-                                mOptions = DataBaseMapperClass.getOptionsAnswersForGrid(mAssesmant.get(i).getQid(), database, answered.get(i), preferences.getInt("selectedLangauge", 1));
+                                mOptions = DataBaseMapperClass.getOptionsAnswersForGrid(mAssesmant.get(i).getQid(), database, answered.get(i), preferences.getInt(Constants.SELECTEDLANGUAGE, 1));
                             } else {
                                 mOptions = DataBaseMapperClass.getOptionsAnswers(mAssesmant.get(i).getQid(), database, preferences.getInt("selectedLangauge", 1));
                             }

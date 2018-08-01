@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.mahiti.convenemis.BeenClass.QuestionAnswer;
 import org.mahiti.convenemis.BeenClass.StatusBean;
@@ -24,6 +25,8 @@ import org.mahiti.convenemis.database.DBHandler;
 import org.mahiti.convenemis.database.Utilities;
 import org.mahiti.convenemis.utils.Constants;
 import org.mahiti.convenemis.utils.Logger;
+import org.mahiti.convenemis.utils.ToastUtils;
+import org.mahiti.convenemis.utils.Utils;
 
 import java.util.List;
 
@@ -46,6 +49,7 @@ public class ListingGridViewAdapter extends RecyclerView.Adapter<ListingGridView
     SharedPreferences prefs;
     String surveyId;
     String getheading;
+
 
 
     public ListingGridViewAdapter(ListingActivity surveySummaryReport, List<StatusBean> statusBeanList, String qid, ConveneDatabaseHelper dbConveneHelper,
@@ -90,6 +94,7 @@ public class ListingGridViewAdapter extends RecyclerView.Adapter<ListingGridView
         viewHolder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                updateLanguageTOSP(statusbean.get(position).getLanguage());
                 Intent intent = new Intent(activity, Beneficiarylinkages.class);
                 intent.putExtra("SurveyId", statusbean.get(position).getSurveyId());
                 intent.putExtra(Constants.HEADER_NAME, getheading);
@@ -102,6 +107,7 @@ public class ListingGridViewAdapter extends RecyclerView.Adapter<ListingGridView
         viewHolder.editbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                updateLanguageTOSP(statusbean.get(position).getLanguage());
                 Utilities.setSurveyStatus(sharedPreferences,"edit");
                 Intent intent = new Intent(activity, SurveyQuestionActivity.class);
                 intent.putExtra("SurveyId", statusbean.get(position).getSurveyId());
@@ -109,6 +115,15 @@ public class ListingGridViewAdapter extends RecyclerView.Adapter<ListingGridView
                 context.startActivity(intent);
             }
         });
+    }
+
+    private void updateLanguageTOSP(String languageid) {
+       if (languageid!=null && !languageid.isEmpty()){
+           SharedPreferences.Editor editor = prefs.edit();
+           editor.putInt(Constants.SELECTEDLANGUAGE, Integer.parseInt(languageid));
+           editor.apply();
+       }
+
     }
 
 

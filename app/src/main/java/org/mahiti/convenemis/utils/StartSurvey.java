@@ -281,7 +281,7 @@ public class StartSurvey extends AsyncTask<Context, Integer, String> {
             values.put("end_date", "0");
             values.put("version_num", String.valueOf(versionNumber));
             values.put("app_version", "");
-            values.put("language", String.valueOf(preferences.getInt(Constants.SELECTEDLANGUAGE, 0)));
+            values.put("language", String.valueOf(preferences.getInt(Constants.SELECTEDLANGUAGE, 1)));
             values.put("lat", preferences.getString("LATITUDE", ""));
             values.put("long", preferences.getString("LONGITUDE", ""));
             values.put("survey_status", "0");

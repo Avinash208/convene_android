@@ -35,6 +35,8 @@ import org.mahiti.convenemis.utils.Utils;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.content.Context.MODE_PRIVATE;
+
 
 /**
  * Adapter class
@@ -58,6 +60,8 @@ public class LocationBasedFormAdapter extends BaseAdapter {
     private String surveyName="";
     private GPSTracker gpsTracker;
     private String[] orderLabels;
+    private static final String MY_PREFS_NAME = "MyPrefs";
+    private SharedPreferences prefs;
 
 
     /**
@@ -70,6 +74,7 @@ public class LocationBasedFormAdapter extends BaseAdapter {
         try{
             mcontext = context;
             preferences = PreferenceManager.getDefaultSharedPreferences(context);
+            prefs = context.getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
             this.hamletLevelBeenList = levelBeens;
             this.activity = activity;
             databaseHelper = ConveneDatabaseHelper.getInstance(context, preferences.getString(Constants.CONVENE_DB, ""), preferences.getString("UID", ""));
@@ -263,6 +268,12 @@ public class LocationBasedFormAdapter extends BaseAdapter {
                         flag = true;
                   //  editor11.putBoolean(ShowSurveyPreview.isEditableKey,flag);
                     editor11.apply();
+                    SharedPreferences.Editor recentPreview = preferences.edit();
+                    recentPreview.putString("recentPreviewRecord", "");
+                    recentPreview.apply();
+                    SharedPreferences.Editor recentP1 = prefs.edit();
+                    recentP1.putString("recentPreviewRecord", "");
+                    recentP1.apply();
                     intent = new Intent(mcontext, ShowSurveyPreview.class);
                     intent.putExtra("surveyPrimaryKey", String.valueOf(surveyBeen.getResponseId()));
                     intent.putExtra("survey_id", String.valueOf(surveyId));

@@ -61,8 +61,11 @@ public class LocationBasedProjectAdapter extends RecyclerView.Adapter<LocationBa
            // viewHolder.periodicityname.setText(new StringBuilder().append(locationBasedProjectActivity.get(position).getBeneficiaryType()).append(" - ").append(locationBasedProjectActivity.get(position).getPiriodicityFlag()).toString());
             viewHolder.periodicityname.setText(new StringBuilder().append("Periodicity : ").append(locationBasedProjectActivity.get(position).getPiriodicityFlag()).toString());
         }
-        if (!locationBasedProjectActivity.get(position).getProjectName().isEmpty()){
+        if (!locationBasedProjectActivity.get(position).getBeneficiaryType().isEmpty()){
+            viewHolder.projectname.setVisibility(View.VISIBLE);
             viewHolder.projectname.setText(new StringBuilder().append("Beneficiary type : ").append(locationBasedProjectActivity.get(position).getBeneficiaryType()));
+        }else{
+            viewHolder.projectname.setVisibility(View.GONE);
         }
         setOnClickLisiner(viewHolder,locationBasedProjectActivity.get(position));
         setOrHideBottomView(viewHolder,position);

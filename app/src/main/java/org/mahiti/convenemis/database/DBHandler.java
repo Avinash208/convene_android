@@ -1582,7 +1582,7 @@ public class DBHandler extends SQLiteOpenHelper {
         }
         return getPeriodicityCount;
     }
-    public int getPeriodicityLocationBased(SurveysBean surveysBean, int surveyId, String periodicityFlag, Date date, String parentUUId) {
+    public int getPeriodicityLocationBased(SurveysBean surveysBean, int surveyId, String periodicityFlag, Date date, String parentUUId, String bid) {
         int getPeriodicityCount = 0;
         try {
             Logger.logD(TAG,"Date capture from"+date.toString());
@@ -1591,8 +1591,8 @@ public class DBHandler extends SQLiteOpenHelper {
             SQLiteDatabase db = getdatabaseinstance_read();
             String[] splitMonth = getCurrentDate.split("-");
             String startingQuery="select * from survey where ";
-            String upEndQuery=" and survey_ids=" + surveyId + " and beneficiary_ids='" + parentUUId + "'";
-            String beneficiaryBased="and cluster_name= "+parentUUId+" ";
+            String upEndQuery=" and survey_ids=" + surveyId + " and beneficiary_ids='" + bid + "'";
+            String beneficiaryBased="and cluster_name= '"+parentUUId.trim()+"' ";
             switch (periodicityFlag) {
                 case DAILY:
                     query = startingQuery+ " date(end_date)='" + getCurrentDate + "'" +upEndQuery;
@@ -1664,6 +1664,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
                     String clusterName = cursor.getString(cursor.getColumnIndex("cluster_name"));
                     String uuid = cursor.getString(cursor.getColumnIndex("uuid"));
+                    String language_id = cursor.getString(cursor.getColumnIndex("language_id"));
                     int serverPrimaryKey = cursor.getInt(cursor.getColumnIndex("server_primary_key"));
                     String endDate = cursor.getString(cursor.getColumnIndex("end_date"));
                     int surveyIds = cursor.getInt(cursor.getColumnIndex(SURVEYIDS));
@@ -1672,6 +1673,7 @@ public class DBHandler extends SQLiteOpenHelper {
                     statusBean.setSurveyId(uuid);
                     statusBean.setParent_form_primaryid(serverPrimaryKey);
                     statusBean.setUuid(uuid);
+                    statusBean.setLanguage(language_id);
                     tempList.add(statusBean);
 
                 } while (cursor.moveToNext());
@@ -1681,5 +1683,49 @@ public class DBHandler extends SQLiteOpenHelper {
             Logger.logE(TAG, "Exception on getting all assessment", e);
         }
         return tempList;
+    }
+
+    public List<String> getChildList(String surveyID) {
+        List<String> tempList= new ArrayList<>();
+        String gridQuery = "select * from Response where Response.ans_text='"+surveyID+"'";
+        SQLiteDatabase db = getdatabaseinstance_read();
+        Cursor cursor = db.rawQuery(gridQuery, null);
+        try {
+            if (cursor.getCount() != 0 && cursor.moveToFirst()) {
+                do {
+                    String surveyId = cursor.getString(cursor.getColumnIndex("survey_id"));
+                    tempList.add(surveyId);
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+        } catch (Exception e) {
+            Logger.logE(TAG, "Exception on getting all assessment", e);
+        }
+        return tempList;
+    }
+
+    public StatusBean getmemberCompleteDetail(String getServerPrimaryKeyStr, String displayQuestion) {
+        List<QuestionAnswer> question = new ArrayList<>();
+        StatusBean statusBean =new StatusBean();
+        String gridQuery = "select * from Response where Response.survey_id='"+getServerPrimaryKeyStr+"' and q_id IN("+displayQuestion+")";
+        SQLiteDatabase db = getdatabaseinstance_read();
+        Cursor cursor = db.rawQuery(gridQuery, null);
+        try {
+            if (cursor.getCount() != 0 && cursor.moveToFirst()) {
+                do {
+                    String userName = cursor.getString(cursor.getColumnIndex("ans_text"));
+                    QuestionAnswer questionAnswer= new QuestionAnswer();
+                    questionAnswer.setQuestionText(userName);
+                    question.add(questionAnswer);
+
+                    statusBean.setQuestionAnswerList(question);
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+        } catch (Exception e) {
+            Logger.logE(TAG, "Exception on getting all assessment", e);
+        }
+        return statusBean;
+
     }
 }

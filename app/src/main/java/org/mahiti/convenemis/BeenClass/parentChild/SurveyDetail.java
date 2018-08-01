@@ -6,6 +6,8 @@ import android.os.Parcelable;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import org.mahiti.convenemis.beansClassSetQuestion.ParentLink;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -98,6 +100,10 @@ public class SurveyDetail implements Parcelable{
     @SerializedName("linkages")
     @Expose
     private List<LinkagesList> linkagesDetails = null;
+
+    @SerializedName("parent_link")
+    @Expose
+    private List<ParentLink> parentLink = null;
 
     private  Integer ProjectID;
     private  String ProjectName;
@@ -550,5 +556,13 @@ public class SurveyDetail implements Parcelable{
 
     public void setLevel7(String level7) {
         this.level7 = level7;
+    }
+
+    public List<ParentLink> getParentLink() {
+        return parentLink;
+    }
+
+    public void setParentLink(List<ParentLink> parentLink) {
+        this.parentLink = parentLink;
     }
 }

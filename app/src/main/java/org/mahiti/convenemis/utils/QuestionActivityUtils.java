@@ -160,30 +160,32 @@ public class QuestionActivityUtils {
      * Method to get the skipcode from Options Table
      */
     public static String checkSkipCode(String qid, SQLiteDatabase database, String ansCode) {
+        String skip = "";
+       if (!ansCode.isEmpty()){
+           String selectQuery = "select skip_code from Options where id = "+ ansCode + " and question_pid= '" + qid + "'";
+           Logger.logD(TAG,"skip selection query : "+selectQuery);
+           Cursor questionCursor = database.rawQuery(selectQuery, null);
 
-        String selectQuery = "select skip_code from Options where id = "+ ansCode + " and question_pid= '" + qid + "'";
-        Logger.logD(TAG,"skip selection query : "+selectQuery);
-        Cursor questionCursor = database.rawQuery(selectQuery, null);
-        String skip = null;
-        try {
-            if(questionCursor!=null && questionCursor.getCount()!=0 && questionCursor.moveToFirst()){
-                do{
-                    skip = questionCursor.getString(questionCursor.getColumnIndex(Constants.SKIP_CODE));
-                    Logger.logV(TAG, "the skip is" + skip);
-                    if ("-1".equals(skip))
-                        break;
-                }while (questionCursor.moveToNext());
-                questionCursor.close();
-            }
-            if (skip == null) {
-                skip = "";
+           try {
+               if(questionCursor!=null && questionCursor.getCount()!=0 && questionCursor.moveToFirst()){
+                   do{
+                       skip = questionCursor.getString(questionCursor.getColumnIndex(Constants.SKIP_CODE));
+                       Logger.logV(TAG, "the skip is" + skip);
+                       if ("-1".equals(skip))
+                           break;
+                   }while (questionCursor.moveToNext());
+                   questionCursor.close();
+               }
+               if (skip == null) {
+                   skip = "";
 
-            }
-        } finally {
-            if (questionCursor != null) {
-                questionCursor.close();
-            }
-        }
+               }
+           } finally {
+               if (questionCursor != null) {
+                   questionCursor.close();
+               }
+           }
+       }
         return skip;
     }
 
@@ -325,7 +327,7 @@ public class QuestionActivityUtils {
 
                 // comparing the current question with the expression question
 // change by charan
-              
+
                     if ("0".equals(localArray[1])) {
                         queryPickData = "select ans_code from Response where q_code = '"
                                 + localArray[0]
@@ -341,7 +343,7 @@ public class QuestionActivityUtils {
                     }
                 }
                 if (!"".equals(queryPickData)) {
-                    
+
                     Cursor fromCursor = db.rawQuery(queryPickData, null);
                     if (fromCursor != null && fromCursor.moveToFirst()) {
                         do {
@@ -394,7 +396,7 @@ public class QuestionActivityUtils {
                     checked = QuestionActivityUtils.listCheck(localArray, ansCodeList);
                     return checked;
                 }
-            
+
         } catch (Exception e) {
             Logger.logE(QuestionActivityUtils.class.getSimpleName(), "Exception in SurveyQuestionsActivity  Parseby method ", e);
         }

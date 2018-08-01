@@ -453,7 +453,9 @@ public class ConveneDatabaseHelper extends SQLiteOpenHelper {
                 cv.put(extraColumn1Str, listOfObjects.getOptions().get(i).getExtraColumn1());
                 cv.put(extraColumn2Str, listOfObjects.getOptions().get(i).getExtraColumn2());
                 cv.put("Assessment_pid", listOfObjects.getOptions().get(i).getAssessmentPid());
-                cv.put("option_order", listOfObjects.getOptions().get(i).getOption_order());
+                cv.put("option_order", "");
+                Gson gson= new Gson();
+                cv.put("rule_engin", gson.toJson(listOfObjects.getOptions().get(i).getRuleEngine()));
                 database.insertWithOnConflict("Options", null, cv, SQLiteDatabase.CONFLICT_REPLACE);
                 Logger.logV(TAG,"Choice table data"+ cv.toString());
             }
@@ -1081,9 +1083,17 @@ public class ConveneDatabaseHelper extends SQLiteOpenHelper {
         return result;
     }
 
-    public List<PreviewQuestionAnswerSet> getAllQuestions(int surveysId) {
+    public List<PreviewQuestionAnswerSet> getAllQuestions(int surveysId, int getLanguageId) {
         List<PreviewQuestionAnswerSet> previewQuestionAnswerSets = new ArrayList<>();
-        String query = "Select * from Question where active = 2 and  survey_id="+surveysId;
+        String query="";
+      if (getLanguageId!=1) {
+           query = "Select LanguageQuestion.question_text,Question.answer,Question.answer_type,Question.id ,LanguageQuestion.language_id\n" +
+                   "from Question \n" +
+                   "inner join LanguageQuestion on LanguageQuestion.question_pid= Question.id\n" +
+                   "where Question.active = 2 and LanguageQuestion.language_id="+getLanguageId+" and  survey_id="+surveysId+" group by Question.id ";
+      }else{
+          query = "Select * from Question where active = 2 and  survey_id=" + surveysId;
+      }
         Cursor cursor = null;
         try {
             database = openDataBase();
@@ -1151,5 +1161,10 @@ public class ConveneDatabaseHelper extends SQLiteOpenHelper {
                 cursor.close();
         }
         return getTempLanguageList;
+    }
+
+    public void deleteLanguageALl() {
+       String query="DELETE FROM Language";
+        database.execSQL(query);
     }
 }

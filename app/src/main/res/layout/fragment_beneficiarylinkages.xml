@@ -93,19 +93,42 @@
                     android:singleLine="true"
                     android:textColor="@color/black"
                     android:textSize="20sp"
-                    tools:text="KUMAR MV"
-                    />
+                    tools:text="KUMAR MV" />
 
             </LinearLayout>
         </RelativeLayout>
     </LinearLayout>
-
     <ScrollView
+        android:id="@+id/scroll"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/header">
-        <LinearLayout
+        android:layout_below="@id/header">
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:orientation="vertical">
+          <LinearLayout
             android:id="@+id/dynamic_question_set"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="20dp"
+            android:paddingBottom="20dp"
+            android:orientation="vertical"/>
+          <TextView
+              android:id="@+id/memberlistid"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:text="Members List"
+              android:paddingLeft="20dp"
+              android:textColor="@color/black"
+              android:textSize="22sp"
+              android:textStyle="bold"
+              android:visibility="gone"
+              />
+        <LinearLayout
+            android:id="@+id/sub_beneficiarylayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
@@ -113,7 +136,9 @@
             android:layout_marginBottom="20dp"
             android:layout_marginTop="10dp"
             android:paddingBottom="20dp"
-            android:orientation="vertical">
-        </LinearLayout>
+            android:visibility="gone"
+            android:orientation="vertical"/>
+      </LinearLayout>
     </ScrollView>
+
 </RelativeLayout>

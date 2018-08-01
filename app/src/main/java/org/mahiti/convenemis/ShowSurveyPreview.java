@@ -54,6 +54,8 @@ public class ShowSurveyPreview extends AppCompatActivity implements View.OnClick
     private static final String SURVEY_ID_KEY = "survey_id";
     private static final String ISLOCATIONBASED = "isLocationBased";
     private static final String NOTLOCATIONBASED = "isNotLocationBased";
+    private static final String MY_PREFS_NAME = "MyPrefs";
+    private SharedPreferences prefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,12 +75,13 @@ public class ShowSurveyPreview extends AppCompatActivity implements View.OnClick
         surveyId = i.getIntExtra(SURVEY_ID_KEY, -1);
         isVisible = i.getBooleanExtra("visibility", false);
         showSurveyPreviewPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        prefs = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
         setButtonClickListener();
         dbHelper = new DBHandler(context);
         net.sqlcipher.database.SQLiteDatabase.loadLibs(getApplicationContext());
         conveneDatabaseHelper = ConveneDatabaseHelper.getInstance(this, showSurveyPreviewPreferences.getString(Constants.CONVENE_DB, ""), showSurveyPreviewPreferences.getString("UID", ""));
         Logger.logV("", "Record is getting created + dbOpenHelper");
-        createDynamicQuestionSet(ShowSurveyPreview.this, getSurveyPrimaryID, surveyId);
+        createDynamicQuestionSet(ShowSurveyPreview.this, getSurveyPrimaryID, surveyId,showSurveyPreviewPreferences.getInt(Constants.SELECTEDLANGUAGE, 1));
         if (!("").equals(showSurveyPreviewPreferences.getString("recentPreviewRecord", ""))) {
             editTextView.setVisibility(View.VISIBLE);
         } else {
@@ -89,6 +92,7 @@ public class ShowSurveyPreview extends AppCompatActivity implements View.OnClick
         recentPreview.apply();
         editTextView.setOnClickListener(view -> {
             Utilities.setSurveyStatus(showSurveyPreviewPreferences, "edit");
+            Utilities.setSurveyStatus(prefs,"edit");
             SharedPreferences.Editor editorSaveDraft = showSurveyPreviewPreferences.edit();
             editorSaveDraft.putBoolean(SAVE_TO_DRAFT_FLAG_KEY, true);
             editorSaveDraft.putBoolean(ISLOCATIONBASED, false);
@@ -130,17 +134,13 @@ public class ShowSurveyPreview extends AppCompatActivity implements View.OnClick
      * @param surveyPrimaryKeyId surveytable pri-key
      * @param surveyId           param
      */
-    private void createDynamicQuestionSet(Context context, String surveyPrimaryKeyId, int surveyId) {
+    private void createDynamicQuestionSet(Context context, String surveyPrimaryKeyId, int surveyId, int languageID) {
         DBHandler dbHelper = new DBHandler(context);
         responses = dbHelper.getAttendedGridQuestion(surveyPrimaryKeyId, conveneDatabaseHelper, true);
         options = conveneDatabaseHelper.getAllOptions();
-        List<PreviewQuestionAnswerSet> getAttendedQuestion = conveneDatabaseHelper.getAllQuestions(surveyId);
+        List<PreviewQuestionAnswerSet> getAttendedQuestion = conveneDatabaseHelper.getAllQuestions(surveyId,languageID);
         if (!getAttendedQuestion.isEmpty()) {
             for (int i = 0; i < getAttendedQuestion.size(); i++) {
-              /*
-                questionParamLayout layout is for setting the answer from the  surveyDatabase.
-                 Question and options are getting from convene database .with reference of dbhandler database .
-                */
                 LinearLayout.LayoutParams questionParamLayout = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                 TextView questionLabel = new TextView(context);
                 questionLabel.setLayoutParams(questionParamLayout);
@@ -151,7 +151,7 @@ public class ShowSurveyPreview extends AppCompatActivity implements View.OnClick
                 questionLabel.setText(getAttendedQuestion.get(i).getQuestion());
                 final View viewLine = getLayoutInflater().inflate(R.layout.spinnerline, parentLayout, false);
                 parentLayout.addView(questionLabel);
-                parentLayout.addView(viewLine);
+              //  parentLayout.addView(viewLine);
 
                 setAnswers(getAttendedQuestion.get(i), parentLayout, questionLabel, responses.get(String.valueOf(getAttendedQuestion.get(i).getQuestionID())));
             }
@@ -202,7 +202,7 @@ public class ShowSurveyPreview extends AppCompatActivity implements View.OnClick
 
 
     private void setInlineAnswers(PreviewQuestionAnswerSet previewQuestionAnswerSet, LinearLayout parentLayout) {
-        final List<AssesmentBean> mAssesmant = DataBaseMapperClass.getAssesements(previewQuestionAnswerSet.getQuestionID(), conveneDatabaseHelper.openDataBase(), 1);
+        final List<AssesmentBean> mAssesmant = DataBaseMapperClass.getAssesements(previewQuestionAnswerSet.getQuestionID(), conveneDatabaseHelper.openDataBase(), showSurveyPreviewPreferences.getInt(Constants.SELECTEDLANGUAGE, 1));
         final View childCustomGrid = getLayoutInflater().inflate(R.layout.grid_custom, parentLayout, false);
         LinearLayout tableLayout = childCustomGrid.findViewById(R.id.custom_grid_table_layout);
         LinearLayout tableLayoutAnswerCard = childCustomGrid.findViewById(R.id.custom_grid_table_answer_layout);
@@ -278,9 +278,9 @@ public class ShowSurveyPreview extends AppCompatActivity implements View.OnClick
 
     private void setGridAnswers(PreviewQuestionAnswerSet previewQuestionAnswerSet, LinearLayout parentLayout) {
 
-        final List<AssesmentBean> mAssesmant = DataBaseMapperClass.getAssesements(previewQuestionAnswerSet.getQuestionID(), conveneDatabaseHelper.openDataBase(), 1);
+        final List<AssesmentBean> mAssesmant = DataBaseMapperClass.getAssesements(previewQuestionAnswerSet.getQuestionID(), conveneDatabaseHelper.openDataBase(),showSurveyPreviewPreferences.getInt(Constants.SELECTEDLANGUAGE, 1) );
         final View childCustomGrid = getLayoutInflater().inflate(R.layout.grid_custom, parentLayout, false);
-        final List<Page> mSubQuestions = DataBaseMapperClass.getSubquestionNew(previewQuestionAnswerSet.getQuestionID(), conveneDatabaseHelper.openDataBase(), -1);
+        final List<Page> mSubQuestions = DataBaseMapperClass.getSubquestionNew(previewQuestionAnswerSet.getQuestionID(), conveneDatabaseHelper.openDataBase(), showSurveyPreviewPreferences.getInt(Constants.SELECTEDLANGUAGE, 1));
 
         LinearLayout tableLayout = childCustomGrid.findViewById(R.id.custom_grid_table_layout);
         tableLayout.removeAllViews();

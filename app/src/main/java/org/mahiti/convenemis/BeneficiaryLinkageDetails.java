@@ -7,6 +7,7 @@ package org.mahiti.convenemis;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
@@ -20,12 +21,16 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.mahiti.convenemis.BeenClass.PreviewQuestionAnswerSet;
+import org.mahiti.convenemis.BeenClass.StatusBean;
 import org.mahiti.convenemis.database.ConveneDatabaseHelper;
 import org.mahiti.convenemis.database.DBHandler;
+import org.mahiti.convenemis.database.ExternalDbOpenHelper;
 import org.mahiti.convenemis.database.Utilities;
 import org.mahiti.convenemis.utils.Constants;
 import org.mahiti.convenemis.utils.Logger;
+import org.mahiti.convenemis.utils.ToastUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -47,6 +52,10 @@ public class BeneficiaryLinkageDetails extends Fragment {
     private int surveysId;
     private String fragmentHeading;
     private RelativeLayout topLayoutContainer;
+    ExternalDbOpenHelper dbExternalOpenHelper;
+    private DBHandler dbHelper;
+    private LinearLayout subbeneficiarylayout;
+    private TextView memberListLabel;
 
 
     public BeneficiaryLinkageDetails() {
@@ -73,7 +82,22 @@ public class BeneficiaryLinkageDetails extends Fragment {
 
         createDynamicQuestionSet(getContext(),surveyPrimaryKeyId,dbOpenHelper,surveyPreferences,surveysId,
                 rootView);
+        CreatChildBeneficiaryDisplay();
         return rootView;
+    }
+
+    private void CreatChildBeneficiaryDisplay() {
+        if (surveysId!=0){
+            List<StatusBean> isAvi= dbExternalOpenHelper.isSubBeneficiaryAvliable(surveysId,dbExternalOpenHelper);
+            if (!isAvi.isEmpty()){
+                renderSubBeneficiaryDeatils(surveyPrimaryKeyId,isAvi.get(0).getSummaryQids());
+            }
+        }
+    }
+
+    private void renderSubBeneficiaryDeatils(String surveysId,String displayQuestion) {
+        new GetSubBeneficiaryList(surveysId,displayQuestion).execute();
+
     }
 
     private void setDynamicImageAccordingly(View fragmentView, String answer) {
@@ -91,7 +115,11 @@ public class BeneficiaryLinkageDetails extends Fragment {
     private  void initVariables(View dialog) {
         surveyPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         dbOpenHelper = ConveneDatabaseHelper.getInstance(getActivity(), surveyPreferences.getString(Constants.CONVENE_DB, ""), surveyPreferences.getString("UID", ""));
+        dbExternalOpenHelper = ExternalDbOpenHelper.getInstance(getActivity(), surveyPreferences.getString(Constants.DBNAME, ""), surveyPreferences.getString("uId", ""));
+        dbHelper= new DBHandler(getContext());
         parentLayout = dialog.findViewById(R.id.dynamic_question_set);
+        subbeneficiarylayout = dialog.findViewById(R.id.sub_beneficiarylayout);
+        memberListLabel = dialog.findViewById(R.id.memberlistid);
         topLayoutContainer = dialog.findViewById(R.id.top_layout_container);
         backToSurvey = dialog.findViewById(R.id.back_survey);
         submitSurvey = dialog.findViewById(R.id.submit_survey);
@@ -129,7 +157,7 @@ public class BeneficiaryLinkageDetails extends Fragment {
     private  void createDynamicQuestionSet(Context context, String surveyPrimaryKeyId,
                                            ConveneDatabaseHelper dbOpenHelper, SharedPreferences preferences,
                                            int surveysId, View rootView) {
-        DBHandler dbHelper= new DBHandler(context);
+
 
         List<PreviewQuestionAnswerSet> getAttendedQuestion= dbHelper.getAttendedQuestion(surveyPrimaryKeyId,dbOpenHelper,preferences.getInt(Constants.SELECTEDLANGUAGE,0),surveysId);
         if (!getAttendedQuestion.isEmpty()){
@@ -170,7 +198,60 @@ public class BeneficiaryLinkageDetails extends Fragment {
         if (!answer.isEmpty())
             textView.setText(answer);
 
-
     }
 
+    private class GetSubBeneficiaryList extends AsyncTask {
+        List<String> getAllMemberTaggedList= new ArrayList<>();
+        List<StatusBean> getFilledMemberList= new ArrayList<>();
+        String surveyID="";
+        String displayQuestion="";
+        public GetSubBeneficiaryList(String surveysId, String displayQuestion) {
+            this.surveyID=surveysId;
+            this.displayQuestion=displayQuestion;
+        }
+
+
+        @Override
+        protected Object doInBackground(Object[] objects) {
+            getAllMemberTaggedList= dbHelper.getChildList(surveyID);
+            Logger.logD("Tagged sub members",getAllMemberTaggedList.size()+"");
+            if (!getAllMemberTaggedList.isEmpty()){
+                for (int i=0;i<getAllMemberTaggedList.size();i++){
+                    getFilledMemberList.add(dbHelper.getmemberCompleteDetail(getAllMemberTaggedList.get(i),displayQuestion));
+                }
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Object o) {
+            super.onPostExecute(o);
+            if (!getFilledMemberList.isEmpty()){
+                subbeneficiarylayout.setVisibility(View.VISIBLE);
+                memberListLabel.setVisibility(View.VISIBLE);
+                renderRecycleViewList(getFilledMemberList);
+            }else {
+                subbeneficiarylayout.setVisibility(View.GONE);
+                memberListLabel.setVisibility(View.GONE);
+                ToastUtils.displayToast("Filled BeneficiaryList"+getFilledMemberList.size(),getActivity());
+            }
+        }
+
+        private void renderRecycleViewList(List<StatusBean> getFilledMemberList) {
+            try {
+                for (int i=0;i<getFilledMemberList.size();i++){
+                    View child = getActivity().getLayoutInflater().inflate(R.layout.detail_row, parentLayout, false);//child.xml
+                    TextView locationlabel = (TextView) child.findViewById(R.id.locationlabel);
+                    TextView namelabel = (TextView) child.findViewById(R.id.namelabel);
+                    for (int k=0;k<getFilledMemberList.get(i).getQuestionAnswerList().size();k++){
+                            namelabel.setText(getFilledMemberList.get(i).getQuestionAnswerList().get(0).getQuestionText());
+                            locationlabel.setText(getFilledMemberList.get(i).getQuestionAnswerList().get(1).getQuestionText());
+                    }
+                    subbeneficiarylayout.addView(child);
+                }
+            } catch (Exception e) {
+               Logger.logE("renderRecycleViewList","s",e);
+            }
+        }
+    }
 }

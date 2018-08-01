@@ -16,6 +16,9 @@ public class StatusBean {
     private String clusterName;
     private int parent_form_primaryid;
     private String uuid;
+    private String Languageid;
+    private String beneficiaryName;
+    private String summaryQids;
 
     private List<QuestionAnswer> questionAnswerList;
 
@@ -157,5 +160,29 @@ public class StatusBean {
 
     public void setUuid(String uuid) {
         this.uuid = uuid;
+    }
+
+    public String getLanguageid() {
+        return Languageid;
+    }
+
+    public void setLanguageid(String languageid) {
+        Languageid = languageid;
+    }
+
+    public String getBeneficiaryName() {
+        return beneficiaryName;
+    }
+
+    public void setBeneficiaryName(String beneficiaryName) {
+        this.beneficiaryName = beneficiaryName;
+    }
+
+    public String getSummaryQids() {
+        return summaryQids;
+    }
+
+    public void setSummaryQids(String summaryQids) {
+        this.summaryQids = summaryQids;
     }
 }

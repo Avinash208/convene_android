@@ -42,6 +42,7 @@ import org.mahiti.convenemis.database.DBHandler;
 import org.mahiti.convenemis.database.ExternalDbOpenHelper;
 import org.mahiti.convenemis.database.ResponseCheckController;
 import org.mahiti.convenemis.database.SurveyControllerDbHelper;
+import org.mahiti.convenemis.database.Utilities;
 import org.mahiti.convenemis.location.GPSTracker;
 import org.mahiti.convenemis.utils.AddBeneficiaryUtils;
 import org.mahiti.convenemis.utils.AnimationUtils;
@@ -406,6 +407,8 @@ public class DataFormFragment extends Fragment implements PeriodicTypeInterface,
                 editor11.putBoolean(SAVE_TO_DRAFT_FLAG_KEY, true);
                 editor11.putInt(SURVEY_ID_KEY, surveysBean.getId());
                 editor11.apply();
+                Utilities.setSurveyStatus(defaultPreferences,"new");
+                Utilities.setSurveyStatus(prefs,"new");
                 calligGPS();
                 if (!gpsTracker.canGetLocation()) {
                     gpsTracker.showSettingsAlert();

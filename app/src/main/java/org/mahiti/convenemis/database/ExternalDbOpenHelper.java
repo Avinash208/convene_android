@@ -1486,8 +1486,10 @@ public class ExternalDbOpenHelper extends SQLiteOpenHelper {
 
                 cv.put("constraints", surveyListDetails.getSurveyDetails().get(i).getConstraints());
                 Log.v(TAG, "constraints: " + surveyListDetails.getSurveyDetails().get(i).getConstraints());
-
-
+                Gson gson= new Gson();
+                String getSubBeneficiaryIds=gson.toJson(surveyListDetails.getSurveyDetails().get(i).getParentLink());
+                cv.put("sub_beneficiary_ids", getSubBeneficiaryIds);
+                Log.v(TAG, "sub_beneficiary_ids: " + getSubBeneficiaryIds);
                 database.insertWithOnConflict("Surveys", null, cv, SQLiteDatabase.CONFLICT_REPLACE);
             }
 
@@ -4486,5 +4488,33 @@ public class ExternalDbOpenHelper extends SQLiteOpenHelper {
         }
 
         return tempList;
+    }
+
+    public List<StatusBean> isSubBeneficiaryAvliable(int surveysId, ExternalDbOpenHelper dbhelper) {
+        List<StatusBean> isaviliable=new ArrayList<>();
+        try {
+            String pendingSurveyQuery = "select Surveys.sub_beneficiary_ids,Surveys.summaryQid from Surveys where Surveys.surveyId="+surveysId;
+            SQLiteDatabase db = dbhelper.getWritableDatabase();
+            Cursor cursor = db.rawQuery(pendingSurveyQuery, null);
+            if (cursor.getCount() != 0 && cursor.moveToFirst()) {
+                do {
+                    String sub_beneficiary_ids = cursor.getString(cursor.getColumnIndex("sub_beneficiary_ids"));
+                    String summaryQid = cursor.getString(cursor.getColumnIndex("summaryQid"));
+                 JSONArray jsonArray= new JSONArray(sub_beneficiary_ids);
+                 JSONObject jsonObject= jsonArray.getJSONObject(0);
+                    StatusBean statusBean= new StatusBean();
+                    statusBean.setClusterName(summaryQid);
+                    statusBean.setSurveyId(String.valueOf(jsonObject.getInt("form_type_id")));
+                    statusBean.setSummaryQids(jsonObject.getString("summary_qid"));
+                    isaviliable.add(statusBean);
+                } while (cursor.moveToNext());
+
+                cursor.close();
+            }
+        } catch (Exception e) {
+            Logger.logV("", "checkPrymarySaveDraftExist from Survey table" + e);
+
+        }
+        return isaviliable;
     }
 }
