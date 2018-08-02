@@ -3,18 +3,26 @@ package org.mahiti.convenemis.backgroundtasks;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.widget.Toast;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.mahiti.convenemis.BeenClass.SurveysBean;
 import org.mahiti.convenemis.backgroundcallbacks.PendingCompletedSurveyAsyncResultListener;
 import org.mahiti.convenemis.database.DBHandler;
+import org.mahiti.convenemis.database.DataBaseMapperClass;
 import org.mahiti.convenemis.database.ExternalDbOpenHelper;
 import org.mahiti.convenemis.database.SurveyControllerDbHelper;
 import org.mahiti.convenemis.utils.Constants;
 import org.mahiti.convenemis.utils.Logger;
+import org.mahiti.convenemis.utils.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import static org.mahiti.convenemis.utils.Constants.TAG;
 
 // The types specify: 1. input data type (String)
 // 2. progress type (Integer)
@@ -52,12 +60,41 @@ public class PendingSurveyAsyncTask extends AsyncTask<String, Integer, List<Surv
             if (sourceList.get(i).getPeriodicity() > addCount) {
                 int getCount = handler.getPeriodicityPreviousCountOnline(sourceList.get(i), sourceList.get(i).getId(), sourceList.get(i).getPeriodicityFlag(), new Date(), surveyPrimaryKeyId);
                 if (getCount == 0 && surveyid != sourceList.get(i).getId()) {
-                    resultList.add(sourceList.get(i));
+                  if (sourceList.get(i).getRuleEngine()!=null &&!sourceList.get(i).getRuleEngine().isEmpty()) {
+                      if (validateRuleSet(sourceList.get(i).getRuleEngine(), surveyPrimaryKeyId))
+                          resultList.add(sourceList.get(i));
+                  }else{
+                      resultList.add(sourceList.get(i));
+                  }
                 }
 
             }
         }
         return resultList;
+    }
+
+    private boolean validateRuleSet(String ruleSet, String surveyPrimaryKeyId) {
+        if (!ruleSet.isEmpty()){
+            try {
+                JSONArray jsonArray= new JSONArray(ruleSet);
+                JSONObject jsonObject= jsonArray.getJSONObject(0);
+                String getDataType= jsonObject.getString("data_type");
+                String getOperator= jsonObject.getString("operator");
+                String getValue= jsonObject.getString("value");
+                int getquestionId= jsonObject.getInt("question_id");
+                int getFormID= jsonObject.getInt("form_id");
+                String getUserEnterText= handler.getResponseText(surveyPrimaryKeyId,getquestionId);
+                Logger.logD("UserEntered Text","Response Table"+getUserEnterText);
+                if (!getUserEnterText.isEmpty()) {
+                    if (DataBaseMapperClass.setRuleEnginScane(getValue, getOperator, Integer.parseInt(getUserEnterText))) {
+                        return true;
+                    }
+                }
+            } catch (JSONException e) {
+                Logger.logE(TAG,"Ruleset Validation",e);
+            }
+        }
+        return false;
     }
 
 

@@ -348,7 +348,7 @@ public class DataBaseMapperClass {
             cursor=database.rawQuery(QuestionQuery,null);
             Logger.logD(TAG,"SpinnerQuestionQuery" + QuestionQuery);
             if (cursor.getCount()<=0){
-                QuestionQuery="SELECT q.option_text, a.id from Options a, Question q where a.question_pid=q.id and q.id="+questionNumber+" and active = 2 ORDER BY a.option_order";
+                QuestionQuery="SELECT a.option_text, a.id from Options a, Question q where a.question_pid=q.id and q.id="+questionNumber+" and q.active = 2 ORDER BY a.option_order";
                 cursor=database.rawQuery(QuestionQuery,null);
             }
             AnswersPage answersPageDefault=new AnswersPage("",Constants.SELECT,0,"",0,0,0,"","");
@@ -1516,7 +1516,7 @@ public class DataBaseMapperClass {
         return false;
     }
 
-    private static boolean setRuleEnginScane(String getRuleEnginValue,String operator, int userText) {
+    public static boolean setRuleEnginScane(String getRuleEnginValue,String operator, int userText) {
         switch (operator){
             case "<=":
                 if (userText<=Integer.parseInt(getRuleEnginValue))

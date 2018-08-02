@@ -56,6 +56,7 @@ public class BeneficiaryLinkageDetails extends Fragment {
     private DBHandler dbHelper;
     private LinearLayout subbeneficiarylayout;
     private TextView memberListLabel;
+    private Button showMemberView;
 
 
     public BeneficiaryLinkageDetails() {
@@ -78,6 +79,12 @@ public class BeneficiaryLinkageDetails extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_beneficiarylinkages, container, false);
         initVariables(rootView);
+        showMemberView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                subbeneficiarylayout.requestFocus();
+            }
+        });
 
 
         createDynamicQuestionSet(getContext(),surveyPrimaryKeyId,dbOpenHelper,surveyPreferences,surveysId,
@@ -119,6 +126,7 @@ public class BeneficiaryLinkageDetails extends Fragment {
         dbHelper= new DBHandler(getContext());
         parentLayout = dialog.findViewById(R.id.dynamic_question_set);
         subbeneficiarylayout = dialog.findViewById(R.id.sub_beneficiarylayout);
+        showMemberView = dialog.findViewById(R.id.memberlistview);
         memberListLabel = dialog.findViewById(R.id.memberlistid);
         topLayoutContainer = dialog.findViewById(R.id.top_layout_container);
         backToSurvey = dialog.findViewById(R.id.back_survey);
@@ -135,6 +143,7 @@ public class BeneficiaryLinkageDetails extends Fragment {
         }
         checkTopLayoutVisiablity(fragmentHeading);
 
+
     }
 
     private void checkTopLayoutVisiablity(String fragmentHeading) {
@@ -143,6 +152,7 @@ public class BeneficiaryLinkageDetails extends Fragment {
         }else{
             topLayoutContainer.setVisibility(View.GONE);
         }
+
     }
 
     /**

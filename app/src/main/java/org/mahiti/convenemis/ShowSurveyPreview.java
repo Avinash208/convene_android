@@ -82,7 +82,7 @@ public class ShowSurveyPreview extends AppCompatActivity implements View.OnClick
         conveneDatabaseHelper = ConveneDatabaseHelper.getInstance(this, showSurveyPreviewPreferences.getString(Constants.CONVENE_DB, ""), showSurveyPreviewPreferences.getString("UID", ""));
         Logger.logV("", "Record is getting created + dbOpenHelper");
         createDynamicQuestionSet(ShowSurveyPreview.this, getSurveyPrimaryID, surveyId,showSurveyPreviewPreferences.getInt(Constants.SELECTEDLANGUAGE, 1));
-        if (!("").equals(showSurveyPreviewPreferences.getString("recentPreviewRecord", ""))) {
+        if (("edit").equals(showSurveyPreviewPreferences.getString("recentPreviewRecord", ""))) {
             editTextView.setVisibility(View.VISIBLE);
         } else {
             editTextView.setVisibility(View.GONE);

@@ -342,6 +342,7 @@ public class LocationBasedActivity extends AppCompatActivity {
         }else{
             villageName.setText(getResources().getString(R.string.edit_or_view) );
             sharedPreferences.edit().putString("recentPreviewRecord", "edit").apply();
+            prefs.edit().putString("recentPreviewRecord", "edit").apply();
             periodicityTextview.setText(periodicityFlag );
             editTextLabel.setText(locationcaptureList.get(i).getLocationName());
             capturedatevalue.setText(surveysBean.getSurveyEndDate());

@@ -1728,4 +1728,22 @@ public class DBHandler extends SQLiteOpenHelper {
         return statusBean;
 
     }
+
+    public String  getResponseText(String surveyPrimaryKeyId, int getquestionId) {
+       String getResponseText="";
+        String responseQuere = "select Response.ans_text from Response where q_id="+getquestionId+" and Response.survey_id='"+surveyPrimaryKeyId+"'";
+        SQLiteDatabase db = getdatabaseinstance_read();
+        Cursor cursor = db.rawQuery(responseQuere, null);
+        try {
+            if (cursor.getCount() != 0 && cursor.moveToFirst()) {
+                do {
+                    getResponseText = cursor.getString(cursor.getColumnIndex("ans_text"));
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+        } catch (Exception e) {
+            Logger.logE(TAG, "Exception on getting all assessment", e);
+        }
+        return getResponseText;
+    }
 }

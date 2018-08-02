@@ -22,6 +22,7 @@ public class SurveysBean {
     private int periodicitySurveyBeen;
     private int isViewOrEdit;
     private  String surveyEndDate;
+    private  String ruleEngine;
 
     public String getSurveyEndDate() {
         return surveyEndDate;
@@ -135,5 +136,13 @@ public class SurveysBean {
     public void setIsViewOrEdit(int isViewOrEdit) {
         //1: edit/view 2: view
         this.isViewOrEdit = isViewOrEdit;
+    }
+
+    public String getRuleEngine() {
+        return ruleEngine;
+    }
+
+    public void setRuleEngine(String ruleEngine) {
+        this.ruleEngine = ruleEngine;
     }
 }

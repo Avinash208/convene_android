@@ -1476,6 +1476,12 @@ public class ExternalDbOpenHelper extends SQLiteOpenHelper {
                 cv.put("category_name", surveyListDetails.getSurveyDetails().get(i).getCategoryName());
                 Log.v(TAG, "category_name  : " + surveyListDetails.getSurveyDetails().get(i).getCategoryName());
 
+               if(surveyListDetails.getSurveyDetails().get(i).getSurveyId()==109) {
+                   cv.put("rule_engine", "[{\"data_type\":\"Number\",\"operator\":\">=\",\"question_id\":833,\"value\":\"22\", \"form_id\":104 }]\n");
+               }else if (surveyListDetails.getSurveyDetails().get(i).getSurveyId()==108){
+                   cv.put("rule_engine", "[{\"data_type\":\"Number\",\"operator\":\"<=\",\"question_id\":833,\"value\":\"25\", \"form_id\":104 }]\n");
+               }
+
                 cv.put("category_id", surveyListDetails.getSurveyDetails().get(i).getCategoryId());
                 Log.v(TAG, "category_id   : " + surveyListDetails.getSurveyDetails().get(i).getCategoryId());
                 List<String> getPid = updateLinkageTable(surveyListDetails.getSurveyDetails().get(i).getLinkagesDetails(), database);
@@ -2517,6 +2523,7 @@ public class ExternalDbOpenHelper extends SQLiteOpenHelper {
                 datum.setBeneficiaryIds(cursor.getString(cursor.getColumnIndex(BENEFICIARYIDS_KEY)));
                 datum.setFacilityIds(cursor.getString(cursor.getColumnIndex(FACILITIY_IDS_KEY)));
                 datum.setPLimit(cursor.getInt(cursor.getColumnIndex(Constants.P_LIMIT)));
+                datum.setRuleEngine(cursor.getString(cursor.getColumnIndex("rule_engine")));
                 datum.setSurveyDone(0);
                 locationbasedbeneficiaryName.add(datum);
             }

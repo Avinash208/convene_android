@@ -153,7 +153,8 @@ public class HomeActivityNew extends BaseActivity implements View.OnClickListene
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.logout:
-                Utils.callDialogConformation(this,this);
+             //  startActivity(new Intent(HomeActivityNew.this, ImageProcessingActivity.class));
+                 Utils.callDialogConformation(this,this);
                 break;
             case R.id.update_content:
                 Utils.contentUpdateConformation(this);
