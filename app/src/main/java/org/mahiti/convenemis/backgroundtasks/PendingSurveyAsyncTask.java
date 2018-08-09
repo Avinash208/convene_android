@@ -41,7 +41,6 @@ public class PendingSurveyAsyncTask extends AsyncTask<String, Integer, List<Surv
     protected void onPreExecute() {
         // Executed in UIThread
     }
-
     public PendingSurveyAsyncTask(Context con, List<SurveysBean> sourceList, ExternalDbOpenHelper externalDbOpenHelper, SharedPreferences defaultPreferences, SurveyControllerDbHelper periodicityCheckControllerDbHelper,
                                   PendingCompletedSurveyAsyncResultListener pendingCompletedSurveyAsyncResultListener, DBHandler handler, String surveyPrimaryKeyId, int surveyId) {
         this.sourceList = sourceList;
@@ -52,7 +51,6 @@ public class PendingSurveyAsyncTask extends AsyncTask<String, Integer, List<Surv
         this.surveyid = surveyId;
         this.preferences = defaultPreferences;
     }
-
     protected List<SurveysBean> doInBackground(String... strings) {
         for (int i = 0; i < sourceList.size(); i++) {
 
@@ -61,7 +59,7 @@ public class PendingSurveyAsyncTask extends AsyncTask<String, Integer, List<Surv
                 int getCount = handler.getPeriodicityPreviousCountOnline(sourceList.get(i), sourceList.get(i).getId(), sourceList.get(i).getPeriodicityFlag(), new Date(), surveyPrimaryKeyId);
                 if (getCount == 0 && surveyid != sourceList.get(i).getId()) {
                   if (sourceList.get(i).getRuleEngine()!=null &&!sourceList.get(i).getRuleEngine().isEmpty()) {
-                      if (validateRuleSet(sourceList.get(i).getRuleEngine(), surveyPrimaryKeyId))
+                     // if (validateRuleSet(sourceList.get(i).getRuleEngine(), surveyPrimaryKeyId))
                           resultList.add(sourceList.get(i));
                   }else{
                       resultList.add(sourceList.get(i));
@@ -72,7 +70,6 @@ public class PendingSurveyAsyncTask extends AsyncTask<String, Integer, List<Surv
         }
         return resultList;
     }
-
     private boolean validateRuleSet(String ruleSet, String surveyPrimaryKeyId) {
         if (!ruleSet.isEmpty()){
             try {
@@ -89,15 +86,15 @@ public class PendingSurveyAsyncTask extends AsyncTask<String, Integer, List<Surv
                     if (DataBaseMapperClass.setRuleEnginScane(getValue, getOperator, Integer.parseInt(getUserEnterText))) {
                         return true;
                     }
+                }else{
+                    return true;
                 }
-            } catch (JSONException e) {
+            } catch (Exception e) {
                 Logger.logE(TAG,"Ruleset Validation",e);
             }
         }
         return false;
     }
-
-
     protected void onPostExecute(List<SurveysBean> result) {
         if (preferences.getString(Constants.PROJECTFLOW, "").equalsIgnoreCase("1")) {
             int getSeletedProjectActivity = preferences.getInt(Constants.SELECTEDPROJECTID, 0);
@@ -107,9 +104,7 @@ public class PendingSurveyAsyncTask extends AsyncTask<String, Integer, List<Surv
         } else {
             pendingCompletedSurveyAsyncResultListener.pendingSurveys(result);
         }
-
     }
-
     /**
      * @param result completed Activity list
      * @param getSeletedProjectActivity selected survey id from the project flow .

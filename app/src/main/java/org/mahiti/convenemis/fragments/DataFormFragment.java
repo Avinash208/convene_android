@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -16,6 +17,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -372,6 +375,14 @@ public class DataFormFragment extends Fragment implements PeriodicTypeInterface,
         } else {
             spinnerSearch.setVisibility(View.GONE);
             addOrCompleteButton.setVisibility(View.VISIBLE);
+            addOrCompleteButton.setPaintFlags(addOrCompleteButton.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+
+          /*  Animation anim = new AlphaAnimation(0.0f, 1.0f);
+            anim.setDuration(120); //You can manage the blinking time with this parameter
+            anim.setStartOffset(10);
+            anim.setRepeatMode(Animation.REVERSE);
+            anim.setRepeatCount(Animation.INFINITE);
+            addOrCompleteButton.startAnimation(anim);*/
 
             addOrCompleteButton.setTextColor(getResources().getColor(R.color.meroon));
         }

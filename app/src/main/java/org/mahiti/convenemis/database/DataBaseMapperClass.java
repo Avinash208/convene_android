@@ -1555,4 +1555,18 @@ public class DataBaseMapperClass {
             cursor.close();
         return getResponseText;
     }
+
+    public static int getOptionCodeIfAnswered(net.sqlcipher.database.SQLiteDatabase db, String surveyPrimaryKeyId, int questionId) {
+        int getAnswerCode=0;
+        String selectQuery = "select Response.ans_code from Response\n" +
+                " where Response.q_id="+questionId+" and Response.survey_id IN (select beneficiary_ids from Survey where uuid='"+surveyPrimaryKeyId+"')";
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        if (cursor != null && cursor.moveToFirst()) {
+            do {
+                getAnswerCode = cursor.getInt(cursor.getColumnIndex("ans_code"));
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return getAnswerCode;
+    }
 }

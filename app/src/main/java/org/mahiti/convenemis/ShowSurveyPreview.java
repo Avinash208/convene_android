@@ -179,17 +179,21 @@ public class ShowSurveyPreview extends AppCompatActivity implements View.OnClick
                 setAnswerToTv(answer, parentLayout, questionLabel);
                 break;
             case 2:
-                if (answer != null) {
-                    String[] ansSet = answer.replace("[", "").replace("]", "").split(",");
-                    StringBuilder answerBuilder = new StringBuilder();
-                    for (int i = 0; i<ansSet.length; i++){
-                        if (i==0)
-                            answerBuilder.append(options.get(Integer.parseInt(ansSet[i].trim())));
-                        else
-                            answerBuilder.append(",").append(options.get(Integer.parseInt(ansSet[i].trim())));
-                    }
-                    answer = answerBuilder.toString();
+                try {
+                    if (answer != null) {
+                        String[] ansSet = answer.replace("[", "").replace("]", "").split(",");
+                        StringBuilder answerBuilder = new StringBuilder();
+                        for (int i = 0; i<ansSet.length; i++){
+                            if (i==0)
+                                answerBuilder.append(options.get(Integer.parseInt(ansSet[i].trim())));
+                            else
+                                answerBuilder.append(",").append(options.get(Integer.parseInt(ansSet[i].trim())));
+                        }
+                        answer = answerBuilder.toString();
 
+                    }
+                } catch (NumberFormatException e) {
+                    e.printStackTrace();
                 }
                 setAnswerToTv(answer, parentLayout, questionLabel);
                 break;

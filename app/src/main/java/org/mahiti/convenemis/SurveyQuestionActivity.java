@@ -53,7 +53,9 @@ import com.google.gson.Gson;
 import com.ikovac.timepickerwithseconds.MyTimePickerDialog;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
+import org.mahiti.convenemis.BeenClass.ActivityRuleSet;
 import org.mahiti.convenemis.BeenClass.AnswersPage;
 import org.mahiti.convenemis.BeenClass.AssesmentBean;
 import org.mahiti.convenemis.BeenClass.Page;
@@ -246,6 +248,7 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
     List<String> getAllGridQuestionCode = new ArrayList<>();
     List<String> getAllGridQuestionCodeInline = new ArrayList<>();
     surveyQuestionGridInlineInterface surveyQuestionGridInlineInterface;
+    private String activityRuleSet = "";
 
     /**
      * Date picker dialogue showing
@@ -275,7 +278,10 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
         prefs = getSharedPreferences(MY_PREFERENCES, Context.MODE_PRIVATE);
         TextView toolbarTitle = findViewById(R.id.toolbarTitle);
         scrollView = findViewById(R.id.scrollView);
-        toolbarTitle.setText(prefs.getString("Survey_tittle", null));
+        if (!prefs.getString(Constants.BENEFICIARY_TOOLBAR_NAME, "").isEmpty())
+            toolbarTitle.setText(new StringBuilder().append(prefs.getString("Survey_tittle", null)).append(" \n ( ").append(prefs.getString(Constants.BENEFICIARY_TOOLBAR_NAME, "")).append(" - " + prefs.getString(Constants.BENEFICIARY_TOOLBAR_CLUSTERNAME, "") + " ) ").toString());
+        else
+            toolbarTitle.setText(prefs.getString("Survey_tittle", null));
         LinearLayout pressBack = findViewById(R.id.backPress);
         dynamicQuestionSet = findViewById(R.id.dynamicQuestionSet);
         blockName = findViewById(R.id.blockName);
@@ -335,7 +341,9 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
         } else {
             previousButton.setVisibility(View.VISIBLE);
         }
-        Logger.logV(TAG, "Surveyids" + surveysId);
+        updateActivityRuleSet(surveysId);
+
+
         hasBlockId = DataBaseMapperClass.checkBlockFromSurvey(surveyDatabase, surveysId);
         mainQList.clear();
         pageSetCount = 0;
@@ -410,6 +418,19 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
         new OperatorTask(SurveyQuestionActivity.this).execute();
 
     }
+
+    private void updateActivityRuleSet(int surveysId) {
+        try {
+            String getruleSet = dbhelper.getSurveyRuleSet(surveysId, dbhelper);
+            if (!getruleSet.isEmpty()) {
+                activityRuleSet = getruleSet;
+
+            }
+        } catch (Exception e) {
+            Logger.logE("updateActivityRuleSet","",e);
+        }
+    }
+
 
     /**
      * preClearAllGlobalHashMap pre clearing the global hash map
@@ -508,6 +529,8 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
      */
     private void ModuleToSetForm(int count, int pageSetCount, List<String> tempQidsList) {
 
+        if (!activityRuleSet.isEmpty())
+            applyRuleEnginIfExist(tempQidsList, activityRuleSet);
         try {
             Logger.logD(TAG, "1. ModuleToSetForm - questionDisplayPageCount Value " + questionDisplayPageCount);
             if (questionDisplayPageCount == 1) {
@@ -546,6 +569,52 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
         } catch (Exception e) {
             Log.e("Excetion In UI", "Exception", e);
         }
+    }
+
+    private void applyRuleEnginIfExist(List<String> tempQidsList, String activityRuleSet) {
+        List<String> tempQid= new ArrayList<>();
+        tempQid=tempQidsList;
+        try {
+            for (int k = 0; k < tempQidsList.size(); k++) {
+                JSONArray jsonArray = new JSONArray(activityRuleSet);
+                for (int j = 0; j < jsonArray.length(); j++) {
+                    ActivityRuleSet actRuleSet = new ActivityRuleSet();
+                    JSONObject jsonObject = jsonArray.getJSONObject(j);
+                    actRuleSet.setDatatype(jsonObject.getString("data_type"));
+                    actRuleSet.setOperator(jsonObject.getString("operator"));
+                    actRuleSet.setQuestionId(jsonObject.getInt("question_id"));
+                    actRuleSet.setValue(jsonObject.getString("value"));
+                    actRuleSet.setFormId(jsonObject.getInt("form_id"));
+                    actRuleSet.setQuestionDisplay(jsonObject.getString("display_question"));
+                    if (actRuleSet.getFormId() == surveysId && isDisplayQuestionAviliable(tempQidsList.get(k),actRuleSet.getQuestionDisplay()) &&
+                            isQuestionValidToDisplay(tempQidsList.get(k),actRuleSet.getValue(),actRuleSet.getQuestionId())) {
+                        ToastUtils.displayToast("All Condition Match to this Id"+tempQidsList.get(k),this);
+                        tempQid.remove(k);
+                    }
+                }
+            }
+        } catch (JSONException e) {
+            Logger.logE("applyRuleEnginIfExist", "", e);
+        }
+        tempQidsList=tempQid;
+
+
+    }
+
+    private boolean isQuestionValidToDisplay(String alreadyAnswercode, String ruleSetvalue, int questionId) {
+        int getOptionCode = DataBaseMapperClass.getOptionCodeIfAnswered(db,surveyPrimaryKeyId,questionId);
+        if (getOptionCode!=0 && String.valueOf(getOptionCode).equalsIgnoreCase(ruleSetvalue))
+            return true;
+        return false;
+    }
+
+    private boolean isDisplayQuestionAviliable(String diaplyQuestion, String ruleSetDisplayQuestion) {
+        String[] splitRulesetQuestion= ruleSetDisplayQuestion.split(",");
+        for (String aSplitRulesetQuestion : splitRulesetQuestion) {
+            if (diaplyQuestion.equalsIgnoreCase(aSplitRulesetQuestion))
+                return true;
+        }
+        return false;
     }
 
     /**
@@ -2388,11 +2457,11 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
                     }
                     Logger.logD(TAG, "currentPageLastQuestionResponseCode = " + currentPageLastQuestionResponseCode);
                 } else {
-                    List<Response> response= hashMapAnswersEditText.get(currentPageLastQuestionId+"_1");
-                    String getResposeTextPrevious=DataBaseMapperClass.getResponseText(db,surveyPrimaryKeyId,currentPageLastQuestionId);
-                    String getResposeText=response.get(0).getAnswer();
-                    String getKeyBasedSkipCode = DataBaseMapperClass.getTestQuestionAnswerCode(currentPageLastQuestionId,surveyDatabase,getResposeText);
-                    radioAnswerCode=getKeyBasedSkipCode;
+                    List<Response> response = hashMapAnswersEditText.get(currentPageLastQuestionId + "_1");
+                    String getResposeTextPrevious = DataBaseMapperClass.getResponseText(db, surveyPrimaryKeyId, currentPageLastQuestionId);
+                    String getResposeText = response.get(0).getAnswer();
+                    String getKeyBasedSkipCode = DataBaseMapperClass.getTestQuestionAnswerCode(currentPageLastQuestionId, surveyDatabase, getResposeText);
+                    radioAnswerCode = getKeyBasedSkipCode;
                     if (!getResposeTextPrevious.isEmpty())
                         currentPageLastQuestionResponseCode = response.get(0).getAns_code();
                     else
@@ -2409,6 +2478,9 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
                     count = lastIndexUsedToFetchQID - 1;
                     Logger.logD(TAG, "pageCountValue-------" + count);
                     skipBlockLevelFlag = false;
+                } else if (skipcode.equals("-1")) {
+                    setAllDataToResponse();
+                    showSubmitPopUp(mainQList.get(mainQList.size() - 1));
                 } else {
                     Logger.logD(TAG, "pageCountValue" + pageSetCount);
                     String questionId = skipcode;
@@ -2466,7 +2538,11 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
                     Logger.logV(TAG, "Normal Flow without skips lastquestionindex" + lastIndexUsedToFetchQID);
                     int lastQuestionIndex = lastIndexUsedToFetchQID - 1;
                     count = lastQuestionIndex + 1;
-                    deleteSkipData(mainQList.get(lastQuestionIndex), "", questionList, radioAnswerCode);
+                    try {
+                        deleteSkipData(mainQList.get(lastQuestionIndex), "", questionList, radioAnswerCode);
+                    } catch (Exception e) {
+                        Logger.logE("Exception", " in delete answered data", e);
+                    }
                 }
             }
             Logger.logV(TAG, "Skipflag values" + skipFlag);
@@ -2482,6 +2558,7 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
             Logger.logE(TAG, "Exception in Next Button Functionality ", e);
         }
     }
+
     /**
      * method
      */
@@ -2984,7 +3061,7 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
                 count++;
                 listQuestionType.clear();
                 clearAllWidgetMapCounts();
-                if (count==mainQList.size()){
+                if (count == mainQList.size()) {
                     setAllDataToResponse();
                     showSubmitPopUp(currentQid);
                     return;
@@ -3132,7 +3209,7 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
                             Logger.logD(TAG, "the only key for this QuestioID " + getResponseKeys.toString());
                         }
                     }
-                    LinearLayout ll=null;
+                    LinearLayout ll = null;
                     for (int j = 0; j < getResponseKeys.size(); j++) {
                         View childInlineGrid = getLayoutInflater().inflate(R.layout.gridlist_adapter, null, false);
                         View childTemp = getLayoutInflater().inflate(R.layout.dialoginline, null, false);
@@ -3155,18 +3232,18 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
                         deleteResponseButton.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                               if (hashMapGridResponse.size()>1){
-                                   String[] spiltDeleteTag = v.getTag().toString().split("@");
-                                   Logger.logD(TAG, "hashMapGridResponse-->before " + hashMapGridResponse.size());
-                                   Logger.logD(TAG, "spiltDeleteTag " + spiltDeleteTag[0]);
-                                   String[] split_GetIndex = spiltDeleteTag[0].split("_");
-                                   hashMapGridResponse.remove(spiltDeleteTag[0]);
-                                   methodToClearHashMapKey(split_GetIndex[1], split_GetIndex[0], spiltDeleteTag[0]);
-                                   Logger.logD(TAG, "hashMapGridResponse-->after " + hashMapGridResponse.size());
-                                   ((LinearLayout) childInlineGrid.getParent()).removeView(childInlineGrid);
-                               }else{
-                                   ToastUtils.displayToast("one item is mandatory", SurveyQuestionActivity.this);
-                               }
+                                if (hashMapGridResponse.size() > 1) {
+                                    String[] spiltDeleteTag = v.getTag().toString().split("@");
+                                    Logger.logD(TAG, "hashMapGridResponse-->before " + hashMapGridResponse.size());
+                                    Logger.logD(TAG, "spiltDeleteTag " + spiltDeleteTag[0]);
+                                    String[] split_GetIndex = spiltDeleteTag[0].split("_");
+                                    hashMapGridResponse.remove(spiltDeleteTag[0]);
+                                    methodToClearHashMapKey(split_GetIndex[1], split_GetIndex[0], spiltDeleteTag[0]);
+                                    Logger.logD(TAG, "hashMapGridResponse-->after " + hashMapGridResponse.size());
+                                    ((LinearLayout) childInlineGrid.getParent()).removeView(childInlineGrid);
+                                } else {
+                                    ToastUtils.displayToast("one item is mandatory", SurveyQuestionActivity.this);
+                                }
 
                             }
                         });
@@ -3287,4 +3364,6 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
         startIntert.putExtra("visibility", true);
         startActivityForResult(startIntert, POP_UP_ACTIVITY);
     }
+
+
 }

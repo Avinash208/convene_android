@@ -146,16 +146,21 @@ public class ExpandableListAdapterDataCollection extends BaseExpandableListAdapt
         editor.putString(Constants.VERSION, surveyDetailBean.getVn());
         editor.putInt(Constants.CONFIG, (surveyDetailBean.getBConfig()));
         editor.putInt(Constants.RD, surveyDetailBean.getReasonDisagree());
+        editor.putString(Constants.DESCRIPTION, surveyDetailBean.getActivityDescription());
         editor.putString(Constants.constraints, surveyDetailBean.getConstraints());
 
         String[] orderLevels = surveyDetailBean.getOrderLevels().split(",");
         editor.putString(Constants.O_LEAVEL, orderLevels[orderLevels.length-1]);
         editor.putString(Constants.CODE, surveyDetailBean.getPcode());
         editor.putString(Constants.PROJECTFLOW, "0");
-        if (datum.getActive()==0)
+        if (datum.getActive()==0) {
             editor.putInt(SURVEY_ID, datum.getBeneficiaryTypeId());
-        else
+            editor.putInt(Constants.ADDBUTTON, 1);
+        }
+        else {
             editor.putInt(SURVEY_ID, surveyDetailBean.getSurveyId());
+            editor.putInt(Constants.ADDBUTTON, 0);
+        }
 
         editor.putString(Constants.BENEFICIARY_TYPE,surveyDetailBean.getBeneficiaryType());
         editor.putString(Constants.BENEFICIARY_IDS,surveyDetailBean.getBeneficiaryIds());

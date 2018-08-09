@@ -1,5 +1,6 @@
 package org.mahiti.convenemis.adapter.spinnercustomadapter;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -12,7 +13,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.mahiti.convenemis.BeenClass.QuestionAnswer;
 import org.mahiti.convenemis.BeenClass.StatusBean;
@@ -25,8 +25,6 @@ import org.mahiti.convenemis.database.DBHandler;
 import org.mahiti.convenemis.database.Utilities;
 import org.mahiti.convenemis.utils.Constants;
 import org.mahiti.convenemis.utils.Logger;
-import org.mahiti.convenemis.utils.ToastUtils;
-import org.mahiti.convenemis.utils.Utils;
 
 import java.util.List;
 
@@ -42,8 +40,8 @@ public class ListingGridViewAdapter extends RecyclerView.Adapter<ListingGridView
     Context context;
     Activity activity;
     List<StatusBean> statusbean;
-    private  String qid;
-    private  ConveneDatabaseHelper dbConveneHelper;
+    private String qid;
+    private ConveneDatabaseHelper dbConveneHelper;
     DBHandler surveySummaryreportdbhandler;
     SharedPreferences sharedPreferences;
     SharedPreferences prefs;
@@ -51,19 +49,18 @@ public class ListingGridViewAdapter extends RecyclerView.Adapter<ListingGridView
     String getheading;
 
 
-
     public ListingGridViewAdapter(ListingActivity surveySummaryReport, List<StatusBean> statusBeanList, String qid, ConveneDatabaseHelper dbConveneHelper,
                                   DBHandler surveySummaryreportdbhandler, SharedPreferences sharedPreferences, SharedPreferences prefs, String id, String getHeading) {
         this.context = surveySummaryReport;
         statusbean = statusBeanList;
         activity = surveySummaryReport;
-        this.qid=qid;
-        this.dbConveneHelper=dbConveneHelper;
-        this.surveySummaryreportdbhandler=surveySummaryreportdbhandler;
-        this.sharedPreferences=sharedPreferences;
-        this.prefs=prefs;
-        this.surveyId=id;
-        this.getheading=getHeading;
+        this.qid = qid;
+        this.dbConveneHelper = dbConveneHelper;
+        this.surveySummaryreportdbhandler = surveySummaryreportdbhandler;
+        this.sharedPreferences = sharedPreferences;
+        this.prefs = prefs;
+        this.surveyId = id;
+        this.getheading = getHeading;
     }
 
     @Override
@@ -77,27 +74,38 @@ public class ListingGridViewAdapter extends RecyclerView.Adapter<ListingGridView
     @Override
     public void onBindViewHolder(ListingGridViewAdapter.ViewHolder viewHolder, final int position) {
 
-        if(!"".equals(qid) && qid.contains(","))
-        {
-            String summary="";
-            String[] qids=qid.split(",");
-            for(int k=0;k<qids.length;k++)
-            {
-                summary= new StringBuilder().append(summary).append(DBHandler.getAnswerFromPreviousQuestion(qids[k], surveySummaryreportdbhandler, String.valueOf(statusbean.get(position).getSurveyId()))).toString();
+        if (!"".equals(qid) && qid.contains(",")) {
+            String summary = "";
+            String[] qids = qid.split(",");
+            for (int k = 0; k < qids.length; k++) {
+                summary = new StringBuilder().append(summary).append(DBHandler.getAnswerFromPreviousQuestion(qids[k], surveySummaryreportdbhandler, String.valueOf(statusbean.get(position).getSurveyId()))).toString();
             }
-            Logger.logD("Getting many times","->"+position);
+
             viewHolder.anniversariesListDymanicLabel.removeAllViews();
-            setParentView(viewHolder.dynamicImage,statusbean.get(position).getQuestionAnswerList(),
-                    viewHolder.nameLabel);
+            try {
+                if(prefs.getInt(Constants.ADDBUTTON,1)==1){
+                   String[] getClusterName= statusbean.get(position).getClusterName().split("#");
+                    viewHolder.householdLabel.setVisibility(View.VISIBLE);
+                    viewHolder.householdLabel.setText(getClusterName[0]);
+                }else{
+                    viewHolder.householdLabel.setText("");
+                    viewHolder.householdLabel.setVisibility(View.GONE);
+                }
+            } catch (Exception e) {
+                Logger.logE(TAG, "->",e);
+            }
+            setParentView(viewHolder.dynamicImage, statusbean.get(position).getQuestionAnswerList(),
+                    viewHolder.nameLabel, viewHolder.householdLabel);
 
         }
         viewHolder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 updateLanguageTOSP(statusbean.get(position).getLanguage());
+                updateBeneficiaryNameTOSP(statusbean.get(position).getQuestionAnswerList().get(0).getAnswerText(),position);
                 Intent intent = new Intent(activity, Beneficiarylinkages.class);
                 intent.putExtra("SurveyId", statusbean.get(position).getSurveyId());
-                intent.putExtra(Constants.HEADER_NAME, getheading);
+                intent.putExtra(Constants.HEADER_NAME, getheading + " - " + statusbean.get(position).getQuestionAnswerList().get(0).getAnswerText());
                 intent.putExtra("parentID", String.valueOf(statusbean.get(position).getQuestionAnswerList().get(0).getParentId()));
                 intent.putExtra("parent_form_primaryid", String.valueOf(statusbean.get(position).getParent_form_primaryid()));
                 intent.putExtra(Constants.SURVEY_ID, surveyId);
@@ -108,7 +116,8 @@ public class ListingGridViewAdapter extends RecyclerView.Adapter<ListingGridView
             @Override
             public void onClick(View view) {
                 updateLanguageTOSP(statusbean.get(position).getLanguage());
-                Utilities.setSurveyStatus(sharedPreferences,"edit");
+
+                Utilities.setSurveyStatus(sharedPreferences, "edit");
                 Intent intent = new Intent(activity, SurveyQuestionActivity.class);
                 intent.putExtra("SurveyId", statusbean.get(position).getSurveyId());
                 intent.putExtra(Constants.SURVEY_ID, surveyId);
@@ -117,12 +126,30 @@ public class ListingGridViewAdapter extends RecyclerView.Adapter<ListingGridView
         });
     }
 
+    private void updateBeneficiaryNameTOSP(String answerText, int position) {
+        String[] getClusterName= statusbean.get(position).getClusterName().split("#");
+        if (!getClusterName[0].isEmpty()){
+            SharedPreferences.Editor sharedPreferencesEditor = sharedPreferences.edit();
+            sharedPreferencesEditor.putString(Constants.BENEFICIARY_TOOLBAR_CLUSTERNAME, getClusterName[0]);
+            sharedPreferencesEditor.apply();
+        }
+
+        if (answerText != null && !answerText.isEmpty()) {
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putString(Constants.BENEFICIARY_TOOLBAR_NAME, answerText);
+            editor.apply();
+            SharedPreferences.Editor sharedPreferencesEditor = sharedPreferences.edit();
+            sharedPreferencesEditor.putString(Constants.BENEFICIARY_TOOLBAR_NAME, answerText);
+            sharedPreferencesEditor.apply();
+        }
+    }
+
     private void updateLanguageTOSP(String languageid) {
-       if (languageid!=null && !languageid.isEmpty()){
-           SharedPreferences.Editor editor = prefs.edit();
-           editor.putInt(Constants.SELECTEDLANGUAGE, Integer.parseInt(languageid));
-           editor.apply();
-       }
+        if (languageid != null && !languageid.isEmpty()) {
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putInt(Constants.SELECTEDLANGUAGE, Integer.parseInt(languageid));
+            editor.apply();
+        }
 
     }
 
@@ -139,6 +166,7 @@ public class ListingGridViewAdapter extends RecyclerView.Adapter<ListingGridView
     protected class ViewHolder extends RecyclerView.ViewHolder {
 
         private TextView nameLabel;
+        private TextView householdLabel;
         private LinearLayout anniversariesListDymanicLabel;
         private ImageView editbtn;
         private ImageView dynamicImage;
@@ -149,6 +177,7 @@ public class ListingGridViewAdapter extends RecyclerView.Adapter<ListingGridView
             anniversariesListDymanicLabel = (LinearLayout) view.findViewById(R.id.linearLayout);
             cardView = (CardView) view.findViewById(R.id.complete_cardview);
             nameLabel = (TextView) view.findViewById(R.id.name_label);
+            householdLabel = (TextView) view.findViewById(R.id.household_label);
             editbtn = (ImageView) view.findViewById(R.id.editbtn);
             dynamicImage = (ImageView) view.findViewById(R.id.dynamic_image);
 
@@ -165,24 +194,42 @@ public class ListingGridViewAdapter extends RecyclerView.Adapter<ListingGridView
         return position;
     }
 
-    private void setParentView(ImageView imageView, List<QuestionAnswer> questionAnswersList, TextView nameLabel) {
+    @SuppressLint("SetTextI18n")
+    private void setParentView(ImageView imageView, List<QuestionAnswer> questionAnswersList, TextView nameLabel,
+                               TextView houseHoldText) {
         try {
-            for (int i=0;i<questionAnswersList.size();i++){
+            for (int i = 0; i < questionAnswersList.size(); i++) {
                 nameLabel.setText(questionAnswersList.get(0).getAnswerText());
+
+                updateBeneficiaryParentDetails(questionAnswersList, houseHoldText);
                 if (!questionAnswersList.get(i).getQuestionText().equalsIgnoreCase(Constants.Gender))
-                    setImageDynamically(imageView,getheading,"");
+                    setImageDynamically(imageView, getheading, "");
                 else
-                    setImageDynamically(imageView,getheading,questionAnswersList.get(i).getAnswerText());
-
-
+                    setImageDynamically(imageView, getheading, questionAnswersList.get(i).getAnswerText());
             }
         } catch (Exception e) {
-            Logger.logE(TAG,"exception here",e);
+            Logger.logE(TAG, "exception here", e);
+        }
+    }
+
+    private void updateBeneficiaryParentDetails(List<QuestionAnswer> questionAnswersList, TextView houseHoldText) {
+        try {
+            if (questionAnswersList.size()<=3 && !questionAnswersList.get(3).getAnswerText().isEmpty()) {
+                houseHoldText.setVisibility(View.VISIBLE);
+                if (!questionAnswersList.get(3).getQuestionText().isEmpty())
+                    houseHoldText.setText(new StringBuilder().append(questionAnswersList.get(3).getQuestionText()).append(" : ").append(questionAnswersList.get(3).getAnswerText()).toString());
+                else
+                    houseHoldText.setText(new StringBuilder().append(questionAnswersList.get(3).getAnswerText()).toString());
+            } else {
+                houseHoldText.setVisibility(View.GONE);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
     private void setImageDynamically(ImageView imageView, String headingLabel, String getGender) {
-        switch (headingLabel){
+        switch (headingLabel) {
             case Constants.GROUP:
                 imageView.setBackgroundResource(R.drawable.group_icon);
 
@@ -191,19 +238,19 @@ public class ListingGridViewAdapter extends RecyclerView.Adapter<ListingGridView
                 imageView.setBackgroundResource(R.drawable.federation_icon);
                 break;
             case Constants.HOUSEHOLDS:
-               if (getGender.equalsIgnoreCase(Constants.MALE))
+                if (getGender.equalsIgnoreCase(Constants.MALE))
                     imageView.setBackgroundResource(R.drawable.household_male);
-               else if (getGender.equalsIgnoreCase(Constants.FEMALE))
-                   imageView.setBackgroundResource(R.drawable.household_female);
-               else
-                   imageView.setBackgroundResource(R.drawable.profile_none);
+                else if (getGender.equalsIgnoreCase(Constants.FEMALE))
+                    imageView.setBackgroundResource(R.drawable.household_female);
+                else
+                    imageView.setBackgroundResource(R.drawable.profile_none);
                 break;
             case Constants.FARMERS:
                 imageView.setBackgroundResource(R.drawable.farmer_icon);
                 break;
-             default:
-                 imageView.setBackgroundResource(R.drawable.profile_none);
-                 break;
+            default:
+                imageView.setBackgroundResource(R.drawable.profile_none);
+                break;
         }
 
     }

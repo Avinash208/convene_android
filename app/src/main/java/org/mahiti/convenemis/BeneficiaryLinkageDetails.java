@@ -57,6 +57,7 @@ public class BeneficiaryLinkageDetails extends Fragment {
     private LinearLayout subbeneficiarylayout;
     private TextView memberListLabel;
     private Button showMemberView;
+    private TextView menberCount;
 
 
     public BeneficiaryLinkageDetails() {
@@ -131,6 +132,7 @@ public class BeneficiaryLinkageDetails extends Fragment {
         topLayoutContainer = dialog.findViewById(R.id.top_layout_container);
         backToSurvey = dialog.findViewById(R.id.back_survey);
         submitSurvey = dialog.findViewById(R.id.submit_survey);
+        menberCount = dialog.findViewById(R.id.membercount);
         Intent surveyPrimaryKeyIntent = getActivity().getIntent();
         if (surveyPrimaryKeyIntent != null) {
             surveyPrimaryKeyId = surveyPrimaryKeyIntent.getStringExtra("SurveyId");
@@ -142,19 +144,15 @@ public class BeneficiaryLinkageDetails extends Fragment {
 
         }
         checkTopLayoutVisiablity(fragmentHeading);
-
-
     }
-
     private void checkTopLayoutVisiablity(String fragmentHeading) {
-        if (fragmentHeading.equalsIgnoreCase("Households")){
+        String[] getOnlyHeading= fragmentHeading.split("-");
+        if ("Households".equalsIgnoreCase(getOnlyHeading[0].trim())){
             topLayoutContainer.setVisibility(View.VISIBLE);
         }else{
             topLayoutContainer.setVisibility(View.GONE);
         }
-
     }
-
     /**
      * method to create dynamic layout on fetching Question and answer .
      * @param context Activity context
@@ -243,7 +241,6 @@ public class BeneficiaryLinkageDetails extends Fragment {
             }else {
                 subbeneficiarylayout.setVisibility(View.GONE);
                 memberListLabel.setVisibility(View.GONE);
-                ToastUtils.displayToast("Filled BeneficiaryList"+getFilledMemberList.size(),getActivity());
             }
         }
 

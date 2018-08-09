@@ -58,6 +58,15 @@
                 android:text="Survey Name"
                 android:textColor="@color/black"
                 android:textSize="14dp" />
+            <TextView
+                android:id="@+id/household_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text=""
+                android:visibility="gone"
+                android:textColor="@color/black"
+                android:textSize="14dp" />
 
         </LinearLayout>
 

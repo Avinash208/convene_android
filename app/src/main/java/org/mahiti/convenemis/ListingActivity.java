@@ -21,11 +21,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.rey.material.app.Dialog;
-
 import net.sqlcipher.database.SQLiteDatabase;
 
 import org.mahiti.convenemis.BeenClass.LanguageBean;
+import org.mahiti.convenemis.BeenClass.Question;
 import org.mahiti.convenemis.BeenClass.QuestionAnswer;
 import org.mahiti.convenemis.BeenClass.StatusBean;
 import org.mahiti.convenemis.adapter.spinnercustomadapter.ListingGridViewAdapter;
@@ -102,7 +101,7 @@ public class ListingActivity extends BaseActivity implements View.OnClickListene
         setContentView(R.layout.activity_listing);
         context = ListingActivity.this;
         initializeViews();
-        imageMenu.setVisibility(View.GONE);
+
         beneficiryReceiver = new Myreceiver();
 
         filter = new IntentFilter("BeneficiaryIntentReceiver");
@@ -121,7 +120,6 @@ public class ListingActivity extends BaseActivity implements View.OnClickListene
         } catch (Exception e) {
             Logger.logE(Constants.TAG, "ListingActivity", e);
         }
-
         callLanguageMethodRunBackground();
         beneficiaryTypeId = i.getStringExtra(Constants.BENEFICIARY_TYPE_ID);
         partnerId = i.getStringExtra("partner_id");
@@ -135,27 +133,30 @@ public class ListingActivity extends BaseActivity implements View.OnClickListene
         syncSurveySyncCompletedList = new ArrayList<>();
         syncSurveySyncPendingList = new ArrayList<>();
         updateSurveyKey(prefs);
-          // new summaryReportSync().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         backPress.setOnClickListener(this);
         createNewButton.setOnClickListener(this);
+        setVisiablity();
     }
-
+    private void setVisiablity() {
+        if(prefs.getInt(Constants.ADDBUTTON,1)==1){
+            createNewButton.setVisibility(View.GONE);
+        }else{
+            createNewButton.setVisibility(View.VISIBLE);
+        }
+    }
     private void callLanguageMethodRunBackground() {
          new languageThread().run();
     }
-
     @Override
     public void onBackPressed() {
         super.onBackPressed();
     }
-
     /**
      * @param prefs prefs
      */
     private void updateSurveyKey(SharedPreferences prefs) {
         surveyUUIDKEY = prefs.getInt("survey_id", 0);
     }
-
     /*method to set the default filter values to sharedPreferences*/
     private void methodToStoreSharedPreference(int which) {
         SharedPreferences.Editor editor = defaultPreferences.edit();
@@ -165,7 +166,6 @@ public class ListingActivity extends BaseActivity implements View.OnClickListene
         editor.apply();
         ToastUtils.displayToast("Selected "+languageList.get(which).getLanguageName(),this);
     }
-
     /*method to intialize all the views */
     private void initializeViews() {
         typeListView = findViewById(R.id.typelistview);
@@ -178,14 +178,39 @@ public class ListingActivity extends BaseActivity implements View.OnClickListene
         filterButton = findViewById(R.id.filter);
         filterLocationName = findViewById(R.id.locationTV);
         filterButton.setOnClickListener(this);
+        imageMenu.setOnClickListener(this);
         languageList= new ArrayList<>();
     }
     @Override
     protected void onResume() {
         super.onResume();
-        updateFilterLabels();
+      //  updateFilterLabels();
+        updateFilterLabelsNonMandatory();
+        new summaryReportSync().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         createNewButton.setOnClickListener(this);
+        updateInfoDescription();
+
     }
+
+    private void updateFilterLabelsNonMandatory() {
+        String getFilterRecords = sharedPreferences.getString(Constants.FILTER + "@" + surveyId, "");
+        if (!getFilterRecords.isEmpty()) {
+            Logger.logD("filterCallBack", getFilterRecords);
+            String[] getSelectedLocation = getFilterRecords.split(",");
+            if (getSelectedLocation.length > 0) {
+                filterLocationName.setText(new StringBuilder().append(getSelectedLocation[getSelectedLocation.length - 1]).toString());
+            }
+        }
+    }
+
+    private void updateInfoDescription() {
+        if(!prefs.getString(Constants.DESCRIPTION,"").isEmpty()){
+            imageMenu.setVisibility(View.VISIBLE);
+        }else{
+            imageMenu.setVisibility(View.GONE);
+        }
+    }
+
     private void updateFilterLabels() {
         try {
             String getFilterRecords = sharedPreferences.getString(Constants.FILTER + "@" + surveyId, "");
@@ -262,6 +287,14 @@ public class ListingActivity extends BaseActivity implements View.OnClickListene
                 break;
             case R.id.createNewButton:
                if (!languageList.isEmpty()){
+                 if (languageList.size()<=1){
+                     Utilities.setSurveyStatus(prefs, "new");
+                     SharedPreferences.Editor editor = prefs.edit();
+                     editor.putInt(SURVEY_ID, Integer.parseInt(surveyId));
+                     editor.apply();
+                     new StartSurvey(ListingActivity.this, ListingActivity.this, prefs.getInt(SURVEY_ID, 0), prefs.getInt(SURVEY_ID, 0), "Village Name", "", "", "", "").execute();
+                     return;
+                 }
                    List<String> getLanguageToString= new ArrayList<>();
                    for (int i=0;i<languageList.size();i++){
                        getLanguageToString.add(languageList.get(i).getLanguageName());
@@ -271,9 +304,25 @@ public class ListingActivity extends BaseActivity implements View.OnClickListene
                    ToastUtils.displayToast("Sorry no Language found to continue!",this);
                }
                 break;
+            case R.id.imageMenu:
+                if (!prefs.getString(Constants.DESCRIPTION,"").isEmpty())
+                    createInfoDescriptionDialog(prefs.getString(Constants.DESCRIPTION,""));
+                else
+                    ToastUtils.displayToast("No detail information ",this);
+                break;
             default:
                 break;
         }
+    }
+
+    private void createInfoDescriptionDialog(String description) {
+
+        android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(context);
+        alertDialogBuilder.setTitle("Activity information").setMessage(description).setPositiveButton("Okay", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+            }
+        }).show();
+
     }
 
     /**
@@ -366,16 +415,14 @@ public class ListingActivity extends BaseActivity implements View.OnClickListene
             super.onPostExecute(o);
             Logger.logD("-->start time", "ended");
             progress.dismiss();
-
             setAdapterList();
-
             if (!syncSurveyList.isEmpty()) {
                 typeListView.setVisibility(View.VISIBLE);
                 emptytextview.setVisibility(View.GONE);
                 GridLayoutManager linearLayoutManager = new GridLayoutManager(ListingActivity.this, 2);
                 linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
                 typeListView.setLayoutManager(linearLayoutManager);
-
+                filterLocationName.setText("");
                 setstatusAdapter = new ListingGridViewAdapter(ListingActivity.this, syncSurveyList, qid,
                         dbConveneHelper, surveySummaryreportdbhandler, prefs, sharedPreferences, surveyId, getDynamicLabel(headerName));
                 typeListView.setAdapter(setstatusAdapter);
@@ -384,10 +431,7 @@ public class ListingActivity extends BaseActivity implements View.OnClickListene
                 emptytextview.setVisibility(View.VISIBLE);
             }
         }
-
-
     }
-
     public String getDynamicLabel(String headerName) {
         String headingName = "";
         switch (headerName) {
@@ -428,14 +472,16 @@ public class ListingActivity extends BaseActivity implements View.OnClickListene
         String question = "";
         if (!displayQuestionList.isEmpty()) {
             for (int i = 0; i < displayQuestionList.size(); i++) {
-                String getQuestionType = dbConveneHelper.getQuestionType(displayQuestionList.get(i));
+                Question getQuestionType = dbConveneHelper.getQuestionBean(displayQuestionList.get(i));
                 question = dbConveneHelper.getQuestionFromDb(displayQuestionList.get(i), parentId);
                 String answer = "";
-                if (getQuestionType.equalsIgnoreCase("R") || getQuestionType.equalsIgnoreCase("S")) {
-                    answer = surveySummaryreportdbhandler.getAnswerFromQuestionID(displayQuestionList.get(i), surveySummaryreportdbhandler, String.valueOf(surveyPrimaryKey), getQuestionType);
+                if ( ("R").equalsIgnoreCase(getQuestionType.getQuestion()) || ("S").equalsIgnoreCase(getQuestionType.getQuestion())) {
+                    answer = surveySummaryreportdbhandler.getAnswerFromQuestionID(displayQuestionList.get(i), surveySummaryreportdbhandler, String.valueOf(surveyPrimaryKey), getQuestionType.getQuestion(), getQuestionType.getQuestionCode());
                     answer = dbConveneHelper.getAnswer(displayQuestionList.get(i), answer, surveyPrimaryKey);
-                } else {
-                    answer = DBHandler.getAnswerFromQuestionID(displayQuestionList.get(i), surveySummaryreportdbhandler, String.valueOf(surveyPrimaryKey), getQuestionType);
+                }else if(("AI").equalsIgnoreCase(getQuestionType.getQuestion())){
+                    answer = DBHandler.getAnswerFromQuestionID(displayQuestionList.get(i), surveySummaryreportdbhandler, String.valueOf(surveyPrimaryKey), getQuestionType.getQuestion(),getQuestionType.getQuestionCode());
+                }else {
+                    answer = DBHandler.getAnswerFromQuestionID(displayQuestionList.get(i), surveySummaryreportdbhandler, String.valueOf(surveyPrimaryKey), getQuestionType.getQuestion(), getQuestionType.getQuestionCode());
                 }
 
                 QuestionAnswer filledBean = new QuestionAnswer();

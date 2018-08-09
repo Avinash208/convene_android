@@ -22,6 +22,7 @@ import android.widget.TextView;
 import org.mahiti.convenemis.database.ExternalDbOpenHelper;
 import org.mahiti.convenemis.fragments.DataFormFragment;
 import org.mahiti.convenemis.utils.Constants;
+import org.mahiti.convenemis.utils.Logger;
 
 public class Beneficiarylinkages extends AppCompatActivity {
 
@@ -78,6 +79,8 @@ public class Beneficiarylinkages extends AppCompatActivity {
     private void getPreviousFromIntent(TextView toolbarTitle) {
         Intent intent = getIntent();
         String headerName = intent.getStringExtra(Constants.HEADER_NAME);
+        Logger.logD("Listing heading Name", headerName);
+
         if (headerName != null && !headerName.isEmpty()) {
             toolbarTitle.setText(headerName);
         } else {

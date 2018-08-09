@@ -85,6 +85,10 @@ public class SurveyDetail implements Parcelable{
     @Expose
     private String constraints;
 
+    @SerializedName("activity_description")
+    @Expose
+    private String activityDescription;
+
     @SerializedName("survey_id")
     @Expose
     private Integer surveyId;
@@ -201,7 +205,13 @@ public class SurveyDetail implements Parcelable{
         }
     };
 
-    public SurveyDetail(String surveyName, int pFuture, int pLimit, int periodicity, String labels, String vn, String beneficiaryType, String beneficiaryIds, int bConfig, int reasonDisagree, String orderLevels, int surveyId, int qConfig, String summaryQid, List<RuleEngine> ruleEngineValue, String facilityType, String facilityIds, String periodicityFlag, String constraints) {
+    public SurveyDetail(String surveyName, int pFuture, int pLimit, int periodicity, String labels, String vn,
+                        String beneficiaryType, String beneficiaryIds, int bConfig,
+                        int reasonDisagree, String orderLevels, int surveyId, int qConfig,
+                        String summaryQid, List<RuleEngine> ruleEngineValue,
+                        String facilityType, String facilityIds, String periodicityFlag,
+                        String constraints,
+                        String description) {
         this.surveyName=surveyName;
         this.pFeature=pFuture;
         this.pLimit=pLimit;
@@ -221,6 +231,7 @@ public class SurveyDetail implements Parcelable{
         this.facilityIds=facilityIds;
         this.piriodicityFlag=periodicityFlag;
         this.constraints=constraints;
+        this.activityDescription=description;
     }
 
     public String getSummaryQid() {
@@ -564,5 +575,13 @@ public class SurveyDetail implements Parcelable{
 
     public void setParentLink(List<ParentLink> parentLink) {
         this.parentLink = parentLink;
+    }
+
+    public String getActivityDescription() {
+        return activityDescription;
+    }
+
+    public void setActivityDescription(String activityDescription) {
+        this.activityDescription = activityDescription;
     }
 }

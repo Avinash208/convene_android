@@ -1712,6 +1712,7 @@ public class SupportClass {
                 if (levelBeen != null && !levelBeen.getName().equalsIgnoreCase("Select")) {
                     buildFilterRecordSharedPrefarence(surveyId, dialog);
                 } else {
+
                     ToastUtils.displayToast("Please select upto least level", activity);
                 }
             }

@@ -860,14 +860,16 @@ public class DBHandler extends SQLiteOpenHelper {
         return answer;
     }
 
-    public static String getAnswerFromQuestionID(String previous, DBHandler dbHandler, String surveyId, String qtype) {
+    public static String getAnswerFromQuestionID(String previous, DBHandler dbHandler, String surveyId, String qtype, int questionId) {
         String answer = "";
         net.sqlcipher.database.SQLiteDatabase db;
         String selectQuery = "";
         try {
             if (qtype.equalsIgnoreCase("R") || qtype.equalsIgnoreCase("S"))
                 selectQuery = "SELECT * FROM Response where q_id =" + previous + " and survey_id='" + surveyId + "'";
-            else
+            else if(qtype.equalsIgnoreCase("AI")){
+                selectQuery = "SELECT ans_text FROM Response where q_id ="+questionId+" and survey_id IN (SELECT ans_text FROM Response where q_id ="+previous+" and survey_id='"+surveyId+"')";
+            } else
                 selectQuery = "SELECT * FROM Response where q_id =" + previous + " and survey_id='" + surveyId + "'";
             db = dbHandler.getdatabaseinstance_read();
             Cursor cursor = db.rawQuery(selectQuery, null);
@@ -959,27 +961,22 @@ public class DBHandler extends SQLiteOpenHelper {
     }
 
     public void updateAddressRecordFromServer(JSONObject jsonObject, String surveyPrimaryKey) {
-        try {
-            String level1 = jsonObject.getString("level1");
-            Logger.logD("Level1", level1 + "");
+
             try {
                 SQLiteDatabase sqLiteDatabase = this.getWritableDatabase(DATABASESECRETKEY);
                 ContentValues values = new ContentValues();
-                values.put("level1", jsonObject.getString("level1"));
-                values.put("level2", jsonObject.getString("level2"));
-                values.put("level3", jsonObject.getString("level3"));
-                values.put("level4", jsonObject.getString("level4"));
-                values.put("level5", jsonObject.getString("level5"));
-                values.put("level6", jsonObject.getString("level6"));
-                values.put("level7", jsonObject.getString("level7"));
+                values.put("level1", jsonObject.getString("1"));
+                values.put("level2", jsonObject.getString("2"));
+                values.put("level3", jsonObject.getString("3"));
+                values.put("level4", jsonObject.getString("4"));
+                values.put("level5", jsonObject.getString("5"));
+                values.put("level6", jsonObject.getString("6"));
+                values.put("level7", jsonObject.getString("7"));
                 int getInsertedresult = sqLiteDatabase.update(SURVEY_TABLE, values, "uuid" + " = ?", new String[]{surveyPrimaryKey});
                 Logger.logD("exception", "->" + getInsertedresult);
             } catch (Exception e) {
                 Logger.logE("exception", "exception in date fragment", e);
             }
-        } catch (JSONException e) {
-            Logger.logE("exception", "exception in date fragment", e);
-        }
     }
 
     public Map<String, String> getAddressResponse(String surveyPrimaryKey) {

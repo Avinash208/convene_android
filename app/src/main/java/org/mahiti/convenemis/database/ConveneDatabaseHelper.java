@@ -18,6 +18,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.mahiti.convenemis.BeenClass.LanguageBean;
 import org.mahiti.convenemis.BeenClass.PreviewQuestionAnswerSet;
+import org.mahiti.convenemis.BeenClass.Question;
 import org.mahiti.convenemis.BeenClass.beneficiaryList.Jsondata;
 import org.mahiti.convenemis.BeenClass.regionallanguage.GetLanguageAssessment;
 import org.mahiti.convenemis.BeenClass.regionallanguage.GetLanguageBlock;
@@ -886,7 +887,7 @@ public class ConveneDatabaseHelper extends SQLiteOpenHelper {
         String questionType="";
         try {
             SQLiteDatabase sqldb = openDataBase();
-            String query = "SELECT id,answer FROM Question where id="+questionID;
+            String query = "SELECT id,answer,question_id FROM Question where id="+questionID;
             Cursor cursor = sqldb.rawQuery(query, null);
             if (cursor != null && cursor.moveToFirst()) {
                 do questionType = cursor.getString(cursor.getColumnIndex("answer"));
@@ -899,6 +900,37 @@ public class ConveneDatabaseHelper extends SQLiteOpenHelper {
 
         return questionType;
 }
+    /**
+     * method returns the string answer for particular question id from Question table
+     * @param questionID
+     * @return
+     */
+    public Question getQuestionBean(String questionID) {
+        Question question= new Question();
+        String questionType="";
+        try {
+            SQLiteDatabase sqldb = openDataBase();
+            String query = "SELECT id,answer,question_id FROM Question where id="+questionID;
+            Cursor cursor = sqldb.rawQuery(query, null);
+            if (cursor != null && cursor.moveToFirst()) {
+                do {
+                    questionType = cursor.getString(cursor.getColumnIndex("answer"));
+                    question.setQuestion(questionType);
+                    int getParentQuestionID=cursor.getInt(cursor.getColumnIndex("question_id"));
+                    if (getParentQuestionID!=0)
+                        question.setQuestionCode(cursor.getInt(cursor.getColumnIndex("question_id")));
+                    else{
+                        question.setQuestionCode(0);
+                    }
+                }while (cursor.moveToNext());
+            }
+            cursor.close();
+        } catch (SQLException e) {
+            Logger.logE("Exception","in",e);
+        }
+
+        return question;
+    }
 
     /**
      * method to get the last modified date in RegionalLanguage table

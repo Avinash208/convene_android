@@ -882,9 +882,7 @@ public class UpdateMasterLoading extends BaseActivity implements ClusterToTypo, 
 
     @Override
     public void fillSurveyResponseInterfaceCallBack(boolean result) {
-
         callProjectSelectionListApi();
-
     }
 
     @Override

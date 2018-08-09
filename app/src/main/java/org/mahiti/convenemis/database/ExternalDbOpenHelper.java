@@ -1343,7 +1343,8 @@ public class ExternalDbOpenHelper extends SQLiteOpenHelper {
                             cursor.getInt(cursor.getColumnIndex("qConfig")),
                             cursor.getString(cursor.getColumnIndex("summaryQid")), null, cursor.getString(cursor.getColumnIndex(FACILITYTYPE)), cursor.getString(cursor.getColumnIndex(FACILITIY_IDS_KEY)),
                             cursor.getString(cursor.getColumnIndex(PERIODICITY_FLAG)),
-                            cursor.getString(cursor.getColumnIndex("constraints")));
+                            cursor.getString(cursor.getColumnIndex("constraints")),
+                            cursor.getString(cursor.getColumnIndex("description")));
                     surveyDetailList.add(surveyDetail);
                 } catch (Exception e) {
                     Logger.logE(TAG, "", e);
@@ -1383,7 +1384,8 @@ public class ExternalDbOpenHelper extends SQLiteOpenHelper {
                             cursor.getInt(cursor.getColumnIndex("qConfig")),
                             cursor.getString(cursor.getColumnIndex("summaryQid")), null, cursor.getString(cursor.getColumnIndex(FACILITYTYPE)), cursor.getString(cursor.getColumnIndex(FACILITIY_IDS_KEY)),
                             cursor.getString(cursor.getColumnIndex(PERIODICITY_FLAG)),
-                            cursor.getString(cursor.getColumnIndex("constraints")));
+                            cursor.getString(cursor.getColumnIndex("constraints")),
+                            cursor.getString(cursor.getColumnIndex("description")));
                     surveyDetailList.add(surveyDetail);
                 } catch (Exception e) {
                     Logger.logE(TAG, "", e);
@@ -1401,11 +1403,12 @@ public class ExternalDbOpenHelper extends SQLiteOpenHelper {
     public void updateSurveyList(SurveyListDetails surveyListDetails) {
 
         try {
-            ContentValues cv = new ContentValues();
+
             database = this.getWritableDatabase();
             Logger.logV(TAG, "The database path name UpdatedSurveyList==>" + database.getPath());
             Log.v(TAG, "Answers size updateSurveyList: " + surveyListDetails.getSurveyDetails().size());
             for (int i = 0; i < surveyListDetails.getSurveyDetails().size(); i++) {
+                ContentValues cv = new ContentValues();
                 int surveyId = surveyListDetails.getSurveyDetails().get(i).getSurveyId();
                 Log.v(TAG, "Answers size SurveyId : " + surveyListDetails.getSurveyDetails().get(i).getSurveyId());
                 deleteSurveys(surveyId);
@@ -1472,12 +1475,23 @@ public class ExternalDbOpenHelper extends SQLiteOpenHelper {
                 cv.put(FACILITYTYPE, surveyListDetails.getSurveyDetails().get(i).getFacilityType());
                 Log.v(TAG, "PeriodicityFlag facility size : " + surveyListDetails.getSurveyDetails().get(i).getFacilityType());
 
+                cv.put("description", surveyListDetails.getSurveyDetails().get(i).getActivityDescription());
+                Log.v(TAG, "getActivityDescription : " + surveyListDetails.getSurveyDetails().get(i).getActivityDescription());
+
 
                 cv.put("category_name", surveyListDetails.getSurveyDetails().get(i).getCategoryName());
                 Log.v(TAG, "category_name  : " + surveyListDetails.getSurveyDetails().get(i).getCategoryName());
 
-               if(surveyListDetails.getSurveyDetails().get(i).getSurveyId()==109) {
-                   cv.put("rule_engine", "[{\"data_type\":\"Number\",\"operator\":\">=\",\"question_id\":833,\"value\":\"22\", \"form_id\":104 }]\n");
+               if(surveyListDetails.getSurveyDetails().get(i).getSurveyId()==101) {
+                   cv.put("rule_engine", "[{\n" +
+                           "  \"data_type\": \"String\",\n" +
+                           "  \"operator\": \"NOT IN\",\n" +
+                           "  \"question_id\": 618,\n" +
+                           "  \"value\": \"1541\",\n" +
+                           "  \"form_id\": 101,\n" +
+                           "  \"error_msg\": \"\",\n" +
+                           "  \"display_question\": \"801\"\n" +
+                           "}]");
                }else if (surveyListDetails.getSurveyDetails().get(i).getSurveyId()==108){
                    cv.put("rule_engine", "[{\"data_type\":\"Number\",\"operator\":\"<=\",\"question_id\":833,\"value\":\"25\", \"form_id\":104 }]\n");
                }
@@ -4523,5 +4537,25 @@ public class ExternalDbOpenHelper extends SQLiteOpenHelper {
 
         }
         return isaviliable;
+    }
+
+    public String getSurveyRuleSet(int surveysId, ExternalDbOpenHelper dbhelper) {
+        String ruleEngine="";
+        try {
+            String pendingSurveyQuery = "select rule_engine from Surveys where Surveys.surveyId="+surveysId;
+            SQLiteDatabase db = dbhelper.getWritableDatabase();
+            Cursor cursor = db.rawQuery(pendingSurveyQuery, null);
+            if (cursor.getCount() != 0 && cursor.moveToFirst()) {
+                do {
+                    ruleEngine = cursor.getString(cursor.getColumnIndex("rule_engine"));
+                } while (cursor.moveToNext());
+
+                cursor.close();
+            }
+        } catch (Exception e) {
+            Logger.logV("", "checkPrymarySaveDraftExist from Survey table" + e);
+
+        }
+        return ruleEngine;
     }
 }

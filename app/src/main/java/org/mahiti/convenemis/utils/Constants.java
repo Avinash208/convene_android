@@ -80,6 +80,10 @@ public class Constants {
     public static final String PROJECTFLOW = "ProjectFlow";
     public static final String O_LABLES = "lables";
     public static final String SELECTEDPROJECTID = "selectedActivity";
+    public static final String ADDBUTTON = "addButton";
+    public static final String BENEFICIARY_TOOLBAR_NAME = "beneficiary_toolbar_name";
+    public static final String DESCRIPTION = "Description";
+    public static final String BENEFICIARY_TOOLBAR_CLUSTERNAME = "beneficiary_Tool_ClusterName";
     public static List<Integer> blockQids=new ArrayList<>();
 
     //-------------------------*******************--------------------
