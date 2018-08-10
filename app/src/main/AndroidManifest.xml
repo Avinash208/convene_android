@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="org.mahiti.convenemis">
+    package="org.assistindia.convene">
 
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
@@ -20,13 +20,13 @@
     <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />
 
     <application
-        android:name=".BaseApplication"
+        android:name="org.assistindia.convene.BaseApplication"
         android:icon="@mipmap/akrspi"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".Splash"
+            android:name="org.assistindia.convene.Splash"
             android:allowBackup="true"
             android:configChanges="orientation"
             android:largeHeap="true"
@@ -39,15 +39,15 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".LoginActivity"
+            android:name="org.assistindia.convene.LoginActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".LoginParentActivity"
+            android:name="org.assistindia.convene.LoginParentActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".SurveyQuestionActivity"
+            android:name="org.assistindia.convene.SurveyQuestionActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden">
@@ -63,11 +63,11 @@
             android:value="AIzaSyBjrTmIgrILwsJZ4gtg8JnT-U9uzyjGH8Y" />
 
         <activity
-            android:name=".SurveyListLevels"
+            android:name="org.assistindia.convene.SurveyListLevels"
             android:configChanges="orientation"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".LevelsActivityNew"
+            android:name="org.assistindia.convene.LevelsActivityNew"
             android:configChanges="orientation"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -77,27 +77,27 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".UpdateMasterLoading"
+            android:name="org.assistindia.convene.UpdateMasterLoading"
             android:configChanges="orientation"
             android:screenOrientation="portrait" />
 
-        <service android:name=".MyIntentService">
+        <service android:name="org.assistindia.convene.MyIntentService">
             <intent-filter>
                 <action android:name="Survey" />
             </intent-filter>
         </service>
-        <service android:name=".MyIntentLinkage">
+        <service android:name="org.assistindia.convene.MyIntentLinkage">
             <intent-filter>
                 <action android:name="Linkage" />
             </intent-filter>
         </service>
-        <service android:name=".network.LangService">
+        <service android:name="org.assistindia.convene.network.LangService">
             <intent-filter>
                 <action android:name="LangService" />
             </intent-filter>
         </service>
         <service
-            android:name=".MyIntentPeriodicity"
+            android:name="org.assistindia.convene.MyIntentPeriodicity"
             android:enabled="true"
             android:exported="false">
             <intent-filter>
@@ -106,7 +106,7 @@
             </intent-filter>
         </service>
         <service
-            android:name=".MyIntentServiceBeneficiary"
+            android:name="org.assistindia.convene.MyIntentServiceBeneficiary"
             android:enabled="true"
             android:exported="false">
             <intent-filter>
@@ -115,7 +115,7 @@
             </intent-filter>
         </service>
         <service
-            android:name=".IntentServiceBeneficiaryUpdate"
+            android:name="org.assistindia.convene.IntentServiceBeneficiaryUpdate"
             android:enabled="true"
             android:exported="false">
             <intent-filter>
@@ -124,7 +124,7 @@
             </intent-filter>
         </service>
         <service
-            android:name=".MyIntentServiceFacility"
+            android:name="org.assistindia.convene.MyIntentServiceFacility"
             android:enabled="true"
             android:exported="false">
             <intent-filter>
@@ -133,12 +133,12 @@
             </intent-filter>
         </service>
 
-        <receiver android:name=".receivers.BatteryChangereciever">
+        <receiver android:name="org.assistindia.convene.receivers.BatteryChangereciever">
             <intent-filter>
                 <action android:name="android.intent.action.BATTERY_CHANGED" />
             </intent-filter>
         </receiver>
-        <receiver android:name=".receivers.PowerConnectionReceiver">
+        <receiver android:name="org.assistindia.convene.receivers.PowerConnectionReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.ACTION_POWER_CONNECTED" />
                 <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED" />
@@ -150,10 +150,10 @@
             android:value="02925ef542d587b0d078678a1e73a90a8291f618" />
 
         <receiver
-            android:name=".AlarmService"
+            android:name="org.assistindia.convene.AlarmService"
             android:process=":remote" />
         <receiver
-            android:name=".receivers.ConnectivityReceiver"
+            android:name="org.assistindia.convene.receivers.ConnectivityReceiver"
             android:enabled="true">
             <intent-filter>
                 <action android:name="android.net.wifi.WIFI_STATE_CHANGED" />
@@ -162,36 +162,36 @@
         </receiver>
 
         <activity
-            android:name=".HomeActivity"
+            android:name="org.assistindia.convene.HomeActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".HomeActivityNew"
+            android:name="org.assistindia.convene.HomeActivityNew"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".ListingActivity"
+            android:name="org.assistindia.convene.ListingActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
-            android:name=".TypeDetailsActivity"
+            android:name="org.assistindia.convene.TypeDetailsActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".AddBeneficiaryActivity"
+            android:name="org.assistindia.convene.AddBeneficiaryActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".AddFacilityActivity"
+            android:name="org.assistindia.convene.AddFacilityActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".ShowSurveyPreview" />
+        <activity android:name="org.assistindia.convene.ShowSurveyPreview" />
         <activity
-            android:name=".DataCollectionListingActivity"
+            android:name="org.assistindia.convene.DataCollectionListingActivity"
             android:label="@string/title_activity_data_collection_listing"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="stateAlwaysHidden" />
-        <activity android:name=".FilterActivityActivity" />
+        <activity android:name="org.assistindia.convene.FilterActivityActivity" />
         <activity
-            android:name=".SurveySummaryReport"
+            android:name="org.assistindia.convene.SurveySummaryReport"
             android:configChanges="orientation"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -201,13 +201,13 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Beneficiarylinkages"
+            android:name="org.assistindia.convene.Beneficiarylinkages"
             android:label="@string/title_activity_beneficiarylinkages"
             android:theme="@style/AppTheme" />
-        <activity android:name=".ShowMemberListActivity" />
-        <activity android:name=".LocationBasedActivity" />
-        <activity android:name=".ProjectSelectionActivity" />
-        <activity android:name=".ImageProcessingActivity"></activity>
+        <activity android:name="org.assistindia.convene.ShowMemberListActivity" />
+        <activity android:name="org.assistindia.convene.LocationBasedActivity" />
+        <activity android:name="org.assistindia.convene.ProjectSelectionActivity" />
+        <activity android:name="org.assistindia.convene.ImageProcessingActivity"></activity>
     </application>
 
 </manifest>

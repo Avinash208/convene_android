@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="#fff9e4"
     android:orientation="vertical"
-    tools:context="org.mahiti.convenemis.DataCollectionListingActivity">
+    tools:context="org.assistindia.convene.DataCollectionListingActivity">
 
     <include
         android:id="@+id/toolbar1"

@@ -58,7 +58,7 @@
         android:layout_below="@+id/linearheader"
         android:layout_marginBottom="10dp"
         android:gravity="center"
-        android:visibility="visible"
+        android:visibility="gone"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:background="@drawable/round_homepagebtn"

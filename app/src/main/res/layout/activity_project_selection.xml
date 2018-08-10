@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="org.mahiti.convenemis.ProjectSelectionActivity">
+    tools:context="org.assistindia.convene.ProjectSelectionActivity">
     <include
         android:id="@+id/toolbar1"
         layout="@layout/toolbar">

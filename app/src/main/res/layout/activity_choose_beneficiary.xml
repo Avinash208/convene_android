@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="#fff9e4"
-    tools:context="org.mahiti.convenemis.ChooseBeneficiaryActivity">
+    tools:context="org.assistindia.convene.ChooseBeneficiaryActivity">
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
@@ -94,7 +94,7 @@
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="10dp"
                 android:layout_marginTop="8dp">
-                <org.mahiti.convenemis.CustomAutoCompleteTextView
+                <org.assistindia.convene.CustomAutoCompleteTextView
                     android:id="@+id/autosearch_names"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"

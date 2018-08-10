@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     android:background="#eeeeee"
-    tools:context="org.mahiti.convenemis.Beneficiarylinkages">
+    tools:context="org.assistindia.convene.Beneficiarylinkages">
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appbar"
         android:layout_width="match_parent"

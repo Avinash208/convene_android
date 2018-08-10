@@ -94,7 +94,7 @@
                     android:background="@drawable/ovalshape"
 
                     />
-                <org.mahiti.convenemis.utils.multispinner.SingleSpinnerSearch
+                <org.assistindia.convene.utils.multispinner.SingleSpinnerSearch
                     android:id="@+id/searchSingleSpinner"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
