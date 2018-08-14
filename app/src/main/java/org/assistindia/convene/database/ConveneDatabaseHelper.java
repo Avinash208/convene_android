@@ -455,6 +455,12 @@ public class ConveneDatabaseHelper extends SQLiteOpenHelper {
                 cv.put(extraColumn2Str, listOfObjects.getOptions().get(i).getExtraColumn2());
                 cv.put("Assessment_pid", listOfObjects.getOptions().get(i).getAssessmentPid());
                 cv.put("option_order", "");
+                if (listOfObjects.getOptions().get(i).getId()==1773){
+                    cv.put("other_choice", true);
+
+                }else{
+                    cv.put("other_choice", false);
+                }
                 Gson gson= new Gson();
                 cv.put("rule_engin", gson.toJson(listOfObjects.getOptions().get(i).getRuleEngine()));
                 database.insertWithOnConflict("Options", null, cv, SQLiteDatabase.CONFLICT_REPLACE);

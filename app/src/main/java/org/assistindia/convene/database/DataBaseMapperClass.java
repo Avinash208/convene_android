@@ -154,7 +154,7 @@ public class DataBaseMapperClass {
                 do {
                     String ansCode = questionCursor.getString(questionCursor.getColumnIndex(ansCodeStr));
                     String answer = questionCursor.getString(questionCursor.getColumnIndex(ansTextStr));
-                    AnswersPage answerResponse= new AnswersPage(ansCode,answer,0,"",questionCursor.getInt(questionCursor.getColumnIndex(ansCodeStr)),0,0,"","");
+                    AnswersPage answerResponse= new AnswersPage(ansCode,answer,0,"",questionCursor.getInt(questionCursor.getColumnIndex(ansCodeStr)),0,0,"","",0);
                     allAnswersList.add(answerResponse);
                 } while (questionCursor.moveToNext());
 
@@ -193,7 +193,7 @@ public class DataBaseMapperClass {
                 do {
                     String ansCode = questionCursor.getString(questionCursor.getColumnIndex(ansCodeStr));
                     String answer = questionCursor.getString(questionCursor.getColumnIndex(Constants.ANS_TEXT));
-                    AnswersPage answerResponse= new AnswersPage(ansCode,answer,0,"",questionNumber,0,0,"","");
+                    AnswersPage answerResponse= new AnswersPage(ansCode,answer,0,"",questionNumber,0,0,"","",0);
                     allAnswersList.add(answerResponse);
                     getStoredAnswer.put(String.valueOf(questionNumber),allAnswersList);
 
@@ -336,11 +336,11 @@ public class DataBaseMapperClass {
         List<AnswersPage> storeAnswer= new ArrayList<>();
         String QuestionQuery="";
         if (selectedLangauge==1){
-            QuestionQuery="SELECT "+ Constants.OPTION_TEXT + ", a.id from Options a, Question q where a.question_pid=q.id and q.id="+questionNumber+ORDER_BY_OPTION_ORDER;
+            QuestionQuery="SELECT "+ Constants.OPTION_TEXT + ",a.other_choice, a.id from Options a, Question q where a.question_pid=q.id and q.id="+questionNumber+ORDER_BY_OPTION_ORDER;
         }else if(selectedLangauge!=1){
             QuestionQuery="SELECT LanguageOptions.option_text,Options.id from Options, Question,  LanguageOptions where Options.id=LanguageOptions.option_pid and   Question.id= LanguageOptions.question_pid and Question.id="+questionNumber+"  and LanguageOptions.language_id="+selectedLangauge+" order BY Options.option_order";
         }else{
-            QuestionQuery="SELECT "+ Constants.OPTION_TEXT + " from Options a, Question q where a.question_pid=q.id and q.id="+questionNumber+ORDER_BY_OPTION_ORDER;
+            QuestionQuery="SELECT "+ Constants.OPTION_TEXT + " ,a.other_choice from Options a, Question q where a.question_pid=q.id and q.id="+questionNumber+ORDER_BY_OPTION_ORDER;
         }
 
         Cursor cursor=null;
@@ -348,16 +348,18 @@ public class DataBaseMapperClass {
             cursor=database.rawQuery(QuestionQuery,null);
             Logger.logD(TAG,"SpinnerQuestionQuery" + QuestionQuery);
             if (cursor.getCount()<=0){
-                QuestionQuery="SELECT a.option_text, a.id from Options a, Question q where a.question_pid=q.id and q.id="+questionNumber+" and q.active = 2 ORDER BY a.option_order";
+                QuestionQuery="SELECT a.option_text, a.id,a.other_choice from Options a, Question q where a.question_pid=q.id and q.id="+questionNumber+" and q.active = 2 ORDER BY a.option_order";
                 cursor=database.rawQuery(QuestionQuery,null);
             }
-            AnswersPage answersPageDefault=new AnswersPage("",Constants.SELECT,0,"",0,0,0,"","");
+            AnswersPage answersPageDefault=new AnswersPage("",Constants.SELECT,0,"",0,0,0,"","",0);
             storeAnswer.add(answersPageDefault);
             if(cursor.moveToFirst()){
                 do{
                     Logger.logD(TAG,ANSWERFORRADIO + cursor.getString(cursor.getColumnIndex(Constants.OPTION_TEXT)));
                     Logger.logD(TAG,ANSWERFORRADIO + cursor.getInt(cursor.getColumnIndex("id")));
-                    AnswersPage answersPage= new AnswersPage("",cursor.getString(cursor.getColumnIndex(Constants.OPTION_TEXT)),0,"",cursor.getInt(cursor.getColumnIndex("id")),0,0,"","");
+                    int getOtherChoice=cursor.getInt(cursor.getColumnIndex("other_choice"));
+                    AnswersPage answersPage= new AnswersPage("",cursor.getString(cursor.getColumnIndex(Constants.OPTION_TEXT)),0,"",cursor.getInt(cursor.getColumnIndex("id")),0,0,"",
+                            "",getOtherChoice);
                     storeAnswer.add(answersPage);
                 }while (cursor.moveToNext());
             }
@@ -394,7 +396,7 @@ public class DataBaseMapperClass {
                     Logger.logD(TAG,ANSWERFORRADIO + cursor.getString(cursor.getColumnIndex(Constants.OPTION_TEXT)));
                     String answer = cursor.getString(cursor.getColumnIndex(Constants.OPTION_TEXT));
                     int pid=cursor.getInt(cursor.getColumnIndex("id"));
-                    AnswersPage answersPage= new AnswersPage(String.valueOf(pid),answer,0,"",0,0,0,"","");
+                    AnswersPage answersPage= new AnswersPage(String.valueOf(pid),answer,0,"",0,0,0,"","",0);
                     storeAnswer.add(answersPage);
                     backtoSetWidget.put(String.valueOf(questionNumber),storeAnswer);
                 }while (cursor.moveToNext());
@@ -504,7 +506,7 @@ public class DataBaseMapperClass {
         boolean gridOrNot= checkGridOrNotGrid(database,questionCode);
         if (gridOrNot){
             Logger.logD(TAG, "Question is grid type NO Options ");
-            AnswersPage answerspage = new AnswersPage("", "", 0, "", 0, 0, 0, "", "");
+            AnswersPage answerspage = new AnswersPage("", "", 0, "", 0, 0, 0, "", "",0);
             allAnswersList.add(answerspage);
             return allAnswersList;
         }else {
@@ -516,7 +518,7 @@ public class DataBaseMapperClass {
             Cursor questionCursor = database.rawQuery(answerQuery, null);
             try {
                 if (questionCursor.getCount() == 0) {
-                    AnswersPage answerspage = new AnswersPage("", "", 0, "", 0, 0, 0, "", "");
+                    AnswersPage answerspage = new AnswersPage("", "", 0, "", 0, 0, 0, "", "",0);
                     allAnswersList.add(answerspage);
                     questionCursor.close();
                     return allAnswersList;
@@ -529,7 +531,7 @@ public class DataBaseMapperClass {
                         int id = questionCursor.getInt(questionCursor.getColumnIndex("id"));
                         answer = questionCursor.getString(questionCursor.getColumnIndex(Constants.OPTION_TEXT));
                         validation = questionCursor.getString(questionCursor.getColumnIndex(Constants.VALIDATION));
-                        AnswersPage answerspage = new AnswersPage(ansCode, answer, ansFlag, validation, id, 0, 0, "", "");
+                        AnswersPage answerspage = new AnswersPage(ansCode, answer, ansFlag, validation, id, 0, 0, "", "",0);
                         allAnswersList.add(answerspage);
                     } while (questionCursor.moveToNext());
                 }
@@ -900,7 +902,7 @@ public class DataBaseMapperClass {
                     String optionText = cursor.getString(cursor.getColumnIndex(optionTextStra));
                     String assessmentID = cursor.getString(cursor.getColumnIndex(assessmentPidStr));
 
-                    AnswersPage answer= new AnswersPage(String.valueOf(id),optionText,0,"",id,0,0,"",assessmentID);
+                    AnswersPage answer= new AnswersPage(String.valueOf(id),optionText,0,"",id,0,0,"",assessmentID,0);
                     list.add(answer);
                 } while (cursor.moveToNext());
             }
@@ -921,7 +923,7 @@ public class DataBaseMapperClass {
                 int id = cursor.getInt(cursor.getColumnIndex("id"));
                 String optionText = cursor.getString(cursor.getColumnIndex("option_text"));
                 String assessmentID = cursor.getString(cursor.getColumnIndex("assessment_pid"));
-                AnswersPage answer= new AnswersPage(String.valueOf(id),optionText,0,"",id,0,0,"",assessmentID);
+                AnswersPage answer= new AnswersPage(String.valueOf(id),optionText,0,"",id,0,0,"",assessmentID,0);
                 list.add(answer);
             } while (cursor.moveToNext());
         }
@@ -980,7 +982,7 @@ public class DataBaseMapperClass {
                 String ansCode = questionCursor.getString(questionCursor.getColumnIndex(ansCodeStr));
                 String answer = questionCursor.getString(questionCursor.getColumnIndex(ansTextStr));
                 String subQuestioncount = questionCursor.getString(questionCursor.getColumnIndex(primaryKeyStr));
-                AnswersPage answerResponse= new AnswersPage(ansCode,answer,0,"",questionNumber,0,Integer.valueOf(subQuestioncount),"","");
+                AnswersPage answerResponse= new AnswersPage(ansCode,answer,0,"",questionNumber,0,Integer.valueOf(subQuestioncount),"","",0);
                 allAnswersList.add(answerResponse);
             } while (questionCursor.moveToNext());
 
@@ -1011,7 +1013,7 @@ public class DataBaseMapperClass {
                 int id = cursor.getInt(cursor.getColumnIndex("id"));
                 String optionText = cursor.getString(cursor.getColumnIndex("option_text"));
                 String assessmentID = cursor.getString(cursor.getColumnIndex("assessment_pid"));
-                AnswersPage answer= new AnswersPage(String.valueOf(id),optionText,0,"",id,0,0,"",assessmentID);
+                AnswersPage answer= new AnswersPage(String.valueOf(id),optionText,0,"",id,0,0,"",assessmentID,0);
 
                 list.add(answer);
             } while (cursor.moveToNext());
@@ -1044,7 +1046,7 @@ public class DataBaseMapperClass {
                     int id = cursor.getInt(cursor.getColumnIndex("id"));
                     String optionText = cursor.getString(cursor.getColumnIndex(optionTextStra));
                     String assessmentID = cursor.getString(cursor.getColumnIndex(assessmentPidStr));
-                    AnswersPage answer= new AnswersPage(String.valueOf(id),optionText,0,"",id,0,0,"",assessmentID);
+                    AnswersPage answer= new AnswersPage(String.valueOf(id),optionText,0,"",id,0,0,"",assessmentID,0);
 
                     list.add(answer);
                 } while (cursor.moveToNext());
@@ -1228,7 +1230,7 @@ public class DataBaseMapperClass {
                     int id = cursor.getInt(cursor.getColumnIndex("id"));
                     String optionText = cursor.getString(cursor.getColumnIndex(optionTextStra));
                     String assessmentID = cursor.getString(cursor.getColumnIndex(assessmentPidStr));
-                    AnswersPage answer= new AnswersPage(String.valueOf(id),optionText,0,"",id,0,0,"",assessmentID);
+                    AnswersPage answer= new AnswersPage(String.valueOf(id),optionText,0,"",id,0,0,"",assessmentID,0);
                     list.add(answer);
                 } while (cursor.moveToNext());
             }
@@ -1412,7 +1414,7 @@ public class DataBaseMapperClass {
                     int id = cursor.getInt(cursor.getColumnIndex("id"));
                     String optionText = cursor.getString(cursor.getColumnIndex("option_text"));
                     String assessmentID = cursor.getString(cursor.getColumnIndex("assessment_pid"));
-                    AnswersPage answer= new AnswersPage(String.valueOf(id),optionText,0,"",id,0,0,"",assessmentID);
+                    AnswersPage answer= new AnswersPage(String.valueOf(id),optionText,0,"",id,0,0,"",assessmentID,0);
                     list.add(answer);
                 } while (cursor.moveToNext());
             }

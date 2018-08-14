@@ -6,10 +6,11 @@ public class AnswersPage {
 	private String validation;
 	private int maxValidation;
 	private int id;
+	private  int other_choice;
 
 	public AnswersPage(String ansCode, String answer, int ansFlag,
 					   String validation, int id, int minValidation, int maxValidation,
-					   String errorMsg, String innerValidation) {
+					   String errorMsg, String innerValidation, int other_choice) {
         int ansFlag1 = ansFlag;
 		this.ansCode = ansCode;
 		this.answer = answer;
@@ -18,6 +19,7 @@ public class AnswersPage {
 		this.maxValidation = maxValidation;
 		String errorMsg1 = errorMsg;
 		this.validation = validation;
+		this.other_choice=other_choice;
 		String innerValidation1 = innerValidation;
 	}
 
@@ -45,4 +47,11 @@ public class AnswersPage {
 		return answer;
 	}
 
+	public int getOther_choice() {
+		return other_choice;
+	}
+
+	public void setOther_choice(int other_choice) {
+		this.other_choice = other_choice;
+	}
 }
