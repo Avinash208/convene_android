@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:background="#eeeeee"
+    android:background="@color/yale_backgroung_color"
     android:layout_height="match_parent">
 
     <ScrollView
@@ -54,22 +54,20 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@color/orange"
+                        android:background="@color/yale_toolbar_color"
                         android:layout_gravity="center"
                         android:gravity="center"
                         android:visibility="visible"
                         android:orientation="horizontal">
-
                         <TextView
                             android:id="@+id/titleHeader"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1.8"
                             android:textSize="18sp"
-
                             android:fontFamily="@font/roboto_medium_new"
                             android:paddingBottom="15dp"
-                            android:paddingLeft="16dp"
+                            android:paddingLeft="18dp"
                             android:paddingRight="10dp"
                             android:paddingTop="15dp"
                             android:text="@string/data_collection_form"
@@ -140,18 +138,17 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
-
                     <LinearLayout
                         android:id="@+id/linearClosed"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@color/green"
+                        android:background="@color/yale_toolbar_color"
                         android:orientation="horizontal">
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:paddingTop="15dp"
-                            android:paddingLeft="16dp"
+                            android:paddingLeft="18dp"
                             android:textColor="@color/white"
                             android:paddingBottom="15dp"
                             android:textSize="18sp"
@@ -167,7 +164,8 @@
                         android:id="@+id/dynamicClosedDataCollectionForm"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:background="@color/white">
 
                     </LinearLayout>
 

@@ -30,7 +30,7 @@
             android:text="Syncing data... "/>
 
     </LinearLayout>
-    <org.assistindia.convene.utils.MaterialProgressBar
+    <org.yale.convene.utils.MaterialProgressBar
 
         android:layout_width="match_parent"
         android:layout_height="3dp"

@@ -2,7 +2,7 @@
 
 
     <!--App and urls String Labels-->
-    <string name="app_name">AKRSP(I) MIS</string>
+    <string name="app_name">Yale</string>
     <string name="application_name">AKRSPI</string>
     <string name="labelusername">Username</string>
     <string name="English">English</string>
@@ -24,15 +24,15 @@
     <!--<string name="regionalLanguageURLS">http://crydemo.mahiti.org/api/language-list/</string>
     http://convenemddemo.mahiti.org/api/
     http://convenedemobackend.mahiti.org/-->
-
+    http://yale.mahiti.org/-->
 
     <!--Demo url-->
 
-    <string name="main_url">http://convenedemobackend.mahiti.org/</string>
-    <string name="answer_upload_url">http://convenedemobackend.mahiti.org/api/add-survey-answers/</string>
-    <string name="main_Url">http://convenedemobackend.mahiti.org/</string>
-    <string name="main_url_Beneficiary">http://convenedemobackend.mahiti.org/</string>
-    <string name="regionalLanguageURLS">http://convenedemobackend.mahiti.org/api/language-list/</string>
+    <string name="main_url">http://assist.mahiti.org/</string>
+    <string name="answer_upload_url">http://assist.mahiti.org/api/add-survey-answers/</string>
+    <string name="main_Url">http://assist.mahiti.org/</string>
+    <string name="main_url_Beneficiary">http://assist.mahiti.org/</string>
+    <string name="regionalLanguageURLS">http://assist.mahiti.org/api/language-list/</string>
 
 
     <string name="loadmore_facility">Loading more Facility please wait&#8230;</string>
@@ -299,7 +299,7 @@
     <string name="loading_skip_rules">Loading skip rules ...</string>
     <string name="loading_skip_mandatory">Loading skip mandatory...</string>
     <string name="loading_language_assessment">Loading mandatory...</string>
-    <string name="loading_assessment">Loading language assessement...</string>
+    <string name="loading_assessment">Loading language assessment...</string>
     <string name="loading_question">Loading question...</string>
     <string name="loading_langauge_block">Loading languageblock...</string>
     <string name="loading_block">Loading block...</string>

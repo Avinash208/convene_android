@@ -77,6 +77,10 @@
     <color name="pale_orange">#abaaaa</color>
     <color name="grid_heading">#f44336</color>
     <color name="floating_button">#2bb3cc</color>
+    <color name="yale_toolbar_color">#00356b</color>
+    <color name="yale_homepage_tab">#286dc0</color>
+    <color name="yale_homepage_bottom_border">#dddddd</color>
+    <color name="yale_backgroung_color">#f9f9f9</color>
 
 
 </resources>

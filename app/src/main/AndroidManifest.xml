@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="org.assistindia.convene">
+    package="org.yale.convene">
 
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
@@ -20,13 +20,13 @@
     <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />
 
     <application
-        android:name="org.assistindia.convene.BaseApplication"
-        android:icon="@mipmap/akrspi"
+        android:name="org.yale.convene.BaseApplication"
+        android:icon="@mipmap/yale"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name="org.assistindia.convene.Splash"
+            android:name="org.yale.convene.Splash"
             android:allowBackup="true"
             android:configChanges="orientation"
             android:largeHeap="true"
@@ -39,15 +39,15 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="org.assistindia.convene.LoginActivity"
+            android:name="org.yale.convene.LoginActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait" />
         <activity
-            android:name="org.assistindia.convene.LoginParentActivity"
+            android:name="org.yale.convene.LoginParentActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait" />
         <activity
-            android:name="org.assistindia.convene.SurveyQuestionActivity"
+            android:name="org.yale.convene.SurveyQuestionActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden">
@@ -63,11 +63,11 @@
             android:value="AIzaSyBjrTmIgrILwsJZ4gtg8JnT-U9uzyjGH8Y" />
 
         <activity
-            android:name="org.assistindia.convene.SurveyListLevels"
+            android:name="org.yale.convene.SurveyListLevels"
             android:configChanges="orientation"
             android:screenOrientation="portrait" />
         <activity
-            android:name="org.assistindia.convene.LevelsActivityNew"
+            android:name="org.yale.convene.LevelsActivityNew"
             android:configChanges="orientation"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -77,27 +77,27 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="org.assistindia.convene.UpdateMasterLoading"
+            android:name="org.yale.convene.UpdateMasterLoading"
             android:configChanges="orientation"
             android:screenOrientation="portrait" />
 
-        <service android:name="org.assistindia.convene.MyIntentService">
+        <service android:name="org.yale.convene.MyIntentService">
             <intent-filter>
                 <action android:name="Survey" />
             </intent-filter>
         </service>
-        <service android:name="org.assistindia.convene.MyIntentLinkage">
+        <service android:name="org.yale.convene.MyIntentLinkage">
             <intent-filter>
                 <action android:name="Linkage" />
             </intent-filter>
         </service>
-        <service android:name="org.assistindia.convene.network.LangService">
+        <service android:name="org.yale.convene.network.LangService">
             <intent-filter>
                 <action android:name="LangService" />
             </intent-filter>
         </service>
         <service
-            android:name="org.assistindia.convene.MyIntentPeriodicity"
+            android:name="org.yale.convene.MyIntentPeriodicity"
             android:enabled="true"
             android:exported="false">
             <intent-filter>
@@ -106,7 +106,7 @@
             </intent-filter>
         </service>
         <service
-            android:name="org.assistindia.convene.MyIntentServiceBeneficiary"
+            android:name="org.yale.convene.MyIntentServiceBeneficiary"
             android:enabled="true"
             android:exported="false">
             <intent-filter>
@@ -115,7 +115,7 @@
             </intent-filter>
         </service>
         <service
-            android:name="org.assistindia.convene.IntentServiceBeneficiaryUpdate"
+            android:name="org.yale.convene.IntentServiceBeneficiaryUpdate"
             android:enabled="true"
             android:exported="false">
             <intent-filter>
@@ -124,7 +124,7 @@
             </intent-filter>
         </service>
         <service
-            android:name="org.assistindia.convene.MyIntentServiceFacility"
+            android:name="org.yale.convene.MyIntentServiceFacility"
             android:enabled="true"
             android:exported="false">
             <intent-filter>
@@ -133,12 +133,12 @@
             </intent-filter>
         </service>
 
-        <receiver android:name="org.assistindia.convene.receivers.BatteryChangereciever">
+        <receiver android:name="org.yale.convene.receivers.BatteryChangereciever">
             <intent-filter>
                 <action android:name="android.intent.action.BATTERY_CHANGED" />
             </intent-filter>
         </receiver>
-        <receiver android:name="org.assistindia.convene.receivers.PowerConnectionReceiver">
+        <receiver android:name="org.yale.convene.receivers.PowerConnectionReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.ACTION_POWER_CONNECTED" />
                 <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED" />
@@ -150,10 +150,10 @@
             android:value="02925ef542d587b0d078678a1e73a90a8291f618" />
 
         <receiver
-            android:name="org.assistindia.convene.AlarmService"
+            android:name="org.yale.convene.AlarmService"
             android:process=":remote" />
         <receiver
-            android:name="org.assistindia.convene.receivers.ConnectivityReceiver"
+            android:name="org.yale.convene.receivers.ConnectivityReceiver"
             android:enabled="true">
             <intent-filter>
                 <action android:name="android.net.wifi.WIFI_STATE_CHANGED" />
@@ -162,36 +162,36 @@
         </receiver>
 
         <activity
-            android:name="org.assistindia.convene.HomeActivity"
+            android:name="org.yale.convene.HomeActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="org.assistindia.convene.HomeActivityNew"
+            android:name="org.yale.convene.HomeActivityNew"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="org.assistindia.convene.ListingActivity"
+            android:name="org.yale.convene.ListingActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
-            android:name="org.assistindia.convene.TypeDetailsActivity"
+            android:name="org.yale.convene.TypeDetailsActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="org.assistindia.convene.AddBeneficiaryActivity"
+            android:name="org.yale.convene.AddBeneficiaryActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="org.assistindia.convene.AddFacilityActivity"
+            android:name="org.yale.convene.AddFacilityActivity"
             android:screenOrientation="portrait" />
-        <activity android:name="org.assistindia.convene.ShowSurveyPreview" />
+        <activity android:name="org.yale.convene.ShowSurveyPreview" />
         <activity
-            android:name="org.assistindia.convene.DataCollectionListingActivity"
+            android:name="org.yale.convene.DataCollectionListingActivity"
             android:label="@string/title_activity_data_collection_listing"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="stateAlwaysHidden" />
-        <activity android:name="org.assistindia.convene.FilterActivityActivity" />
+        <activity android:name="org.yale.convene.FilterActivityActivity" />
         <activity
-            android:name="org.assistindia.convene.SurveySummaryReport"
+            android:name="org.yale.convene.SurveySummaryReport"
             android:configChanges="orientation"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -201,13 +201,13 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="org.assistindia.convene.Beneficiarylinkages"
+            android:name="org.yale.convene.Beneficiarylinkages"
             android:label="@string/title_activity_beneficiarylinkages"
             android:theme="@style/AppTheme" />
-        <activity android:name="org.assistindia.convene.ShowMemberListActivity" />
-        <activity android:name="org.assistindia.convene.LocationBasedActivity" />
-        <activity android:name="org.assistindia.convene.ProjectSelectionActivity" />
-        <activity android:name="org.assistindia.convene.ImageProcessingActivity"></activity>
+        <activity android:name="org.yale.convene.ShowMemberListActivity" />
+        <activity android:name="org.yale.convene.LocationBasedActivity" />
+        <activity android:name="org.yale.convene.ProjectSelectionActivity" />
+        <activity android:name="org.yale.convene.ImageProcessingActivity"></activity>
     </application>
 
 </manifest>

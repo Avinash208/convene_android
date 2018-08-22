@@ -95,7 +95,7 @@
                     android:layout_marginTop="5dp"
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp">
-                    <org.assistindia.convene.utils.multispinner.SingleSpinnerSearch
+                    <org.yale.convene.utils.multispinner.SingleSpinnerSearch
                         android:id="@+id/searchSingleSpinner"
                         android:layout_width="fill_parent"
                         android:layout_height="match_parent"

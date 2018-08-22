@@ -145,7 +145,7 @@
                 android:id="@+id/dynamic_question_set"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
+                android:layout_marginBottom="15dp"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
                 android:orientation="vertical"
@@ -155,13 +155,12 @@
                 android:id="@+id/memberlistid"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingLeft="20dp"
+                android:paddingLeft="25dp"
                 android:text="Members List"
-                android:textColor="@color/black"
-                android:textSize="22sp"
+                android:textColor="@color/yale_homepage_tab"
+                android:textSize="20dp"
                 android:textStyle="bold"
                 android:visibility="gone" />
-
             <LinearLayout
                 android:id="@+id/sub_beneficiarylayout"
                 android:layout_width="match_parent"

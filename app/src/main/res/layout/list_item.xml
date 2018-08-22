@@ -6,6 +6,7 @@
     android:id="@+id/linearItem"
     android:gravity="center"
     android:weightSum="2"
+    android:elevation="4dp"
     android:background="@drawable/expand_decorate"
     android:orientation="horizontal">
     <LinearLayout

@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="org.assistindia.convene.TypeDetailsActivity">
+    tools:context="org.yale.convene.TypeDetailsActivity">
 
     <include
         android:id="@+id/toolbar1"

@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/formRowColor"
-    tools:context="org.assistindia.convene.SurveyQuestionActivity">
+    tools:context="org.yale.convene.SurveyQuestionActivity">
     <include
         android:id="@+id/toolbar1"
         layout="@layout/toolbar_survey_question"/>

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:context="org.assistindia.convene.LocationBasedActivity">
+    tools:context="org.yale.convene.LocationBasedActivity">
 
     <include
         android:id="@+id/toolbar1"

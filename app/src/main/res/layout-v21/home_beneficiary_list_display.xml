@@ -85,7 +85,7 @@
                     android:background="@drawable/ovalshape"
                     android:gravity="center"
                     />
-                <org.assistindia.convene.utils.multispinner.SingleSpinnerSearch
+                <org.yale.convene.utils.multispinner.SingleSpinnerSearch
                     android:id="@+id/searchSingleSpinner"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
