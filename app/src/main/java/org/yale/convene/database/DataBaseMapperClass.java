@@ -361,8 +361,8 @@ public class DataBaseMapperClass {
                 QuestionQuery="SELECT a.option_text, a.id,a.other_choice from Options a, Question q where a.question_pid=q.id and q.id="+questionNumber+" and q.active = 2 ORDER BY a.option_order";
                 cursor=database.rawQuery(QuestionQuery,null);
             }
-            AnswersPage answersPageDefault=new AnswersPage("",Constants.SELECT,0,"",0,0,0,"","",0);
-            storeAnswer.add(answersPageDefault);
+           /* AnswersPage answersPageDefault=new AnswersPage("",Constants.SELECT,0,"",0,0,0,"","",0);
+            storeAnswer.add(answersPageDefault);*/
             if(cursor.moveToFirst()){
                 do{
                     Logger.logD(TAG,ANSWERFORRADIO + cursor.getString(cursor.getColumnIndex(Constants.OPTION_TEXT)));
@@ -915,6 +915,9 @@ public class DataBaseMapperClass {
                     AnswersPage answer= new AnswersPage(String.valueOf(id),optionText,0,"",id,0,0,"",assessmentID,0);
                     list.add(answer);
                 } while (cursor.moveToNext());
+            } else{
+                AnswersPage answer= new AnswersPage("","",0,"",0,0,0,"","",0);
+                list.add(answer);
             }
             cursor.close();
         }catch (Exception e){
@@ -1615,14 +1618,19 @@ public class DataBaseMapperClass {
 
     }
 
-    public static String getOptionTextIfAnswered(net.sqlcipher.database.SQLiteDatabase db, String getParentBeneficiaryUUID, int questionId) {
+    public static String getOptionTextIfAnswered(net.sqlcipher.database.SQLiteDatabase db, String getParentBeneficiaryUUID, int questionId,String getRuleOperator) {
         String getAnswerText="";
         String selectQuery = "select Response.ans_code, Response.ans_text from Response\n" +
                 " where Response.q_id="+questionId+" and Response.survey_id='"+getParentBeneficiaryUUID+"'";
         Cursor cursor = db.rawQuery(selectQuery, null);
         if (cursor != null && cursor.moveToFirst()) {
             do {
-                getAnswerText = cursor.getString(cursor.getColumnIndex("ans_text"));
+                if (getRuleOperator.equalsIgnoreCase("==")){
+                    getAnswerText = cursor.getString(cursor.getColumnIndex("ans_code"));
+                }else{
+                    getAnswerText = cursor.getString(cursor.getColumnIndex("ans_text"));
+                }
+
             } while (cursor.moveToNext());
         }
         cursor.close();

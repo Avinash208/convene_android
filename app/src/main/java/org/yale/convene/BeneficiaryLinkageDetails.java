@@ -246,7 +246,6 @@ public class BeneficiaryLinkageDetails extends Fragment {
             }else {
                 subbeneficiarylayout.setVisibility(View.GONE);
                 memberListLabel.setVisibility(View.GONE);
-                ToastUtils.displayToast("Filled BeneficiaryList"+getFilledMemberList.size(),getActivity());
             }
         }
 

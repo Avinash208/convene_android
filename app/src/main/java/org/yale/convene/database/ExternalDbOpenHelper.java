@@ -3963,7 +3963,7 @@ public class ExternalDbOpenHelper extends SQLiteOpenHelper {
         List<String> stringList = new ArrayList<>();
         try {
             SQLiteDatabase db = openDataBase();
-            String query = "select category_name,category_id from Surveys group by category_id";
+            String query = "select category_name,category_id from Surveys WHERE category_id!=0 group by category_id";
             Cursor cursor = db.rawQuery(query, null);
             Logger.logD(TAG, "" + query);
             if (cursor != null && cursor.getCount() != 0 && cursor.moveToFirst()) {

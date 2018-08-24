@@ -220,7 +220,7 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
     HashMap<String, EditText> otherOptionEditTextMap = new HashMap<>();
     Map<String, Spinner> dynamicSpinnerHashMap = new HashMap<>();
     List<Spinner> storeAllDynamicSpinner = new ArrayList<>();
-    List<Integer> skipBasedRulesetList = new ArrayList<>();
+    List<String> skipBasedRulesetList = new ArrayList<>();
 
     File mFileTemp;
 
@@ -541,8 +541,8 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
      * @param tempQidsList
      */
     private void ModuleToSetForm(int count, int pageSetCount, List<String> tempQidsList) {
-
-
+        if (!skipBasedRulesetList.isEmpty())
+            tempQidsList= removeQuestionAgainstRuleset(tempQidsList,skipBasedRulesetList);
         try {
             Logger.logD(TAG, "1. ModuleToSetForm - questionDisplayPageCount Value " + questionDisplayPageCount);
             if (questionDisplayPageCount == 1) {
@@ -553,6 +553,9 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
             //setting 5 Questions in One Page
             questionPageList = QuestionActivityUtils.getQuestionFromMainList(count, tempQidsList, surveyDatabase, pageSetCount, prefs.getInt(SURVEYID, 0),
                     restUrl, dbOpenHelper, mainQList);
+
+            if (!skipBasedRulesetList.isEmpty())
+                questionPageList= removeQuestionAgainstRuleset(questionPageList,skipBasedRulesetList);
             List<String> currentPageQIDS = new ArrayList<>();
             int pageCount = questionPageList.size();
             for (int i = 0; i < pageCount; i++) {
@@ -587,6 +590,16 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
         }
     }
 
+    private  List<String>  removeQuestionAgainstRuleset(List<String> tempQidsList, List<String> skipBasedRulesetList) {
+        List<String> holdTempQids= new ArrayList<>();
+        for (int i=0;i<tempQidsList.size();i++){
+            if (!skipBasedRulesetList.contains(tempQidsList.get(i))){
+                holdTempQids.add(tempQidsList.get(i));
+            }
+        }
+        return  holdTempQids;
+    }
+
     private List<String> applyRuleEnginIfExist(String activityRuleSet) {
         List<Boolean> validateRuleset = new ArrayList<>();
         List<String> tempQid = new ArrayList<>();
@@ -599,20 +612,29 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
                 JSONObject jsonObject = jsonArray.getJSONObject(j);
                 JSONArray ruleSetArray = jsonObject.getJSONArray("rulesets");
                 JSONArray ruleQuestionToDisplay = jsonObject.getJSONArray("questions_to_display");
-                for (int b = 0; b < ruleSetArray.length(); b++) {
-                    ActivityRuleSet actRuleSet = new ActivityRuleSet();
+                JSONArray ruleQuestionNotToDisplay = jsonObject.getJSONArray("questions_not_to_display");
+                List<Boolean> validateINNERRuleset = new ArrayList<>();
+                for (int b = 0; b < ruleSetArray.length(); b++) {ActivityRuleSet actRuleSet = new ActivityRuleSet();
                     JSONObject ruleSetjsonObject = ruleSetArray.getJSONObject(b);
                     actRuleSet.setDatatype(ruleSetjsonObject.getString("data_type"));
                     actRuleSet.setOperator(ruleSetjsonObject.getString("operator"));
                     actRuleSet.setQuestionId(ruleSetjsonObject.getInt("question_id"));
                     actRuleSet.setValue(ruleSetjsonObject.getString("value"));
                     if (isQuestionValidToDisplay(String.valueOf(actRuleSet.getQuestionId()), actRuleSet.getValue(), actRuleSet.getQuestionId(), actRuleSet.getOperator())) {
-                        for (int p = 0; p < ruleQuestionToDisplay.length(); p++) {
-                            tempQid.add(String.valueOf(ruleQuestionToDisplay.getInt(p)));
-                        }
-                        validateRuleset.add(false);
-                        break;
+                        validateINNERRuleset.add(true);
+                    }else{
+                        validateINNERRuleset.add(false);
                     }
+                }
+                if (!validateINNERRuleset.contains(false)){
+                    for (int p = 0; p < ruleQuestionToDisplay.length(); p++) {
+                        tempQid.add(String.valueOf(ruleQuestionToDisplay.getInt(p)));
+                    }
+                    for (int p = 0; p < ruleQuestionNotToDisplay.length(); p++) {
+                        skipBasedRulesetList.add(String.valueOf(ruleQuestionNotToDisplay.getInt(p)));
+                    }
+                    validateRuleset.add(false);
+                    break;
                 }
 
             }
@@ -626,7 +648,7 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
     private boolean isQuestionValidToDisplay(String alreadyAnswercode, String ruleSetvalue, int questionId, String getOperator) {
         String getParentBeneficiaryUUID = DataBaseMapperClass.getParentUUID(db, surveyPrimaryKeyId);
         if (!getParentBeneficiaryUUID.isEmpty()) {
-            String getOptionCode = DataBaseMapperClass.getOptionTextIfAnswered(db, getParentBeneficiaryUUID, questionId);
+            String getOptionCode = DataBaseMapperClass.getOptionTextIfAnswered(db, getParentBeneficiaryUUID, questionId,getOperator);
             if (!getOptionCode.isEmpty() && validateOperator(getOperator, ruleSetvalue, getOptionCode))
                 return true;
         }
@@ -643,6 +665,8 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
                 return Integer.parseInt(getOptionCode) >= Integer.parseInt(ruleSetvalue);
             case "<=":
                 return Integer.parseInt(getOptionCode) <= Integer.parseInt(ruleSetvalue);
+            case "==":
+                return Integer.parseInt(getOptionCode) == Integer.parseInt(ruleSetvalue);
             default:
                 break;
         }
@@ -1703,7 +1727,7 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
         Logger.logV(TAG, "Linear dynamic child Count" + mCount);
         // Loop through all of the children
         try {
-            for (int i = 0; i < mCount; i++) {
+            for (int i = 0; i < mCount  ; i++) {
                 View mChild;
                 switch (Integer.parseInt(listQuestionType.get(i))) {
                     /*
@@ -1837,9 +1861,11 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
                                     tempFlag = true;
                                 }
                             }
-                            if (tempFlag) {
+                           // if (tempFlag) {
+                            if (true) {
                                 boolean fileBoolean = FunctionalityCodeStoreGRid(gridviewQuestionCOde);
-                                list.add(String.valueOf(fileBoolean));
+                            //    list.add(String.valueOf(fileBoolean));
+                                list.add(String.valueOf(true));
                             } else {
                                 list.add(String.valueOf(false));
                             }
@@ -2005,6 +2031,7 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
         GridCount = 0;
         gridCountInline = 0;
         editcount = 0;
+        spinnerCount = 0;
         getAllGridQuestionCodeInline.clear();
     }
 
@@ -2653,7 +2680,7 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
 
             //Modify by guru
             answersEditText.clear();
-            hashMapAnswersEditText.clear();
+          //  hashMapAnswersEditText.clear();
             // making skip code variable to default
             skipcode = "";
 
@@ -3594,10 +3621,11 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
             return null;
         }
     }
-
     private void callPopUpActivity() {
         editcount = 0;
+        checkCount=0;
         gridCountInline = 0;
+        hashMapAnswersEditText.clear();
         Intent startIntert = new Intent(SurveyQuestionActivity.this, ShowSurveyPreview.class);
         startIntert.putExtra("surveyPrimaryKey", surveyPrimaryKeyId);
         startIntert.putExtra("survey_id", surveysId);

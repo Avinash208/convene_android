@@ -420,12 +420,14 @@ public class DataFormFragment extends Fragment implements PeriodicTypeInterface,
                 editor11.apply();
                 Utilities.setSurveyStatus(defaultPreferences,"new");
                 Utilities.setSurveyStatus(prefs,"new");
-                calligGPS();
+                new StartSurvey(getActivity(), getActivity(), surveysBean.getId(), 0, "Static Village", surveyPrimaryKeyId, boundaryLevel, "", "").execute();
+               /* calligGPS();
                 if (!gpsTracker.canGetLocation()) {
-                    gpsTracker.showSettingsAlert();
+                    new StartSurvey(getActivity(), getActivity(), surveysBean.getId(), 0, "Static Village", surveyPrimaryKeyId, boundaryLevel, "", "").execute();
+                    //gpsTracker.showSettingsAlert();
                 } else {
                     new StartSurvey(getActivity(), getActivity(), surveysBean.getId(), 0, "Static Village", surveyPrimaryKeyId, boundaryLevel, "", "").execute();
-                }
+                }*/
 
             } else if (("Continue").equalsIgnoreCase(btn)) {
                 if (surveysBean.getSurveyStatus() == 1)
@@ -543,7 +545,7 @@ public class DataFormFragment extends Fragment implements PeriodicTypeInterface,
                 onClickFunctionalityVIew(statusTextView, completedSurveyList.get(i).getUuid(), completedSurveyList.get(i).getId());
             } else {
                 statusTextView.setText(R.string.edit_or_view);
-                onClickFunctionality(statusTextView, surveyPrimaryKeyId, completedSurveyList.get(i).getId());
+                onClickFunctionality(statusTextView, surveyPrimaryKeyId, completedSurveyList.get(i).getId(),completedSurveyList.get(i).getServerPrimaryKey());
             }
             dynamicClosedDataCollectionForm.addView(childView);
         }
@@ -565,11 +567,12 @@ public class DataFormFragment extends Fragment implements PeriodicTypeInterface,
 
     }
 
-    private void onClickFunctionality(TextView statusTextView, String beneficiaryUuid, int surveysId) {
+    private void onClickFunctionality(TextView statusTextView, String beneficiaryUuid, int surveysId,
+                                      String getServerPrimaryKey) {
         statusTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String parentUUIDExist = handler.getActivityUUID(beneficiaryUuid);
+                String parentUUIDExist = handler.getActivityUUID(beneficiaryUuid,getServerPrimaryKey);
                 if (!parentUUIDExist.equals("")) {
                     SharedPreferences.Editor recentPreview = defaultPreferences.edit();
                     recentPreview.putString("recentPreviewRecord", "edit");

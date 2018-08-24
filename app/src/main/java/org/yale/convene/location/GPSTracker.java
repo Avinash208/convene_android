@@ -57,7 +57,7 @@ public class GPSTracker extends Service implements LocationListener {
 		this.mContext = context;
 		sp = PreferenceManager
 				.getDefaultSharedPreferences(context);
-		getLocation();
+	//	getLocation();
 	}
 
 	/**

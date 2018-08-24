@@ -250,7 +250,9 @@ public class AutoSyncActivity extends Activity {
             /*
             Getting tab details for this particular record
              */
-            JSONObject surveyList = autoSyncHandler.getTabInfoRecords("Select * from Tabdetails where survey_id = '" + autoSyncSurveyID+"'");
+          //  JSONObject surveyList = autoSyncHandler.getTabInfoRecords("Select * from Tabdetails where survey_id = '" + autoSyncSurveyID+"'");
+          // changes becouse some device are not working  device for YALE
+            JSONObject surveyList = new JSONObject();
 
             /*Calling method setPostParameters for setting postparameters from local variables that are fetched from local database*/
 
@@ -549,7 +551,7 @@ public class AutoSyncActivity extends Activity {
             builderMultiPart.addFormDataPart("vn", versionNumber);
             builderMultiPart.addFormDataPart("av", latestAppVersion);
             builderMultiPart.addFormDataPart("l_id", String.valueOf(languageId));
-            builderMultiPart.addFormDataPart("imei", deviceId);
+            builderMultiPart.addFormDataPart("imei", "");
             builderMultiPart.addFormDataPart("survey_id", String.valueOf(autoSyncSurveyKey));
             builderMultiPart.addFormDataPart("mode", online);
             builderMultiPart.addFormDataPart("part2_charge", "");
@@ -643,8 +645,8 @@ public class AutoSyncActivity extends Activity {
             String concatenateAll = String.valueOf(latitude).concat(String.valueOf(longitude))
                     .concat(sampleId).concat(String.valueOf(hrId))
                     .concat(String.valueOf(startDate)).concat(String.valueOf(endDate))
-                    .concat(String.valueOf(versionNumber)).concat(latestAppVersion)
-                    .concat(String.valueOf(languageId)).concat(deviceId)
+                    .concat(String.valueOf("1.1")).concat("1.1")
+                    .concat(String.valueOf("")).concat("")
                     .concat(String.valueOf(autoSyncSurveyKey))
                     .concat(online).concat(part2Charge).concat(String.valueOf(fromValue))
                     .concat(gpsTracker).concat(bloodCollected).concat(completionStatus)

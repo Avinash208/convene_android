@@ -230,7 +230,7 @@ public class StartSurvey extends AsyncTask<Context, Integer, String> {
     @Override
     protected void onPreExecute() {
         syncSurveyProgDialog.show();
-        gpsTracker = new GPSTracker(activity);
+      //  gpsTracker = new GPSTracker(activity);
 
     }
 
@@ -263,7 +263,7 @@ public class StartSurvey extends AsyncTask<Context, Integer, String> {
     @Override
     protected String doInBackground(Context... arg0) {
         try {
-            setLocation();
+         //   setLocation();
             SharedPreferences sharedpreferences = context.getSharedPreferences(MY_PREFERENCES, Context.MODE_PRIVATE);
 
             Logger.logV(TAG, "Value of Version number " + prefs.getString(Constants.VERSION, ""));
@@ -298,7 +298,7 @@ public class StartSurvey extends AsyncTask<Context, Integer, String> {
             values.put("survey_status1", "0");
             values.put("domain_id", "");
             values.put("p1_charge", String.valueOf(charge));
-            values.put("gps_tracker", String.valueOf(gpsTracker.gps_tracker));
+            values.put("gps_tracker", "");
             values.put("consent_status", "");
             values.put("server_primary_key", responsePrimaryID);
             values.put("level1", "");

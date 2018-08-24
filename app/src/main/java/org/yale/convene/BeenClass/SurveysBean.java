@@ -11,6 +11,7 @@ public class SurveysBean {
     private int isSurveyDone;
     int id;
     private String uuid;
+    private  String serverPrimaryKey;
 
     private String periodicityFlag;
     private int pLimit;
@@ -144,5 +145,13 @@ public class SurveysBean {
 
     public void setRuleEngine(String ruleEngine) {
         this.ruleEngine = ruleEngine;
+    }
+
+    public String getServerPrimaryKey() {
+        return serverPrimaryKey;
+    }
+
+    public void setServerPrimaryKey(String serverPrimaryKey) {
+        this.serverPrimaryKey = serverPrimaryKey;
     }
 }

@@ -374,8 +374,13 @@ public class DBHandler extends SQLiteOpenHelper {
      */
     public JSONObject getTabInfoRecords(String query) {
         JSONObject map = new JSONObject();
-        SQLiteDatabase writableDatabase = this.getWritableDatabase(DATABASESECRETKEY);
-        Cursor cursor = writableDatabase.rawQuery(query, null);
+        Cursor cursor = null;
+        try {
+            SQLiteDatabase writableDatabase = this.getWritableDatabase(DATABASESECRETKEY);
+            cursor = writableDatabase.rawQuery(query, null);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         if (cursor.moveToFirst()) {
             do {
                 try {
@@ -1331,6 +1336,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
                     String uuid = cursor.getString(cursor.getColumnIndex("beneficiary_ids"));
                     String puuid = cursor.getString(cursor.getColumnIndex("uuid"));
+                    String serverPrimaryKey = cursor.getString(cursor.getColumnIndex("server_primary_key"));
 
                     if (!uuid.equals(""))
                         isCompleted = getUUIDStatus(uuid);
@@ -1340,6 +1346,7 @@ public class DBHandler extends SQLiteOpenHelper {
                     surveysBean.setSurveyEndDate(getEndDate);
                     surveysBean.setSurveyName(statusBeanTemp.getName());
                     surveysBean.setUuid(puuid);
+                    surveysBean.setServerPrimaryKey(serverPrimaryKey);
                     surveysBean.setId(survey_ids);
                 } while (cursor.moveToNext());
 
@@ -1456,10 +1463,10 @@ public class DBHandler extends SQLiteOpenHelper {
         return result;
     }
 
-    public String getActivityUUID(String beneficiaryUuid) {
+    public String getActivityUUID(String beneficiaryUuid, String getServerPrimaryKeyStr) {
         String getSelectedUUids = "";
         try {
-            String pendingSurveyQuery = "select uuid from Survey where beneficiary_ids='" + beneficiaryUuid + "'";
+            String pendingSurveyQuery = "select uuid from Survey where beneficiary_ids='" + beneficiaryUuid + "' and server_primary_key="+getServerPrimaryKeyStr;
             SQLiteDatabase db = getdatabaseinstance_read();
             Cursor cursor = db.rawQuery(pendingSurveyQuery, null);
             if (cursor.getCount() != 0 && cursor.moveToFirst()) {

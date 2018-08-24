@@ -19,6 +19,7 @@ public class StatusBean {
     private String Languageid;
     private String beneficiaryName;
     private String summaryQids;
+    private String serverPrimaryKey;
 
     private List<QuestionAnswer> questionAnswerList;
 
@@ -184,5 +185,13 @@ public class StatusBean {
 
     public void setSummaryQids(String summaryQids) {
         this.summaryQids = summaryQids;
+    }
+
+    public String getServerPrimaryKey() {
+        return serverPrimaryKey;
+    }
+
+    public void setServerPrimaryKey(String serverPrimaryKey) {
+        this.serverPrimaryKey = serverPrimaryKey;
     }
 }
