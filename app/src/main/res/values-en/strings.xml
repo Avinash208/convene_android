@@ -1,6 +1,6 @@
 <resources>
     <!--App and urls String Labels-->
-    <string name="app_name">Yale</string>
+    <string name="app_name">Convene</string>
     <string name="application_name">AKRSPI</string>
     <string name="labelusername">Username</string>
     <string name="English">English</string>

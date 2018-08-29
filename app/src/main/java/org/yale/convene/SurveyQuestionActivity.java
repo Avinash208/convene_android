@@ -948,6 +948,7 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
                     Logger.logD(TAG, "Clicked button Tag ->" + v.getTag());
                     String[] spiltButtonTag = v.getTag().toString().split("@");
                     if (spiltButtonTag[1].equals("ADD")) {
+                        gridAssessmentMapDialog.put(String.valueOf(getCurrentGridQuestionID) + "_ASS", MAssesmant);
                         SupportClass.createDialogFOrGrid(mSubQuestions.get(subRowTemp), v, SurveyQuestionActivity.this, surveyDatabase, getCurrentGridQuestionID);
                     } else if (spiltButtonTag[1].equals("EDIT")) {
                         String getResponseHashMapKey = spiltButtonTag[0];

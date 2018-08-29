@@ -1059,7 +1059,8 @@ public class DataBaseMapperClass {
                     int id = cursor.getInt(cursor.getColumnIndex("id"));
                     String optionText = cursor.getString(cursor.getColumnIndex(optionTextStra));
                     String assessmentID = cursor.getString(cursor.getColumnIndex(assessmentPidStr));
-                    AnswersPage answer= new AnswersPage(String.valueOf(id),optionText,0,"",id,0,0,"",assessmentID,0);
+                    String skip_code = cursor.getString(cursor.getColumnIndex("skip_code"));
+                    AnswersPage answer= new AnswersPage(String.valueOf(id),optionText,0,skip_code,id,0,0,"",assessmentID,0);
 
                     list.add(answer);
                 } while (cursor.moveToNext());
@@ -1635,5 +1636,23 @@ public class DataBaseMapperClass {
         }
         cursor.close();
         return getAnswerText;
+    }
+
+
+    public static String getSkipCodeIfExist(AssesmentBean assesmentBean, SQLiteDatabase database) {
+        String getSkipCode="";
+        String selectQuery = "select skip_code from Options where Options.survey_id=183 and Options.assessment_pid="+assesmentBean.getQid();
+        Cursor cursor = database.rawQuery(selectQuery, null);
+        if (cursor != null && cursor.moveToFirst()) {
+            do {
+                getSkipCode = cursor.getString(cursor.getColumnIndex("skip_code"));
+                if (!getSkipCode.isEmpty())
+                    return getSkipCode ;
+
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return getSkipCode;
+
     }
 }

@@ -1,5 +1,6 @@
 package org.yale.convene.utils;
 
+import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
@@ -10,6 +11,7 @@ import org.yale.convene.BeenClass.Response;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 public class Constants {
@@ -193,13 +195,19 @@ public class Constants {
     public static HashMap<String,List<Response>> GridResponseHashMap= new HashMap<>();
     public static HashMap<String,List<String>> GridResponseHashMapKeys= new HashMap<>();
 
+    public static  Map<String ,Response> responselistBasedOnSkip = new HashMap<>();
+    public static  Map<String ,List<AssesmentBean>> assessmentListBasedOnSkip = new HashMap<>();
+    public static Map<String ,List<View>> skipPageView= new HashMap<>();
+
     public static ArrayList<Button> bt= new ArrayList<>();
     public static ArrayList<Button> dateButton = new ArrayList<>();
     public static List<String> mainAcessmentList = new ArrayList<>();
     public static List<Integer> blockQidIntegers =new ArrayList<>();
     public static List<String> listHashMapKey= new ArrayList<>();
+    public static List<String> notTaggedQids= new ArrayList<>();
 
     public static HashMap<String,Button> buttonDynamicDateGrid = new HashMap<>();
+    public  static int skipPageCount=0;
 
 
     public static int rowInflater=0;

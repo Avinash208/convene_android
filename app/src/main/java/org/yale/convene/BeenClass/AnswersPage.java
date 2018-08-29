@@ -7,6 +7,7 @@ public class AnswersPage {
 	private int maxValidation;
 	private int id;
 	private  int other_choice;
+	private  String skipCode;
 
 	public AnswersPage(String ansCode, String answer, int ansFlag,
 					   String validation, int id, int minValidation, int maxValidation,
@@ -53,5 +54,13 @@ public class AnswersPage {
 
 	public void setOther_choice(int other_choice) {
 		this.other_choice = other_choice;
+	}
+
+	public String getSkipCode() {
+		return skipCode;
+	}
+
+	public void setSkipCode(String skipCode) {
+		this.skipCode = skipCode;
 	}
 }
