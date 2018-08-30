@@ -21,7 +21,7 @@
 
     <application
         android:name="org.yale.convene.BaseApplication"
-        android:icon="@drawable/convene"
+        android:icon="@mipmap/yale"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">

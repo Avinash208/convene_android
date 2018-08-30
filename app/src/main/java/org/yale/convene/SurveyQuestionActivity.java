@@ -118,6 +118,7 @@ import static org.yale.convene.utils.Constants.gridAssessmentMapDialog;
 import static org.yale.convene.utils.Constants.gridQuestionMapDialog;
 import static org.yale.convene.utils.Constants.gridSubQuestionMapDialog;
 import static org.yale.convene.utils.Constants.listHashMapKey;
+import static org.yale.convene.utils.Constants.responselistBasedOnSkip;
 import static org.yale.convene.utils.Constants.rowInflater;
 
 
@@ -761,8 +762,8 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
         dynamicInlineAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                SupportClass.moduleToCreateInlineDialogForm(questionID, surveyDatabase, SurveyQuestionActivity.this, childInline, defaultPreferences);
+                SupportClass supportClass= new SupportClass();
+                supportClass.moduleToCreateInlineDialogForm(questionID, surveyDatabase, SurveyQuestionActivity.this, childInline, defaultPreferences);
             }
         });
         gridQuestionMapDialog.put(getCurrentQuestionID + QUESTION, questionID);
@@ -949,14 +950,21 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
                     String[] spiltButtonTag = v.getTag().toString().split("@");
                     if (spiltButtonTag[1].equals("ADD")) {
                         gridAssessmentMapDialog.put(String.valueOf(getCurrentGridQuestionID) + "_ASS", MAssesmant);
-                        SupportClass.createDialogFOrGrid(mSubQuestions.get(subRowTemp), v, SurveyQuestionActivity.this, surveyDatabase, getCurrentGridQuestionID);
+                        SupportClass supportClass= new SupportClass();
+                        responselistBasedOnSkip.clear();
+                        supportClass.createDialogFOrGrid(mSubQuestions.get(subRowTemp), v, SurveyQuestionActivity.this, surveyDatabase, getCurrentGridQuestionID, null);
                     } else if (spiltButtonTag[1].equals("EDIT")) {
                         String getResponseHashMapKey = spiltButtonTag[0];
                         if (GridResponseHashMap.size() > 0) {
                             List<Response> getAnsweredResponse = GridResponseHashMap.get(getResponseHashMapKey);
                             Logger.logD(TAG, "The Size of the edit Response ->" + getAnsweredResponse.size());
                             if (getAnsweredResponse.size() > 0) {
-                                SupportClass.showDialogEdit(getAnsweredResponse, MAssesmant, SurveyQuestionActivity.this, SurveyQuestionActivity.this, page, surveyDatabase, spiltButtonTag[0], v, 14, mSubQuestions.get(subRowTemp));
+                                gridAssessmentMapDialog.put(String.valueOf(getCurrentGridQuestionID) + "_ASS", MAssesmant);
+                                updateResponseListBasedSkip(MAssesmant,getAnsweredResponse);
+                                SupportClass supportClass= new SupportClass();
+                                supportClass.createDialogFOrGrid(mSubQuestions.get(subRowTemp), v, SurveyQuestionActivity.this, surveyDatabase, getCurrentGridQuestionID,
+                                        null);
+                                //  SupportClass.showDialogEdit(getAnsweredResponse, MAssesmant, SurveyQuestionActivity.this, SurveyQuestionActivity.this, page, surveyDatabase, spiltButtonTag[0], v, 14, mSubQuestions.get(subRowTemp));
                             } else {
                                 ToastUtils.displayToast("Response empty", SurveyQuestionActivity.this);
                             }
@@ -972,6 +980,17 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
 
         }
 
+    }
+
+    private void updateResponseListBasedSkip(List<AssesmentBean> mAssesmant, List<Response> getAnsweredResponse) {
+        Logger.logD("GetAssessment Size",""+mAssesmant.size());
+        for (int i=0;i<mAssesmant.size();i++){
+           for (int j=0;j<getAnsweredResponse.size();j++){
+               if (mAssesmant.get(i).getQid()==getAnsweredResponse.get(j).getGroup_id())
+               responselistBasedOnSkip.put(String.valueOf(mAssesmant.get(i).getQid()),getAnsweredResponse.get(j));
+           }
+
+        }
     }
 
     private void beneficiaryParentDisplay(Page page, String questionFont, String answerFont, int questionCode) {
