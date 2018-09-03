@@ -348,6 +348,7 @@ public class DataFormFragment extends Fragment implements PeriodicTypeInterface,
         final View childView = getActivity().getLayoutInflater().inflate(R.layout.data_collection_form, dynamicDataCollectionForm, false);
         final TextView surveyNameTextView = childView.findViewById(R.id.surveyName);
         final TextView periodicityName = childView.findViewById(R.id.periodicityName);
+        periodicityName.setVisibility(View.GONE);
         final TextView addOrCompleteButton = childView.findViewById(R.id.addOrComplete);
         final TextView noteText = childView.findViewById(R.id.noteText);
         final SingleSpinnerSearch spinnerSearch = childView.findViewById(R.id.searchSingleSpinner);
@@ -711,7 +712,6 @@ public class DataFormFragment extends Fragment implements PeriodicTypeInterface,
             statusTextView.setText(R.string.edit_or_view);
         }
     }
-
 
     /**
      * @param getServerKey

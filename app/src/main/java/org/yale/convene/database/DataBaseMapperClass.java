@@ -1639,9 +1639,9 @@ public class DataBaseMapperClass {
     }
 
 
-    public static String getSkipCodeIfExist(AssesmentBean assesmentBean, SQLiteDatabase database) {
+    public static String getSkipCodeIfExist(AssesmentBean assesmentBean, SQLiteDatabase database, int survey_ID) {
         String getSkipCode="";
-        String selectQuery = "select skip_code from Options where Options.survey_id=183 and Options.assessment_pid="+assesmentBean.getQid();
+        String selectQuery = "select skip_code from Options where Options.survey_id="+survey_ID+" and Options.assessment_pid="+assesmentBean.getQid();
         Cursor cursor = database.rawQuery(selectQuery, null);
         if (cursor != null && cursor.moveToFirst()) {
             do {

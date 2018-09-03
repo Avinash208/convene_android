@@ -755,15 +755,15 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
         TextView question = (TextView) childInline.findViewById(R.id.mainQuestion);
         Button dynamicInlineAdd = (Button) childInline.findViewById(R.id.addorcreateinline);
         validateMandatoryView(page, childInline, question);
-
-
         final Page questionID = page;
         final int getCurrentQuestionID = page.getQuestionNumber();
         dynamicInlineAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 SupportClass supportClass= new SupportClass();
-                supportClass.moduleToCreateInlineDialogForm(questionID, surveyDatabase, SurveyQuestionActivity.this, childInline, defaultPreferences);
+                responselistBasedOnSkip.clear();
+                supportClass.moduleToCreateInlineDialogForm(questionID, surveyDatabase, SurveyQuestionActivity.this, childInline,
+                        defaultPreferences,surveysId);
             }
         });
         gridQuestionMapDialog.put(getCurrentQuestionID + QUESTION, questionID);
@@ -1361,17 +1361,14 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
 
         if (displayQuestionModel.getMandatory().contains("1"))
             v.setHint(displayQuestionModel.getQuestion() + " *");
-        else
+        else {
             v.setHint(displayQuestionModel.getQuestion());
-
-
+        }
         v.setHintTextAppearance(R.style.hintstyle);
-
         EditText edittext = (EditText) child.findViewById(R.id.ans_text);
-        edittext.setSingleLine(true);
+        edittext.setSingleLine(false);
         edittext.setHintTextColor(getResources().getColor(R.color.pink));
         question.setFocusable(true);
-
         if (answerMap1.size() > 0) {
             AnswersPage setAnswer = answerMap1.get(String.valueOf(questionCode));
             edittext.setText(setAnswer.getAnswer());
@@ -1380,7 +1377,6 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
         TextView errorTextEdit = new TextView(this);
         errorTextEdit.setTextColor(Color.RED);
         hashMap.put(String.valueOf(displayQuestionModel.getQuestionNumber()), edittext);
-
         displayQuestionTextTooTip(displayQuestionModel, question, child.findViewById(R.id.tooltip));
         getAllEditTextQuestionCode.add(String.valueOf(displayQuestionModel.getQuestionNumber()));
         hashMapTextError.put(String.valueOf(displayQuestionModel.getQuestionNumber()), errorTextEdit);
@@ -3549,10 +3545,16 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
                                 Logger.logD(TAG, "splitTag " + spiltTag[1]);
                                 Logger.logD(TAG, "rowInflater value " + rowInflater);
                                 Logger.logD(TAG, "Key value value " + Integer.getInteger(splitKeypare[1]));
-                                if (MAssessment != null && questionPagebean != null)
-                                    SupportClass.showDialogEdit(getResponseForEdit, MAssessment, SurveyQuestionActivity.this, SurveyQuestionActivity.this, questionPagebean, surveyDatabase, spiltTag[0], childTemp, 16, questionPagebean);
-                                else
-                                    ToastUtils.displayToast("Some thing  went wrong", SurveyQuestionActivity.this);
+                                if (MAssessment != null && questionPagebean != null) {
+                                    String getResponseHashMapKey = spiltTag[0];
+                                    List<Response> getAnsweredResponse = hashMapGridResponse.get(getResponseHashMapKey);
+                                    updateResponseListBasedSkip(MAssessment, getAnsweredResponse);
+                                   SupportClass supportClass= new SupportClass();
+                                    supportClass.moduleToCreateInlineDialogForm(questionPagebean, surveyDatabase, SurveyQuestionActivity.this, childTemp,
+                                            defaultPreferences,surveysId);
+                                    //SupportClass.showDialogEdit(getResponseForEdit, MAssessment, SurveyQuestionActivity.this, SurveyQuestionActivity.this, questionPagebean, surveyDatabase, spiltTag[0], childTemp, 16, questionPagebean);
+                                }else
+                                    ToastUtils.displayToast("Some thing  went wrong please contact Admin", SurveyQuestionActivity.this);
                             }
                         });
 

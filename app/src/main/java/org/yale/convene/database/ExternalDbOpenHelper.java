@@ -2517,7 +2517,7 @@ public class ExternalDbOpenHelper extends SQLiteOpenHelper {
         if ("Beneficiary".equalsIgnoreCase(beneficiary)) {
             query = "SELECT  * FROM Surveys where " + columnName + "=" + beneficiaryType;
         } else {
-            query = "select * from Surveys where Surveys.beneficiary_ids=" + beneficiaryType;
+            query = "select * from Surveys where Surveys.beneficiary_ids=" + beneficiaryType +" order by  Surveys.surveyId ASC";
         }
         Cursor cursor = db.rawQuery(query, null);
         Logger.logV(TAG, tagStr + query);
