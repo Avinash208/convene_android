@@ -786,10 +786,8 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
                     fillInlineRow.put(String.valueOf(page.getQuestionNumber()) + "_" + getinlineRowCount.get(i), sortedList);
                     Logger.logD(TAG, "the list of the hashMap" + fillInlineRow.size());
                     Logger.logD("listHashMapKey--<<>>>", listHashMapKey.toString() + "");
-
                     fillInlineHashMapKey.put(String.valueOf(getCurrentQuestionID), listHashMapKey);
                 }
-
                 rowInflater = fillInlineRow.size() + 1;
                 surveyQuestionGridInlineInterface.OnSuccessfullGridInline(fillInlineRow, childInline, getCurrentQuestionID, fillInlineHashMapKey, 16);
             }
@@ -952,7 +950,8 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
                         gridAssessmentMapDialog.put(String.valueOf(getCurrentGridQuestionID) + "_ASS", MAssesmant);
                         SupportClass supportClass= new SupportClass();
                         responselistBasedOnSkip.clear();
-                        supportClass.createDialogFOrGrid(mSubQuestions.get(subRowTemp), v, SurveyQuestionActivity.this, surveyDatabase, getCurrentGridQuestionID, null);
+                        supportClass.createDialogFOrGrid(mSubQuestions.get(subRowTemp), v, SurveyQuestionActivity.this, surveyDatabase, getCurrentGridQuestionID, null,
+                                surveysId);
                     } else if (spiltButtonTag[1].equals("EDIT")) {
                         String getResponseHashMapKey = spiltButtonTag[0];
                         if (GridResponseHashMap.size() > 0) {
@@ -963,7 +962,7 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
                                 updateResponseListBasedSkip(MAssesmant,getAnsweredResponse);
                                 SupportClass supportClass= new SupportClass();
                                 supportClass.createDialogFOrGrid(mSubQuestions.get(subRowTemp), v, SurveyQuestionActivity.this, surveyDatabase, getCurrentGridQuestionID,
-                                        null);
+                                        null,surveysId);
                                 //  SupportClass.showDialogEdit(getAnsweredResponse, MAssesmant, SurveyQuestionActivity.this, SurveyQuestionActivity.this, page, surveyDatabase, spiltButtonTag[0], v, 14, mSubQuestions.get(subRowTemp));
                             } else {
                                 ToastUtils.displayToast("Response empty", SurveyQuestionActivity.this);
@@ -3544,9 +3543,10 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
                                 String[] splitKeypare = spiltTag[0].split("_");
                                 Logger.logD(TAG, "splitTag " + spiltTag[1]);
                                 Logger.logD(TAG, "rowInflater value " + rowInflater);
-                                Logger.logD(TAG, "Key value value " + Integer.getInteger(splitKeypare[1]));
+                                Logger.logD(TAG, "Key value value " + Integer.parseInt(splitKeypare[1]));
                                 if (MAssessment != null && questionPagebean != null) {
                                     String getResponseHashMapKey = spiltTag[0];
+                                    SupportClass.storeInlineindexPostion=Integer.parseInt(splitKeypare[1]);
                                     List<Response> getAnsweredResponse = hashMapGridResponse.get(getResponseHashMapKey);
                                     updateResponseListBasedSkip(MAssessment, getAnsweredResponse);
                                    SupportClass supportClass= new SupportClass();
