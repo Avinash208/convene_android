@@ -28,13 +28,13 @@
         android:id="@+id/toolbarTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:textColor="@color/white"
-        android:text=""
-        android:layout_gravity="center"
         android:layout_centerHorizontal="true"
-        android:textSize="@dimen/toolbar_font_loading"
-        android:fontFamily="fonts/Roboto-Medium.ttf" />
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:text=""
+        android:fontFamily="@font/heebo_regular"
+        android:textColor="@color/white"
+        android:textSize="@dimen/toolbar_font_loading" />
     <ImageView
         android:id="@+id/imageMenu"
         android:layout_width="22dp"

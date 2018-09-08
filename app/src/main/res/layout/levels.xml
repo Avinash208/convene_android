@@ -303,7 +303,7 @@
                     android:textColor="@android:color/black"
                     android:textSize="18sp"
                     android:textStyle="bold" />
-                <org.yale.convene.CustomAutoCompleteTextView
+                <org.fwwb.convene.convenecode.CustomAutoCompleteTextView
                     android:id="@+id/level_search"
                     android:layout_width="fill_parent"
                     android:layout_height="60dp"

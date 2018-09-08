@@ -36,9 +36,11 @@
             android:layout_weight="1"
             android:textSize="14dp"
             android:gravity="center"
+            android:fontFamily="@font/heebo_regular"
             android:textAllCaps="true"
             android:text="Sync data"
-            android:textColor="#000" />
+
+            android:textColor="@color/fwwb_text_color_blue" />
 
         <View
             android:layout_width="1dp"
@@ -56,8 +58,9 @@
             android:gravity="center"
             android:textSize="14dp"
             android:text="Logout"
+            android:fontFamily="@font/heebo_regular"
             android:textAllCaps="true"
-            android:textColor="#000" />
+            android:textColor="@color/pink" />
     </LinearLayout>
 
 </RelativeLayout>

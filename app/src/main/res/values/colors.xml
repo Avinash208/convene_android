@@ -81,6 +81,9 @@
     <color name="yale_homepage_tab">#286dc0</color>
     <color name="yale_homepage_bottom_border">#dddddd</color>
     <color name="yale_backgroung_color">#f9f9f9</color>
+    <color name="fwwb_text_color">#232323</color>
+    <color name="fwwb_text_color_blue">#3f51b5</color>
+    <color name="fwwb_border_color">#e9eaf5</color>
 
 
 </resources>

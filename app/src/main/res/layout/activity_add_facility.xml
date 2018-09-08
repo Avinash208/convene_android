@@ -361,7 +361,7 @@
                                 android:textColor="@color/black"
                                 android:theme="@style/ThemeOverlay.AppCompat.Light" />
 
-                            <org.yale.convene.utils.multispinner.SpinnerClusterSearch
+                            <org.fwwb.convene.convenecode.utils.multispinner.SpinnerClusterSearch
                                 android:id="@+id/searchSingleSpinner"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"

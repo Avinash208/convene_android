@@ -5,8 +5,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#eeeeee"
-    tools:context="org.yale.convene.ListingActivity">
+    android:background="@color/fwwb_border_color"
+    tools:context="org.fwwb.convene.convenecode.ListingActivity">
 
     <include
         android:id="@+id/toolbar1"

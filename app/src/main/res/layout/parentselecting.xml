@@ -30,4 +30,12 @@
         android:background="@color/formRowColor">
 
     </LinearLayout>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_marginTop="@dimen/ten"
+        android:background="@drawable/divider"
+        android:layout_below="@id/singlespinnercontainer"
+        />
 </RelativeLayout>

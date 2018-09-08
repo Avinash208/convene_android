@@ -43,7 +43,7 @@
                         android:padding="4dp"
                         android:singleLine="false"
                         android:textColor="@color/black"
-                        android:textSize="14dp" />
+                        android:textSize="16dp" />
                     <TextView
                         android:id="@+id/periodicityName"
                         android:layout_width="match_parent"
@@ -55,8 +55,9 @@
                         android:paddingLeft="5dp"
                         android:paddingRight="6dp"
                         android:paddingTop="1dp"
-                        android:textColor="@color/black"
-                        android:textSize="16sp" />
+                        android:visibility="visible"
+                        android:textColor="@color/inActiveText"
+                        android:textSize="14sp" />
 
                 </LinearLayout>
 
@@ -94,7 +95,7 @@
                     android:textSize="16sp"
                     android:visibility="gone" />
 
-                <org.yale.convene.utils.multispinner.SingleSpinnerSearch
+                <org.fwwb.convene.convenecode.utils.multispinner.SingleSpinnerSearch
                     android:id="@+id/searchSingleSpinner"
                     android:layout_width="match_parent"
                     android:layout_height="18dp"

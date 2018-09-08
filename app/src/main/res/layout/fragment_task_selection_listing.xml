@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/constraintLayout"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="match_parent"
+    android:padding="@dimen/app_padding"
+    android:background="@color/fwwb_border_color"
+    tools:context=".fwwbcode.activities.TaskSelectionListingActivity$PlaceholderFragment">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="No values are there"
+        android:id="@+id/emptyListError"
+        android:fontFamily="@font/heebo_regular"
+        android:textSize="@dimen/regular_text"
+        android:gravity="center"
+        />
+
+    <android.support.v7.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/taskList"
+        />
+
+</LinearLayout>

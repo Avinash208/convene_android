@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="#fff9e4"
     android:orientation="vertical"
-    tools:context="org.yale.convene.DataCollectionListingActivity">
+    tools:context="org.fwwb.convene.convenecode.DataCollectionListingActivity">
 
     <include
         android:id="@+id/toolbar1"

@@ -5,7 +5,6 @@
     android:layout_height="match_parent"
     android:padding="3dp"
     android:layout_marginTop="3dp"
-    tools:context=".SurveyQuestionActivity"
     android:background="@drawable/form_row">
     <android.support.v7.widget.CardView
         xmlns:card_view="http://schemas.android.com/apk/res-auto"
@@ -40,26 +39,20 @@
                         android:id="@+id/mainQuestion"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Question"
+                        android:text="question "
+                        android:textColor="@color/black"
                         android:textSize="18dp"
-                        android:textStyle="bold"
                         android:layout_marginBottom="5dp" />
-
                 </LinearLayout>
-
-
             </LinearLayout>
-
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:id="@+id/textInput"
                 hintAnimationEnabled="true"
                 hintEnabled="true"
                 android:textColorHint="@color/black"
-                android:visibility="visible"
-                android:layout_height="wrap_content"
-                >
-
+                card_view:hintEnabled="false"
+                android:layout_height="wrap_content">
                 <EditText
                     android:id="@+id/ans_text"
                     android:layout_width="match_parent"

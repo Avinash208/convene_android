@@ -24,6 +24,7 @@
             android:textColor="#232323"
             android:paddingTop="13dp"
             android:paddingBottom="13dp"
+            android:fontFamily="@font/heebo_regular"
             android:layout_marginLeft="16dp" />
     </LinearLayout>
 

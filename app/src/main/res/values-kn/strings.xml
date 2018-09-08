@@ -3,7 +3,7 @@
 
     <!--App and urls String Labels-->
     <string name="app_name">TNSMS</string>
-    <string name="application_name">AKRSPI</string>
+    <string name="application_name">FWWB</string>
     <string name="labelusername">Username</string>
     <string name="English">English</string>
     <string name="Kannada">Kannada</string>
@@ -25,11 +25,11 @@
     <!--Demo url-->
 
 
-    <string name="main_url">http://yale.mahiti.org/api/</string>
-    <string name="answer_upload_url">http://yale.mahiti.org/api/add-survey-answers/</string>
-    <string name="main_Url">http://yale.mahiti.org/</string>
-    <string name="main_url_Beneficiary">http://yale.mahiti.org/</string>
-    <string name="regionalLanguageURLS">http://yale.mahiti.org/api/language-list/</string>
+    <string name="main_url">http://akrspiui.mahiti.org/api/</string>
+    <string name="answer_upload_url">http://akrspiui.mahiti.org/api/add-survey-answers/</string>
+    <string name="main_Url">http://akrspiui.mahiti.org/</string>
+    <string name="main_url_Beneficiary">http://akrspiui.mahiti.org/</string>
+    <string name="regionalLanguageURLS">http://akrspiui.mahiti.org/api/language-list/</string>
 
 
     <string name="loadmore_facility">Loading more Facility please wait&#8230;</string>

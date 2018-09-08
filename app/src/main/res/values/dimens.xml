@@ -23,4 +23,12 @@
     <dimen name="sixteen_sp">16sp</dimen>
     <dimen name="forty_dp">40dp</dimen>
     <dimen name="onefour_sp">14sp</dimen>
+    <dimen name="regular_text">16sp</dimen>
+    <dimen name="app_padding">20dp</dimen>
+    <dimen name="listitem_margin">20dp</dimen>
+    <dimen name="small_icon_size">40dp</dimen>
+    <dimen name="heading_two">20sp</dimen>
+    <dimen name="text_regular">14sp</dimen>
+    <dimen name="text_small">12sp</dimen>
+    <dimen name="five">5dp</dimen>
 </resources>

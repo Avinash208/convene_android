@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical">
+   <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    >
+    <ImageView
+        android:layout_width="@dimen/small_icon_size"
+        android:layout_height="@dimen/small_icon_size"
+        android:src="@drawable/fwwb_trainingblueicon"
+        />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/heebo_regular"
+        android:textColor="@color/fwwb_text_color"
+        android:textSize="@dimen/heading_two"
+        android:id="@+id/trainingNameTv"
+        tools:text="FinacialEducation"
+        android:layout_marginStart="@dimen/ten"
+        android:layout_gravity="center_vertical"
+
+        />
+
+</LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:layout_marginTop="@dimen/ten"
+        >
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_weight="2.5"
+            android:visibility="visible"
+            android:layout_margin="2dp"
+            android:gravity="center"
+            android:padding="@dimen/five"
+            android:background="@drawable/fwwb_border"
+            android:orientation="vertical"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:layout_width="@dimen/small_icon_size"
+                android:layout_height="@dimen/small_icon_size"
+                android:src="@drawable/fwwb_batchicon"
+                />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dip"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
+                android:background="@color/fwwb_border_color"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/heebo_regular"
+                android:textColor="@color/fwwb_text_color"
+                android:textSize="@dimen/text_small"
+                tools:text="28"
+                android:layout_marginTop="@dimen/five"
+                android:layout_marginBottom="@dimen/five"
+                android:id="@+id/batchParticipantsTv"
+                android:gravity="center"
+                android:layout_marginStart="@dimen/ten"
+                android:layout_gravity="center_vertical"
+                android:singleLine="true"
+                />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_weight="3"
+            android:padding="@dimen/five"
+
+            android:layout_margin="2dp"
+            android:gravity="center"
+            android:background="@drawable/fwwb_border"
+            android:orientation="vertical"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:layout_width="@dimen/small_icon_size"
+                android:layout_height="@dimen/small_icon_size"
+                android:src="@drawable/ic_access_time_black_24dp"
+                />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dip"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
+                android:background="@color/fwwb_border_color"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/heebo_regular"
+                android:textColor="@color/fwwb_text_color"
+                android:textSize="@dimen/text_small"
+                tools:text="Anantapuram,Ap"
+                android:gravity="center"
+                android:layout_marginTop="@dimen/five"
+                android:layout_marginBottom="@dimen/five"
+
+                android:id="@+id/trainingLocationTv"
+                android:layout_marginStart="@dimen/ten"
+                android:layout_gravity="center_vertical"
+                android:singleLine="true"
+                />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_weight="3"
+            android:padding="@dimen/five"
+            android:gravity="center"
+            android:layout_margin="2dp"
+            android:background="@drawable/fwwb_border"
+            android:orientation="vertical"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:layout_width="@dimen/small_icon_size"
+                android:layout_height="@dimen/small_icon_size"
+                android:src="@drawable/fwwbcalendaricon"
+                />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dip"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
+                android:background="@color/fwwb_border_color"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/heebo_regular"
+                android:textColor="@color/fwwb_text_color"
+                android:textSize="@dimen/text_small"
+                tools:text="28/08/2018"
+                android:id="@+id/trainingDateTv"
+                android:gravity="center"
+                android:layout_marginTop="@dimen/five"
+                android:layout_marginBottom="@dimen/five"
+
+                android:layout_marginStart="@dimen/ten"
+                android:layout_gravity="center_vertical"
+                android:singleLine="true"
+                />
+
+
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

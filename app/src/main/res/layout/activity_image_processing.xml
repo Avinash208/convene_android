@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="org.yale.convene.ImageProcessingActivity">
+    tools:context="org.fwwb.convene.convenecode.ImageProcessingActivity">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"

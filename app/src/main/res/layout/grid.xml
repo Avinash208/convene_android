@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:padding="8dp"
     android:background="#fff9e4"
-    tools:context="org.yale.convene.SurveyQuestionActivity">
+    tools:context="org.fwwb.convene.convenecode.SurveyQuestionActivity">
     <android.support.v7.widget.CardView
         xmlns:card_view="http://schemas.android.com/apk/res-auto"
         android:id="@+id/card_view"

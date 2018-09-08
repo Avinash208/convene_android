@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="org.yale.convene.SchemesActivity">
+    tools:context="org.fwwb.convene.SchemesActivity">
     <include layout="@layout/content_schemes" />
 
 </android.support.design.widget.CoordinatorLayout>

@@ -190,6 +190,7 @@
     <style name="AppTabTextAppearance" parent="TextAppearance.Design.Tab">
         <item name="android:textSize">18sp</item>
         <item name="textAllCaps">false</item>
+        <item name="android:fontFamily">@font/heebo_regular</item>
     </style>
 
     <style name="hintstyle" parent="@android:style/TextAppearance">
@@ -198,6 +199,7 @@
         <item name="android:textSize">16sp</item>
 
     </style>
+
     <style name="WideDialog" parent="Base.Theme.AppCompat.Dialog">
         <item name="android:windowMinWidthMajor">90%</item>
         <item name="android:windowMinWidthMinor">100%</item>
