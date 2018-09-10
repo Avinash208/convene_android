@@ -3566,7 +3566,7 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
                 }
                 listQuestionType.clear();
                 clearAllWidgetMapCounts();
-                deleteResponseFromHashMap(currentQid, hashMapAnswersEditText) ;
+            //    deleteResponseFromHashMap(currentQid, hashMapAnswersEditText) ;
                 nextButtonFunctionality(count, displayQids);
             }
             skipBlockLevelFlag = true;
@@ -3606,12 +3606,12 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
                             deleteQidsFromResponse(getNextQuestion);
                             listQuestionType.clear();                               // Clearing the list which contain anstype
                             clearAllWidgetMapCounts();
-                            nextButtonFunctionality(count, getNextQuestion);
+                            nextButtonFunctionality(0, getNextQuestion);
                         } else {
                             count = qids.indexOf(skipQid);
                             deleteResponseFromHashMap(qid, hashMapAnswersEditText) ;
-                            deleteResponseFromHashMap(qid, hashMapAnswersEditText) ;
-                            deleteQidsFromResponse(qids);
+                            List<String> getNextQuestion=  prePareNextSetQuestion(qid,displayQids);
+                            deleteQidsFromResponse(getNextQuestion);
                             listQuestionType.clear();                               // Clearing the list which contain anstype
                             clearAllWidgetMapCounts();
                             nextButtonFunctionality(count, qids);
