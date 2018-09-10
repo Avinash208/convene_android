@@ -18,7 +18,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
 import org.fwwb.convene.R;
 import org.fwwb.convene.convenecode.BeenClass.beneficiary.Datum;
 import org.fwwb.convene.convenecode.adapter.ExpandableListAdapterDataCollection;
@@ -66,7 +65,7 @@ public class HomeActivityNew extends BaseActivity implements View.OnClickListene
         this.context = HomeActivityNew.this;
         homePresenter = new HomePresenter(this);
         initVariables();
-        activity=HomeActivityNew.this;
+        activity = HomeActivityNew.this;
         Logger.logD("Current page is homescreen", "curent page is homescreen");
         DBHandler dbHandler = new DBHandler(this);
         dbhelper = ExternalDbOpenHelper.getInstance(HomeActivityNew.this, defaultPreferences.getString(Constants.DBNAME, ""), defaultPreferences.getString("inv_id", ""));
@@ -103,54 +102,64 @@ public class HomeActivityNew extends BaseActivity implements View.OnClickListene
     protected void onStart() {
         super.onStart();
         UpdateModuleVisiabliteAgainstProject();
+        UpdateViewModulesAgainstProject();
+    }
+
+    private void UpdateViewModulesAgainstProject() {
+        LinearLayout dynamicButtonContainer = findViewById(R.id.dynamic_button_container);
+        for (int i = 0; i < 1; i++) {
+            View inflatParentView = this.getLayoutInflater().inflate(R.layout.home_button_dynamic, dynamicButtonContainer, false);
+            dynamicButtonContainer.addView(inflatParentView);
+        }
     }
 
     private void UpdateModuleVisiabliteAgainstProject() {
-        if (syncSurveyPreferences.getBoolean(Constants.SHOWTRAININGMODULEFLAG,false)){
+        if (syncSurveyPreferences.getBoolean(Constants.SHOWTRAININGMODULEFLAG, false)) {
             trainingButton.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             trainingButton.setVisibility(View.GONE);
         }
     }
 
     private void checkInternet() {
         if (Utils.haveNetworkConnection(context)) {
-            Logger.logD("Online","Enable");
-        }else{
+            Logger.logD("Online", "Enable");
+        } else {
             Toast.makeText(getBaseContext(), "Application is working in offline", Toast.LENGTH_SHORT).show();
         }
     }
 
-    public int GetDipsFromPixel(float pixels){
+    public int GetDipsFromPixel(float pixels) {
         // Get the screen's density scale
         final float scale = getResources().getDisplayMetrics().density;
         // Convert the dps to pixels, based on density scale
         return (int) (pixels * scale + 0.5f);
     }
+
     /**
      * initializing all the field values
      */
     private void initVariables() {
-        imageMenu =  findViewById(R.id.imageMenu);
+        imageMenu = findViewById(R.id.imageMenu);
         imageMenu.setVisibility(View.GONE);
-        TextView toolbarTitle =  findViewById(R.id.toolbarTitle);
+        TextView toolbarTitle = findViewById(R.id.toolbarTitle);
         Typeface customFont = Typeface.createFromAsset(getAssets(), "fonts/Roboto-Regular.ttf");
         toolbarTitle.setTypeface(customFont);
         toolbarTitle.setText(getString(R.string.Home));
         syncSurveyPreferences = PreferenceManager.getDefaultSharedPreferences(HomeActivityNew.this);
-        pressBack =  findViewById(R.id.backPress);
+        pressBack = findViewById(R.id.backPress);
         pressBack.setVisibility(View.GONE);
-        userNameLabel =  findViewById(R.id.userNameLabel);
+        userNameLabel = findViewById(R.id.userNameLabel);
         String userName = defaultPreferences.getString("user_name", "");
         userNameLabel.setText(String.format(userName));
         userNameLabel.setTypeface(customFont);
         helpTexts = findViewById(R.id.helptext);
-        logOut =  findViewById(R.id.logout);
-        dataformsLinear =  findViewById(R.id.dataformsLinear);
-        expListView =  findViewById(R.id.expandableListview);
-        TextView contentUpdateView =  findViewById(R.id.update_content);
-        TextView activityButton =  findViewById(R.id.activity);
-        trainingButton =  (CardView) findViewById(R.id.card_view);
+        logOut = findViewById(R.id.logout);
+        dataformsLinear = findViewById(R.id.dataformsLinear);
+        expListView = findViewById(R.id.expandableListview);
+        TextView contentUpdateView = findViewById(R.id.update_content);
+        TextView activityButton = findViewById(R.id.activity);
+        trainingButton = (CardView) findViewById(R.id.card_view);
         contentUpdateView.setOnClickListener(this);
         activityButton.setOnClickListener(this);
     }
@@ -162,18 +171,20 @@ public class HomeActivityNew extends BaseActivity implements View.OnClickListene
         return true;
 
     }
+
     @Override
     public void getExpandableListHeading(List<String> listDataHeader, HashMap<String, List<Datum>> listDataChild) {
         Logger.logD("MVP WORKING", listDataHeader.size() + "");
         listAdapter = new ExpandableListAdapterDataCollection(this, listDataHeader, listDataChild);
         expListView.setAdapter(listAdapter);
     }
+
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.logout:
-             //  startActivity(new Intent(HomeActivityNew.this, ImageProcessingActivity.class));
-                 Utils.callDialogConformation(this,this);
+                //  startActivity(new Intent(HomeActivityNew.this, ImageProcessingActivity.class));
+                Utils.callDialogConformation(this, this);
                 break;
             case R.id.update_content:
                 Utils.contentUpdateConformation(this);
@@ -182,8 +193,8 @@ public class HomeActivityNew extends BaseActivity implements View.OnClickListene
                 callProjectSelectionActivity();
                 break;
 
-                case R.id.dataformsLinear:
-                    callTaskSelectionActivity();
+            case R.id.dataformsLinear:
+                callTaskSelectionActivity();
                 break;
             default:
                 break;
@@ -191,11 +202,11 @@ public class HomeActivityNew extends BaseActivity implements View.OnClickListene
     }
 
     private void callTaskSelectionActivity() {
-        startActivity(new Intent(activity,TaskSelectionListingActivity.class));
+        startActivity(new Intent(activity, TaskSelectionListingActivity.class));
     }
 
     private void callProjectSelectionActivity() {
-        startActivity(new Intent(activity,ProjectSelectionActivity.class));
+        startActivity(new Intent(activity, ProjectSelectionActivity.class));
     }
 
     /**
@@ -211,7 +222,7 @@ public class HomeActivityNew extends BaseActivity implements View.OnClickListene
             startActivity(intent);
             finish();
         } else
-             Toast.makeText(getBaseContext(), getString(R.string.pressToExit), Toast.LENGTH_SHORT).show();
+            Toast.makeText(getBaseContext(), getString(R.string.pressToExit), Toast.LENGTH_SHORT).show();
         backPressed = System.currentTimeMillis();
     }
 
