@@ -91,6 +91,8 @@ public class Constants {
     public static final String SHOWTRAININGMODULEFLAG = "showTrainingModuleFlag";
     public static final String SHOWACTIVITYMODULEFLAG = "showActivityModuleFlag";
     public static final String SHOWPERIODICITYFLAG = "showPeriocityFlag";
+    public static final String SURVEY_NAME_HOME = "SurveyNameFromHome";
+    public static final String SURVEY_ID_HOME = "SurveyIdFromHome";
     public static List<Integer> blockQids=new ArrayList<>();
 
     //-------------------------*******************--------------------

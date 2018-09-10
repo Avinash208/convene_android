@@ -55,7 +55,7 @@ public class ListingActivity extends BaseActivity implements View.OnClickListene
     private LinearLayout backPress;
     private TextView toolbarTitle;
     private String headerName;
-    private static final String MY_PREFS_NAME = "MyPrefsMyPrefs";
+    private static final String MY_PREFS_NAME = "MyPrefs";
     public android.database.sqlite.SQLiteDatabase SurveySummaryReportdatabase;
     FloatingActionButton createNewButton;
     Intent intent;
@@ -110,11 +110,11 @@ public class ListingActivity extends BaseActivity implements View.OnClickListene
         createNewButton = findViewById(R.id.createNewButton);
         dbOpenHelper = ExternalDbOpenHelper.getInstance(this, sharedPreferences.getString(Constants.DBNAME, ""), sharedPreferences.getString("uId", ""));
         dbConveneHelper = ConveneDatabaseHelper.getInstance(this, sharedPreferences.getString("CONVENEDB", ""), sharedPreferences.getString("UID", ""));
-
+        headerName = prefs.getString(Constants.SURVEY_NAME_HOME,"");
+        surveyId = String.valueOf(prefs.getInt(Constants.SURVEY_ID_HOME,0));
         Intent i = getIntent();
-        headerName = i.getStringExtra(Constants.HEADER_NAME);
         try {
-            surveyId = i.getStringExtra(Constants.SURVEY_ID);
+
             SharedPreferences.Editor editor = prefs.edit();
             editor.putInt(SURVEY_ID, Integer.parseInt(surveyId));
             editor.apply();

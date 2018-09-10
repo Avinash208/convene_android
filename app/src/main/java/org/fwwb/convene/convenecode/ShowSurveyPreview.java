@@ -99,9 +99,11 @@ public class ShowSurveyPreview extends AppCompatActivity implements View.OnClick
             editorSaveDraft.putBoolean(ISLOCATIONBASED, false);
             editorSaveDraft.putBoolean(NOTLOCATIONBASED, false);
             editorSaveDraft.apply();
+            prefs.edit().putString("Survey_tittle", i.getStringExtra("survey_title")).apply();
             Intent intent = new Intent(this, SurveyQuestionActivity.class);
             intent.putExtra("SurveyId", getSurveyPrimaryID);
             intent.putExtra(SURVEY_ID_KEY, String.valueOf(surveyId));
+
             startActivity(intent);
             finish();
 

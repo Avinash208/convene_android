@@ -66,7 +66,7 @@ public class Beneficiarylinkages extends AppCompatActivity {
         Tabthree = (TabItem) findViewById(R.id.tabItem3);
         prefs = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
         isBeneficiaryTypeLinkage = isBeneficiaryTypeLinkage();
-        surveyList = dbOpenHelper.getTypeBasedSurvey(String.valueOf(prefs.getInt("survey_id", 0)));
+        surveyList = dbOpenHelper.getTypeBasedSurvey(String.valueOf(prefs.getInt(Constants.SURVEY_ID_HOME, 0)));
 
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.

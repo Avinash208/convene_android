@@ -59,7 +59,7 @@
         android:orientation="horizontal"
         android:layout_margin="@dimen/five"
         android:id="@+id/syncLayout"
-        android:visibility="visible"
+        android:visibility="gone"
         android:background="@color/pink"
         android:paddingStart="@dimen/five"
         android:weightSum="1"

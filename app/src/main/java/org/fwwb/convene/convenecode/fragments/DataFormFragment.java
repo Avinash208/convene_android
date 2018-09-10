@@ -522,7 +522,7 @@ public class DataFormFragment extends Fragment implements PeriodicTypeInterface,
                 onClickFunctionalityVIew(statusTextView, completedSurveyList.get(i).getUuid(), completedSurveyList.get(i).getId());
             } else {
                 statusTextView.setText(R.string.edit_or_view);
-                onClickFunctionality(statusTextView, surveyPrimaryKeyId, completedSurveyList.get(i).getId(),completedSurveyList.get(i).getServerPrimaryKey());
+                onClickFunctionality(statusTextView, surveyPrimaryKeyId, completedSurveyList.get(i).getId(),completedSurveyList.get(i).getServerPrimaryKey(),completedSurveyList.get(i).getSurveyName());
             }
             if (defaultPreferences.getBoolean(Constants.SHOWPERIODICITYFLAG,false)){
                 periodicityTextview.setVisibility(View.VISIBLE);
@@ -550,7 +550,7 @@ public class DataFormFragment extends Fragment implements PeriodicTypeInterface,
     }
 
     private void onClickFunctionality(TextView statusTextView, String beneficiaryUuid, int surveysId,
-                                      String getServerPrimaryKey) {
+                                      String getServerPrimaryKey, String surveyName) {
         statusTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -563,6 +563,7 @@ public class DataFormFragment extends Fragment implements PeriodicTypeInterface,
                     Intent startShowSurveyPreview = new Intent(getActivity(), ShowSurveyPreview.class);
                     startShowSurveyPreview.putExtra("surveyPrimaryKey", parentUUIDExist);
                     startShowSurveyPreview.putExtra("survey_id", surveysId);
+                    startShowSurveyPreview.putExtra("survey_title", surveyName);
                     startShowSurveyPreview.putExtra("visibility", false);
                     startActivityForResult(startShowSurveyPreview, 200);
                 } else {

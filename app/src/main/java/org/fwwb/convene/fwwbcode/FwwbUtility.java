@@ -6,7 +6,10 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Date;
-import java.util.List; /**
+import java.util.List;
+import java.util.Locale;
+
+/**
  * Copyright Mahiti Infotech Pvt Ltd (here after referred to as Mahiti) 2017.
  * All rights reserved. This library cannot be repackaged, included in any other application, reverse engineered, altered or extended without written permission from Mahiti.
  */
@@ -21,8 +24,7 @@ public class FwwbUtility {
     public static List<TaskItemBean> sortList(List<TaskItemBean> itemBeanList, String dateFormat) {
 
         Collections.sort(itemBeanList, (arg0, arg1) -> {
-            SimpleDateFormat format = new SimpleDateFormat(
-                    dateFormat);
+            SimpleDateFormat format = new SimpleDateFormat(dateFormat, Locale.US);
             int compareResult = 0;
             try {
                 Date arg0Date = format.parse(arg0.getTrainingDate());

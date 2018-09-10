@@ -155,10 +155,12 @@ public class ExpandableListAdapterDataCollection extends BaseExpandableListAdapt
         editor.putString(Constants.PROJECTFLOW, "0");
         if (datum.getActive()==0) {
             editor.putInt(SURVEY_ID, datum.getBeneficiaryTypeId());
+            editor.putInt(Constants.SURVEY_ID_HOME,datum.getBeneficiaryTypeId());
             editor.putInt(Constants.ADDBUTTON, 1);
         }
         else {
             editor.putInt(SURVEY_ID, surveyDetailBean.getSurveyId());
+            editor.putInt(Constants.SURVEY_ID_HOME,surveyDetailBean.getSurveyId());
             editor.putInt(Constants.ADDBUTTON, 0);
         }
 
@@ -166,6 +168,8 @@ public class ExpandableListAdapterDataCollection extends BaseExpandableListAdapt
         editor.putString(Constants.BENEFICIARY_IDS,surveyDetailBean.getBeneficiaryIds());
         editor.putString(Constants.FACILITY_IDS,surveyDetailBean.getFacilityIds());
         editor.putString("Survey_tittle",surveyDetailBean.getSurveyName());
+        editor.putString(Constants.SURVEY_NAME_HOME,surveyDetailBean.getSurveyName());
+
 
         editor.putInt(Constants.Q_CONFIGS, surveyDetailBean.getQConfig());
         editor.apply();
