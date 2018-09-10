@@ -4,11 +4,6 @@ package org.fwwb.convene.convenecode.BeenClass;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-/**
- *  Been to add child link
- *
- */
-
 public class childLink implements Parcelable {
 
     private String child_form_id;
