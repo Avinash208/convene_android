@@ -1599,7 +1599,9 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
     public void displayQuestionTextTooTip(Page displayQuestionModel, TextView questionTextView, ImageView toolTip) {
         // Set Question with mandatory or not as red start
 //        String getQuestionUpend="<font color=\"red\"><b>"+displayQuestionModel.getQuestionUcode()+"</b>.</font> "+displayQuestionModel.getQuestion();
-        String getQuestionUpend="<b>"+displayQuestionModel.getQuestionUcode()+"</b>."+displayQuestionModel.getQuestion();
+        String getQuestionUpend = displayQuestionModel.getQuestion();
+        if (!displayQuestionModel.getQuestionUcode().isEmpty() && !"0".equals(displayQuestionModel.getQuestionUcode()))
+            getQuestionUpend = "<b>"+displayQuestionModel.getQuestionUcode()+"</b>."+displayQuestionModel.getQuestion();
         if (displayQuestionModel.getMandatory().contains("1"))
             SupportClass.setRedStar(questionTextView, getQuestionUpend);
         else

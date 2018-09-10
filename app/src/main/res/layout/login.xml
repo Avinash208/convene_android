@@ -58,7 +58,7 @@
                     android:hint="@string/nameHint"
                     android:imeOptions="actionNext"
                     android:maxLines="1"
-                    android:text="yale"
+                    android:text=""
                     android:paddingBottom="20dp"
                     android:paddingLeft="10dp"
                     android:singleLine="true"
@@ -95,7 +95,7 @@
                     android:textColor="#000"
                     android:textColorHint="#000"
                     android:textSize="20sp"
-                    android:text="Admin@2018"/>
+                    android:text=""/>
 
 
             </android.support.design.widget.TextInputLayout>

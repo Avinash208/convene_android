@@ -6,7 +6,7 @@
         android:bottomRightRadius="4dp"
         android:topLeftRadius="4dp"
         android:topRightRadius="4dp" />
-    <solid android:color="@color/yale_homepage_tab" />
+    <solid android:color="@color/convene_toolbar_color" />
     <padding
         android:bottom="0dp"
         android:left="0dp"
@@ -17,5 +17,5 @@
         android:height="20dp" />
     <stroke
         android:width="3dp"
-        android:color="@color/yale_homepage_tab" />
+        android:color="@color/convene_toolbar_color" />
 </shape>

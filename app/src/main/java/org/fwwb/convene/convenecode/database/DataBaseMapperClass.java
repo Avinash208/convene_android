@@ -259,7 +259,7 @@ public class DataBaseMapperClass {
             cursor=database.rawQuery(QuestionQuery,null);
             Logger.logD(TAG,questionQueryStr + QuestionQuery);
             if (cursor.getCount()<=0){
-                QuestionQuery="SELECT DISTINCT Question.help_text,Question.question_json,Question.location_levels,Question.question_id, Question.id, Question.block_id, Question.question_code, Question.answer_type,  Question.mandatory, Question.question_text, Question.validation from Question , Options  where Question.id="+qcode+" and Question.active = 2 and  Question.survey_id =" + survey_id;
+                QuestionQuery="SELECT DISTINCT Question.help_text,Question.question_Ucode,Question.question_json,Question.location_levels,Question.question_id, Question.id, Question.block_id, Question.question_code, Question.answer_type,  Question.mandatory, Question.question_text, Question.validation from Question , Options  where Question.id="+qcode+" and Question.active = 2 and  Question.survey_id =" + survey_id;
                 cursor=database.rawQuery(QuestionQuery,null);
             }
             if(cursor.getCount()>0 && cursor.moveToFirst()){

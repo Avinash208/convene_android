@@ -3,8 +3,20 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@drawable/login_bg_fwwb"
+    android:background="@color/fwwb_backround"
     android:orientation="vertical">
+
+
+<FrameLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/login_bg_fwwb"
+        />
+</FrameLayout>
+
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -51,7 +63,7 @@
                     android:hint="@string/nameHint"
                     android:imeOptions="actionNext"
                     android:maxLines="1"
-                    tools:text="yale"
+                    tools:text="fwwb"
                     android:paddingBottom="20dp"
                     android:paddingLeft="10dp"
                     android:singleLine="true"
@@ -105,8 +117,8 @@
                     android:layout_height="match_parent"
 
                     android:gravity="center"
-                    android:textStyle="bold"
                     android:text="@string/let_s_go"
+                    android:fontFamily="@font/heebo_bold"
                     android:textColor="@color/textcolor"
                     android:textSize="18sp" />
             </LinearLayout>

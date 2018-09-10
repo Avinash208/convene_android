@@ -3,6 +3,7 @@ package org.fwwb.convene.fwwbcode.adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -48,7 +49,15 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskItemHolder
         holder.batchNameTv.setText(taskItemBean.getBatchName());
         holder.batchParticipantsTv.setText(""+taskItemBean.getBatchParticipants());
         holder.trainingDateTv.setText(taskItemBean.getTrainingDate());
-        holder.trainingLocationTv.setText(taskItemBean.getTrainingStatus()+"");
+        if (taskItemBean.getTrainingStatus()<=1)
+        {
+            holder.trainingLocationTv.setText(taskItemBean.getTrainingStatus()+" hour");
+        }
+        else
+        {
+            holder.trainingLocationTv.setText(taskItemBean.getTrainingStatus()+" hours");
+        }
+
         holder.trainingNameTv.setText(taskItemBean.getTrainingName());
         holder.taskTile.setOnClickListener(v -> {
          callDetailsActivity(taskItemBean);
@@ -73,7 +82,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskItemHolder
         TextView trainingLocationTv;
         TextView batchParticipantsTv;
         TextView trainingDateTv;
-        LinearLayout taskTile;
+        CardView taskTile;
         public TaskItemHolder(View itemView) {
             super(itemView);
             batchNameTv = itemView.findViewById(R.id.batchNameTv);

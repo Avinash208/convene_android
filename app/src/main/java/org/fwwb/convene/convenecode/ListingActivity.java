@@ -297,7 +297,7 @@ public class ListingActivity extends BaseActivity implements View.OnClickListene
                      editor.putInt(SURVEY_ID, Integer.parseInt(surveyId));
                      editor.putString("Survey_tittle", headerName);
                      editor.apply();
-                     new StartSurvey(ListingActivity.this, ListingActivity.this, prefs.getInt(SURVEY_ID, 0), prefs.getInt(SURVEY_ID, 0), "", "", "", "", "").execute(); //Chaned by guru removed "village Name"
+                     new StartSurvey(ListingActivity.this, ListingActivity.this, prefs.getInt(SURVEY_ID, 0), prefs.getInt(SURVEY_ID, 0), "", "", "", "", "", null, "", "").execute(); //Chaned by guru removed "village Name"
                      return;
                  }
                    List<String> getLanguageToString= new ArrayList<>();
@@ -358,7 +358,7 @@ public class ListingActivity extends BaseActivity implements View.OnClickListene
                 SharedPreferences.Editor editor = prefs.edit();
                 editor.putInt(SURVEY_ID, Integer.parseInt(surveyId));
                 editor.apply();
-                new StartSurvey(ListingActivity.this, ListingActivity.this, prefs.getInt(SURVEY_ID, 0), prefs.getInt(SURVEY_ID, 0), "Village Name", "", "", "", "").execute();
+                new StartSurvey(ListingActivity.this, ListingActivity.this, prefs.getInt(SURVEY_ID, 0), prefs.getInt(SURVEY_ID, 0), "Village Name", "", "", "", "", null, "", "").execute();
 
     }
 
@@ -442,16 +442,16 @@ public class ListingActivity extends BaseActivity implements View.OnClickListene
         String headingName = "";
         switch (headerName) {
             case Constants.GROUP:
-                createNewButton.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.yale_toolbar_color)));
+                createNewButton.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.convene_toolbar_color)));
                 return headerName;
             case Constants.FPO:
-                createNewButton.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.yale_toolbar_color)));
+                createNewButton.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.convene_toolbar_color)));
                 return headerName;
             case Constants.HOUSEHOLDS:
-                createNewButton.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.yale_toolbar_color)));
+                createNewButton.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.convene_toolbar_color)));
                 return headerName;
             case Constants.FARMERS:
-                createNewButton.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.yale_toolbar_color)));
+                createNewButton.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.convene_toolbar_color)));
                 return headerName;
             default:
                 headingName= headerName;
@@ -547,7 +547,7 @@ public class ListingActivity extends BaseActivity implements View.OnClickListene
             syncSurveyDatabase.close();
             Logger.logV("Listsize", "List size of summery report" + syncSurveyList.size());
         } catch (Exception e) {
-            Logger.logE(SurveySummaryReport.class.getSimpleName(), "Exception in SyncSurveyActivity  summaryReport method ", e);
+            Logger.logE(ListingActivity.class.getSimpleName(), "Exception in SyncSurveyActivity  summaryReport method ", e);
         }
         return pendSurveyStatus;
     }

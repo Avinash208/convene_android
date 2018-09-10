@@ -12,6 +12,7 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
 
+import org.fwwb.convene.fwwbcode.presentor.attendancepresentor.SaveAttendanceListener;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -42,6 +43,7 @@ import static android.content.Context.MODE_PRIVATE;
  * Created by mahiti on 2/12/16.
  */
 public class StartSurvey extends AsyncTask<Context, Integer, String> {
+    private String trainingUuid ="";
     private String captureDate = "";
     private SharedPreferences prefs;
     Context context;
@@ -61,11 +63,13 @@ public class StartSurvey extends AsyncTask<Context, Integer, String> {
     private static final String MY_PREFS_NAME = "MyPrefs";
     private static final String MY_PREFERENCES = "MyPrefs";
     private String beneficiaryDetails;
+    private  SaveAttendanceListener saveAttendanceListener;
     private ConveneDatabaseHelper dbOpenHelper;
     public android.database.sqlite.SQLiteDatabase database;
     private String facility_id = "0";
     private String beneficiary_id = "0";
     private String uuid = "";
+    private  String batchUuid;
     private int typeId = 0;
     private int surveyId = 0;
     private int languageId = 0;
@@ -112,7 +116,6 @@ public class StartSurvey extends AsyncTask<Context, Integer, String> {
         this.responsePrimaryID = "";
         dbOpenHelper = ConveneDatabaseHelper.getInstance(context, preferences.getString(Constants.CONVENE_DB, ""), preferences.getString("UID", ""));
     }
-
     /**
      * @param surveySummaryReport
      * @param activity
@@ -123,9 +126,14 @@ public class StartSurvey extends AsyncTask<Context, Integer, String> {
      * @param clusterLevelName
      * @param serverResponseID
      * @param captureDate
+     * @param saveAttendanceListener
+     * @param trainingUuid
+     * @param batchUuid
      */
     public StartSurvey(Context surveySummaryReport, Activity activity, int surveyId, int levelId, String locationName, String beneficiaryDetails, String clusterLevelName
-            , String serverResponseID, String captureDate) {
+            , String serverResponseID, String captureDate, SaveAttendanceListener saveAttendanceListener, String trainingUuid, String batchUuid) {
+
+
 
         this.context = surveySummaryReport;
         this.activity = activity;
@@ -133,6 +141,9 @@ public class StartSurvey extends AsyncTask<Context, Integer, String> {
         this.surveyId = surveyId;
         this.selectedLevel = locationName;
         this.beneficiaryDetails = beneficiaryDetails;
+        this.saveAttendanceListener = saveAttendanceListener;
+        this.trainingUuid = trainingUuid;
+        this.batchUuid = batchUuid;
         values = new HashMap<>();
         this.captureDate = captureDate;
         prefs = context.getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
@@ -319,6 +330,12 @@ public class StartSurvey extends AsyncTask<Context, Integer, String> {
             values.put("cluster_id", String.valueOf(selectedClusterId));
             values.put("clustername", selectedLevel);
             values.put("clusterkey", "Hamlet");
+            if (trainingUuid == null)
+                trainingUuid = "";
+            values.put("trainingUuid", trainingUuid);
+            if (batchUuid == null)
+                batchUuid = "";
+            values.put("batchUuid", batchUuid);
             if (("").equalsIgnoreCase(beneficiaryDetails)) {
 
                 values.put("beneficiary_details", "");
@@ -411,6 +428,13 @@ public class StartSurvey extends AsyncTask<Context, Integer, String> {
      */
     private void callNextActivity(String response) {
         if (!response.equals("")) {
+
+            if (saveAttendanceListener!= null) {
+                saveAttendanceListener.savedAttendanceSurvey(true, beneficiaryDetails, response);
+                if (syncSurveyProgDialog != null && syncSurveyProgDialog.isShowing())
+                    syncSurveyProgDialog.cancel();
+                return;
+            }
             Intent intent = new Intent(activity, SurveyQuestionActivity.class);
             intent.putExtra("SurveyId", response);
             intent.putExtra(Constants.SURVEY_ID, String.valueOf(prefs.getInt(Constants.SURVEY_ID, 0)));

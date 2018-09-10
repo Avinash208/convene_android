@@ -3,7 +3,6 @@ package org.fwwb.convene.fwwbcode.activities;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -15,7 +14,6 @@ import android.view.View;
 import android.widget.TextView;
 
 import org.fwwb.convene.R;
-import org.fwwb.convene.convenecode.ListingActivity;
 import org.fwwb.convene.convenecode.database.Utilities;
 import org.fwwb.convene.convenecode.utils.StartSurvey;
 import org.fwwb.convene.fwwbcode.FwwbConstants;
@@ -105,7 +103,7 @@ public class TaskSelectionListingActivity extends AppCompatActivity implements T
         editor.putInt(SURVEY_ID, prefs.getInt("TraningModuleSurvey",188));
         editor.putString("Survey_tittle", "Task");
         editor.apply();
-        new StartSurvey(TaskSelectionListingActivity.this, TaskSelectionListingActivity.this, prefs.getInt(SURVEY_ID, 0), prefs.getInt(SURVEY_ID, 0), "", "", "", "", "").execute(); //Chaned by guru removed "village Name"
+        new StartSurvey(TaskSelectionListingActivity.this, TaskSelectionListingActivity.this, prefs.getInt(SURVEY_ID, 0), prefs.getInt(SURVEY_ID, 0), "", "", "", "", "", null, "", "").execute(); //Chaned by guru removed "village Name"
 
     }
 

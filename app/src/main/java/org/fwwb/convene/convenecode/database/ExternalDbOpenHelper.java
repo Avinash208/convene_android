@@ -2506,21 +2506,17 @@ public class ExternalDbOpenHelper extends SQLiteOpenHelper {
 
 
     /**
-     * @param beneficiary
      * @param beneficiaryType
-     * @param columnName
      * @return
      */
-    public List<SurveysBean> getTypeBasedSurvey(String beneficiary, String beneficiaryType, String columnName) {
+    public List<SurveysBean> getTypeBasedSurvey(String beneficiaryType) {
         List<SurveysBean> locationbasedbeneficiaryName = new ArrayList<>();
         SQLiteDatabase db = openDataBase();
         String query = "";
         Logger.logV(TAG, tagStr + db.getPath());
-        if ("Beneficiary".equalsIgnoreCase(beneficiary)) {
-            query = "SELECT  * FROM Surveys where " + columnName + "=" + beneficiaryType;
-        } else {
-            query = "select * from Surveys where Surveys.beneficiary_ids=" + beneficiaryType +" order by  Surveys.surveyId ASC";
-        }
+
+        query = "select * from Surveys where is_training_survey !=2 and category_id=0 and Surveys.beneficiary_ids=" + beneficiaryType;
+
         Cursor cursor = db.rawQuery(query, null);
         Logger.logV(TAG, tagStr + query);
         if (cursor.getCount() != 0 && cursor.moveToFirst()) {
@@ -4551,5 +4547,30 @@ public class ExternalDbOpenHelper extends SQLiteOpenHelper {
 
         }
         return ruleEngine;
+    }
+
+    public int getAttendanceSurvey(ExternalDbOpenHelper externalDbOpenHelper) {
+        int surveyId = 0;
+        Cursor cursor = null;
+        try {
+            String query = "Select surveyId from Surveys where is_training_survey=2";
+            SQLiteDatabase db = database;
+            if (db== null || !db.isOpen())
+                externalDbOpenHelper.getWritableDatabase();
+
+            cursor = db.rawQuery(query, null);
+            if (cursor.getCount() != 0 && cursor.moveToFirst()) {
+                do {
+                    surveyId = cursor.getInt(cursor.getColumnIndex("surveyId"));
+                } while (cursor.moveToNext());
+            }
+        } catch (Exception e) {
+            Logger.logE("getAttendanceSurvey", e.getMessage(),e);
+        }finally {
+            if (cursor != null)
+                cursor.close();
+        }
+        return surveyId;
+
     }
 }

@@ -20,10 +20,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.fwwb.convene.R;
+import org.fwwb.convene.convenecode.BeenClass.SurveysBean;
 import org.fwwb.convene.convenecode.database.ExternalDbOpenHelper;
 import org.fwwb.convene.convenecode.fragments.DataFormFragment;
 import org.fwwb.convene.convenecode.utils.Constants;
 import org.fwwb.convene.convenecode.utils.Logger;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Beneficiarylinkages extends AppCompatActivity {
 
@@ -46,6 +50,8 @@ public class Beneficiarylinkages extends AppCompatActivity {
     private String isBeneficiaryTypeLinkage = "";
     private static final String MY_PREFS_NAME = "MyPrefs";
     private SharedPreferences prefs;
+    private List<SurveysBean> surveyList = new ArrayList<>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +66,8 @@ public class Beneficiarylinkages extends AppCompatActivity {
         Tabthree = (TabItem) findViewById(R.id.tabItem3);
         prefs = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
         isBeneficiaryTypeLinkage = isBeneficiaryTypeLinkage();
+        surveyList = dbOpenHelper.getTypeBasedSurvey(String.valueOf(prefs.getInt("survey_id", 0)));
+
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
@@ -138,6 +146,7 @@ public class Beneficiarylinkages extends AppCompatActivity {
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
         private String beneficiaryWithLinkage[] = {getResources().getString(R.string.tab_text_2), getResources().getString(R.string.tab_text_1), getResources().getString(R.string.tab_text_3)};
+        private String beneficiaryWithoutActivity[] = { getResources().getString(R.string.tab_text_1), getResources().getString(R.string.tab_text_3)};
         private String beneficiaryWithOUTLinkage[] = {getResources().getString(R.string.tab_text_2), getResources().getString(R.string.tab_text_1)};
 
         public SectionsPagerAdapter(FragmentManager fm) {
@@ -147,6 +156,8 @@ public class Beneficiarylinkages extends AppCompatActivity {
         @Nullable
         @Override
         public CharSequence getPageTitle(int position) {
+            if (surveyList.isEmpty())
+                return beneficiaryWithoutActivity[position];
             if (isBeneficiaryTypeLinkage.equals(""))
                 return beneficiaryWithOUTLinkage[position];
             else
@@ -157,6 +168,16 @@ public class Beneficiarylinkages extends AppCompatActivity {
         public Fragment getItem(int position) {
             // getItem is called to instantiate the fragment for the given page.
             // Return a BeneficiaryLinkageDetails (defined as a static inner class below).
+
+            if (surveyList.isEmpty())
+            {
+                if (position == 0) {
+                    return BeneficiaryLinkageDetails.newInstance(position + 1);
+                } else if (position == 1) {
+                    return BeneficiaryLinkageActivityFragment.newInstance(position + 1);
+
+                }
+            }
             if (position == 0) {
                 Bundle bundle = new Bundle();
                 DataFormFragment dataFormFragment = new DataFormFragment();
@@ -175,6 +196,8 @@ public class Beneficiarylinkages extends AppCompatActivity {
         @Override
         public int getCount() {
             // Show 3 total pages.
+            if (surveyList.isEmpty())
+                return beneficiaryWithoutActivity.length;
             if (isBeneficiaryTypeLinkage.equals(""))
                 return beneficiaryWithOUTLinkage.length;
             else

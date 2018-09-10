@@ -3,22 +3,35 @@
     android:layout_width="match_parent"
     android:layout_height="50dp"
     android:orientation="horizontal"
-    android:padding="13dp"
+    android:paddingStart="20dp"
+    android:paddingTop="@dimen/five"
+    android:paddingBottom="@dimen/five"
     android:weightSum="2"
     android:background="@drawable/n_decorate">
+    <ImageView
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_gravity="center_vertical"
+        android:src="@drawable/beneficiary_icon"
+        />
+
     <TextView
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
         android:id="@+id/lblListHeader"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_weight="1.8"
+        android:paddingStart="20dp"
+        android:gravity="center_vertical"
+        android:layout_gravity="center_vertical"
+        android:text="Trainings"
         android:fontFamily="@font/heebo_regular"
         android:padding="1dp"
         android:paddingLeft="?android:attr/expandableListPreferredItemPaddingLeft"
-        android:textAllCaps="true"
+        android:textAllCaps="false"
         android:textColor="@color/white"
         android:textSize="18sp"
-        android:textStyle="normal" />
+        android:textStyle="normal"
+        />
+
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"

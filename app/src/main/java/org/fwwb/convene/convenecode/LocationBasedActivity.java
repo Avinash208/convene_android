@@ -87,7 +87,7 @@ public class LocationBasedActivity extends AppCompatActivity {
                     int getCount = handler.getPeriodicityLocationBased(surveysBean, prefs.getInt(Constants.SURVEY_ID, 0), periodicityFlag, new Date(),updateListLocation, "")                                             ;
 
                    if (getCount==0) {
-                       new StartSurvey(activity, activity, prefs.getInt(Constants.SURVEY_ID, 0), clusterID, updateListLocation, "", "", "", "").execute();
+                       new StartSurvey(activity, activity, prefs.getInt(Constants.SURVEY_ID, 0), clusterID, updateListLocation, "", "", "", "", null, "", "").execute();
                    }else{
                        ToastUtils.displayToast("Periodicity completed", activity);
                    }

@@ -141,7 +141,7 @@ public class UpdateSurveyAsyncTask extends AsyncTask<Context, Integer, String> {
                        insertIntoSurveyTable(jsonObj.getString("response_id"),jsonObj.getString("response_dump"),jsonObj.getString("server_date_time"),
                         jsonObj.getString("survey_id"),jsonObj.getString("cluster_name"),jsonObj.getInt("cluster_id"),jsonObj.getString("bene_uuid"),
                         jsonObj.getString("location"),jsonObj.getString("cluster_beneficiary"),
-                               jsonObj.getString("grid_inline_questions"), jsonObj.getString("app_answer_on") ,jsonObj.getString("training_survey_id"));
+                               jsonObj.getString("grid_inline_questions"), jsonObj.getString("app_answer_on") ,jsonObj.getString("training_survey_id"),jsonObj);
             }
         } catch (Exception e) {
             Logger.logE("the status", "the questionsArray lenth is " ,e);
@@ -151,7 +151,7 @@ public class UpdateSurveyAsyncTask extends AsyncTask<Context, Integer, String> {
 
     private void insertIntoSurveyTable(String response_UUID, String response_DUMP, String server_modified_date,
                                        String surveyId, String cluster_name, int cluserid, String uuid, String location,
-                                       String cluster_beneficiary, String gridResponse, String surveyCaptureDate, String jsonObj) {
+                                       String cluster_beneficiary, String gridResponse, String surveyCaptureDate, String jsonObj, JSONObject obj) {
          Map<String, String> values = new HashMap<>();
         values.put("start_survey_status", "0");
         values.put("inv_id", preferences.getString("uId",""));
@@ -185,7 +185,7 @@ public class UpdateSurveyAsyncTask extends AsyncTask<Context, Integer, String> {
         Logger.logD("cluserid----->", String.valueOf(cluserid));
         values.put("clustername", cluster_name);
         values.put("clusterkey", "");
-        values.put("clusterkey", "");
+
         values.put("level1", "");
         values.put("level2", "");
         values.put("level3", "");
@@ -201,14 +201,16 @@ public class UpdateSurveyAsyncTask extends AsyncTask<Context, Integer, String> {
         values.put("beneficiary_ids", cluster_beneficiary);
         values.put("beneficiary_details_status", "1");
         values.put("training_survey_id",jsonObj );
-        if (true) {
-            values.put("extra_column", "1");
-        } else {
-            values.put("extra_column", "0");
+        try {
+            if (obj.has("training_uuid"))
+                values.put("trainingUuid",obj.getString("training_uuid"));
+            if (obj.has("batch_uuid"))
+                values.put("batchUuid",obj.getString("batch_uuid"));
+        } catch (Exception e) {
+            Logger.logE(TAG,e.getMessage(),e);
         }
+        values.put("extra_column", "1");
         Logger.logV("SyncClass", "the response is" + String.valueOf(values));
-        Logger.logV("SyncClass", "the response is" + String.valueOf(values));
-
         String response = syncSurveyHandler.insertSurveyDataToDB(values);
         Logger.logV("response", "the response is" + response);
         updateToResponseTable(response,response_DUMP,location,gridResponse,surveyId);

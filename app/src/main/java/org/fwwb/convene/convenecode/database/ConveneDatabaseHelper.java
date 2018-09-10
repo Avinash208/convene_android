@@ -558,7 +558,7 @@ public class ConveneDatabaseHelper extends SQLiteOpenHelper {
 
                 cv.put("question_id",String.valueOf(listOfObjects.getQuestion().get(i).getQuestionid()));
                 // Modified by Avinash raj . added Question Ucode Concept for YALE Application.
-                cv.put("question_Ucode","20014");
+                cv.put("question_Ucode","");
 
                 //Modify byy guru if dependencyDatatype not null then only tostring gives us value else will return null
                 String json;
@@ -1221,5 +1221,34 @@ public class ConveneDatabaseHelper extends SQLiteOpenHelper {
     public void deleteLanguageALl() {
        String query="DELETE FROM Language";
         database.execSQL(query);
+    }
+
+    public int getAttendaceQuestion(int surveyId) {
+
+        int id = 0;
+        String query= "select id from Question where survey_id="+surveyId+" limit 1";
+        Cursor cursor = null;
+        try {
+            if (database == null || !database.isOpen())
+                database = openDataBase();
+            cursor = database.rawQuery(query, null);
+            if (cursor.moveToFirst()) {
+                do {
+                    id = cursor.getInt(cursor.getColumnIndex("id"));
+                }
+                while (cursor.moveToNext());
+
+
+            }
+            cursor.close();
+        }catch (Exception e)
+        {
+            Logger.logE("getAllOptions",e.getMessage(),e);
+        }
+        finally {
+            if (cursor != null)
+                cursor.close();
+        }
+        return id;
     }
 }

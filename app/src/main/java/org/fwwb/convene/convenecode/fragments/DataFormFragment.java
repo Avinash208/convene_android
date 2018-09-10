@@ -17,8 +17,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -219,7 +217,7 @@ public class DataFormFragment extends Fragment implements PeriodicTypeInterface,
      * method to get the facility based survey based on facility id in survey table
      */
     private void getTheFacilityBasedForm() {
-        surveyList = externalDbOpenHelper.getTypeBasedSurvey("Facility",String.valueOf(surveysId), "facility_ids");
+        surveyList = externalDbOpenHelper.getTypeBasedSurvey(String.valueOf(surveysId));
     }
 
 
@@ -405,7 +403,7 @@ public class DataFormFragment extends Fragment implements PeriodicTypeInterface,
                 if (!gpsTracker.canGetLocation()) {
                     gpsTracker.showSettingsAlert();
                 } else {
-                    new StartSurvey(getActivity(), getActivity(), surveysBean.getId(), 0, "Static Village", surveyPrimaryKeyId, boundaryLevel, "", "").execute();
+                    new StartSurvey(getActivity(), getActivity(), surveysBean.getId(), 0, "Static Village", surveyPrimaryKeyId, boundaryLevel, "", "", null, "", "").execute();
                 }
 
             } else if (("Continue").equalsIgnoreCase(btn)) {
@@ -451,7 +449,7 @@ public class DataFormFragment extends Fragment implements PeriodicTypeInterface,
             if (jsonArray != null)
                 new StartSurvey(getActivity(), getActivity(), surveysBean.getId(), Integer.parseInt(locationId), locationName, jsonArray.toString(), boundaryLevel, selectedBeneficiaryId, previousPeriodLastDate).execute();
             else
-                new StartSurvey(getActivity(), getActivity(), surveysBean.getId(), Integer.parseInt(locationId), locationName, beneficiaryArray, boundaryLevel, "", previousPeriodLastDate).execute();
+                new StartSurvey(getActivity(), getActivity(), surveysBean.getId(), Integer.parseInt(locationId), locationName, beneficiaryArray, boundaryLevel, "", previousPeriodLastDate, null, "", "").execute();
         });
         dialog.show();
     }

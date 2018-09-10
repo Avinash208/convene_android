@@ -166,7 +166,7 @@ public class ExpandableListAdapterDataCollection extends BaseExpandableListAdapt
         editor.putString(Constants.BENEFICIARY_IDS,surveyDetailBean.getBeneficiaryIds());
         editor.putString(Constants.FACILITY_IDS,surveyDetailBean.getFacilityIds());
         editor.putString("Survey_tittle",surveyDetailBean.getSurveyName());
-        Logger.logV("the survye id is","the survey id is"+surveyDetailBean.getSurveyId());
+
         editor.putInt(Constants.Q_CONFIGS, surveyDetailBean.getQConfig());
         editor.apply();
         Logger.logD("-->start time","checking time line");

@@ -123,6 +123,7 @@ public class DBHandler extends SQLiteOpenHelper {
                 "level7 TEXT," +
                 "training_survey TEXT," +
                 "training_uuid TEXT," +
+                "batch_uuid TEXT," +
                 "training_survey_id TEXT," +//to get for which Beneficiary type this training(DCF) attached
                 "capture_date DATETIME," +
                 "fac_uuid,beneficiary_type_id TEXT,facility_type_id TEXT,server_primary_key INTEGER)";
@@ -224,6 +225,8 @@ public class DBHandler extends SQLiteOpenHelper {
             values.put("facility_type_id", queryValues.get("facility_type_id"));
             values.put(SERVER_PRIMARY_KEY, queryValues.get("response_parent_uuid"));
             values.put("training_survey_id", queryValues.get("training_survey_id"));
+            values.put("training_uuid", queryValues.get("trainingUuid"));
+            values.put("batch_uuid", queryValues.get("batchUuid"));
             if (database == null || !database.isOpen())
                 database = this.getWritableDatabase(DATABASESECRETKEY);
             Logger.logD(TAG, "SurveyTable" + values.toString());
@@ -990,13 +993,21 @@ public class DBHandler extends SQLiteOpenHelper {
             try {
                 SQLiteDatabase sqLiteDatabase = this.getWritableDatabase(DATABASESECRETKEY);
                 ContentValues values = new ContentValues();
-                values.put("level1", jsonObject.getString("1"));
-                values.put("level2", jsonObject.getString("2"));
-                values.put("level3", jsonObject.getString("3"));
-                values.put("level4", jsonObject.getString("4"));
-                values.put("level5", jsonObject.getString("5"));
-                values.put("level6", jsonObject.getString("6"));
-                values.put("level7", jsonObject.getString("7"));
+                try {
+                    values.put("level1", jsonObject.getString("1"));
+                    values.put("level2", jsonObject.getString("2"));
+                    values.put("level3", jsonObject.getString("3"));
+                    values.put("level4", jsonObject.getString("4"));
+                    values.put("level5", jsonObject.getString("5"));
+                    if (!jsonObject.has("6"))
+                        jsonObject.put("6","");
+                    if (!jsonObject.has("7"))
+                        jsonObject.put("7","");
+                    values.put("level6", jsonObject.getString("6"));
+                    values.put("level7", jsonObject.getString("7"));
+                } catch (JSONException e) {
+                    Logger.logE("updateAddressRecordFromServer",e.getMessage(),e);
+                }
                 int getInsertedresult = sqLiteDatabase.update(SURVEY_TABLE, values, "uuid" + " = ?", new String[]{surveyPrimaryKey});
                 Logger.logD("exception", "->" + getInsertedresult);
             } catch (Exception e) {
@@ -1768,9 +1779,9 @@ public class DBHandler extends SQLiteOpenHelper {
         return getResponseText;
     }
 
-    public String getResponseChoise(String surveyPrimaryKeyId, int getquestionId, String getValue) {
+    public String getResponseChoise(String surveyPrimaryKeyId) {
         String getResponseText="0";
-        String responseQuere = "select *  from Response where Response.survey_id='"+surveyPrimaryKeyId+"' and Response.ans_code="+getValue;
+        String responseQuere = "select *  from Response where Response.survey_id='"+surveyPrimaryKeyId+"'";
         SQLiteDatabase db = getdatabaseinstance_read();
         Cursor cursor = db.rawQuery(responseQuere, null);
         try {
@@ -1799,5 +1810,57 @@ public class DBHandler extends SQLiteOpenHelper {
         } catch (Exception e) {
             Logger.logE("exception", "exception in date fragment", e);
         }
+    }
+
+
+    public Map<String, String> getAllAttendanceOfTraining(String trainingUuid, String batchUuid) {
+        String responseQuere = "select uuid,beneficiary_ids from Survey where batch_uuid ='"+batchUuid+"' and  training_uuid='"+trainingUuid+"'";
+        Map<String,String> memberAtteendance = new HashMap<>();
+        Cursor cursor =null;
+        try {
+            SQLiteDatabase db= database;
+            if (database == null || !database.isOpen())
+                db = getdatabaseinstance_read();
+
+            Logger.logV("getAllAttendanceOfTraining",responseQuere);
+            cursor = db.rawQuery(responseQuere, null);
+            if (cursor.getCount() != 0 && cursor.moveToFirst()) {
+                do {
+                    String beneficiaryIds = cursor.getString(cursor.getColumnIndex("beneficiary_ids"));
+                    String uuid = cursor.getString(cursor.getColumnIndex("uuid"));
+                    memberAtteendance.put(beneficiaryIds,uuid);
+                } while (cursor.moveToNext());
+            }
+        } catch (Exception e) {
+            Logger.logE(TAG, "Exception on getting all assessment", e);
+        }finally {
+            if (cursor != null)
+                cursor.close(); ;
+        }
+        return memberAtteendance;
+    }
+
+    public List<String> getUnsyncAttendance(String trainingUuid, String uuidForInQuery) {
+        List<String> list = new ArrayList<>();
+        String responseQuere = "select uuid from Survey where survey_status='1' and training_uuid='"+trainingUuid+"' and beneficiary_ids IN("+uuidForInQuery+")";
+        Cursor cursor =null;
+        try {
+            SQLiteDatabase db= database;
+            if (database == null || !database.isOpen())
+                db = getdatabaseinstance_read();
+            cursor = db.rawQuery(responseQuere, null);
+            if (cursor.getCount() != 0 && cursor.moveToFirst()) {
+                do {
+                    String uuid = cursor.getString(cursor.getColumnIndex("uuid"));
+                    list.add(uuid);
+                } while (cursor.moveToNext());
+            }
+        } catch (Exception e) {
+            Logger.logE(TAG, "Exception on getting all assessment", e);
+        }finally {
+            if (cursor != null)
+                cursor.close(); ;
+        }
+        return list;
     }
 }

@@ -279,7 +279,7 @@ public class BeneficiaryLinkageActivityFragment extends Fragment implements Push
                                     preferenceEd.putBoolean("isLocationBased", true);
                                     preferenceEd.apply();
                                     Utilities.setSurveyStatus(prefs,"new");
-                                    new StartSurvey(getActivity(), getActivity(), sharedPreferences.getInt(Constants.SURVEY_ID, 0), sharedPreferences.getInt(Constants.SURVEY_ID, 0), "Village Name", "", "", "", "").execute();
+                                    new StartSurvey(getActivity(), getActivity(), sharedPreferences.getInt(Constants.SURVEY_ID, 0), sharedPreferences.getInt(Constants.SURVEY_ID, 0), "Village Name", "", "", "", "", null, "", "").execute();
                                 }
                             });
                             deleteSelectedBen.setOnClickListener(new View.OnClickListener() {
@@ -357,7 +357,7 @@ public class BeneficiaryLinkageActivityFragment extends Fragment implements Push
         Utilities.setSurveyStatus(prefs,"new");
 
 
-        new StartSurvey(getActivity(), getActivity(), sharedPreferences.getInt(Constants.SURVEY_ID, 0), sharedPreferences.getInt(Constants.SURVEY_ID, 0), "Village Name", "", "", "", "").execute();
+        new StartSurvey(getActivity(), getActivity(), sharedPreferences.getInt(Constants.SURVEY_ID, 0), sharedPreferences.getInt(Constants.SURVEY_ID, 0), "Village Name", "", "", "", "", null, "", "").execute();
     }
 
     private void deleteFunctionality(ArrayList<childLink> getChildUUids, int finalJ, List<QuestionAnswer> headingNameList, int finalI, List<QuestionAnswer> getUnderChildList) {

@@ -86,7 +86,7 @@ public class PendingSurveyAsyncTask extends AsyncTask<String, Integer, List<Surv
                    if (getDataType.equalsIgnoreCase("Number"))
                          getUserEnterText= handler.getResponseText(surveyPrimaryKeyId,getquestionId);
                    else if (getDataType.equalsIgnoreCase("String"))
-                       getUserEnterText= handler.getResponseChoise(surveyPrimaryKeyId,getquestionId,getValue);
+                       getUserEnterText= handler.getResponseChoise(surveyPrimaryKeyId);
                    Logger.logD("UserEntered Text","Response Table"+getUserEnterText);
                    if (!getUserEnterText.isEmpty()) {
                        if (DataBaseMapperClass.setRuleEnginScane(getValue, getOperator, Integer.parseInt(getUserEnterText))) {

@@ -15,7 +15,7 @@
         android:layout_height="wrap_content"
         app:cardBackgroundColor="#ffffff"
         android:layout_margin="20dp"
-        android:padding="15dp"
+        app:contentPadding="15dp"
         app:cardCornerRadius="6dp"
         app:cardElevation="3dp">
         <include layout="@layout/task_snippet"/>
@@ -46,13 +46,67 @@
             android:layout_alignParentEnd="true"
             android:textColor="@color/white"
             android:fontFamily="@font/heebo_regular"
-            android:textSize="@dimen/heading_two"
+            android:textSize="@dimen/regular_text"
             android:layout_marginEnd="10dp"
             android:text="@string/attendance"
             android:id="@+id/attatecetext"
             />
 
     </RelativeLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_margin="@dimen/five"
+        android:id="@+id/syncLayout"
+        android:visibility="visible"
+        android:background="@color/pink"
+        android:paddingStart="@dimen/five"
+        android:weightSum="1"
+
+
+        >
+        <TextView
+            android:id="@+id/attendanceSyncCountTv"
+            android:text=""
+            android:layout_width="0dp"
+            android:layout_weight="0.75"
+            android:textColor="@color/white"
+            android:paddingStart="@dimen/ten"
+            android:layout_gravity="center_vertical"
+            android:fontFamily="@font/heebo_medium"
+            android:textSize="@dimen/regular_text"
+            android:layout_height="wrap_content" />
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_weight="0.25"
+            android:layout_height="42dp">
+            <ProgressBar
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:padding="2dp"
+                android:visibility="gone"
+                android:contentDescription=""
+                android:indeterminateDrawable="@drawable/attendance_progress"
+                android:id="@+id/progressBarSync"
+                />
+        <Button
+            android:layout_width="match_parent"
+            android:layout_margin="2dp"
+            android:layout_gravity="center_vertical"
+            android:layout_height="40dp"
+            android:textColor="@color/white"
+            android:background="@drawable/button_background_white_bg"
+            android:text="@string/sync"
+            android:id="@+id/syncBtn"
+            android:textAllCaps="false"
+            android:fontFamily="@font/heebo_regular"
+            android:textSize="@dimen/regular_text"
+            />
+        </RelativeLayout>
+    </LinearLayout>
 
     <ScrollView
         android:layout_width="match_parent"
@@ -61,17 +115,19 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/parentPanel"
+        android:layout_marginBottom="@dimen/app_padding"
         android:orientation="vertical"
         >
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:padding="@dimen/ten"
-            android:textColor="@color/Red"
+            android:textColor="#db4427"
             android:gravity="center"
-            android:text="No members linked"
+            android:layout_marginTop="20dp"
+            android:text="No entrepreneur linked!"
             android:fontFamily="@font/heebo_regular"
-            android:textSize="@dimen/heading_two"
+            android:textSize="@dimen/regular_text"
 
 
             />

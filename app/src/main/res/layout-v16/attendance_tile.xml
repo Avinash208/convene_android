@@ -6,8 +6,8 @@
     android:layout_marginTop="2dp"
     android:paddingStart="20dp"
     android:paddingEnd="20dp"
-    android:paddingTop="10dp"
-    android:paddingBottom="10dp"
+    android:paddingTop="@dimen/five"
+    android:paddingBottom="@dimen/five"
     android:background="@color/white"
     android:layout_height="wrap_content">
 
@@ -19,7 +19,7 @@
         android:id="@+id/count"
         android:fontFamily="@font/heebo_regular"
         android:layout_centerVertical="true"
-        android:textSize="18sp"
+        android:textSize="@dimen/regular_text"
         />
 
     <TextView
@@ -32,7 +32,7 @@
         tools:text="Prakruti"
         android:id="@+id/memberName"
         android:textColor="@android:color/black"
-        android:textSize="18sp" />
+        android:textSize="@dimen/regular_text" />
 
     <FrameLayout
         android:layout_width="wrap_content"
@@ -64,12 +64,11 @@
                 />
         </LinearLayout>
         <ImageView
-            android:layout_width="45dp"
-            android:layout_height="45dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_marginLeft="90dp"
-            android:background="#ff9800"
-
-                android:id="@+id/info"
+            android:background="@drawable/yellow_round"
+            android:id="@+id/info"
             android:src="@drawable/infocion"
             />
     </FrameLayout>
