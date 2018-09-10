@@ -188,10 +188,16 @@ public class ListingActivity extends BaseActivity implements View.OnClickListene
         super.onResume();
 
         updateFilterLabelsNonMandatory();
+        updatePrefs();
         new summaryReportSync().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         createNewButton.setOnClickListener(this);
         updateInfoDescription();
 
+    }
+
+    private void updatePrefs() {
+        prefs.edit().putString(Constants.BENEFICIARY_TOOLBAR_CLUSTERNAME,prefs.getString(Constants.BENEFICIARY_TOOLBAR_CLUSTERNAME_HOME,"")).apply();
+        prefs.edit().putString(Constants.BENEFICIARY_TOOLBAR_CLUSTERNAME,prefs.getString(Constants.BENEFICIARY_TOOLBAR_CLUSTERNAME_HOME,"")).apply();
     }
 
     private void updateFilterLabelsNonMandatory() {
@@ -296,6 +302,8 @@ public class ListingActivity extends BaseActivity implements View.OnClickListene
                      SharedPreferences.Editor editor = prefsTemp.edit();
                      editor.putInt(SURVEY_ID, Integer.parseInt(surveyId));
                      editor.putString("Survey_tittle", headerName);
+                     editor.putString(Constants.BENEFICIARY_TOOLBAR_NAME, "");
+                     editor.putString(Constants.BENEFICIARY_TOOLBAR_NAME, "");
                      editor.apply();
                      new StartSurvey(ListingActivity.this, ListingActivity.this, prefs.getInt(SURVEY_ID, 0), prefs.getInt(SURVEY_ID, 0), "", "", "", "", "", null, "", "").execute(); //Chaned by guru removed "village Name"
                      return;

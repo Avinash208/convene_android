@@ -93,6 +93,8 @@ public class Constants {
     public static final String SHOWPERIODICITYFLAG = "showPeriocityFlag";
     public static final String SURVEY_NAME_HOME = "SurveyNameFromHome";
     public static final String SURVEY_ID_HOME = "SurveyIdFromHome";
+    public static final String BENEFICIARY_TOOLBAR_CLUSTERNAME_HOME = "beneficiary_Tool_ClusterNameHome";
+    public static final String BENEFICIARY_TOOLBAR_NAME_HOME ="beneficiary_toolbar_nameHome" ;
     public static List<Integer> blockQids=new ArrayList<>();
 
     //-------------------------*******************--------------------

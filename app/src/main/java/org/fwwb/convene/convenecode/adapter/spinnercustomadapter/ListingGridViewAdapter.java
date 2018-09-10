@@ -133,12 +133,15 @@ public class ListingGridViewAdapter extends RecyclerView.Adapter<ListingGridView
         if (!getClusterName[0].isEmpty()){
             SharedPreferences.Editor sharedPreferencesEditor = sharedPreferences.edit();
             sharedPreferencesEditor.putString(Constants.BENEFICIARY_TOOLBAR_CLUSTERNAME, getClusterName[0]);
+            prefs.edit().putString(Constants.BENEFICIARY_TOOLBAR_CLUSTERNAME_HOME, answerText).apply();
             sharedPreferencesEditor.apply();
         }
 
         if (answerText != null && !answerText.isEmpty()) {
             SharedPreferences.Editor editor = prefs.edit();
             editor.putString(Constants.BENEFICIARY_TOOLBAR_NAME, answerText);
+            editor.putString(Constants.BENEFICIARY_TOOLBAR_NAME_HOME, answerText);
+
             editor.apply();
             SharedPreferences.Editor sharedPreferencesEditor = sharedPreferences.edit();
             sharedPreferencesEditor.putString(Constants.BENEFICIARY_TOOLBAR_NAME, answerText);
