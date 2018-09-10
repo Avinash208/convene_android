@@ -13,6 +13,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.fwwb.convene.convenecode.SurveyQuestionActivity;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -28,7 +29,6 @@ import org.fwwb.convene.convenecode.BeenClass.parentChild.SurveyDetail;
 import org.fwwb.convene.R;
 import org.fwwb.convene.convenecode.SupportClass;
 import org.fwwb.convene.convenecode.SurveyListLevels;
-import org.fwwb.convene.convenecode.SurveyQuestionActivity;
 import org.fwwb.convene.convenecode.adapter.BoundarySpinnerAdapter;
 import org.fwwb.convene.convenecode.adapter.LocationSpinnerAdapter;
 import org.fwwb.convene.convenecode.adapter.spinnercustomadapter.CustomNewSpinnerAdapter;

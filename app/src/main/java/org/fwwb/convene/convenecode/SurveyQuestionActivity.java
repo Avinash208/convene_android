@@ -1562,11 +1562,10 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
         question.setTextSize(Integer.valueOf(questionFontSize));
         LinearLayout LL = (LinearLayout) child.findViewById(R.id.relativeLayoutedit);
         TextInputLayout v = (TextInputLayout) child.findViewById(R.id.textInput);
-        String getQuestionUpend="("+displayQuestionModel.getQuestionUcode()+") "+displayQuestionModel.getQuestion();
         if (displayQuestionModel.getMandatory().contains("1"))
-            SupportClass.setRedStar(question, getQuestionUpend);
+            SupportClass.setRedStar(question, displayQuestionModel.getQuestion());
         else {
-            question.setText(getQuestionUpend);
+            question.setText(displayQuestionModel.getQuestion());
         }
         v.setHintTextAppearance(R.style.hintstyle);
         EditText edittext = (EditText) child.findViewById(R.id.ans_text);
@@ -1598,14 +1597,10 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
      */
     public void displayQuestionTextTooTip(Page displayQuestionModel, TextView questionTextView, ImageView toolTip) {
         // Set Question with mandatory or not as red start
-//        String getQuestionUpend="<font color=\"red\"><b>"+displayQuestionModel.getQuestionUcode()+"</b>.</font> "+displayQuestionModel.getQuestion();
-        String getQuestionUpend = displayQuestionModel.getQuestion();
-        if (!displayQuestionModel.getQuestionUcode().isEmpty() && !"0".equals(displayQuestionModel.getQuestionUcode()))
-            getQuestionUpend = "<b>"+displayQuestionModel.getQuestionUcode()+"</b>."+displayQuestionModel.getQuestion();
         if (displayQuestionModel.getMandatory().contains("1"))
-            SupportClass.setRedStar(questionTextView, getQuestionUpend);
+            SupportClass.setRedStar(questionTextView, displayQuestionModel.getQuestion());
         else
-            questionTextView.setText(getQuestionUpend);
+            questionTextView.setText(displayQuestionModel.getQuestion());
         // Set ToolTip as instruction to the user if exist
         if (!"".equalsIgnoreCase(displayQuestionModel.getToolTip())) {
             toolTip.setVisibility(View.VISIBLE);
@@ -2943,7 +2938,7 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
                 if (!("T").equalsIgnoreCase(answerType)) {
                     HashMap<String, AnswersPage> getAnswerMap = getUserAnsweredResponseFromDB(Integer.parseInt(currentPageLastQuestionId), db, surveyPrimaryKeyId, restUrl);
                     // Storing the last question code except textual questions
-                    if (!getAnswerMap.isEmpty()) {
+                    if (!getAnswerMap.isEmpty() && !("C").equalsIgnoreCase(answerType) ) {
                         currentPageLastQuestionResponseCode = getAnswerMap.get(currentPageLastQuestionId).getAnswerCode();
                     } else {
                         currentPageLastQuestionResponseCode = "";
@@ -2972,7 +2967,7 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
                     Logger.logD(TAG, "pageCountValue-------" + count);
                     skipBlockLevelFlag = false;
                 } else if (skipcode.equals("-1")) {
-                    setAllDataToResponse();
+                    Logger.logD(TAG, "showSubmitPopUp2971");
                     showSubmitPopUp(mainQList.get(mainQList.size() - 1));
                 } else {
                     Logger.logD(TAG, "pageCountValue" + pageSetCount);
@@ -3025,14 +3020,15 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
                 }
             } else {
                 if ("".equals(skipcode) && questionList.get(questionList.size() - 1).equals(mainQList.get(mainQList.size() - 1))) {
-                    setAllDataToResponse();
+                    Logger.logD(TAG, "showSubmitPopUp3025");
                     showSubmitPopUp(mainQList.get(mainQList.size() - 1));
                 } else {
                     Logger.logV(TAG, "Normal Flow without skips lastquestionindex" + lastIndexUsedToFetchQID);
                     int lastQuestionIndex = lastIndexUsedToFetchQID - 1;
                     count = lastQuestionIndex + 1;
                     try {
-                        deleteSkipData(mainQList.get(lastQuestionIndex), "", questionList, radioAnswerCode);
+                        String currentPageLastQuestionId = questionList.get(questionList.size() - 1);
+                        deleteSkipData(currentPageLastQuestionId, "", questionList, radioAnswerCode);
                     } catch (Exception e) {
                         Logger.logE("Exception", " in delete answered data", e);
                     }
@@ -3201,7 +3197,7 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
-
+                        setAllDataToResponse();
                         int fromIndex = allBlocksQList.indexOf(currentQid);
                         fromIndex = fromIndex + 1;
                         deletedCodes.clear();
@@ -3556,11 +3552,16 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
                 listQuestionType.clear();
                 clearAllWidgetMapCounts();
                 if (count == mainQList.size()) {
-                    setAllDataToResponse();
+                    Logger.logD(TAG, "showSubmitPopUp3557");
                     showSubmitPopUp(currentQid);
                     return;
                 }
-                nextButtonFunctionality(count, mainQList);
+              List<String> getNextQuestion=  prePareNextSetQuestion(currentQid,mainQList);
+               if (!getNextQuestion.isEmpty()) {
+                   nextButtonFunctionality(count, getNextQuestion);
+               }else{
+                   showSubmitPopUp(currentQid);
+               }
             } else {
                 count = questionList.indexOf(displayQids.get(0));
                 if (count == -1) {
@@ -3574,6 +3575,16 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
             }
             skipBlockLevelFlag = true;
         }
+    }
+
+    private List<String> prePareNextSetQuestion(String currentQid, List<String> mainQList) {
+       List<String> getTempList= new ArrayList<>();
+        for (int i=0;i<mainQList.size();i++){
+            if (Integer.parseInt(mainQList.get(i))>Integer.parseInt(currentQid)){
+                getTempList.add(mainQList.get(i));
+            }
+        }
+        return getTempList;
     }
 
     /**
@@ -3592,6 +3603,7 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
                         if ("".equals(qids.get(0)) && skipQid.isEmpty()) {
                             count = mainQList.indexOf(qid);
                             count++;
+
                             deleteQidsFromResponse(displayQids);
                             listQuestionType.clear();                               // Clearing the list which contain anstype
                             clearAllWidgetMapCounts();
