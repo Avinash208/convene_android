@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingEnd="15dp"
+    android:background="@color/white"
+    android:paddingStart="10dp">
+
+    <LinearLayout
+        android:id="@+id/card_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/mainLinear"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginLeft="5dp"
+            android:orientation="horizontal"
+            android:weightSum="6">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="4.2"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <TextView
+                        android:id="@+id/surveyName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="2.8"
+                        android:fontFamily="@font/roboto_bold"
+                        android:padding="4dp"
+                        android:singleLine="false"
+                        android:textColor="@color/black"
+                        android:textSize="16dp" />
+                    <TextView
+                        android:id="@+id/periodicityName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="1.4"
+                        android:fontFamily="@font/roboto"
+                        android:paddingBottom="6dp"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="6dp"
+                        android:paddingTop="1dp"
+                        android:visibility="visible"
+                        android:textColor="@color/inActiveText"
+                        android:textSize="14sp" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/noteText"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:paddingBottom="3dp"
+                    android:paddingLeft="10dp"
+                    android:text="@string/previous_pending_note"
+                    android:textColor="@color/Red"
+                    android:textSize="@dimen/app_twelve_sp"
+                    android:visibility="gone" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/dynamicLinear"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginRight="5dp"
+                android:layout_weight="1.8"
+                android:orientation="vertical"
+                android:padding="5dp">
+
+                <TextView
+                    android:id="@+id/addOrComplete"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:fontFamily="@font/roboto"
+                    android:gravity="center"
+                    android:textSize="16sp"
+                    android:visibility="gone" />
+
+                <org.fwwb.convene.convenecode.utils.multispinner.SingleSpinnerSearch
+                    android:id="@+id/searchSingleSpinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="18dp"
+                    android:visibility="visible"
+                    app:hintText="Select Facility" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/dynamicSurveyCollectedDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"></LinearLayout>
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#cecdcd"
+        android:visibility="visible" />
+</LinearLayout>

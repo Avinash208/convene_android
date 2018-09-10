@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/activity_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+<Button
+    android:layout_width="wrap_content"
+    android:layout_height="60dp"
+    android:id="@+id/newServey"
+    android:visibility="gone"
+    android:text="select new survey questions"
+    android:layout_centerInParent="true"
+    android:background="#3F51B5"
+    android:textColor="#fff"
+    android:padding="5dp"
+    />
+
+</RelativeLayout>

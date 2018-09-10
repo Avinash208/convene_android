@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:background="#fff9e4"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <android.support.v7.widget.CardView
+                android:id="@+id/card_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                app:cardBackgroundColor="#fff9e4"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="10dp">
+                <LinearLayout
+                    android:id="@+id/linearHeader"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:weightSum="2">
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:id="@+id/nameTextLebel"
+                            android:layout_width="0dp"
+                            android:layout_marginLeft="6dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1.8"
+                            android:background="@color/yellow"
+                            android:paddingTop="5dp"
+                            android:text="Name: "
+                            android:paddingLeft="10dp"
+                            android:paddingBottom="3dp"
+                            android:paddingRight="10dp"/>
+                        <TextView
+                            android:id="@+id/nameText"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="4"
+                            android:textStyle="bold"
+                            android:text="Child"
+                            android:paddingTop="5dp"
+                            android:paddingLeft="10dp"
+                            android:paddingBottom="3dp"
+                            android:paddingRight="10dp"/>
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:id="@+id/agePanel"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/ageTextLabel"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1.8"
+                            android:layout_marginLeft="6dp"
+                            android:background="@color/yellow"
+                            android:text="Age: "
+                            android:paddingTop="5dp"
+                            android:paddingLeft="10dp"
+                            android:paddingBottom="3dp"
+                            android:paddingRight="10dp"/>
+
+                        <TextView
+                            android:id="@+id/ageText"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="4"
+                            android:paddingTop="5dp"
+                            android:paddingLeft="10dp"
+                            android:paddingBottom="3dp"
+                            android:paddingRight="10dp"/>
+
+                    </LinearLayout>
+
+
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/locationTextLabel"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="6dp"
+                            android:layout_weight="1.8"
+                            android:background="@color/yellow"
+                            android:text="Location: "
+                            android:paddingTop="5dp"
+                            android:paddingLeft="10dp"
+                            android:paddingBottom="3dp"
+                            android:paddingRight="10dp"/>
+                        <TextView
+                            android:id="@+id/locationText"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="4"
+                            android:paddingTop="5dp"
+                            android:paddingLeft="10dp"
+                            android:paddingBottom="3dp"
+                            android:paddingRight="10dp"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/parentPanel"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/parentTextLabel"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1.8"
+                            android:layout_marginLeft="6dp"
+                            android:background="@color/yellow"
+                            android:text="Parent: "
+                            android:paddingTop="5dp"
+                            android:paddingLeft="10dp"
+                            android:paddingBottom="3dp"
+                            android:paddingRight="10dp"/>
+
+                        <TextView
+                            android:id="@+id/parentText"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="4"
+                            android:paddingTop="5dp"
+                            android:paddingLeft="10dp"
+                            android:paddingBottom="3dp"
+                            android:paddingRight="10dp"/>
+
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/addressTextLabel"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1.8"
+                            android:layout_marginLeft="6dp"
+                            android:background="@color/yellow"
+                            android:paddingTop="5dp"
+                            android:text="Address: "
+                            android:paddingLeft="10dp"
+                            android:paddingBottom="3dp"
+                            android:paddingRight="10dp"/>
+                        <TextView
+                            android:id="@+id/addressText"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="4"
+                            android:paddingTop="5dp"
+                            android:paddingLeft="10dp"
+                            android:paddingBottom="3dp"
+                            android:paddingRight="10dp"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/contactLinear"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:visibility="gone"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:id="@+id/contactLabelText"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:background="@color/yellow"
+                            android:layout_weight="1.8"
+                            android:layout_marginLeft="6dp"
+                            android:paddingTop="5dp"
+                            android:text="Contact No:"
+                            android:paddingLeft="10dp"
+                            android:paddingBottom="3dp"
+                            android:paddingRight="10dp"/>
+                        <TextView
+                            android:id="@+id/contactText"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="4"
+                            android:paddingTop="5dp"
+                            android:paddingLeft="10dp"
+                            android:paddingBottom="3dp"
+                            android:paddingRight="10dp"/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:id="@+id/pincodeLabelText"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:background="@color/yellow"
+                            android:layout_weight="1.8"
+                            android:layout_marginLeft="6dp"
+                            android:paddingTop="5dp"
+                            android:text="Pincode:"
+                            android:paddingLeft="10dp"
+                            android:paddingBottom="3dp"
+                            android:paddingRight="10dp"/>
+                        <TextView
+                            android:id="@+id/pincodeText"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="4"
+                            android:paddingTop="5dp"
+                            android:paddingLeft="10dp"
+                            android:paddingBottom="3dp"
+                            android:paddingRight="10dp"/>
+
+                    </LinearLayout>
+
+
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <LinearLayout
+                    android:id="@+id/linearContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:layout_marginBottom="10dp"
+                    android:visibility="visible"
+                    android:layout_marginTop="10dp"
+                    android:orientation="vertical">
+
+
+                    <LinearLayout
+                        android:id="@+id/linearLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:visibility="visible"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:id="@+id/motherLinear"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:visibility="visible"
+                            android:background="@drawable/spinner_background">
+
+                        </LinearLayout>
+                        <LinearLayout
+                            android:id="@+id/childLinear"
+                            android:layout_width="match_parent"
+                            android:background="@drawable/spinner_background"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:visibility="visible"
+                            android:orientation="vertical">
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+            </ScrollView>
+
+
+        </LinearLayout>
+
+
+    </ScrollView>
+
+
+</LinearLayout>

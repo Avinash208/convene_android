@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:paddingTop="5dp"
+      android:paddingStart="@dimen/ten"
+      android:paddingEnd="@dimen/ten"
+      android:paddingBottom="5dp"
+      android:background="@drawable/headingcove"
+      android:orientation="horizontal"
+      android:weightSum="4">
+    <TextView
+        android:id="@+id/holdername"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="2.4"
+        android:gravity="center_vertical"
+        android:paddingLeft="10dp"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        android:fontFamily="@font/roboto_medium_new"
+        android:text="Heading here " />
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_weight="0.5"
+        android:gravity="center"
+        android:layout_marginEnd="@dimen/ten"
+        android:layout_gravity="center_vertical"
+        android:orientation="vertical">
+      <TextView
+          android:layout_width="30dp"
+          android:layout_height="30dp"
+          android:gravity="center"
+          android:textSize="16dp"
+          android:text="0"
+          android:visibility="visible"
+          android:textAllCaps="true"
+          android:background="@drawable/rounded_tv"
+          android:textColor="@color/black"
+          android:id="@+id/addlink"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_weight="0.5"
+        android:gravity="center"
+        android:layout_marginEnd="@dimen/ten"
+        android:layout_gravity="center_vertical"
+
+        android:orientation="vertical">
+      <ImageView
+          android:layout_width="40dp"
+          android:layout_height="50dp"
+          android:layout_weight="1"
+          android:gravity="center"
+          android:src="@drawable/newactive"
+          android:id="@+id/addmembers" />
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/linklabelcontainer"
+        android:layout_width="0dp"
+        android:layout_height="35dp"
+        android:layout_weight="0.5"
+        android:gravity="center"
+
+        android:layout_gravity="center_vertical"
+
+        android:orientation="vertical">
+      <TextView
+          android:id="@+id/linklabel"
+          android:layout_width="40dp"
+          android:layout_height="50dp"
+          android:layout_weight="1"
+          android:textSize="16sp"
+          android:fontFamily="@font/roboto_bold"
+          android:gravity="center"
+          android:background="#252525"
+          android:textColor="@color/white"
+          android:text="Link"
+          />
+    </LinearLayout>
+
+  </LinearLayout>
+  <ScrollView
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content">
+    <LinearLayout
+        android:id="@+id/child_dynamic_inflater"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+      <TextView
+          android:id="@+id/linkage_empty_label"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:text="No linkage added"
+          android:padding="10dp"
+          android:textSize="16dp"
+          android:visibility="gone"
+          android:textStyle="bold"
+          android:textColor="@color/meroon"
+          android:gravity="center"/>
+    </LinearLayout>
+  </ScrollView>
+
+</LinearLayout>

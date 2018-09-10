@@ -1,0 +1,347 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#eeeeee"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/toolbar1"
+        layout="@layout/toolbar_updatingloading" />
+
+    <LinearLayout
+        android:id="@+id/progressBar1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/toolbar1">
+        <ProgressBar
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:indeterminateTint="@color/pink" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:textSize="16dp"
+            android:text="Syncing data... "/>
+
+    </LinearLayout>
+    <org.fwwb.convene.convenecode.utils.MaterialProgressBar
+
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+
+        android:indeterminate="true"
+        android:visibility="gone"
+        app:backgroundColour="#999999"
+        app:duration="2000"
+        app:progressColour="#4caf50" />
+
+    <RelativeLayout
+        android:id="@+id/assignlocationcontenter"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/progressBar1"
+        android:layout_marginTop="20dp">
+
+        <LinearLayout
+            android:layout_width="270dp"
+            android:layout_height="50dp"
+            android:layout_marginLeft="40dp"
+            android:background="@drawable/assign_decorate"
+            android:elevation="4dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/locationtext"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10dp"
+                android:drawableLeft="@drawable/ic_add_location_white_24dp"
+                android:drawablePadding="5dp"
+                android:fontFamily="@font/roboto"
+                android:gravity="center"
+                android:minHeight="0dp"
+                android:minWidth="0dp"
+                android:text="ASSIGNED LOCATION"
+                android:textColor="#ffffff"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="20dp"
+            app:cardCornerRadius="6dp"
+            app:cardBackgroundColor="@color/white"
+            app:cardElevation="2dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginRight="10dp"
+                android:orientation="vertical">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="10dp"
+                    android:weightSum="2">
+
+                    <ProgressBar
+                        android:id="@+id/location_progressbar"
+                        style="@style/Base.Widget.AppCompat.ProgressBar.Horizontal"
+                        android:layout_width="0dp"
+                        android:layout_height="20dp"
+                        android:layout_weight="2"
+                        android:paddingBottom="5dp"
+                        android:paddingTop="5dp"
+                        android:progressDrawable="@drawable/progress_drawable" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="10dp"
+                        android:layout_weight="0.2">
+
+                        <ImageView
+                            android:id="@+id/locationimageStatus"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:visibility="gone" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/location_status"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="5dp"
+                    android:text="Loading..."
+                    android:layout_marginBottom="15dp"
+                    android:textColor="#fff"
+                    android:textSize="14dp" />
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/datacollectionforum"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/assignlocationcontenter"
+        android:layout_marginTop="20dp">
+
+        <LinearLayout
+            android:layout_width="270dp"
+            android:layout_height="50dp"
+            android:layout_marginLeft="40dp"
+            android:background="@drawable/datacollection_decorate"
+            android:elevation="4dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10dp"
+                android:drawableLeft="@drawable/ic_assessment_white_24dp"
+                android:drawablePadding="5dp"
+                android:gravity="center"
+                android:minHeight="0dp"
+                android:minWidth="0dp"
+                android:fontFamily="@font/roboto"
+                android:text="DATA COLLECTION FORMS"
+                android:textColor="#ffffff"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="20dp"
+            app:cardCornerRadius="6dp"
+            app:cardBackgroundColor="@color/white"
+            app:cardElevation="2dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginRight="10dp"
+
+                android:orientation="vertical">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="10dp"
+                    android:weightSum="2">
+
+                    <ProgressBar
+                        android:id="@+id/datacollection_progressbar"
+                        style="@style/Base.Widget.AppCompat.ProgressBar.Horizontal"
+                        android:layout_width="0dp"
+                        android:layout_height="20dp"
+                        android:layout_weight="2"
+                        android:paddingBottom="5dp"
+                        android:paddingTop="5dp"
+                        android:progressDrawable="@drawable/progress_drawable" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="10dp"
+                        android:layout_weight="0.2">
+
+                        <ImageView
+                            android:id="@+id/datacollectionimageStatus"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:visibility="gone" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/datacollection_status"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="5dp"
+                    android:text="Loading..."
+                    android:textColor="#fff"
+                    android:layout_marginBottom="15dp"
+                    android:textSize="14dp" />
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/otherinformation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/datacollectionforum"
+        android:layout_marginTop="20dp">
+
+        <LinearLayout
+            android:layout_width="270dp"
+            android:layout_height="50dp"
+            android:layout_marginLeft="40dp"
+            android:background="@drawable/other_decorate"
+            android:elevation="4dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10dp"
+                android:drawableLeft="@drawable/ic_assignment_white_24dp"
+                android:drawablePadding="5dp"
+                android:gravity="center"
+                android:minHeight="0dp"
+                android:minWidth="0dp"
+                android:fontFamily="@font/roboto"
+                android:text="OTHER INFORMATION"
+                android:textColor="#ffffff"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="20dp"
+            app:cardCornerRadius="6dp"
+            app:cardBackgroundColor="@color/white"
+            app:cardElevation="2dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginRight="10dp"
+
+                android:orientation="vertical">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="10dp"
+                    android:weightSum="2">
+
+                    <ProgressBar
+                        android:id="@+id/other_progressbar"
+                        style="@style/Base.Widget.AppCompat.ProgressBar.Horizontal"
+                        android:layout_width="0dp"
+                        android:layout_height="20dp"
+                        android:layout_weight="2"
+                        android:paddingBottom="5dp"
+                        android:paddingTop="5dp"
+                        android:progressDrawable="@drawable/progress_drawable" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="10dp"
+                        android:layout_weight="0.2">
+
+                        <ImageView
+                            android:id="@+id/ohterimageStatus"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:visibility="gone" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/other_status"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="5dp"
+                    android:text="Loading..."
+                    android:textColor="#fff"
+                    android:layout_marginBottom="15dp"
+                    android:textSize="14dp" />
+            </LinearLayout>
+
+        </android.support.v7.widget.CardView>
+
+    </RelativeLayout>
+    <ProgressBar
+        android:id="@+id/beneficiary_progressbar"
+        style="@style/Base.Widget.AppCompat.ProgressBar.Horizontal"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1.8"
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp"
+        android:visibility="gone"
+        android:progressDrawable="@drawable/progress_drawable" />
+    <TextView
+        android:id="@+id/beneficiary_status"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Loading..."
+        android:textSize="14dp"
+        android:visibility="gone"
+        android:paddingBottom="5dp"/>
+</RelativeLayout>

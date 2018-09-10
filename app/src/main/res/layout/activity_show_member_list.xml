@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="org.fwwb.convene.convenecode.ShowMemberListActivity">
+    <RelativeLayout
+        android:id="@+id/heading"
+        android:layout_width="match_parent"
+        android:background="@color/pink"
+        android:layout_height="60dp">
+        <com.mancj.materialsearchbar.MaterialSearchBar
+            android:id="@+id/searchBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:mt_textColor="@color/white"
+            app:mt_textCursorTint="@color/white"
+            app:mt_maxSuggestionsCount="10"
+            android:layout_centerInParent="true"
+            app:mt_searchIconTint="@color/white"
+            app:mt_backIconTint="@color/white"
+            app:mt_clearIconTint="@color/white"
+            app:mt_searchBarColor="@color/pink" />
+
+       <LinearLayout
+           android:layout_width="wrap_content"
+           android:layout_height="match_parent"
+           android:orientation="vertical"
+           android:gravity="center"
+           android:layout_marginLeft="20dp"
+           android:id="@+id/imageBack">
+           <ImageView
+
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:layout_gravity="center_vertical"
+               android:visibility="visible"
+
+               android:background="@drawable/ic_arrow_back_white_24dp" />
+
+       </LinearLayout>
+
+        <TextView
+            android:id="@+id/title_heading"
+            android:layout_width="wrap_content"
+            android:layout_height="60dp"
+            android:layout_weight="2.6"
+            android:gravity="center"
+            android:paddingLeft="10dp"
+            android:layout_toEndOf="@+id/imageBack"
+            android:text="Add/Link"
+            android:textColor="#ffffff"
+            android:textSize="18dp" />
+
+    </RelativeLayout>
+
+
+
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/selectedSchoolLayout"
+        android:layout_below="@+id/heading"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginTop="10dp"
+        >
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:id="@+id/parentTextLayout"
+            >
+
+        </LinearLayout>
+    </HorizontalScrollView>
+
+    <android.support.v7.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/schoolAsignRv"
+        android:visibility="visible"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="10dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_below="@+id/selectedSchoolLayout"
+        android:layout_above="@+id/bottomcontainer">
+
+
+
+    </android.support.v7.widget.RecyclerView>
+   <LinearLayout
+       android:id="@+id/nodatalabel"
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:orientation="vertical"
+       android:gravity="center"
+       android:visibility="gone"
+       android:layout_below="@+id/selectedSchoolLayout"
+       android:layout_above="@+id/bottomcontainer">
+       <TextView
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:gravity="center"
+           android:textColor="@color/divider"
+           android:text="No records to display"/>
+
+   </LinearLayout>
+    <LinearLayout
+        android:id="@+id/bottomcontainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="right"
+        android:layout_marginRight="20dp"
+        android:layout_alignParentBottom="true">
+        <Button
+            android:id="@+id/addMember"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Add"
+            android:textColor="@color/white"/>
+
+    </LinearLayout>
+</RelativeLayout>

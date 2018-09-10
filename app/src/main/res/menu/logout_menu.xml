@@ -1,0 +1,38 @@
+<menu xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/logout"
+        android:title="@string/LOGOUT"
+        android:showAsAction=""
+        tools:ignore="AppCompatResource" />
+
+    <item
+        android:id="@+id/changeTheme"
+        android:visible="false"
+        android:title="@string/changeTheme"/>
+    <item
+        android:id="@+id/changeLanguage"
+        android:visible="false"
+        android:title="@string/choose_language"/>
+    <item
+        android:id="@+id/update_db"
+        android:title="@string/updatedatabase"
+        android:visible="true"/>
+    <item
+        android:id="@+id/sync_data"
+        android:title="@string/syncData" />
+    <item
+        android:id="@+id/testServer"
+        android:title="@string/testServer" />
+
+    <item
+        android:id="@+id/locationselection"
+        android:title="@string/locationModes" >
+    </item>
+    <item
+        android:id="@+id/mahiti"
+        android:title="@string/buildMahiti" />
+    <item
+        android:id="@+id/facingIssue"
+        android:visible="false"
+        android:title="@string/facingissue" />
+</menu>

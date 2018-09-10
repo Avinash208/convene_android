@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="org.fwwb.convene">
+
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
+
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.GET_TASKS" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />
+
+    <application
+        android:name=".convenecode.BaseApplication"
+        android:icon="@mipmap/yale"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity
+            android:name=".convenecode.Splash"
+            android:allowBackup="true"
+            android:configChanges="orientation"
+            android:largeHeap="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".convenecode.LoginActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".convenecode.LoginParentActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".convenecode.SurveyQuestionActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyBjrTmIgrILwsJZ4gtg8JnT-U9uzyjGH8Y" />
+
+        <activity
+            android:name=".convenecode.SurveyListLevels"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".convenecode.LevelsActivityNew"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".convenecode.UpdateMasterLoading"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait" />
+
+        <service android:name=".convenecode.MyIntentService">
+            <intent-filter>
+                <action android:name="Survey" />
+            </intent-filter>
+        </service>
+        <service android:name=".convenecode.MyIntentLinkage">
+            <intent-filter>
+                <action android:name="Linkage" />
+            </intent-filter>
+        </service>
+        <service android:name=".convenecode.network.LangService">
+            <intent-filter>
+                <action android:name="LangService" />
+            </intent-filter>
+        </service>
+        <service
+            android:name=".convenecode.MyIntentPeriodicity"
+            android:enabled="true"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="PeriodicIntentReceiver" />
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+        </service>
+        <service
+            android:name=".convenecode.MyIntentServiceBeneficiary"
+            android:enabled="true"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="BeneficiaryIntentReceiver" />
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+        </service>
+        <service
+            android:name=".convenecode.IntentServiceBeneficiaryUpdate"
+            android:enabled="true"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="BeneficiaryUpdateIntentReceiver" />
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+        </service>
+        <service
+            android:name=".convenecode.MyIntentServiceFacility"
+            android:enabled="true"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="FacilityIntentReceiver" />
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+        </service>
+
+        <receiver android:name=".convenecode.receivers.BatteryChangereciever">
+            <intent-filter>
+                <action android:name="android.intent.action.BATTERY_CHANGED" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name=".convenecode.receivers.PowerConnectionReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.ACTION_POWER_CONNECTED" />
+                <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED" />
+            </intent-filter>
+        </receiver>
+
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="02925ef542d587b0d078678a1e73a90a8291f618" />
+
+        <receiver
+            android:name=".convenecode.AlarmService"
+            android:process=":remote" />
+        <receiver
+            android:name=".convenecode.receivers.ConnectivityReceiver"
+            android:enabled="true">
+            <intent-filter>
+                <action android:name="android.net.wifi.WIFI_STATE_CHANGED" />
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+        </receiver>
+
+        <activity
+            android:name=".convenecode.HomeActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".convenecode.HomeActivityNew"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".convenecode.ListingActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden" />
+        <activity
+            android:name=".convenecode.TypeDetailsActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".convenecode.AddBeneficiaryActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".convenecode.AddFacilityActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".convenecode.ShowSurveyPreview" />
+        <activity
+            android:name=".convenecode.DataCollectionListingActivity"
+            android:label="@string/title_activity_data_collection_listing"
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="stateAlwaysHidden" />
+        <activity android:name=".convenecode.FilterActivityActivity" />
+        <activity
+            android:name=".convenecode.SurveySummaryReport"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".convenecode.Beneficiarylinkages"
+            android:label="@string/title_activity_beneficiarylinkages"
+            android:theme="@style/AppTheme" />
+        <activity android:name=".convenecode.ShowMemberListActivity" />
+        <activity android:name=".convenecode.LocationBasedActivity" />
+        <activity android:name=".convenecode.ProjectSelectionActivity" />
+        <activity android:name=".convenecode.ImageProcessingActivity" />
+        <activity android:name=".fwwbcode.FwTraningListingActivity" />
+        <activity
+            android:name=".fwwbcode.activities.TaskSelectionListingActivity"
+            android:label="@string/title_activity_task_selection_listing"
+            android:theme="@style/AppTheme" />
+        <activity android:name=".fwwbcode.activities.TaskDetailsActivity"></activity>
+    </application>
+
+</manifest>

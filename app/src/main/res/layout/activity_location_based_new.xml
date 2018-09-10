@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:context="org.fwwb.convene.convenecode.LocationBasedActivity">
+
+    <include
+        android:id="@+id/toolbar1"
+        layout="@layout/toolbar">
+    </include>
+
+    <ScrollView
+        android:id="@+id/spinnerscroll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/toolbar1">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+
+            <LinearLayout
+                android:id="@+id/relativeLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:background="@drawable/form_row"
+                android:orientation="vertical"
+                android:padding="8dp">
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/dymaicactivitydisplay"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/spinnerscroll"
+                android:layout_margin="10dp"
+                android:orientation="vertical" />
+        </LinearLayout>
+
+    </ScrollView>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:gravity="right"
+        android:orientation="vertical">
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/createNewButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="@dimen/fab_margin"
+            android:layout_marginBottom="8dp"
+            android:layout_marginRight="15dp"
+            app:backgroundTint="@color/pink"
+            app:srcCompat="@drawable/ic_add" />
+    </LinearLayout>
+
+
+</RelativeLayout>

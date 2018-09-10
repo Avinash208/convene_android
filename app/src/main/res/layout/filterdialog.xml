@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/headinglabel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="10dp"
+        android:text="Filter"
+        android:textSize="18dp"
+        android:textStyle="bold" />
+    <ScrollView
+        android:id="@+id/spinnerscroll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/headinglabel"
+        android:layout_above="@+id/footer"
+        >
+        <LinearLayout
+            android:id="@+id/dymaicactivitydisplay"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/spinnerscroll"
+            android:padding="10dp"
+            android:orientation="vertical" />
+
+    </ScrollView>
+    <LinearLayout
+        android:id="@+id/footer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="10dp"
+        android:gravity="right"
+        android:orientation="vertical"
+        android:paddingRight="10dp">
+
+        <Button
+            android:id="@+id/filterbutton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Filter"
+            android:textColor="@color/white"
+            android:textSize="15dp" />
+
+    </LinearLayout>
+
+
+</RelativeLayout>

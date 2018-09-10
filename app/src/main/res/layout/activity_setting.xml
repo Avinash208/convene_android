@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/footer"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_alignParentBottom="true"
+        android:gravity="center"
+        android:background="@drawable/homepage_border"
+        android:weightSum="2">
+
+        <TextView
+            android:id="@+id/helptext"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:textSize="14dp"
+            android:visibility="gone"
+            android:text="Support"
+            android:textColor="#fff" />
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="1dp"
+            android:visibility="gone"
+            android:layout_marginRight="1dp"
+            android:background="#fff9e4" />
+        <TextView
+            android:id="@+id/update_content"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:textSize="14dp"
+            android:gravity="center"
+            android:fontFamily="@font/heebo_regular"
+            android:textAllCaps="true"
+            android:text="Sync data"
+
+            android:textColor="@color/fwwb_text_color_blue" />
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="1dp"
+            android:visibility="visible"
+            android:layout_marginRight="1dp"
+            android:background="#dddddd" />
+
+        <TextView
+            android:id="@+id/logout"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:textSize="14dp"
+            android:text="Logout"
+            android:fontFamily="@font/heebo_regular"
+            android:textAllCaps="true"
+            android:textColor="@color/pink" />
+    </LinearLayout>
+
+</RelativeLayout>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:background="#f9f9f9"
+    tools:context="org.fwwb.convene.convenecode.Beneficiarylinkages">
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/MyTheme.AppBarOverlay">
+        <include
+            android:id="@+id/toolbar1"
+            layout="@layout/toolbar">
+        </include>
+    </android.support.design.widget.AppBarLayout>
+    <android.support.design.widget.TabLayout
+        android:id="@+id/tabs"
+        android:layout_below="@+id/appbar"
+        android:layout_width="match_parent"
+        app:tabBackground="@color/white"
+        app:tabSelectedTextColor="@color/yale_homepage_tab"
+        app:tabIndicatorColor="@color/yale_homepage_tab"
+        app:tabTextColor="@color/tabtextcolor"
+        app:tabTextAppearance="@style/AppTabTextAppearance"
+        android:layout_height="wrap_content">
+    </android.support.design.widget.TabLayout>
+    <android.support.v4.view.ViewPager
+        android:id="@+id/container"
+        android:layout_below="@+id/tabs"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+</RelativeLayout>

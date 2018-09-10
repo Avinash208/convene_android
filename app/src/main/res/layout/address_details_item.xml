@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:background="#fff"
+    android:layout_height="wrap_content">
+
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/card_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="8dp"
+        android:background="#fff"
+        app:cardBackgroundColor="#fff"
+        android:layout_marginTop="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginBottom="8dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/primaryLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="8dp"
+                android:text="Primary Address"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="6dp"
+                android:paddingRight="6dp"
+                android:paddingTop="6dp"
+                android:orientation="horizontal">
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_weight="7"
+                    android:paddingLeft="6dp"
+                    android:paddingRight="6dp"
+                    android:paddingBottom="6dp">
+                    <TextView
+                        android:id="@+id/address1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="4"
+                        android:text="Address1"/>
+                    <TextView
+                        android:id="@+id/address2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2"
+                        android:text="Address2"/>
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/remove"
+                    android:layout_width="60dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:padding="4dp"
+                    android:gravity="center"
+                    android:layout_gravity="center"
+                    android:background="@drawable/ovalshape"
+                    android:text="@string/remove"
+                    android:textColor="#000"/>
+                <TextView
+                    android:id="@+id/edit"
+                    android:layout_width="60dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:layout_weight="1"
+                    android:padding="4dp"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="3dp"
+                    android:background="@drawable/ovalshape"
+                    android:text="@string/Edit"
+                    android:textColor="#000"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+
+</LinearLayout>

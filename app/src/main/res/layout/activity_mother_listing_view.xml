@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/yellow"
+                android:orientation="horizontal">
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:paddingTop="8dp"
+                        android:paddingBottom="8dp"
+                        android:text="Mother Information"/>
+
+                    <TextView
+                        android:id="@+id/addMother"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:visibility="visible"
+                        android:padding="8dp"
+                        android:backgroundTint="@color/white"
+                        android:background="@drawable/ovalshape"
+                        android:layout_gravity="right"
+                        android:text="Add Mother"/>
+                </LinearLayout>
+                <TextView
+                    android:id="@+id/titleHeaderMotherName"
+                    android:layout_width="0dp"
+                    android:layout_weight="1.8"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="10dp"
+                    android:paddingLeft="13dp"
+                    android:visibility="gone"
+                    android:paddingBottom="8dp"
+                    android:text="Name"/>
+
+                <TextView
+                    android:id="@+id/show"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:padding="8dp"
+                    android:visibility="gone"
+                    android:textSize="18sp"
+                    android:background="@drawable/ic_bottom_arrow"
+
+                    />
+                <TextView
+                    android:id="@+id/hide"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:padding="8dp"
+                    android:visibility="gone"
+                    android:textSize="18sp"
+                    android:background="@drawable/ic_expand_less"
+                    />
+
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/emptytextview0"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:text="No mother's data"
+                android:visibility="gone"/>
+
+
+            <LinearLayout
+                android:id="@+id/grandMotherLinear"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+            </LinearLayout>
+            <ListView
+                android:id="@+id/motherNameListview"
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                android:visibility="gone"
+                >
+            </ListView>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+
+
+</LinearLayout>

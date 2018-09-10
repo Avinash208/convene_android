@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:padding="4dp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <android.support.v7.widget.CardView
+        android:id="@+id/card_view"
+        android:background="@color/white"
+        android:layout_width="match_parent"
+        android:elevation="8dp"
+        app:cardBackgroundColor="#fff9e4"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="10">
+            <LinearLayout
+                android:id="@+id/linearItem"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="7.5"
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/beneficiaryname"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="18sp"
+                    android:text="name"
+                    android:textStyle="bold"
+                    android:paddingTop="5dp"
+                    android:paddingBottom="2dp"
+                    android:textColor="#000" />
+                <TextView
+                    android:id="@+id/beneficiary_location"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="#000"
+                    android:textSize="14sp"
+                    android:paddingBottom="5dp"
+                    android:text="sdsdsd"
+                    />
+                <TextView
+                    android:id="@+id/beneficiary_modi_ddate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="#000"
+                    android:visibility="gone"
+                    android:textSize="14sp"
+                    android:paddingBottom="5dp"
+                    android:text=""
+                    />
+
+                <TextView
+                    android:id="@+id/noteText"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="10dp"
+                    android:visibility="gone"
+                    android:text="@string/previous_pending_note"
+                    android:textColor="@color/Red"
+                    android:textSize="@dimen/app_twelve_sp"
+                    android:layout_weight="0.6" />
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:layout_weight="2.3">
+                <TextView
+                    android:id="@+id/statusDetails"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:visibility="gone"
+                    android:textSize="10sp"
+                    android:padding="4dp" />
+                <TextView
+                    android:id="@+id/editDetails"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:padding="6dp"
+                    android:visibility="visible"
+                    android:textSize="12sp"
+                    android:text="@string/completed"
+                    android:background="@drawable/ovalshape"
+
+                    />
+                <org.fwwb.convene.convenecode.utils.multispinner.SingleSpinnerSearch
+                    android:id="@+id/searchSingleSpinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    app:hintText="Select Facility"
+                    />
+
+            </LinearLayout>
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+
+
+</LinearLayout>
