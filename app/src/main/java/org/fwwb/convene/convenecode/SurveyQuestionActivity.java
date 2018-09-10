@@ -3553,7 +3553,7 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
                 }
               List<String> getNextQuestion=  prePareNextSetQuestion(currentQid,mainQList);
                if (!getNextQuestion.isEmpty()) {
-                   nextButtonFunctionality(count, getNextQuestion);
+                   nextButtonFunctionality(0, getNextQuestion);
                }else{
                    showSubmitPopUp(currentQid);
                }
