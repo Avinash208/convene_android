@@ -106,6 +106,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 import io.github.douglasjunior.androidSimpleTooltip.SimpleTooltip;
 
@@ -689,7 +690,6 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
         return false;
 
     }
-
     /**
      * @param V
      */
@@ -701,19 +701,16 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
      * @param questionCode
      */
     private void ModuleForCreatingUI(String questionCode) {
-
         List<AnswersPage> mAnswersEditTextPage = DataBaseMapperClass.getAnswersForQuestionFromDB(questionCode, surveyDatabase, restUrl);               // Getting all the Answer and fill to answer Pager list
         answerspage = mAnswersEditTextPage.get(0);
         hashMapForAnswerBeen.put(questionCode, mAnswersEditTextPage);                                     // AnswerPageBeen contain capture Answer
         mapperForEntity(Integer.parseInt(questionCode));
 
     }
-
     /**
      * @param questionCode
      */
     private void mapperForEntity(int questionCode) {
-
         if (!surveyDatabase.isOpen()) {
             surveyDatabase = dbOpenHelper.getWritableDatabase();
         }
@@ -3207,8 +3204,6 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
                         }
                         //       deleteQidsFromResponse(deletedCodes);
                         Toast.makeText(SurveyQuestionActivity.this, "Validating...", Toast.LENGTH_SHORT).show();
-//                        PreviewPopUp pre = new PreviewPopUp();
-//                        pre.showPreviewPopUp(SurveyQuestionActivity.this, surveyPrimaryKeyId, dbOpenHelper, nextB, previousButton, surveysId);
                         //Modified by Guru
                         callPopUpActivity();
                     }
@@ -3571,6 +3566,7 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
                 }
                 listQuestionType.clear();
                 clearAllWidgetMapCounts();
+                deleteResponseFromHashMap(currentQid, hashMapAnswersEditText) ;
                 nextButtonFunctionality(count, displayQids);
             }
             skipBlockLevelFlag = true;
@@ -3603,14 +3599,19 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
                         if ("".equals(qids.get(0)) && skipQid.isEmpty()) {
                             count = mainQList.indexOf(qid);
                             count++;
-
-                            deleteQidsFromResponse(displayQids);
+                            // Changes from Avinash Raj , deleting all the response  from the EditTextHashMap
+                            deleteResponseFromHashMap(qid, hashMapAnswersEditText) ;
+                           // Changes from the Avinash raj sorting the repeted from the questiondisplay .
+                            List<String> getNextQuestion=  prePareNextSetQuestion(qid,mainQList);
+                            deleteQidsFromResponse(getNextQuestion);
                             listQuestionType.clear();                               // Clearing the list which contain anstype
                             clearAllWidgetMapCounts();
-                            nextButtonFunctionality(count, mainQList);
+                            nextButtonFunctionality(count, getNextQuestion);
                         } else {
                             count = qids.indexOf(skipQid);
-                            deleteQidsFromResponse(displayQids);
+                            deleteResponseFromHashMap(qid, hashMapAnswersEditText) ;
+                            deleteResponseFromHashMap(qid, hashMapAnswersEditText) ;
+                            deleteQidsFromResponse(qids);
                             listQuestionType.clear();                               // Clearing the list which contain anstype
                             clearAllWidgetMapCounts();
                             nextButtonFunctionality(count, qids);
@@ -3628,6 +3629,24 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
                 });
         alertDialog = alertDialogBuilder.create();
         alertDialog.show();
+    }
+
+    /**
+     * Changes by Avinash raj , deleting all the above question from the hashmap to resolve dulidation .
+     * @param currentQid
+     * @param hashMapAnswersEditText
+     */
+    private void deleteResponseFromHashMap(String currentQid, HashMap<String, List<Response>> hashMapAnswersEditText) {
+        HashMap<String, List<Response>> getTempList= new HashMap<>();
+        getTempList.putAll(hashMapAnswersEditText);
+        Set<String> getAllHashMapKey= getTempList.keySet();
+        for (String keySet: getAllHashMapKey){
+            String[] getIndex=keySet.split("_");
+            if (Integer.parseInt(getIndex[0])>Integer.parseInt(currentQid)){
+                hashMapAnswersEditText.remove(keySet);
+                Logger.logD("Current Qid"+currentQid+"Removed",keySet+"From this HasmMap");
+            }
+        }
     }
 
 
