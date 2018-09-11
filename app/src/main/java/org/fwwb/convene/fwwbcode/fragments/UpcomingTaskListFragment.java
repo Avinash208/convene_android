@@ -103,6 +103,11 @@ import java.util.List;
     }
 
     @Override
+    public void singleTaskItem(TaskItemBean singleTask) {
+
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
         TaskListPresenters presenters = new TaskListPresenters(getActivity(), this);

@@ -9,19 +9,27 @@ import com.google.gson.annotations.SerializedName;
  */
 public class DependencyObject {
 
-    @SerializedName("dependency_qid")
+    @SerializedName("dependency_qid") //question id in Which question's answer should be change
     @Expose
     private Integer dependencyQid;
 
-    @SerializedName("depending_datatype")
+    @SerializedName("depending_datatype") //for dependent question from which table nee dto take data Ex: survey/response/question
     @Expose
     private String dependingDatatype;
 
-    @SerializedName("question_id")
+    @SerializedName("question_id") // question id which used in to get data to depending question
     @Expose
     private Integer questionId;
 
-    private String value;
+    @SerializedName("column_name") // question id which used in to get data to depending question
+    @Expose
+    private Integer columnName;
+
+    @SerializedName("operator") // question id which used in to get data to depending question
+    @Expose
+    private Integer operator;
+
+    private String value;//selected value of the parent question
 
 
     public Integer getDependencyQid() {

@@ -155,7 +155,7 @@ public class ConveneDatabaseHelper extends SQLiteOpenHelper {
                 cv.put(extraColumn2Str,object.getInt(extraColumn2Str));
                 cv.put("qtype",object.getString("qtype"));
                 database.insertWithOnConflict(Constants.ASSESSMENT, null, cv, SQLiteDatabase.CONFLICT_REPLACE);
-                Logger.logV(TAG,"Assessment json cv values==>"+ cv.toString());
+                /**Logger.logV(TAG,"Assessment json cv values==>"+ cv.toString());*/
             }
 
 
@@ -335,7 +335,7 @@ public class ConveneDatabaseHelper extends SQLiteOpenHelper {
                 cv.put(extraColumn1Str,listOfObjects.getLanguageAssessment().get(i).getExtraColumn1());
                 cv.put(extraColumn2Str,listOfObjects.getLanguageAssessment().get(i).getExtraColumn2());
                 database.insertWithOnConflict("LanguageAssessment", null, cv, SQLiteDatabase.CONFLICT_REPLACE);
-                Logger.logV(TAG,"Language Assessment Saved Successfully" + cv.toString());
+               /** Logger.logV(TAG,"Language Assessment Saved Successfully" + cv.toString());*/
             }
 
         }catch(Exception e){
@@ -415,7 +415,7 @@ public class ConveneDatabaseHelper extends SQLiteOpenHelper {
                 cv.put(extraColumn1Str,listOfObjects.getLanguageQuestion().get(i).getExtraColumn1());
                 cv.put(extraColumn2Str,listOfObjects.getLanguageQuestion().get(i).getExtraColumn2());
                 database.insertWithOnConflict("LanguageQuestion", null, cv, SQLiteDatabase.CONFLICT_REPLACE);
-                Logger.logV(TAG,"Language Question Saved Successfully " + cv.toString());
+                /**Logger.logV(TAG,"Language Question Saved Successfully " + cv.toString());*/
             }
             Utils.copyEncryptedConveneDataBase(context,preferences);
         }catch(Exception e){
@@ -465,7 +465,6 @@ public class ConveneDatabaseHelper extends SQLiteOpenHelper {
                 Gson gson= new Gson();
                 cv.put("rule_engin", gson.toJson(listOfObjects.getOptions().get(i).getRuleEngine()));
                 database.insertWithOnConflict("Options", null, cv, SQLiteDatabase.CONFLICT_REPLACE);
-                Logger.logV(TAG,"Choice table data"+ cv.toString());
             }
         } catch (Exception e) {
             Logger.logE(TAG,"Exception", e);
@@ -774,7 +773,7 @@ public class ConveneDatabaseHelper extends SQLiteOpenHelper {
                 cv.put(extraColumn2Str,listOfObjects.getLanguageOptions().get(i).getExtraColumn2());
                 cv.put(questionPidStr,listOfObjects.getLanguageOptions().get(i).getQuestionPid());
                 database.insertWithOnConflict("LanguageOptions", null, cv, SQLiteDatabase.CONFLICT_REPLACE);
-                Logger.logV(TAG,"LanguageOptions Saved Successfully " + cv.toString());
+
             }
             Utils.copyEncryptedConveneDataBase(context,preferences);
         }catch(Exception e){
@@ -998,8 +997,8 @@ public class ConveneDatabaseHelper extends SQLiteOpenHelper {
                     cv.put(updatedTimeStr,regionnalLanguage.getRegionalLanguage().get(i).getUpdatedDated());
                     cv.put(activeStr,regionnalLanguage.getRegionalLanguage().get(i).getActive());
                     Long insertedPID= database.insertWithOnConflict(languageStr, null, cv, SQLiteDatabase.CONFLICT_REPLACE);
-                    Logger.logV(languageStr,"Regional Language  Saved Successfully " + cv.toString());
-                    Logger.logV(languageStr,"Regional Language  p_ID are " + insertedPID);
+                    /**Logger.logV(languageStr,"Regional Language  Saved Successfully " + cv.toString());
+                    Logger.logV(languageStr,"Regional Language  p_ID are " + insertedPID);*/
                 }
             }else{
                 Logger.logV(languageStr,"Regional Language " + regionnalLanguage.getMessage());

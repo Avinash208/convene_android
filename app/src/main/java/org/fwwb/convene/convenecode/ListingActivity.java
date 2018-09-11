@@ -303,7 +303,7 @@ public class ListingActivity extends BaseActivity implements View.OnClickListene
                      editor.putInt(SURVEY_ID, Integer.parseInt(surveyId));
                      editor.putString("Survey_tittle", headerName);
                      editor.putString(Constants.BENEFICIARY_TOOLBAR_NAME, "");
-                     editor.putString(Constants.BENEFICIARY_TOOLBAR_NAME, "");
+                     editor.putString(Constants.BENEFICIARY_TOOLBAR_CLUSTERNAME, "");
                      editor.apply();
                      new StartSurvey(ListingActivity.this, ListingActivity.this, prefs.getInt(SURVEY_ID, 0), prefs.getInt(SURVEY_ID, 0), "", "", "", "", "", null, "", "").execute(); //Chaned by guru removed "village Name"
                      return;

@@ -26,4 +26,5 @@ public interface TaskListListeners {
      * @param recentList recent month task of the user
      */
     void recentTaskList(List<TaskItemBean> recentList);
+    void singleTaskItem(TaskItemBean singleTask);
 }

@@ -965,7 +965,7 @@ public class UpdateMasterLoading extends BaseActivity implements ClusterToTypo, 
      */
     private void configurationAgainstProject() {
         SharedPreferences.Editor editorStoreTimeStamp = sharedPreferences.edit();
-        editorStoreTimeStamp.putBoolean(Constants.SHOWTRAININGMODULEFLAG, false);
+        editorStoreTimeStamp.putBoolean(Constants.SHOWTRAININGMODULEFLAG, true);
         editorStoreTimeStamp.putBoolean(Constants.SHOWACTIVITYMODULEFLAG, true);
         editorStoreTimeStamp.putBoolean(Constants.SHOWPERIODICITYFLAG, true);
         editorStoreTimeStamp.apply();

@@ -50,6 +50,23 @@
             android:background="@color/fwwb_border_color"/>
         <include
             layout="@layout/task_snippet"/>
+
+        <TextView
+            android:id="@+id/offlineTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/ten"
+            android:fontFamily="@font/heebo_medium"
+            android:visibility="gone"
+            android:textColor="@color/Red"
+            android:padding="2dp"
+            android:textSize="@dimen/regular_text"
+            android:text="Offline"
+            android:layout_gravity="end"
+            android:layout_marginTop="@dimen/five"
+            />
     </LinearLayout>
+
+
 
 </android.support.v7.widget.CardView>

@@ -7,9 +7,9 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -25,11 +25,11 @@ import org.fwwb.convene.convenecode.AutoSyncActivity;
 import org.fwwb.convene.convenecode.BeenClass.AnswersPage;
 import org.fwwb.convene.convenecode.BeenClass.childLink;
 import org.fwwb.convene.convenecode.ListingActivity;
+import org.fwwb.convene.convenecode.ShowSurveyPreview;
 import org.fwwb.convene.convenecode.database.ConveneDatabaseHelper;
 import org.fwwb.convene.convenecode.database.DBHandler;
 import org.fwwb.convene.convenecode.database.DataBaseMapperClass;
 import org.fwwb.convene.convenecode.database.ExternalDbOpenHelper;
-import org.fwwb.convene.convenecode.database.Utilities;
 import org.fwwb.convene.convenecode.utils.Constants;
 import org.fwwb.convene.convenecode.utils.Logger;
 import org.fwwb.convene.convenecode.utils.Utils;
@@ -40,12 +40,15 @@ import org.fwwb.convene.fwwbcode.presentor.attendancepresentor.MemberAttendanceL
 import org.fwwb.convene.fwwbcode.presentor.attendancepresentor.SaveAttendanceHelper;
 import org.fwwb.convene.fwwbcode.presentor.attendancepresentor.SaveAttendanceListener;
 import org.fwwb.convene.fwwbcode.presentor.taskpresentor.TaskListHelper;
+import org.fwwb.convene.fwwbcode.presentor.taskpresentor.TaskListListeners;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class TaskDetailsActivity extends AppCompatActivity implements MemberAttendanceListener, SaveAttendanceListener {
+import static org.fwwb.convene.convenecode.utils.Constants.SURVEY_ID;
+
+public class TaskDetailsActivity extends AppCompatActivity implements MemberAttendanceListener, SaveAttendanceListener,TaskListListeners {
 
     private TextView batchNameTv;
     private TextView trainingNameTv;
@@ -55,7 +58,7 @@ public class TaskDetailsActivity extends AppCompatActivity implements MemberAtte
     private TextView attendanceSyncCountTv;
     private Button syncBtn;
     private ProgressBar syncProgress;
-
+    private SharedPreferences sharedPreferencesDefault;
     private LinearLayout parentPanel;
     private LinearLayout syncLayout;
     private LinearLayout clickedLayout = null;
@@ -69,6 +72,7 @@ public class TaskDetailsActivity extends AppCompatActivity implements MemberAtte
     private SaveAttendanceHelper saveAttendanceHelper;
     private SyncReceiver syncReceiver;
     private IntentFilter syncFilter;
+    private boolean isEditable= true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,7 +89,8 @@ public class TaskDetailsActivity extends AppCompatActivity implements MemberAtte
         Activity activity= TaskDetailsActivity.this;
         syncReceiver = new SyncReceiver();
         syncFilter = new IntentFilter("Survey");
-        SharedPreferences sharedPreferencesDefault = PreferenceManager.getDefaultSharedPreferences(activity);
+
+        sharedPreferencesDefault = PreferenceManager.getDefaultSharedPreferences(activity);
         conveneDatabaseHelper = ConveneDatabaseHelper.getInstance(activity, sharedPreferencesDefault.getString(Constants.CONVENE_DB,""), sharedPreferencesDefault.getString("UID",""));
         ExternalDbOpenHelper externalDbOpenHelper = ExternalDbOpenHelper.getInstance(activity, sharedPreferencesDefault.getString(Constants.DBNAME, ""), sharedPreferencesDefault.getString("inv_id", ""));
         int surveyId = externalDbOpenHelper.getAttendanceSurvey(externalDbOpenHelper);
@@ -99,6 +104,7 @@ public class TaskDetailsActivity extends AppCompatActivity implements MemberAtte
     @Override
     protected void onResume() {
         super.onResume();
+        new TaskListHelper(TaskDetailsActivity.this,this).getList(taskItemBean.getTaskUuid());
         if (syncReceiver!= null)
             registerReceiver(syncReceiver, syncFilter);
     }
@@ -117,8 +123,12 @@ public class TaskDetailsActivity extends AppCompatActivity implements MemberAtte
             return;
 
         taskItemBean = getIntent().getExtras().getParcelable("taskItem");
-        if (taskItemBean== null)
-            return;
+
+
+
+    }
+
+    private void setDataToView() {
         batchNameTv.setText(taskItemBean.getBatchName());
         batchParticipantsTv.setText(""+taskItemBean.getBatchParticipants());
         trainingDateTv.setText(taskItemBean.getTrainingDate());
@@ -133,7 +143,6 @@ public class TaskDetailsActivity extends AppCompatActivity implements MemberAtte
 
         trainingNameTv.setText(taskItemBean.getTrainingName());
         setAdapter();
-
     }
 
     private void setUnsync() {
@@ -228,6 +237,7 @@ public class TaskDetailsActivity extends AppCompatActivity implements MemberAtte
 
             if (!membersBean.getAttendanceSurveyUuid().isEmpty())
             {
+                isEditable = false;
                 if (membersBean.getMemberAttendance() == 1)
                 {
                     infoImg.setBackground(getResources().getDrawable(R.drawable.rounded_present));
@@ -301,6 +311,30 @@ public class TaskDetailsActivity extends AppCompatActivity implements MemberAtte
             }
         });
 
+        LinearLayout editView = findViewById(R.id.viewEdit);
+
+        editView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent startShowSurveyPreview = new Intent(TaskDetailsActivity.this, ShowSurveyPreview.class);
+                startShowSurveyPreview.putExtra("surveyPrimaryKey", taskItemBean.getTaskUuid());
+                startShowSurveyPreview.putExtra("survey_id", 188);
+                startShowSurveyPreview.putExtra("visibility", false);
+                if (!isEditable)
+                    sharedPreferencesDefault.edit().putString("recentPreviewRecord","view").apply();
+                else
+                    sharedPreferencesDefault.edit().putString("recentPreviewRecord","edit").apply();
+                SharedPreferences prefsTemp = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+                SharedPreferences.Editor editor = prefsTemp.edit();
+                editor.putInt(SURVEY_ID, 188);
+                editor.putString("Survey_tittle", "Task");
+                editor.putString(Constants.BENEFICIARY_TOOLBAR_NAME, "");
+                editor.putString(Constants.BENEFICIARY_TOOLBAR_CLUSTERNAME, "");
+                editor.apply();
+                startActivityForResult(startShowSurveyPreview,200);
+            }
+        });
+
 
     }
 
@@ -353,6 +387,32 @@ public class TaskDetailsActivity extends AppCompatActivity implements MemberAtte
     });
     }
 
+    @Override
+    public void currentTaskList(List<TaskItemBean> currentList) {
+
+    }
+
+    @Override
+    public void upcomingTaskList(List<TaskItemBean> upcomingList) {
+
+    }
+
+    @Override
+    public void recentTaskList(List<TaskItemBean> recentList) {
+
+    }
+
+    @Override
+    public void singleTaskItem(TaskItemBean singleTask) {
+        this.taskItemBean = singleTask;
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                setDataToView();
+            }
+        });
+    }
+
 
     /**
      * Receiver Class
@@ -365,6 +425,16 @@ public class TaskDetailsActivity extends AppCompatActivity implements MemberAtte
             } catch (Exception e) {
                 Logger.logE(ListingActivity.class.getSimpleName(), "Exception in SyncSurveyActivity  Myreceiver class  ", e);
             }
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == RESULT_OK)
+        {
+
         }
     }
 }

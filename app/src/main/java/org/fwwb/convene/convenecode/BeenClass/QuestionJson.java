@@ -21,13 +21,13 @@ public class QuestionJson {
 
     @SerializedName("dependency")
     @Expose
-    private List<DependencyObject> dependencyQId;
+    private List<DependencyObject> dependencyQId;//List of dependency questions which should modify if curent question changed
 
-    @SerializedName("reference_id")
+    @SerializedName("reference_id") //Which questionId/SurveyId need to get in the query
     @Expose
     private Integer referenceId;
 
-    @SerializedName("display_datatype")
+    @SerializedName("display_datatype")//Which table need to query Ex: survey/response
     @Expose
     private String dependencyDatatype;
 
