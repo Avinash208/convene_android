@@ -58,6 +58,7 @@ import org.fwwb.convene.convenecode.BeenClass.AnswersPage;
 import org.fwwb.convene.convenecode.BeenClass.AssesmentBean;
 import org.fwwb.convene.convenecode.BeenClass.DependencyObject;
 import org.fwwb.convene.convenecode.BeenClass.Page;
+import org.fwwb.convene.convenecode.BeenClass.QuestionJson;
 import org.fwwb.convene.convenecode.BeenClass.Response;
 import org.fwwb.convene.convenecode.BeenClass.SetAnswers;
 import org.fwwb.convene.convenecode.BeenClass.parentChild.LevelBeen;
@@ -124,7 +125,6 @@ import static org.fwwb.convene.convenecode.utils.Constants.listHashMapKey;
 
 import static org.fwwb.convene.convenecode.utils.Constants.responselistBasedOnSkip;
 import static org.fwwb.convene.convenecode.utils.Constants.rowInflater;
-import static org.fwwb.convene.convenecode.utils.Constants.skipPageCount;
 
 
 public class SurveyQuestionActivity extends BaseActivity implements View.OnClickListener, surveyQuestionPreviewInterface,
@@ -264,8 +264,6 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
     private boolean saveToDraftFlag = false;
     private ScrollView scrollView;
     private int surveysId;
-    String getParentsBeneficiary = "";
-    String getParentsBeneficiaryName = "";
     List<String> getAllGridQuestionCode = new ArrayList<>();
     List<String> getAllGridQuestionCodeInline = new ArrayList<>();
     surveyQuestionGridInlineInterface surveyQuestionGridInlineInterface;
@@ -1064,6 +1062,8 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
         }
         storeAIWidgettextView.add(errorText);
         List<LevelBeen> finalList = list;
+        if (getIndex!= 0)
+            saveBenTpeAnswer(page.getQuestionNumber(),page.getQuestionJson(),finalList.get(getIndex));
         spinnerSearch.setFilterItems(list, getIndex, new SpinnerListenerFilter() {
 
             @Override
@@ -1072,26 +1072,7 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
                     for (int j = 0; j < items.size(); j++) {
                         if (items.get(j).isSelected()) {
                             Logger.logD("Selected", "Item is" + finalList.get(j).getUuid());
-
-                            //Modify by guru start
-
-//                            getParentsBeneficiary = finalList.get(j).getUuid();
-//                            getParentsBeneficiaryName = finalList.get(j).getName();
-                            getBenificiaryQids.add(page.getQuestionNumber());
-
-                            singleSpinnerAnswerMap.put(page.getQuestionNumber(),finalList.get(j));
-
-                            if (page.getQuestionJson().getDependencyQId() != null )
-                            {
-                                for (DependencyObject dependencyObject : page.getQuestionJson().getDependencyQId())
-                                {
-                                    dependencyObject.setValue(finalList.get(j).getUuid());
-                                    dependencyObjectMap.put(dependencyObject.getQuestionId(),dependencyObject);
-                                    setDependencyData(dependencyObject);
-                                }
-                            }
-                            //Modify by guru end
-
+                            saveBenTpeAnswer(page.getQuestionNumber(),page.getQuestionJson(),finalList.get(j));
                         }
                     }
                 } catch (Exception e) {
@@ -1106,6 +1087,25 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
         }
     }
 
+    private void saveBenTpeAnswer(int questionNumber, QuestionJson questionJson, LevelBeen levelBeen) {
+        //Modify by guru start
+
+        getBenificiaryQids.add(questionNumber);
+
+        singleSpinnerAnswerMap.put(questionNumber,levelBeen);
+
+        if (questionJson.getDependencyQId() != null )
+        {
+            for (DependencyObject dependencyObject :questionJson.getDependencyQId())
+            {
+                dependencyObject.setValue(levelBeen.getUuid());
+                dependencyObjectMap.put(dependencyObject.getDependencyQid(),dependencyObject);
+                setDependencyData(dependencyObject);
+            }
+        }
+        //Modify by guru end
+
+    }
 
 
     //Modify by guru
@@ -1197,7 +1197,7 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
             levelBeenList = DataBaseMapperClass.getBenificiaryParentDetails(db, selectQuery);
 
         }
-        HashMap<String, AnswersPage> getDataAnswer = getUserAnsweredResponseFromDB(dependencyObject.getQuestionId(), db, surveyPrimaryKeyId, restUrl);
+        HashMap<String, AnswersPage> getDataAnswer = getUserAnsweredResponseFromDB(dependencyObject.getDependencyQid(), db, surveyPrimaryKeyId, restUrl);
 
         int getIndex = 0;
         if (!getDataAnswer.isEmpty()) {
@@ -1234,7 +1234,7 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
 
             }
         });
-        singleSpinnerSearchFilterMap.get(dependencyObject.getDependencyQid()).getItemAtPosition(getIndex);
+
     }
 
 
