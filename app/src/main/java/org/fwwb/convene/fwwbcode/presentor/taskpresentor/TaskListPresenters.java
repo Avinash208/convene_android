@@ -27,7 +27,7 @@ public class TaskListPresenters implements TaskListListeners{
 
         this.activity = activity;
         this.listListeners = listListeners;
-        new TaskListHelper(this.activity,this);
+        new TaskListHelper(this.activity,this).getList("");
     }
 
 
@@ -45,5 +45,10 @@ public class TaskListPresenters implements TaskListListeners{
     @Override
     public void recentTaskList(List<TaskItemBean> recentList) {
         listListeners.recentTaskList(recentList);
+    }
+
+    @Override
+    public void singleTaskItem(TaskItemBean singleTask) {
+
     }
 }

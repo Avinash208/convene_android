@@ -159,4 +159,9 @@ public class TaskSelectionListingActivity extends AppCompatActivity implements T
     public void recentTaskList(List<TaskItemBean> recentList) {
 
     }
+
+    @Override
+    public void singleTaskItem(TaskItemBean singleTask) {
+
+    }
 }

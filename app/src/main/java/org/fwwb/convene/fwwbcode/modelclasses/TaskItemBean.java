@@ -20,6 +20,7 @@ public class TaskItemBean implements Parcelable {
     private int batchParticipants;
     private int beneficiaryType;
     private int trainingHour;
+    private int surveyStatus;
 
     public TaskItemBean()
     {}
@@ -171,5 +172,13 @@ public class TaskItemBean implements Parcelable {
 
     public void setTrainingHour(int trainingHour) {
         this.trainingHour = trainingHour;
+    }
+
+    public int getSurveyStatus() {
+        return surveyStatus;
+    }
+
+    public void setSurveyStatus(int surveyStatus) {
+        this.surveyStatus = surveyStatus;
     }
 }

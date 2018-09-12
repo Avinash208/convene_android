@@ -8,7 +8,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.fwwb.convene.R;
@@ -59,6 +58,12 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskItemHolder
         }
 
         holder.trainingNameTv.setText(taskItemBean.getTrainingName());
+
+        if (taskItemBean.getSurveyStatus() == 1)
+        {
+            holder.taskTile.setCardBackgroundColor(context.getResources().getColor(R.color.light_red));
+            holder.offlineTv.setVisibility(View.VISIBLE);
+        }
         holder.taskTile.setOnClickListener(v -> {
          callDetailsActivity(taskItemBean);
         });
@@ -78,6 +83,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskItemHolder
     class TaskItemHolder extends RecyclerView.ViewHolder{
 
         TextView batchNameTv;
+        TextView offlineTv;
         TextView trainingNameTv;
         TextView trainingLocationTv;
         TextView batchParticipantsTv;
@@ -86,6 +92,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskItemHolder
         public TaskItemHolder(View itemView) {
             super(itemView);
             batchNameTv = itemView.findViewById(R.id.batchNameTv);
+            offlineTv = itemView.findViewById(R.id.offlineTv);
             taskTile = itemView.findViewById(R.id.taskTile);
             trainingNameTv = itemView.findViewById(R.id.trainingNameTv);
             trainingLocationTv = itemView.findViewById(R.id.trainingLocationTv);

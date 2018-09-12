@@ -107,4 +107,9 @@ import java.util.List;
     public void recentTaskList(List<TaskItemBean> recentList) {
         setTaskList(recentList);
     }
+
+    @Override
+    public void singleTaskItem(TaskItemBean singleTask) {
+
+    }
 }

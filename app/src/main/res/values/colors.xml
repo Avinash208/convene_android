@@ -39,7 +39,7 @@
     <color name="headercolor">#030763</color>
     <color name="holo_blue">#FF33E5B5</color>
     <color name="blue">#e00303</color>
-    <color name="Red">#ff4500</color>
+    <color name="Red">#db4427</color>
     <color name="yellow">#fed803</color>
     <color name="TitleColor">#168ed2</color>
     <color name="white">#FFFFFF</color>
@@ -85,6 +85,8 @@
     <color name="fwwb_text_color_blue">#3f51b5</color>
     <color name="fwwb_border_color">#e9eaf5</color>
     <color name="fwwb_backround">#2d3a80</color>
+    <color name="light_green">#52c0edc2</color>
+    <color name="light_red">#a1f9e2dd</color>
 
 
 </resources>

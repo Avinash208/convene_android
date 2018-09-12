@@ -41,6 +41,8 @@ public class TaskListHelper {
     private List<TaskItemBean> upcomingList = new ArrayList<>();
     private List<TaskItemBean> recentList = new ArrayList<>();
 
+    private String taskUuid;
+
     public TaskListHelper(Activity activity, TaskListListeners listListeners)
     {
         this.activity = activity;
@@ -49,14 +51,22 @@ public class TaskListHelper {
         sharedPreferencesDefault = PreferenceManager.getDefaultSharedPreferences(activity);
         conveneDatabaseHelper = ConveneDatabaseHelper.getInstance(activity, sharedPreferencesDefault.getString(Constants.CONVENE_DB,""), sharedPreferencesDefault.getString("UID",""));
         externalDbOpenHelper = ExternalDbOpenHelper.getInstance(activity,sharedPreferencesDefault.getString(Constants.DBNAME, ""), sharedPreferencesDefault.getString("inv_id", ""));
+
+
+
+
+    }
+
+
+    public void getList(String uuid)
+    {
+        this.taskUuid =  uuid;
         String summurryQid = externalDbOpenHelper.getSummaryQid(188,externalDbOpenHelper);
         getTaskSurveys(188);
         getTaskList(summurryQid);
         String nameQids = getNameSurvey(conveneDatabaseHelper);
         getCompleteList(nameQids);
         Logger.logD("TaskListHelper", "size " + totalTaskList.size());
-
-
     }
 
     private void getCompleteList(String nameQids) {
@@ -92,12 +102,21 @@ public class TaskListHelper {
                     String yearNumber  = (String) DateFormat.format("yyyy",   date);
                     String monthNumber2  = (String) DateFormat.format("MM",   calendar.getTime());
                     String yearNumber2  = (String) DateFormat.format("yyyy",   calendar.getTime());
-                    if (Integer.parseInt(monthNumber) == Integer.parseInt(monthNumber2) &&(Integer.parseInt(yearNumber)==Integer.parseInt(yearNumber2)))
-                        currentList.add(totalTaskList.get(i));
-                    if (Integer.parseInt(monthNumber) > Integer.parseInt(monthNumber2)|| (Integer.parseInt(yearNumber)>Integer.parseInt(yearNumber2)) )
-                        upcomingList.add(totalTaskList.get(i));
-                    if (Integer.parseInt(monthNumber) < Integer.parseInt(monthNumber2) || (Integer.parseInt(yearNumber)<Integer.parseInt(yearNumber2)))
-                        recentList.add(totalTaskList.get(i));
+
+                    if (taskUuid.isEmpty())
+                    {
+                        if (Integer.parseInt(monthNumber) == Integer.parseInt(monthNumber2) &&(Integer.parseInt(yearNumber)==Integer.parseInt(yearNumber2)))
+                            currentList.add(totalTaskList.get(i));
+                        if (Integer.parseInt(monthNumber) > Integer.parseInt(monthNumber2)|| (Integer.parseInt(yearNumber)>Integer.parseInt(yearNumber2)) )
+                            upcomingList.add(totalTaskList.get(i));
+                        if (Integer.parseInt(monthNumber) < Integer.parseInt(monthNumber2) || (Integer.parseInt(yearNumber)<Integer.parseInt(yearNumber2)))
+                            recentList.add(totalTaskList.get(i));
+                    }
+                    else
+                    {
+                        listListeners.singleTaskItem(totalTaskList.get(i));
+                        return;
+                    }
                 }
 
 
@@ -108,9 +127,11 @@ public class TaskListHelper {
             }
 
         }
-        listListeners.currentTaskList(currentList);
-        listListeners.upcomingTaskList(upcomingList);
-        listListeners.recentTaskList(recentList);
+        if (taskUuid.isEmpty()) {
+            listListeners.currentTaskList(currentList);
+            listListeners.upcomingTaskList(upcomingList);
+            listListeners.recentTaskList(recentList);
+        }
     }
 
     private int getParticipants(TaskItemBean itemBean) {
@@ -129,7 +150,6 @@ public class TaskListHelper {
             Cursor cursor = db.rawQuery(query, null);
             if (cursor.getCount() != 0 && cursor.moveToFirst()) {
                 do {
-
                     if (i==1)
                         answer = cursor.getString(cursor.getColumnIndex("typology_code"));
                     else
@@ -167,14 +187,17 @@ public class TaskListHelper {
     private void getTaskSurveys(int surveyId) {
 
         String query = "Select uuid,survey_status from Survey where survey_status != 0 and survey_ids='"+surveyId+"'";
+        if (!taskUuid.isEmpty())
+            query = "Select uuid,survey_status from Survey where uuid ='"+taskUuid+"' and survey_status != 0 and survey_ids='"+surveyId+"'";
         try {
             SQLiteDatabase db = dbHandler.getdatabaseinstance_read();
             Cursor cursor = db.rawQuery(query, null);
             if (cursor.getCount() != 0 && cursor.moveToFirst()) {
                 do {
                     TaskItemBean taskItemBean = new TaskItemBean();
-                    String survey_status = cursor.getString(cursor.getColumnIndex("survey_status"));
+                    String surveyStatus = cursor.getString(cursor.getColumnIndex("survey_status"));
                     taskItemBean.setTaskUuid(cursor.getString(cursor.getColumnIndex("uuid")));
+                    taskItemBean.setSurveyStatus(Integer.parseInt(surveyStatus));
                     totalTaskList.add(taskItemBean);
                 } while (cursor.moveToNext());
 
