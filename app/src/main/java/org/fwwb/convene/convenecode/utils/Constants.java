@@ -95,6 +95,9 @@ public class Constants {
     public static final String SURVEY_ID_HOME = "SurveyIdFromHome";
     public static final String BENEFICIARY_TOOLBAR_CLUSTERNAME_HOME = "beneficiary_Tool_ClusterNameHome";
     public static final String BENEFICIARY_TOOLBAR_NAME_HOME ="beneficiary_toolbar_nameHome" ;
+    public static final String YALE_PROJECT = "yaleProject";
+    public static final String FWWB_PROJECT = "FWWBProject";
+    public static final String SUMMARYSTATUS = "summaryPage";
     public static List<Integer> blockQids=new ArrayList<>();
 
     //-------------------------*******************--------------------

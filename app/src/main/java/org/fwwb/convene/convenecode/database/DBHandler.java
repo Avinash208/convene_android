@@ -11,6 +11,7 @@ import net.sqlcipher.database.SQLiteDatabase;
 import net.sqlcipher.database.SQLiteOpenHelper;
 
 import org.fwwb.convene.convenecode.BeenClass.parentChild.LevelBeen;
+import org.fwwb.convene.convenecode.BeenClass.parentChild.SurveyDetail;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -1862,5 +1863,54 @@ public class DBHandler extends SQLiteOpenHelper {
                 cursor.close(); ;
         }
         return list;
+    }
+
+    public List<StatusBean> getCollectedSurveyList(ExternalDbOpenHelper dbhelper, Integer survey_ids) {
+        List<StatusBean> getTempList= new ArrayList<>();
+        String responseQuere = "select * from survey\n" +
+                "inner join Response on Response.survey_id=survey.beneficiary_ids\n" +
+                " where survey_ids="+survey_ids+" and survey.beneficiary_ids!='' group by survey.beneficiary_ids \n" +
+                "\n";
+        SQLiteDatabase db = getdatabaseinstance_read();
+        Cursor cursor = db.rawQuery(responseQuere, null);
+        try {
+            if (cursor.getCount() != 0 && cursor.moveToFirst()) {
+                do {
+                    String clusterName = cursor.getString(cursor.getColumnIndex("cluster_name"));
+                    String uuid = cursor.getString(cursor.getColumnIndex("uuid"));
+                    String language_id = cursor.getString(cursor.getColumnIndex("language_id"));
+                    int serverPrimaryKey = cursor.getInt(cursor.getColumnIndex("server_primary_key"));
+                    String endDate = cursor.getString(cursor.getColumnIndex("end_date"));
+                    int surveyIds = cursor.getInt(cursor.getColumnIndex(SURVEYIDS));
+                    StatusBean statusBean= new StatusBean();
+                    statusBean.setClusterName(clusterName);
+                    statusBean.setSurveyId(uuid);
+                    statusBean.setParent_form_primaryid(serverPrimaryKey);
+                    statusBean.setUuid(uuid);
+                    statusBean.setLanguage(language_id);
+                    getTempList.add(statusBean);
+
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+        } catch (Exception e) {
+            Logger.logE(TAG, "Exception on getting all assessment", e);
+        }
+        return getTempList;
+    }
+
+    public int getTotalSurveyCount(DBHandler dbHelper) {
+        int getTotalCount=0;
+        List<StatusBean> getTempList= new ArrayList<>();
+        String responseQuere = "select * from survey where beneficiary_ids=''";
+        SQLiteDatabase db = getdatabaseinstance_read();
+        Cursor cursor = db.rawQuery(responseQuere, null);
+        try {
+            getTotalCount=cursor.getCount();
+            cursor.close();
+        } catch (Exception e) {
+            Logger.logE(TAG, "Exception on getting all assessment", e);
+        }
+        return getTotalCount;
     }
 }

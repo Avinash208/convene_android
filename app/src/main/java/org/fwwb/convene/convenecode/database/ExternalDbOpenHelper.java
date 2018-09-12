@@ -14,6 +14,7 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 
+import org.fwwb.convene.convenecode.BeenClass.SurveyDetails;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -4573,4 +4574,31 @@ public class ExternalDbOpenHelper extends SQLiteOpenHelper {
         return surveyId;
 
     }
+
+    public List<Datum> getAllActivityList(ExternalDbOpenHelper dbhelper) {
+        List<Datum> getTempList= new ArrayList<>();
+        try {
+            String pendingSurveyQuery = "select * from Surveys where Surveys.category_id=0";
+            SQLiteDatabase db = dbhelper.getWritableDatabase();
+            Cursor cursor = db.rawQuery(pendingSurveyQuery, null);
+            if (cursor.getCount() != 0 && cursor.moveToFirst()) {
+                do {
+                    Datum datum = new Datum();
+                    datum.setId(cursor.getInt(cursor.getColumnIndex("surveyId")));
+                    datum.setName(cursor.getString(cursor.getColumnIndex("surveyName")));
+                    datum.setBeneficiaryTypeId(cursor.getInt(cursor.getColumnIndex("beneficiary_ids")));
+                    datum.setActive(cursor.getInt(cursor.getColumnIndex("category_id")));
+                    getTempList.add(datum);
+                } while (cursor.moveToNext());
+
+                cursor.close();
+            }
+        } catch (Exception e) {
+            Logger.logV("", "checkPrymarySaveDraftExist from Survey table" + e);
+
+        }
+        return getTempList;
+    }
+
+
 }

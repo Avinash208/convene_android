@@ -925,7 +925,6 @@ public class UpdateMasterLoading extends BaseActivity implements ClusterToTypo, 
        dbOpenHelper.deleteProjectActivity();
         dbOpenHelper.updateProjectResponse(project);
     }
-
     private void callProjectSelectionListApi() {
         if (Utils.haveNetworkConnection(this)) {
             UpdateRegionalLanguge updateRegionalLanguge = new UpdateRegionalLanguge(UpdateMasterLoading.this, getString(R.string.regionalLanguageURLS), UpdateMasterLoading.this, otherProgressBar);
@@ -937,7 +936,6 @@ public class UpdateMasterLoading extends BaseActivity implements ClusterToTypo, 
 
 
     }
-
     private void executeNeXtFunctionality(String results) {
         try {
             DBHandler dbHandler= new DBHandler(this);
@@ -951,14 +949,12 @@ public class UpdateMasterLoading extends BaseActivity implements ClusterToTypo, 
         } catch (JsonSyntaxException e) {
             e.printStackTrace();
         }
-
         setMasterDatabaseUpdateTimeStamp();
         configurationAgainstProject();
         Intent intent = new Intent(context, HomeActivityNew.class);
         startActivity(intent);
         finish();
     }
-
     /**
      * this method to configure the Module against the project . Updating To SP saying not to display
      * Training and Activity module in the Homepage.
@@ -968,6 +964,8 @@ public class UpdateMasterLoading extends BaseActivity implements ClusterToTypo, 
         editorStoreTimeStamp.putBoolean(Constants.SHOWTRAININGMODULEFLAG, false);
         editorStoreTimeStamp.putBoolean(Constants.SHOWACTIVITYMODULEFLAG, true);
         editorStoreTimeStamp.putBoolean(Constants.SHOWPERIODICITYFLAG, true);
+        editorStoreTimeStamp.putBoolean(Constants.YALE_PROJECT, true);
+        editorStoreTimeStamp.putBoolean(Constants.FWWB_PROJECT, false);
         editorStoreTimeStamp.apply();
     }
 }

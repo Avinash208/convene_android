@@ -21,7 +21,7 @@
 
     <application
         android:name=".convenecode.BaseApplication"
-        android:icon="@mipmap/fwwb_ic_launcher_round"
+        android:icon="@mipmap/yale"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
@@ -183,7 +183,6 @@
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity android:name=".convenecode.FilterActivityActivity" />
-
         <activity
             android:name=".convenecode.Beneficiarylinkages"
             android:label="@string/title_activity_beneficiarylinkages"
@@ -191,13 +190,20 @@
         <activity android:name=".convenecode.ShowMemberListActivity" />
         <activity android:name=".convenecode.LocationBasedActivity" />
         <activity android:name=".convenecode.ProjectSelectionActivity" />
-        <activity android:name=".convenecode.ImageProcessingActivity" />
         <activity android:name=".fwwbcode.FwTraningListingActivity" />
         <activity
             android:name=".fwwbcode.activities.TaskSelectionListingActivity"
             android:label="@string/title_activity_task_selection_listing"
             android:theme="@style/AppTheme" />
-        <activity android:name=".fwwbcode.activities.TaskDetailsActivity"></activity>
+        <activity android:name=".fwwbcode.activities.TaskDetailsActivity" />
+        <activity
+            android:name=".convenecode.CompletedSurveyActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".convenecode.PendingSurveyActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".convenecode.SummaryPageActivity"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>
