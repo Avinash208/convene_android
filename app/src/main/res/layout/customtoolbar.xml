@@ -28,10 +28,9 @@
         android:id="@+id/toolbarTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_gravity="center"
         android:gravity="center"
         android:text=""
+        android:paddingStart="10dp"
         android:fontFamily="@font/heebo_medium"
         android:textColor="@color/white"
         android:textSize="@dimen/toolbar_font_loading" />

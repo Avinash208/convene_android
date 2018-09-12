@@ -54,6 +54,7 @@
                         android:paddingLeft="5dp"
                         android:paddingRight="6dp"
                         android:paddingTop="1dp"
+                        android:visibility="gone"
                         android:textColor="@color/inActiveText"
                         android:textSize="14sp" />
 

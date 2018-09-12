@@ -2516,7 +2516,7 @@ public class ExternalDbOpenHelper extends SQLiteOpenHelper {
         String query = "";
         Logger.logV(TAG, tagStr + db.getPath());
 
-        query = "select * from Surveys where is_training_survey !=2 and category_id=0 and Surveys.beneficiary_ids=" + beneficiaryType;
+        query = "select * from Surveys where is_training_survey !=2 and category_id=0 and Surveys.beneficiary_ids=" + beneficiaryType + " order by  Surveys.surveyId ASC";
 
         Cursor cursor = db.rawQuery(query, null);
         Logger.logV(TAG, tagStr + query);

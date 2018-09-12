@@ -932,9 +932,6 @@ public class UpdateMasterLoading extends BaseActivity implements ClusterToTypo, 
         } else {
             showAlertErrorInternetConnectivity(context, 23, RETRY_CONNECTIVITY, true);
         }
-
-
-
     }
     private void executeNeXtFunctionality(String results) {
         try {
@@ -963,7 +960,7 @@ public class UpdateMasterLoading extends BaseActivity implements ClusterToTypo, 
         SharedPreferences.Editor editorStoreTimeStamp = sharedPreferences.edit();
         editorStoreTimeStamp.putBoolean(Constants.SHOWTRAININGMODULEFLAG, true);
         editorStoreTimeStamp.putBoolean(Constants.SHOWACTIVITYMODULEFLAG, true);
-        editorStoreTimeStamp.putBoolean(Constants.SHOWPERIODICITYFLAG, true);
+        editorStoreTimeStamp.putBoolean(Constants.SHOWPERIODICITYFLAG, false);
         editorStoreTimeStamp.putBoolean(Constants.YALE_PROJECT, true);
         editorStoreTimeStamp.putBoolean(Constants.FWWB_PROJECT, false);
         editorStoreTimeStamp.apply();

@@ -18,7 +18,7 @@
     <dimen name="sixty_dp">60dp</dimen>
     <dimen name="ten">10dp</dimen>
     <dimen name="toolbar_font">22sp</dimen>
-    <dimen name="toolbar_font_loading">20sp</dimen>
+    <dimen name="toolbar_font_loading">20dp</dimen>
     <dimen name="fourteen_sp">14sp</dimen>
     <dimen name="sixteen_sp">16sp</dimen>
     <dimen name="forty_dp">40dp</dimen>

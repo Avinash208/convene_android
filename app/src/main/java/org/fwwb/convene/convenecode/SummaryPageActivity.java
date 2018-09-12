@@ -69,7 +69,7 @@ public class SummaryPageActivity extends AppCompatActivity implements View.OnCli
         TextView toolbarTitle = findViewById(R.id.toolbarTitle);
         Typeface customFont = Typeface.createFromAsset(getAssets(), "fonts/Roboto-Regular.ttf");
         toolbarTitle.setTypeface(customFont);
-        toolbarTitle.setText(getString(R.string.completed));
+        toolbarTitle.setText("Summary");
         pressBack = findViewById(R.id.backPress);
         dividerImage = findViewById(R.id.devider_blue);
         pendingimage = findViewById(R.id.pending_image);

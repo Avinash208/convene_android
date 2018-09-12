@@ -23,11 +23,11 @@
 
 
     <!--Demo url-->
-    <string name="main_url">http://fwwb.mahiti.org/api/</string>
-    <string name="answer_upload_url">http://fwwb.mahiti.org/api/add-survey-answers/</string>
-    <string name="main_Url">http://fwwb.mahiti.org/</string>
-    <string name="main_url_Beneficiary">http://fwwb.mahiti.org/</string>
-    <string name="regionalLanguageURLS">http://fwwb.mahiti.org/api/language-list/</string>
+    <string name="main_url">http://yale.mahiti.org/api/</string>
+    <string name="answer_upload_url">http://yale.mahiti.org/api/add-survey-answers/</string>
+    <string name="main_Url">http://yale.mahiti.org/</string>
+    <string name="main_url_Beneficiary">http://yale.mahiti.org/</string>
+    <string name="regionalLanguageURLS">http://yale.mahiti.org/api/language-list/</string>
 
 
     <string name="loadmore_facility">Loading more Facility please wait&#8230;</string>

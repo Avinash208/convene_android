@@ -589,6 +589,8 @@ public class AutoSyncActivity extends Activity {
             if (trainingUuid== null)trainingUuid="";
             if (batchUuid== null)
                 batchUuid="";
+            if (captureDate== null)
+                captureDate="";
             builderMultiPart.addFormDataPart("captured_date",captureDate);
             builderMultiPart.addFormDataPart("training_uuid",trainingUuid);
             builderMultiPart.addFormDataPart("batch_uuid",batchUuid);

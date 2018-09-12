@@ -9,7 +9,7 @@
         android:layout_height="60dp"
         android:layout_alignParentBottom="true"
         android:gravity="center"
-        android:background="@drawable/homepage_border"
+        android:background="#ffffff"
         android:weightSum="2">
         <TextView
             android:id="@+id/helptext"

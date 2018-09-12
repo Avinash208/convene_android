@@ -229,8 +229,7 @@ public class DataFormFragment extends Fragment implements PeriodicTypeInterface,
             return;
         new PendingSurveyAsyncTask(getActivity(), surveyList, externalDbOpenHelper, prefs, periodicityCheckControllerDbHelper, this, handler, surveyPrimaryKeyId, surveysId).execute();
         new CompletedSurveyAsyncTask(getActivity(), surveyList, externalDbOpenHelper, prefs, surveyPrimaryKeyId, this, handler).execute();
-
-    }
+        }
 
 
     /**
@@ -517,7 +516,7 @@ public class DataFormFragment extends Fragment implements PeriodicTypeInterface,
             periodicityTextview.setText("Periodicity : " + completedSurveyList.get(i).getPeriodicityFlag());
             surveyTextView.setText(completedSurveyList.get(i).getSurveyName());
             capturedTextView.setText("Captured on : " + completedSurveyList.get(i).getSurveyEndDate());
-            if (completedSurveyList.get(i).isSurveyDone() == 1) {
+            if (!completedSurveyList.get(i).getPeriodicityFlag().isEmpty() && completedSurveyList.get(i).isSurveyDone() == 1) {
                 statusTextView.setText("VIEW");
                 onClickFunctionalityVIew(statusTextView, completedSurveyList.get(i).getUuid(), completedSurveyList.get(i).getId());
             } else {

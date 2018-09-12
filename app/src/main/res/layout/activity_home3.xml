@@ -5,7 +5,6 @@
     android:layout_width="match_parent"
     android:background="@color/fwwb_border_color"
     android:layout_height="match_parent">
-
     <LinearLayout
         android:id="@+id/linearheader"
         android:layout_width="match_parent"
@@ -110,8 +109,7 @@
                 android:visibility="visible"
                 app:cardBackgroundColor="#db2064"
                 android:layout_marginTop="20dp"
-                app:cardCornerRadius="@dimen/five"
-                app:cardElevation="4dp">
+                app:cardCornerRadius="@dimen/five">
 
                 <LinearLayout
                     android:id="@+id/dataformsLinear"
@@ -125,9 +123,7 @@
                         android:layout_width="25dp"
                         android:layout_height="25dp"
                         android:layout_gravity="center_vertical"
-                        android:src="@drawable/trainings_icon"
-                        />
-
+                        android:src="@drawable/trainings_icon" />
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="40dp"
@@ -142,10 +138,7 @@
                         android:textAllCaps="false"
                         android:textColor="@color/white"
                         android:textSize="18sp"
-                        android:textStyle="normal"
-                        />
-
-
+                        android:textStyle="normal" />
                 </LinearLayout>
 
             </android.support.v7.widget.CardView>
@@ -176,14 +169,13 @@
            <android.support.v7.widget.CardView
                android:layout_width="match_parent"
                android:layout_height="wrap_content"
-               android:layout_marginBottom="10dp"
+               android:layout_marginBottom="15dp"
                android:visibility="visible"
                app:cardBackgroundColor="#db2064"
                android:layout_marginTop="20dp"
-               android:layout_marginLeft="10dp"
-               android:layout_marginRight="10dp"
-               app:cardCornerRadius="@dimen/five"
-               app:cardElevation="4dp">
+               android:layout_marginLeft="20dp"
+               android:layout_marginRight="20dp"
+               app:cardCornerRadius="@dimen/five">
                <LinearLayout
                    android:layout_width="match_parent"
                    android:layout_height="50dp"
@@ -208,7 +200,7 @@
                        android:paddingLeft="?android:attr/expandableListPreferredItemPaddingLeft"
                        android:textAllCaps="false"
                        android:textColor="@color/white"
-                       android:textSize="18sp"
+                       android:textSize="18dp"
                        android:textStyle="normal" />
                </LinearLayout>
            </android.support.v7.widget.CardView>
@@ -217,17 +209,15 @@
             android:id="@+id/add_new_survey"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp">
             <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
+                android:layout_marginBottom="5dp"
                 app:cardBackgroundColor="#3743aa"
-                android:layout_marginTop="5dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                app:cardCornerRadius="@dimen/five"
-                app:cardElevation="4dp">
+                app:cardCornerRadius="@dimen/five">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
@@ -238,14 +228,14 @@
                         android:layout_width="25dp"
                         android:layout_height="25dp"
                         android:layout_gravity="center_vertical"
-                        android:src="@drawable/completed_surveys" />
+                        android:src="@drawable/add_new_household" />
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="40dp"
                         android:paddingStart="20dp"
                         android:gravity="center_vertical"
                         android:layout_gravity="center_vertical"
-                        android:text="Add New Household"
+                        android:text="Add New Households"
                         android:fontFamily="@font/heebo_regular"
                         android:padding="1dp"
                         android:paddingLeft="?android:attr/expandableListPreferredItemPaddingLeft"
@@ -260,24 +250,24 @@
            android:layout_width="match_parent"
            android:layout_height="wrap_content"
            android:orientation="vertical"
+           android:layout_marginLeft="10dp"
+           android:layout_marginRight="10dp"
            android:id="@+id/dynamic_button_container">
        </LinearLayout>
         <LinearLayout
             android:id="@+id/pending_survey"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp">
             <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
                 android:visibility="visible"
                 app:cardBackgroundColor="#3743aa"
-                android:layout_marginTop="5dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                app:cardCornerRadius="@dimen/five"
-                app:cardElevation="4dp">
+                app:cardCornerRadius="@dimen/five">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
@@ -311,17 +301,15 @@
             android:id="@+id/completed_survey"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp">
             <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
+                android:layout_marginBottom="5dp"
                 app:cardBackgroundColor="#3743aa"
-                android:layout_marginTop="5dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                app:cardCornerRadius="@dimen/five"
-                app:cardElevation="4dp">
+                app:cardCornerRadius="@dimen/five">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
@@ -345,7 +333,7 @@
                         android:paddingLeft="?android:attr/expandableListPreferredItemPaddingLeft"
                         android:textAllCaps="false"
                         android:textColor="@color/white"
-                        android:textSize="18sp"
+                        android:textSize="18dp"
                         android:textStyle="normal" />
                 </LinearLayout>
             </android.support.v7.widget.CardView>

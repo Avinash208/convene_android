@@ -24,9 +24,11 @@ import org.fwwb.convene.convenecode.BeenClass.parentChild.SurveyDetail;
 import org.fwwb.convene.convenecode.adapter.ExpandableListAdapterDataCollection;
 import org.fwwb.convene.convenecode.database.DBHandler;
 import org.fwwb.convene.convenecode.database.ExternalDbOpenHelper;
+import org.fwwb.convene.convenecode.database.Utilities;
 import org.fwwb.convene.convenecode.presenter.HomePresenter;
 import org.fwwb.convene.convenecode.utils.Constants;
 import org.fwwb.convene.convenecode.utils.Logger;
+import org.fwwb.convene.convenecode.utils.StartSurvey;
 import org.fwwb.convene.convenecode.utils.Utils;
 import org.fwwb.convene.convenecode.view.HomeViewInterface;
 import org.fwwb.convene.fwwbcode.activities.TaskSelectionListingActivity;
@@ -62,6 +64,7 @@ public class HomeActivityNew extends BaseActivity implements View.OnClickListene
     private LinearLayout completedSurveyBtn;
     private LinearLayout summerySurveyBtn;
     private LinearLayout pendingSurveyBtn;
+    private LinearLayout addNewSurvey;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,16 +112,15 @@ public class HomeActivityNew extends BaseActivity implements View.OnClickListene
         UpdateModuleVisiabliteAgainstProject();
 
     }
-
     private void UpdateViewModulesAgainstProject(HashMap<String, List<Datum>> listDataChild) {
+        addNewSurvey = (LinearLayout) findViewById(R.id.add_new_survey);
         LinearLayout dynamicButtonContainer = findViewById(R.id.dynamic_button_container);
         List<Datum> getBeneficiaryList = listDataChild.get("Listing survey");
         for (int i = 0; i < getBeneficiaryList.size(); i++) {
             View inflatParentView = getLayoutInflater().inflate(R.layout.home_button_dynamic, dynamicButtonContainer, false);
             TextView addSurveyText = inflatParentView.findViewById(R.id.survey_name_text);
             Datum getBeanValues = getBeneficiaryList.get(i);
-            addSurveyText.setText(new StringBuilder().append("Add New ").append(getBeanValues.getName()).toString());
-            Logger.logD("Button Text", "" + addSurveyText.getText());
+            addSurveyText.setText(new StringBuilder().append(getBeanValues.getName()).append(" List").toString());
             addSurveyText.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -127,7 +129,20 @@ public class HomeActivityNew extends BaseActivity implements View.OnClickListene
                     for (int j = 0; j < surveyDetail.size(); j++) {
                         if (getBeanValues.getName().equalsIgnoreCase(surveyDetail.get(j).getSurveyName())) {
                             surveyDetailBean = surveyDetail.get(j);
-                            setSharedPreferences(surveyDetailBean, getBeanValues);
+                            setSharedPreferences(surveyDetailBean, getBeanValues,"1");
+                        }
+                    }
+                }
+            });
+            addNewSurvey.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    List<SurveyDetail> surveyDetail = SurveyListLevels.getSurveyList(context, defaultPreferences.getString(Constants.DBNAME, ""), defaultPreferences.getString("UID", ""), "");
+                    SurveyDetail surveyDetailBean;
+                    for (int j = 0; j < surveyDetail.size(); j++) {
+                        if (getBeanValues.getName().equalsIgnoreCase(surveyDetail.get(j).getSurveyName())) {
+                            surveyDetailBean = surveyDetail.get(j);
+                            setSharedPreferences(surveyDetailBean, getBeanValues,"2");
                         }
                     }
                 }
@@ -136,6 +151,7 @@ public class HomeActivityNew extends BaseActivity implements View.OnClickListene
 
             dynamicButtonContainer.addView(inflatParentView);
         }
+
     }
 
     private void UpdateModuleVisiabliteAgainstProject() {
@@ -188,6 +204,7 @@ public class HomeActivityNew extends BaseActivity implements View.OnClickListene
         completedSurveyBtn = (LinearLayout) findViewById(R.id.completed_survey);
         pendingSurveyBtn = (LinearLayout) findViewById(R.id.pending_survey);
         summerySurveyBtn = (LinearLayout) findViewById(R.id.summery_container);
+
         contentUpdateView.setOnClickListener(this);
         activityButton.setOnClickListener(this);
         completedSurveyBtn.setOnClickListener(this);
@@ -207,6 +224,7 @@ public class HomeActivityNew extends BaseActivity implements View.OnClickListene
     public void getExpandableListHeading(List<String> listDataHeader, HashMap<String, List<Datum>> listDataChild) {
         if (syncSurveyPreferences.getBoolean(Constants.YALE_PROJECT, false)) {
             UpdateViewModulesAgainstProject(listDataChild);
+
         } else if (syncSurveyPreferences.getBoolean(Constants.FWWB_PROJECT, false)) {
             Logger.logD("MVP WORKING", listDataHeader.size() + "");
             listAdapter = new ExpandableListAdapterDataCollection(this, listDataHeader, listDataChild);
@@ -272,7 +290,12 @@ public class HomeActivityNew extends BaseActivity implements View.OnClickListene
         backPressed = System.currentTimeMillis();
     }
 
-    private void setSharedPreferences(SurveyDetail surveyDetailBean, Datum datum) {
+    /**
+     * @param surveyDetailBean
+     * @param datum
+     * @param getActivityFlag 1-> Call Listing page 2-> call New HouseHold create page
+     */
+    private void setSharedPreferences(SurveyDetail surveyDetailBean, Datum datum, String getActivityFlag) {
 
         SharedPreferences sharedpreferences = context.getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
 
@@ -302,23 +325,24 @@ public class HomeActivityNew extends BaseActivity implements View.OnClickListene
             editor.putInt(Constants.SURVEY_ID_HOME, surveyDetailBean.getSurveyId());
             editor.putInt(Constants.ADDBUTTON, 0);
         }
-
         editor.putString(Constants.BENEFICIARY_TYPE, surveyDetailBean.getBeneficiaryType());
         editor.putString(Constants.BENEFICIARY_IDS, surveyDetailBean.getBeneficiaryIds());
         editor.putString(Constants.FACILITY_IDS, surveyDetailBean.getFacilityIds());
         editor.putString("Survey_tittle", surveyDetailBean.getSurveyName());
         editor.putString(Constants.SURVEY_NAME_HOME, surveyDetailBean.getSurveyName());
-
-
         editor.putInt(Constants.Q_CONFIGS, surveyDetailBean.getQConfig());
         editor.apply();
         Logger.logD("-->start time", "checking time line");
-        if (sharedpreferences.getInt(SURVEY_ID, 0) != 0) {
+        if (sharedpreferences.getInt(SURVEY_ID, 0) != 0 && getActivityFlag.equalsIgnoreCase("1") ) {
             Intent survrySummaryReport = new Intent(context, ListingActivity.class);
             survrySummaryReport.putExtra(SURVEY_ID, String.valueOf(sharedpreferences.getInt(SURVEY_ID, 0)));
             survrySummaryReport.putExtra(Constants.HEADER_NAME, surveyDetailBean.getBeneficiaryType());
             startActivity(survrySummaryReport);
-        } else {
+        }else if (sharedpreferences.getInt(SURVEY_ID, 0) != 0 && getActivityFlag.equalsIgnoreCase("2") ) {
+            SharedPreferences prefsMY = context.getSharedPreferences("MyPrefs", MODE_PRIVATE);
+            Utilities.setSurveyStatus(prefsMY, "new");
+            new StartSurvey(activity, activity, sharedpreferences.getInt(SURVEY_ID, 0), sharedpreferences.getInt(SURVEY_ID, 0), "", "", "", "", "", null, "", "").execute(); //Chaned by guru removed "village Name"*/
+        }else {
             Intent intent1 = new Intent(this, LocationBasedActivity.class);
             intent1.putExtra(Constants.PERIODICITY, surveyDetailBean.getPiriodicityFlag());
             intent1.putExtra(Constants.P_LIMIT, 1);
