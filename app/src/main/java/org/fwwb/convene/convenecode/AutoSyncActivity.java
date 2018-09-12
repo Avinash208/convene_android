@@ -15,9 +15,6 @@ import android.util.Log;
 import net.sqlcipher.Cursor;
 import net.sqlcipher.database.SQLiteDatabase;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.fwwb.convene.convenecode.database.CommonDao;
 import org.fwwb.convene.convenecode.database.DBHandler;
 import org.fwwb.convene.convenecode.database.DataBaseMapperClass;
@@ -29,6 +26,9 @@ import org.fwwb.convene.convenecode.utils.MultiPartRestClient;
 import org.fwwb.convene.convenecode.utils.Operator;
 import org.fwwb.convene.convenecode.utils.RestUrl;
 import org.fwwb.convene.convenecode.utils.ToastUtils;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -590,6 +590,7 @@ public class AutoSyncActivity extends Activity {
             if (batchUuid== null)batchUuid="";
             builderMultiPart.addFormDataPart("captured_date",captureDate);
             builderMultiPart.addFormDataPart("training_uuid",trainingUuid);
+            builderMultiPart.addFormDataPart("batch_uuid",batchUuid);
             // Is it a force sync of regular submission
             if(fromValue == 3)
                 fromValue = 1;
