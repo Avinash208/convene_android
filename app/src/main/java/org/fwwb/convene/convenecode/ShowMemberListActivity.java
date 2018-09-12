@@ -315,7 +315,7 @@ public class ShowMemberListActivity extends AppCompatActivity implements HomeTil
                     JSONObject jsonObject1 = jsonArray.getJSONObject(i);
                     String getUUID = jsonObject1.getString("uuid");
                     String createdon = jsonObject1.getString("created_on");
-                    int updatedResponseKey = dbHandlershowMember.updateBeneficiaryLinkageStatus(getUUID, createdon, dbHandlershowMember);
+                    int updatedResponseKey = dbHandlershowMember.updateBeneficiaryLinkageStatus(getUUID, createdon);
                     Logger.logD("response Updated successfullty", updatedResponseKey + "");
                     finish();
                 }

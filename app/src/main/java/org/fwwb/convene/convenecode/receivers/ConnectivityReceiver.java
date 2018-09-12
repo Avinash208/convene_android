@@ -184,7 +184,7 @@ public class ConnectivityReceiver extends BroadcastReceiver {
                     JSONObject jsonObject1=jsonArray.getJSONObject(i);
                     String getUUID= jsonObject1.getString("uuid");
                     String created_on= jsonObject1.getString("created_on");
-                    int updatedResponseKey=dbHandlershowMember.updateBeneficiaryLinkageStatus(getUUID,created_on,dbHandlershowMember);
+                    int updatedResponseKey=dbHandlershowMember.updateBeneficiaryLinkageStatus(getUUID,created_on);
                     Logger.logD("response Updated successfullty",updatedResponseKey+"");
                     Intent intent = new Intent(context, MyIntentLinkage.class);
                     context.startService(intent);

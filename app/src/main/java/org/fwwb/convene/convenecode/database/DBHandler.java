@@ -296,8 +296,9 @@ public class DBHandler extends SQLiteOpenHelper {
      * @return
      */
     public int updateSurveyDataToDB(String surveyId, int serverPrimaryKey) {
-        String getPK = "'" + surveyId + "'";
-        SQLiteDatabase liteDatabase = this.getWritableDatabase(DATABASESECRETKEY);
+        SQLiteDatabase sqLiteDatabase = database;
+        if (database == null || !database.isOpen())
+            sqLiteDatabase = this.getWritableDatabase(DATABASESECRETKEY);
         ContentValues values = new ContentValues();
         values.put(SERVER_PRIMARY_KEY, serverPrimaryKey);
         values.put(Constants.START_SURVEY_STATUS, "1");
@@ -306,7 +307,7 @@ public class DBHandler extends SQLiteOpenHelper {
         values.put(Constants.END_DATE, new SimpleDateFormat(DATE_FORMAT).format(new Date()));
         values.put(Constants.SURVEY_KEY, surveyId);
         values.put(Constants.SYNC_DATE, "");
-        return liteDatabase.update(SURVEY_TABLE, values, "uuid" + " = ?", new String[]{surveyId});
+        return sqLiteDatabase.update(SURVEY_TABLE, values, "uuid" + " = ?", new String[]{surveyId});
     }
 
     /**
@@ -330,13 +331,14 @@ public class DBHandler extends SQLiteOpenHelper {
     /**
      * @param surveyId
      * @param reuse
-     * @param bloodSample
      * @param charge
      * @return
      */
-    public int updateendSurvey_statusDataToDB(String surveyId, int reuse, String bloodSample, String charge) {
+    public int updateendSurvey_statusDataToDB(String surveyId, int reuse, String charge) {
         String getPrimaryKey = "'" + surveyId + "'";
-        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase(DATABASESECRETKEY);
+        SQLiteDatabase sqLiteDatabase = database;
+        if (database == null || !database.isOpen())
+            sqLiteDatabase = this.getWritableDatabase(DATABASESECRETKEY);
         ContentValues values = new ContentValues();
         if (reuse == 1) {
             values.put(Constants.SURVEY_STATUS, "1");
@@ -360,7 +362,9 @@ public class DBHandler extends SQLiteOpenHelper {
     public long insert_VenueDetails(Map<String, String> queryValues, String tableName) {
         long insertedRecord = 0;
         try {
-            SQLiteDatabase databaseWritable = this.getWritableDatabase(DATABASESECRETKEY);
+            SQLiteDatabase sqLiteDatabase = database;
+            if (database == null || !database.isOpen())
+                sqLiteDatabase = this.getWritableDatabase(DATABASESECRETKEY);
             ContentValues values = new ContentValues();
             Iterator it = queryValues.entrySet().iterator();
             while (it.hasNext()) {
@@ -370,7 +374,7 @@ public class DBHandler extends SQLiteOpenHelper {
                 values.put(pairs.getKey().toString(), pairs.getValue()
                         .toString());
             }
-            insertedRecord = databaseWritable.insertOrThrow(tableName, null, values);
+            insertedRecord = sqLiteDatabase.insertOrThrow(tableName, null, values);
         } catch (Exception e) {
             Logger.logE(TAG, "Exception in insert_VenueDetails method", e);
         }
@@ -384,8 +388,10 @@ public class DBHandler extends SQLiteOpenHelper {
      */
     public JSONObject getTabInfoRecords(String query) {
         JSONObject map = new JSONObject();
-        SQLiteDatabase writableDatabase = this.getWritableDatabase(DATABASESECRETKEY);
-        Cursor cursor = writableDatabase.rawQuery(query, null);
+        SQLiteDatabase sqLiteDatabase = database;
+        if (database == null || !database.isOpen())
+            sqLiteDatabase = this.getWritableDatabase(DATABASESECRETKEY);
+        Cursor cursor = sqLiteDatabase.rawQuery(query, null);
         if (cursor.moveToFirst()) {
             do {
                 try {
@@ -471,11 +477,13 @@ public class DBHandler extends SQLiteOpenHelper {
      */
     public int updateEndSurveyStatusDataToDB(String surveyId) {
         String getPK = "'" + surveyId + "'";
-        SQLiteDatabase databaseWritableEnd = this.getWritableDatabase(DATABASESECRETKEY);
+        SQLiteDatabase sqLiteDatabase = database;
+        if (database == null || !database.isOpen())
+            sqLiteDatabase = this.getWritableDatabase(DATABASESECRETKEY);
         ContentValues values = new ContentValues();
         values.put(Constants.SURVEY_STATUS, "1");
         values.put(Constants.END_DATE, new SimpleDateFormat(DATE_FORMAT, Locale.ENGLISH).format(new Date()));
-        return databaseWritableEnd.update(SURVEY_TABLE, values, "uuid" + " = ?", new String[]{surveyId});
+        return sqLiteDatabase.update(SURVEY_TABLE, values, "uuid" + " = ?", new String[]{surveyId});
     }
 
     /**
@@ -908,8 +916,10 @@ public class DBHandler extends SQLiteOpenHelper {
             lastModifiedDate = "";
             String query = "SELECT sync_date FROM survey WHERE sync_date In (SELECT MAX(sync_date) FROM Survey)";
             Logger.logD("", "get parent response query" + query);
-            SQLiteDatabase database = this.getReadableDatabase(DATABASESECRETKEY);
-            cursor = database.rawQuery(query, null);
+            SQLiteDatabase sqLiteDatabase = database;
+            if (database == null || !database.isOpen())
+                sqLiteDatabase = this.getReadableDatabase(DATABASESECRETKEY);
+            cursor = sqLiteDatabase.rawQuery(query, null);
             if (cursor != null && cursor.moveToFirst()) {
                 lastModifiedDate = cursor.getString(cursor.getColumnIndex("sync_date"));
             } else {
@@ -917,13 +927,10 @@ public class DBHandler extends SQLiteOpenHelper {
             }
             if (cursor != null) {
                 cursor.close();
-            } else {
-                cursor.close();
             }
 
         } catch (Exception e) {
             e.printStackTrace();
-            cursor.close();
         }
         return lastModifiedDate;
     }
@@ -966,7 +973,9 @@ public class DBHandler extends SQLiteOpenHelper {
                     break;
             }
             try {
-                SQLiteDatabase sqLiteDatabase = this.getWritableDatabase(DATABASESECRETKEY);
+                SQLiteDatabase sqLiteDatabase = database;
+                if (database == null || !database.isOpen())
+                    sqLiteDatabase = this.getWritableDatabase(DATABASESECRETKEY);
                 ContentValues values = new ContentValues();
                 values.put(s, getLevel1Id.getId());
                 Spinner getLevel7Spinner = dynamicSpinnerHashMap.get("level5");
@@ -992,7 +1001,9 @@ public class DBHandler extends SQLiteOpenHelper {
     public void updateAddressRecordFromServer(JSONObject jsonObject, String surveyPrimaryKey) {
 
             try {
-                SQLiteDatabase sqLiteDatabase = this.getWritableDatabase(DATABASESECRETKEY);
+                SQLiteDatabase sqLiteDatabase = database;
+                if (database == null || !database.isOpen())
+                    sqLiteDatabase = this.getWritableDatabase(DATABASESECRETKEY);
                 ContentValues values = new ContentValues();
                 try {
                     values.put("level1", jsonObject.getString("1"));
@@ -1182,12 +1193,14 @@ public class DBHandler extends SQLiteOpenHelper {
     }
 
 
-    public int updateBeneficiaryLinkageStatus(String getUUID, String created_on, DBHandler dbHandlershowMember) {
-        SQLiteDatabase liteDatabase = this.getWritableDatabase(DATABASESECRETKEY);
+    public int updateBeneficiaryLinkageStatus(String getUUID, String created_on) {
+        SQLiteDatabase sqLiteDatabase = database;
+        if (database == null || !database.isOpen())
+            sqLiteDatabase = this.getWritableDatabase(DATABASESECRETKEY);
         ContentValues values = new ContentValues();
         values.put(SYNCSTATUS, "2");
         values.put("linked_on", created_on);
-        return liteDatabase.update("Linkages", values, "uuid" + " = ?", new String[]{getUUID});
+        return sqLiteDatabase.update("Linkages", values, "uuid" + " = ?", new String[]{getUUID});
     }
 
     public JSONArray getOfflineRecord(DBHandler dbHandlershowMember) {
@@ -1803,7 +1816,9 @@ public class DBHandler extends SQLiteOpenHelper {
 
     public void UpdateOtherchoice(String questionID, String otherChoice, String surveyPrimaryKey) {
         try {
-            SQLiteDatabase sqLiteDatabase = this.getWritableDatabase(DATABASESECRETKEY);
+            SQLiteDatabase sqLiteDatabase = database;
+            if (database == null || !database.isOpen())
+                sqLiteDatabase = this.getWritableDatabase(DATABASESECRETKEY);
             ContentValues values = new ContentValues();
             values.put("sub_questionId", otherChoice);
             int getInsertedresult = sqLiteDatabase.update("Response", values,"survey_id='"+surveyPrimaryKey+"' and q_id='"+questionID+"'",null);

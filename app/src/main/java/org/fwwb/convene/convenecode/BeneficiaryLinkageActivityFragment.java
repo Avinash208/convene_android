@@ -469,7 +469,7 @@ public class BeneficiaryLinkageActivityFragment extends Fragment implements Push
                     JSONObject jsonObject1 = jsonArray.getJSONObject(i);
                     String getUUID = jsonObject1.getString("uuid");
                     String createdon = jsonObject1.getString("created_on");
-                    int updatedResponseKey = dbHandler.updateBeneficiaryLinkageStatus(getUUID, createdon, dbHandler);
+                    int updatedResponseKey = dbHandler.updateBeneficiaryLinkageStatus(getUUID, createdon);
                     Logger.logD("response Updated successfullty", updatedResponseKey + "");
 
                 }

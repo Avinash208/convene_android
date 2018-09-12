@@ -103,6 +103,9 @@ public class AutoSyncActivity extends Activity {
     private static final String surveyStatusStr = "survey_status";
     private static final String benTypeIdStr ="beneficiary_type_id";
 
+    private String trainingUuid="";
+    private String batchUuid="";
+
 
     public AutoSyncActivity(Context context) {
         this.context = context;
@@ -342,7 +345,7 @@ public class AutoSyncActivity extends Activity {
                        if (qtype.equals("S") && (!subQuestionCode.isEmpty() )){
                            valueKeypareArray.put(qtype+"_"+subQuestionId+"_"+String.valueOf(groupID),autoSyncAnsCode);
                            valueKeypareArray.put(qtype+"_"+subQuestionId+"_"+String.valueOf(groupID)+"_"+autoSyncAnsCode,String.valueOf(subQuestionCode));
-                       }else if (qtype.equals("R") && (!subQuestionCode.equalsIgnoreCase("0") || !subQuestionCode.isEmpty() )){
+                       }else if (qtype.equals("R") && ( !subQuestionCode.isEmpty() )){
                            valueKeypareArray.put(qtype+"_"+subQuestionId+"_"+String.valueOf(groupID),autoSyncAnsCode);
                            valueKeypareArray.put(qtype+"_"+subQuestionId+"_"+String.valueOf(groupID)+"_"+autoSyncAnsCode,String.valueOf(subQuestionCode));
                        }
@@ -473,6 +476,12 @@ public class AutoSyncActivity extends Activity {
                         beneficiary_id="0";
                     }
                     uuid=cursor1.getString(cursor1.getColumnIndex("uuid"));
+                    trainingUuid=cursor1.getString(cursor1.getColumnIndex("training_uuid"));
+                    if (trainingUuid== null)
+                        trainingUuid= "";
+                    batchUuid=cursor1.getString(cursor1.getColumnIndex("batch_uuid"));
+                    if (batchUuid== null)
+                        batchUuid= "";
                     server_primary_key=String.valueOf(cursor1.getInt(cursor1.getColumnIndex("server_primary_key")));
                     Logger.logD("C", "ClusterKey : ---------" + clusterKey + "--" + cursor1.getString(cursor1.getColumnIndex(columns[23])));
 
@@ -502,41 +511,43 @@ public class AutoSyncActivity extends Activity {
         public MultipartBody.Builder setPostParameters(String deviceId, String surveyList, String sectionId, JSONObject array) {
 
             MultipartBody.Builder builderMultiPart = new MultipartBody.Builder().setType(MultipartBody.FORM);
-            Logger.logV(POST_PARAMETERS_VALUE, "la" + String.valueOf(latitude));
-            Logger.logV(POST_PARAMETERS_VALUE, "lo" + String.valueOf(longitude));
-            Logger.logV(POST_PARAMETERS_VALUE, "sample_id" + String.valueOf(sampleId));
-            Logger.logV(POST_PARAMETERS_VALUE, "uId" + String.valueOf(hrId));
-            Logger.logV(POST_PARAMETERS_VALUE, "la" + String.valueOf(latitude));
-            Logger.logV(POST_PARAMETERS_VALUE, "sd" + startDate);
-            Logger.logV(POST_PARAMETERS_VALUE, "ed" + endDate);
-            Logger.logV(POST_PARAMETERS_VALUE, "vn" + versionNumber);
-            Logger.logV(POST_PARAMETERS_VALUE, "av" + latestAppVersion);
-            Logger.logV(POST_PARAMETERS_VALUE, "l_id" + String.valueOf(languageId));
-            Logger.logV(POST_PARAMETERS_VALUE, "imei" + deviceId);
-            Logger.logV(POST_PARAMETERS_VALUE, "survey_id" + String.valueOf(autoSyncSurveyKey));
-            Logger.logV(POST_PARAMETERS_VALUE, "mode" + online);
-            Logger.logV(POST_PARAMETERS_VALUE, "part2_charge" + "");
-            Logger.logV(POST_PARAMETERS_VALUE, GPS_TRACKER + gpsTracker);
-            Logger.logV(POST_PARAMETERS_VALUE, "created_on" + autoSyncCreatedOn);
-            Logger.logV(POST_PARAMETERS_VALUE, "sp_s_o" + autoSyncCreatedOn);
-            Logger.logV(POST_PARAMETERS_VALUE, REASON_KEY + reason);
-            Logger.logV(POST_PARAMETERS_VALUE, "beneficiary_id" + beneficiary_id);
+            Logger.logV(POST_PARAMETERS_VALUE, "la: " + String.valueOf(latitude));
+            Logger.logV(POST_PARAMETERS_VALUE, "lo: " + String.valueOf(longitude));
+            Logger.logV(POST_PARAMETERS_VALUE, "sample_id: " + String.valueOf(sampleId));
+            Logger.logV(POST_PARAMETERS_VALUE, "uId: " + String.valueOf(hrId));
+            Logger.logV(POST_PARAMETERS_VALUE, "la: " + String.valueOf(latitude));
+            Logger.logV(POST_PARAMETERS_VALUE, "sd: " + startDate);
+            Logger.logV(POST_PARAMETERS_VALUE, "ed: " + endDate);
+            Logger.logV(POST_PARAMETERS_VALUE, "vn: " + versionNumber);
+            Logger.logV(POST_PARAMETERS_VALUE, "av: " + latestAppVersion);
+            Logger.logV(POST_PARAMETERS_VALUE, "l_id: " + String.valueOf(languageId));
+            Logger.logV(POST_PARAMETERS_VALUE, "imei: " + deviceId);
+            Logger.logV(POST_PARAMETERS_VALUE, "survey_id: " + String.valueOf(autoSyncSurveyKey));
+            Logger.logV(POST_PARAMETERS_VALUE, "mode: " + online);
+            Logger.logV(POST_PARAMETERS_VALUE, "part2_charge: " + "");
+            Logger.logV(POST_PARAMETERS_VALUE, GPS_TRACKER +": "+ gpsTracker);
+            Logger.logV(POST_PARAMETERS_VALUE, "created_on: " + autoSyncCreatedOn);
+            Logger.logV(POST_PARAMETERS_VALUE, "sp_s_o: " + autoSyncCreatedOn);
+            Logger.logV(POST_PARAMETERS_VALUE, REASON_KEY+": " + reason);
+            Logger.logV(POST_PARAMETERS_VALUE, "beneficiary_id: " + beneficiary_id);
 
-            Logger.logV(POST_PARAMETERS_VALUE, benTypeIdStr + beneficiaryTypeId );
-            Logger.logV(POST_PARAMETERS_VALUE, FACILITY_TYPE_ID + facilityTypeId );
-            Logger.logV(POST_PARAMETERS_VALUE, "facility_id" + facility_id);
-            Logger.logV(POST_PARAMETERS_VALUE, "uuid" + uuid);
-            Logger.logV(POST_PARAMETERS_VALUE, CLUSTER_ID + clusterForSync);
-            Logger.logV(POST_PARAMETERS_VALUE, "answers_array" + String.valueOf(array));
-            Logger.logV(POST_PARAMETERS_VALUE, "OperatorDetails" + surveyList);
-            Logger.logV(POST_PARAMETERS_VALUE, "is_cus_rom" + autoSyncPreferences.getString(PLAY_STORE, ""));
-            Logger.logV(POST_PARAMETERS_VALUE, "pe_r" +paperEntryReason);
-            Logger.logV(POST_PARAMETERS_VALUE, "lqc" + lastQcode);
-            Logger.logV(POST_PARAMETERS_VALUE, "survey_part" + sectionId);
-            Logger.logV(POST_PARAMETERS_VALUE, "t_id" + typologyCode);
-            Logger.logV(POST_PARAMETERS_VALUE, "clusterKey" + clusterKey);
-            Logger.logV(POST_PARAMETERS_VALUE, "clusterMember" + clusterMember);
-            Logger.logV(POST_PARAMETERS_VALUE, "captured_date" + captureDate);
+            Logger.logV(POST_PARAMETERS_VALUE, benTypeIdStr+": " + beneficiaryTypeId );
+            Logger.logV(POST_PARAMETERS_VALUE, FACILITY_TYPE_ID+": " + facilityTypeId );
+            Logger.logV(POST_PARAMETERS_VALUE, "facility_id: " + facility_id);
+            Logger.logV(POST_PARAMETERS_VALUE, "uuid: " + uuid);
+            Logger.logV(POST_PARAMETERS_VALUE, CLUSTER_ID+": " + clusterForSync);
+            Logger.logV(POST_PARAMETERS_VALUE, "answers_array: " + String.valueOf(array));
+            Logger.logV(POST_PARAMETERS_VALUE, "OperatorDetails: " + surveyList);
+            Logger.logV(POST_PARAMETERS_VALUE, "is_cus_rom: " + autoSyncPreferences.getString(PLAY_STORE, ""));
+            Logger.logV(POST_PARAMETERS_VALUE, "pe_r: " +paperEntryReason);
+            Logger.logV(POST_PARAMETERS_VALUE, "lqc: " + lastQcode);
+            Logger.logV(POST_PARAMETERS_VALUE, "survey_part: " + sectionId);
+            Logger.logV(POST_PARAMETERS_VALUE, "t_id: " + typologyCode);
+            Logger.logV(POST_PARAMETERS_VALUE, "clusterKey: " + clusterKey);
+            Logger.logV(POST_PARAMETERS_VALUE, "clusterMember: " + clusterMember);
+            Logger.logV(POST_PARAMETERS_VALUE, "captured_date: " + captureDate);
+            Logger.logV(POST_PARAMETERS_VALUE, "training_uuid: " + trainingUuid);
+            Logger.logV(POST_PARAMETERS_VALUE, "batch_uuid: " + batchUuid);
 
             // Adding post parameter
             builderMultiPart.addFormDataPart("la", String.valueOf(latitude));
@@ -575,7 +586,10 @@ public class AutoSyncActivity extends Activity {
             builderMultiPart.addFormDataPart("clusterKey", clusterKey);
             builderMultiPart.addFormDataPart("clustername", clusterMember);
             builderMultiPart.addFormDataPart("captured_date","");
-
+            if (trainingUuid== null)trainingUuid="";
+            if (batchUuid== null)batchUuid="";
+            builderMultiPart.addFormDataPart("captured_date",captureDate);
+            builderMultiPart.addFormDataPart("training_uuid",trainingUuid);
             // Is it a force sync of regular submission
             if(fromValue == 3)
                 fromValue = 1;

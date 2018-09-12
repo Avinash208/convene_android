@@ -66,7 +66,7 @@ public class UpdateSurveyAsyncTask extends AsyncTask<Context, Integer, String> {
         preferences = PreferenceManager.getDefaultSharedPreferences(context);
         syncSurveyHandler = new DBHandler(context);
         dbOpenHelper = ConveneDatabaseHelper.getInstance(context, preferences.getString("CONVENEDB",""),preferences.getString("UID",""));
-        syncSurveyHandler.AllPreviousResponse();
+//        syncSurveyHandler.AllPreviousResponse();
     }
     @Override
     protected String doInBackground(Context... params) {

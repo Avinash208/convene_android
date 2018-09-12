@@ -1177,13 +1177,10 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
     private void setResponseValueToDependencyquestion(DependencyObject dependencyObject) {
         if (singleSpinnerSearchFilterMap.get(dependencyObject.getDependencyQid()) == null)
             return;
-
-
-
         List<LevelBeen> levelBeenList;
 
         String questionId= "0";
-        if (dependencyObject.getQuestionId()== 0) {
+        if (dependencyObject.getQuestionId()== 0 && !"0".equals(dependencyObject.getValue())) {
             questionId = dbhelper.getSummaryQid(Integer.parseInt(dependencyObject.getValue()), dbhelper);
             if (questionId != null && !questionId.isEmpty() && questionId.split(",").length > 1)
                 questionId = questionId.split(",")[0];
@@ -3300,7 +3297,7 @@ public class SurveyQuestionActivity extends BaseActivity implements View.OnClick
      * @param m_context This method is used to update the record
      */
     public void updateRecord(Context m_context) {
-        surveyHandler.updateendSurvey_statusDataToDB(surveyPrimaryKeyId, 1, "", String.valueOf(charge));
+        surveyHandler.updateendSurvey_statusDataToDB(surveyPrimaryKeyId, 1, String.valueOf(charge));
         surveyHandler.insert_VenueDetails(values, "Tabdetails");
         Intent i = new Intent(m_context, MyIntentService.class);
         m_context.startService(i);

@@ -911,7 +911,7 @@ public class ConveneDatabaseHelper extends SQLiteOpenHelper {
             SQLiteDatabase sqldb = openDataBase();
             String query = "SELECT id,answer,question_id FROM Question where id="+questionID;
             Cursor cursor = sqldb.rawQuery(query, null);
-            if (cursor != null && cursor.moveToFirst()) {
+            if (cursor.getCount()>0 && cursor.moveToFirst()) {
                 do questionType = cursor.getString(cursor.getColumnIndex("answer"));
                 while (cursor.moveToNext());
             }
