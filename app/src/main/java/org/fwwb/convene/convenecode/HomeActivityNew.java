@@ -38,6 +38,9 @@ import java.util.List;
 
 import static org.fwwb.convene.convenecode.utils.Constants.SURVEY_ID;
 
+/**
+ * COde changes by Avinash Raj
+ */
 public class HomeActivityNew extends BaseActivity implements View.OnClickListener, HomeViewInterface {
 
     private long backPressed;
