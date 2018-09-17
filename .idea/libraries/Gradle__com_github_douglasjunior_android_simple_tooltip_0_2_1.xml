@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="Gradle: com.github.douglasjunior:android-simple-tooltip-0.2.1">
+    <CLASSES>
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/android-simple-tooltip-0.2.1.aar/934534643f8bbb693955bd88fe04ece9/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/android-simple-tooltip-0.2.1.aar/934534643f8bbb693955bd88fe04ece9/jars/classes.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.douglasjunior/android-simple-tooltip/0.2.1/8b961a6f423a14ac113b3020efc0b637e7811b21/android-simple-tooltip-0.2.1-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
